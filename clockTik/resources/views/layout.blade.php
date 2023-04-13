@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,10 +21,9 @@
             <a href="{{ route() }}">Home</a> --}}
         </header>
 
-        <div class="login">
-            @yield('loginForm')
-        </div>
-       
+        @yield('login')
+
+        <div class="formContainer">@yield('newUser')</div>
 
         <footer> &copy Toon De Booser</footer>
     </div>
