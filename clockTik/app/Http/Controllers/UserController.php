@@ -10,4 +10,25 @@ class UserController extends Controller
          
         return view('newUser');
     }
+
+    public function registrate (Request $request){
+
+        $request->validate(
+            [
+
+                'name' => 'string|max:255',
+                'email' => 'email|max:255',
+                'password' => 'string|min:8|confirmed'
+
+            ],
+            [
+                'name.string' => "Unless your mother was a cold hearted ****, please enter your name!",
+                'email.email' => "your pigeon adres seems to be none existing.",
+            ]
+        );
+
+        return view('welcome',[]);
+    }
 }
+
+

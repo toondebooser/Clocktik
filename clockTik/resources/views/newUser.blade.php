@@ -4,7 +4,7 @@
     <h2>User Registration</h2>
 @endsection
 @section('newUser')
-    <form class="newUserForm" name="newUserForm" action="" method="post">
+    <form class="newUserForm" name="newUserForm" action="{{ route('registrate') }}" method="post">
 
         @csrf
         <label class="nameLabel" for="name">Name</label>
@@ -22,10 +22,18 @@
         @enderror
 
         <label class="passwordLabel" for="password">Password</label>
-        <input class="password" type="password" name="password">
+        <input id="password" class="password" type="password" name="password">
 
-        <label class="passwordConfirmationLabel" for="passwordConfirmation">Repeat password</label>
-        <input class="passwordConfirmation" type="password" name="passwordConfirmation">
+        @error('password')
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
+
+        <label class="passwordConfirmationLabel" for="password_confirmation">Repeat password</label>
+        <input id="password_confirmation" class="passwordConfirmation" type="password" name="password_confirmation">
+
+        @error('passwordConfirmation')
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
 
         <input class="registrationButton" type="submit" value="Registrate">
 
