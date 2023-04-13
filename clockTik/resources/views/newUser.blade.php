@@ -1,4 +1,8 @@
 @extends('layout')
+
+@section('title')
+    <h2>User Registration</h2>
+@endsection
 @section('newUser')
     <form class="newUserForm" name="newUserForm" action="" method="post">
 
@@ -23,6 +27,7 @@
         <label class="passwordConfirmationLabel" for="passwordConfirmation">Repeat password</label>
         <input class="passwordConfirmation" type="password" name="passwordConfirmation">
 
+        <input class="registrationButton" type="submit" value="Registrate">
 
     </form>
 @endsection
