@@ -2,6 +2,9 @@
 
 @section('title')
     <h2>User Registration</h2>
+    @if (isset($exists))
+        <p>{{$exists}}</p>
+    @endif
 @endsection
 @section('newUser')
     <form class="newUserForm" name="newUserForm" action="{{ route('registrate') }}" method="post">

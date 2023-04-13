@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -29,6 +30,24 @@ class UserController extends Controller
                 'password.string' => "The provided password is not allowed.",
             ]
         );
+
+        $newUser = new User;
+        $name = request()->input('name');
+        $email = request()->input('email');
+        $password = request()->input('password');
+        $checkEmail = User::where('email', $email)->first();
+
+        if ($checkEmail) {
+            $exists = "This email adres already exists!";
+            return view("newUser", ['exists' => $exists]);
+        }
+
+        $newUser->name = $name;
+        $newUser->email = $email;
+        $newUser->password = $password;
+        $newUser->save();
+        
+
 
         return view('welcome', []);
     }
