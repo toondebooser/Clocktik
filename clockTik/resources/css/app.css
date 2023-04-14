@@ -85,6 +85,19 @@ h1 {
     max-width: 500px;
     justify-self: center;
 }
+ul{
+    color: red;
+    list-style: none;
+    margin-top: 10px;
+    padding-left: 35px;
+}
+.loginError{
+    height: fit-content;
+    align-self: center;
+    grid-row: 3/4;
+    grid-column: 3/11;
+    background-color: pink;
+}
 .nameLabel {
     grid-column: 2/12;
     grid-row: 1/2;

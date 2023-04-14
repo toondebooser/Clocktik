@@ -21,7 +21,6 @@
     <div class="text-danger">{{ $message }}</div>
     @enderror
 </div>
-
 @endsection
 @section('newUser')
 <div class="formContainer">

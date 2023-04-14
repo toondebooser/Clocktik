@@ -10,3 +10,4 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'show'])->name('home');
 Route::get('/new-user', [UserController::class, 'newUser'])->name('newUser');
 Route::post('/user-validation', [UserController::class, 'registrate'])->name('registrate');
+Route::post('/login',[HomeController::class, 'login'])->name('login');

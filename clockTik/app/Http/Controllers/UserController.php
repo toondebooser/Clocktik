@@ -26,7 +26,7 @@ class UserController extends Controller
 
             ],
             [
-                'name.string' => "Unless your mother was a cold hearted ****, please enter your name!",
+                'name.string' => "please enter your name!",
                 'email.email' => "your pigeon adres seems to be none existing.",
                 'password.string' => "The provided password is not allowed.",
             ]
