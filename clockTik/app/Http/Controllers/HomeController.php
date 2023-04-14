@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -23,6 +24,11 @@ class HomeController extends Controller
         'password.required' => "your password is required",
     ]
 );
+
+if (auth()->attempt($request->only(['email', 'password']))) {
+    return view('userPage', ['user' => auth()->user()]);
+}
+return redirect()->back()->withErrors(['email'=>'email or password is incorrect']);
     }
 }
 

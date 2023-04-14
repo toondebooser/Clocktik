@@ -28,8 +28,8 @@
     <div class="logincontainer">
         <form class="loginForm" action="{{route('login')}}" method="post">
             @csrf
-            <label class="userNameLabel" for="userName">Email adress</label>
-            <input class="userName" type="email" name="userName" >
+            <label class="userNameLabel" for="email">Email adress</label>
+            <input class="userName" type="email" name="email" >
             <label class="passLabel" for="password">Password</label>
             <input class="pass" type="password" name="password">
             <input class="loginButton" type="submit" value="Login">
