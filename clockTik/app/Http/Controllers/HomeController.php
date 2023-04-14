@@ -10,7 +10,7 @@ class HomeController extends Controller
     public function show () {
         return view('welcome');}
 
-    public function login (Request $request){
+    public function authentication (Request $request){
 
        $request->validate([
 
@@ -26,7 +26,7 @@ class HomeController extends Controller
 );
 
 if (auth()->attempt($request->only(['email', 'password']))) {
-    return redirect('/userPage');
+    return redirect('/dashboard');
 }
 return redirect()->back()->withErrors(['email'=>'email or password is incorrect']);
     }

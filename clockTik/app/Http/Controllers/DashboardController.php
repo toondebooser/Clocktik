@@ -8,6 +8,6 @@ class DashboardController extends Controller
 {
     public function currentUser()
     {
-        return view('userPage', ['user' => auth()->user()]);
+        return view('dashboard', ['user' => auth()->user()]);
     }
 }

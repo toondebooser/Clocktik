@@ -12,15 +12,18 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <title>clockTik</title>
 </head>
-
 <body>
+    <?php $currentUser = auth()->user();?>
     <div class="bodyContent">
 
         @yield('error')
 
         @yield('title')
         <header>
-            <a href="{{ route('home') }}">home</a>
+            @if (isset($currentUser))
+                <a href="{{route('dashboard')}}">Dashboard</a>
+            @endif
+            <a href="{{ route('home') }}">login</a>
             <a href="{{ route('newUser') }}">register</a>
         </header>
 

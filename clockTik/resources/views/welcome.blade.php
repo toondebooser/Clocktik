@@ -1,7 +1,12 @@
 @extends('layout')
+<?php $currentUser = auth()->user();?>
 @section('title')
     <h1>ClockTik</h1>
+    @if (isset($currentUser))
+    <p>{{$currentUser->name}}</p>   
+    @endif
 @endsection
+
 @section('error')
 {{-- <div class="errorBox">
 
@@ -26,7 +31,7 @@
 @endsection
 @section('login')
     <div class="logincontainer">
-        <form class="loginForm" action="{{route('login')}}" method="post">
+        <form class="loginForm" action="{{route('authentication')}}" method="post">
             @csrf
             <label class="userNameLabel" for="email">Email adress</label>
             <input class="userName" type="email" name="email" >

@@ -12,5 +12,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'show'])->name('home');
 Route::get('/new-user', [UserController::class, 'newUser'])->name('newUser');
 Route::post('/user-validation', [UserController::class, 'registrate'])->name('registrate');
-Route::post('/login',[HomeController::class, 'login'])->name('login');
-Route::get('/userPage', [DashboardController::class, 'currentUser']);
+Route::post('/authentication',[HomeController::class, 'authentication'])->name('authentication');
+Route::get('/dashboard', [DashboardController::class, 'currentUser'])->name('dashboard');
