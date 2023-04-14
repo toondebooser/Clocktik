@@ -30,6 +30,11 @@ if (auth()->attempt($request->only(['email', 'password']))) {
 }
 return redirect()->back()->withErrors(['email'=>'email or password is incorrect']);
     }
+
+    public function logout (){
+        auth()->logout();
+        return redirect('/');
+    }
 }
 
 

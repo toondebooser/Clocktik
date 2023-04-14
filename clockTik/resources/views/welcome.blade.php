@@ -38,6 +38,7 @@
             <label class="passLabel" for="password">Password</label>
             <input class="pass" type="password" name="password">
             <input class="loginButton" type="submit" value="Login">
+            <a class='registerLink'href="{{ route('newUser') }}">Register</a>
         </form>
     </div>
 @endsection

@@ -20,11 +20,12 @@
 
         @yield('title')
         <header>
+            @yield('header')
             @if (isset($currentUser))
                 <a href="{{route('dashboard')}}">Dashboard</a>
-            @endif
-            <a href="{{ route('home') }}">login</a>
-            <a href="{{ route('newUser') }}">register</a>
+                <a href="{{ route('logout') }}">logout</a>
+                                        
+                @endif
         </header>
 
         @yield('login')
