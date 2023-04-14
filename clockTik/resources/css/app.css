@@ -93,6 +93,7 @@ ul{
 }
 .loginError{
     height: fit-content;
+    justify-content: center;
     align-self: center;
     grid-row: 3/4;
     grid-column: 3/11;

@@ -27,7 +27,7 @@ class UserController extends Controller
             ],
             [
                 'name.string' => "please enter your name!",
-                'email.email' => "your pigeon adres seems to be none existing.",
+                'email.email' => "your email adress seems to be none existing.",
                 'password.string' => "The provided password is not allowed.",
             ]
         );
@@ -41,7 +41,7 @@ class UserController extends Controller
 
         if ($checkEmail) {
             $exists = "This email adres already exists!";
-            return view("newUser", ['exists' => $exists]);
+            return redirect()->back()->withErrors(['email'=> $exists]);
         }
 
         $newUser->name = $name;
@@ -52,7 +52,7 @@ class UserController extends Controller
 
 
 
-        return view('welcome');
+        return redirect('/');
     }
-    
+
 }
