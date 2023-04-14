@@ -15,15 +15,18 @@
 
 <body>
     <div class="bodyContent">
+
+        @yield('error')
+
         @yield('title')
         <header>
-            {{-- <a href="{{ route() }}">Contact</a>
-            <a href="{{ route() }}">Home</a> --}}
+            <a href="{{ route('home') }}">home</a>
+            <a href="{{ route('newUser') }}">register</a>
         </header>
 
         @yield('login')
 
-        <div class="formContainer">@yield('newUser')</div>
+        @yield('newUser')
 
         <footer> &copy Toon De Booser</footer>
     </div>

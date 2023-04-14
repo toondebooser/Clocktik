@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -35,6 +36,7 @@ class UserController extends Controller
         $name = request()->input('name');
         $email = request()->input('email');
         $password = request()->input('password');
+        $hashedPassword = bcrypt($password);
         $checkEmail = User::where('email', $email)->first();
 
         if ($checkEmail) {
@@ -44,9 +46,10 @@ class UserController extends Controller
 
         $newUser->name = $name;
         $newUser->email = $email;
-        $newUser->password = $password;
+        $newUser->password = $hashedPassword;
+        $newUser->email_verified_at = Carbon::now();
         $newUser->save();
-        
+
 
 
         return view('welcome', []);
