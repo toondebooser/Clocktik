@@ -12,8 +12,9 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <title>clockTik</title>
 </head>
+
 <body>
-    <?php $currentUser = auth()->user();?>
+    <?php $currentUser = auth()->user(); ?>
     <div class="bodyContent">
 
         @yield('error')
@@ -22,10 +23,9 @@
         <header>
             @yield('header')
             @if (isset($currentUser))
-                <a href="{{route('dashboard')}}">Dashboard</a>
+                <a href="{{ route('dashboard') }}">Dashboard</a>
                 <a href="{{ route('logout') }}">logout</a>
-                                        
-                @endif
+            @endif
         </header>
 
         @yield('login')

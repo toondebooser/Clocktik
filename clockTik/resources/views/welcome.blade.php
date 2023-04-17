@@ -39,6 +39,8 @@
             <input class="pass" type="password" name="password">
             <input class="loginButton" type="submit" value="Login">
             <a class='registerLink'href="{{ route('newUser') }}">Register</a>
+            <label class="rememberLabel" for="remember">Remember me</label>
+            <input id="remember" type="checkbox" name="remember" class="remeberCheckbox">
         </form>
     </div>
 @endsection

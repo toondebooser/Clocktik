@@ -1,4 +1,4 @@
 @extends('layout')
 @section('title')
-    <h1>Welcome {{$user->name}}</h1>
+    <h2>Welcome {{$user->name}}</h2>
 @endsection
