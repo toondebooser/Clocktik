@@ -29,7 +29,7 @@
         </header>
 
         @yield('login')
-
+        @yield('userDashboard')
         @yield('newUser')
 
         <footer> &copy Toon De Booser</footer>
