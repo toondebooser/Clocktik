@@ -47,7 +47,7 @@ class UserController extends Controller
         $newUser->name = $name;
         $newUser->email = $email;
         $newUser->password = $hashedPassword;
-        $newUser->email_verified_at = Carbon::now();
+        $newUser->email_verified_at = now();
         $newUser->save();
 
 
