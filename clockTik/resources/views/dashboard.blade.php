@@ -4,10 +4,17 @@
 @endsection
 
 @section('userDashboard')
-@if ($shiftStatus == 0)
+@if ($shiftStatus == false)
 <a href="{{route('start')}}" class="startButton">
-    <p class="buttonText">Start working</p>
+    <p class="buttonText">Start</p>
 </a> 
+{{-- @else 
+<a href="{{route('break')}}" class="breakButton">
+    <p class="buttonText">Break</p>
+</a> 
+<a href="{{route('stop')}}" class="stopButton">
+    <p class="buttonText">Stop</p>
+</a>  --}}
 @endif
 {{$shiftStatus}}
 

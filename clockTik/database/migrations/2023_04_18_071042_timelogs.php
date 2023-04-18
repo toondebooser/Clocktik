@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('Timelogs', function (Blueprint $table) {
             $table->id();
+            $table->boolean('BreakStatus');
             $table->boolean('ShiftStatus');
-            $table->timestamp('StartWork');
+            $table->timestamp('StartWork')->nullable();
             $table->timestamp('StartBreak')->nullable();
             $table->timestamp('EndBreak')->nullable();
             $table->timestamp('StopWork')->nullable();

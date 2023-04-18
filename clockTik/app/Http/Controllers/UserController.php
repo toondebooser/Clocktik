@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Timelog;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -33,11 +34,13 @@ class UserController extends Controller
         );
 
         $newUser = new User;
+        $userRow = new Timelog;
         $name = request()->input('name');
         $email = request()->input('email');
         $password = request()->input('password');
         $hashedPassword = bcrypt($password);
         $checkEmail = User::where('email', $email)->first();
+
 
         if ($checkEmail) {
             $exists = "This email adres already exists!";
@@ -49,6 +52,10 @@ class UserController extends Controller
         $newUser->password = $hashedPassword;
         $newUser->email_verified_at = now();
         $newUser->save();
+        $userRow->UserId = $newUser->id;
+        $userRow->ShiftStatus = false;
+        $userRow->BreakStatus = false;
+        $userRow->save();
 
 
 

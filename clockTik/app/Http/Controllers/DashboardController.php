@@ -10,17 +10,16 @@ class DashboardController extends Controller
     public function userDashboard()
     {
         $DataBase = Timelog::find(auth()->user()->id);
-        $shiftStatus = $DataBase->id;
-        $start  = $DataBase->StartWork;
-        return view('dashboard', ['user' => auth()->user(), 'start' => $start, 'shiftStatus' => $shiftStatus]);
+        $shiftStatus = $DataBase->ShiftStatus;
+        return view('dashboard', ['user' => auth()->user(), 'shiftStatus' => $shiftStatus]);
     }
 
     public function startWorking(Request $request)
     {
         $timestamp = now();
-        $newShift = new Timelog;
+        $newShift = Timelog::find(auth()->user()->id);
         $newShift->StartWork = $timestamp;
-        $newShift->UserId = auth()->user()->id;
+        $newShift->ShiftStatus = 1;
         $newShift->save();
         // $startTime = now();
         // $userId = auth()->user()->id;
