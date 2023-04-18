@@ -11,17 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('TimeSheets', function (Blueprint $table) {
+        Schema::create('timesheets', function (Blueprint $table) {
             $table->id();
             $table->integer('UserId');
             $table->timestamp('ClockedIn');
             $table->timestamp('ClockedOut');
             $table->timestamp('BreakStart')->nullable();
             $table->timestamp('BreakStop')->nullable();
-            $table->integer('RegularHours');
-            $table->integer('BreakHours')->nullable();
-            $table->integer('OverTime')->nullable();
+            $table->decimal('RegularHours',5,2);
+            $table->decimal('BreakHours',5,2)->nullable();
+            $table->decimal('OverTime',5,2)->nullable();
             $table->date('Month');
+            $table->timestamps();
 
         });
     }
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('TimeSheets');
+        Schema::dropIfExists('timesheets');
     }
 };

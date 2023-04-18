@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Timelog;
-use App\Models\TimeSheet;
+use App\Models\Timesheet;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -51,7 +52,7 @@ class DashboardController extends Controller
     public function stop()
     {
         $timeStamp = now();
-        $breakStatus = false;
+        $breakStatus = true;
         $userRow = Timelog::find(auth()->user()->id);
         if ($userRow->BreakStatus == true) {
             $breakStatus = true;
@@ -68,7 +69,7 @@ class DashboardController extends Controller
 
     public function makeTimeSheet($userRow, $breakStatus, $timeStamp)
     {
-        $newTimeSheet = new TimeSheet;
+        $newTimeSheet = new Timesheet;
         $newTimeSheet->UserId = auth()->user()->id;
         $newTimeSheet->ClockedIn = $userRow->StartWork;
         $newTimeSheet->ClockedOut = $userRow->StopWork;
@@ -77,21 +78,35 @@ class DashboardController extends Controller
             $newTimeSheet->BreakStop = $userRow->EndBreak;
             $newTimeSheet->BreakHours = $this->calculateBreakHours($newTimeSheet, $userRow);
         }
-        $newTimeSheet->RegularHours = $this->calculateRegularHours($newTimeSheet);
-        $newTimeSheet->OverTime = $this->calculateOverTime($newTimeSheet);
-        $newTimeSheet->Month = $timeStamp->format('F Y');
+        $newTimeSheet->RegularHours = $this->calculateRegularHours($userRow);
+        // $newTimeSheet->OverTime = $this->calculateOverTime($newTimeSheet);
+        $newTimeSheet->Month = $timeStamp;
         $newTimeSheet->save();
     }
 
-    public function calculateBreakHours($newTimeSheet, $userRow)
+    public function calculateBreakHours($userRow)
     {
         $start = $userRow->StartBreak;
         $end = $userRow->EndBreak;
+        $startParse = Carbon::parse($start);
+        $endParse = Carbon::parse($end);
+
+        $diffInMin = $endParse->diffInMinutes($startParse);
+        $decimalTime = round($diffInMin / 60, 2);
+        return $decimalTime;
     }
-    public function calculateRegularHours($newTimeSheet)
+    public function calculateRegularHours($userRow)
     {
+        $start = $userRow->StartWork;
+        $end = $userRow->StopWork;
+        $startParse = Carbon::parse($start);
+        $endParse = Carbon::parse($end);
+        $diffInMin = $endParse->diffInMinutes($startParse);
+        $decimalTime = round($diffInMin / 60, 2);
+        return $decimalTime;
     }
-    public function calculateOverTime($newTimeSheet)
-    {
-    }
+    // public function calculateOverTime($newTimeSheet)
+    // {
+
+    // }
 }
