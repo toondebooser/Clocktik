@@ -52,34 +52,31 @@ class DashboardController extends Controller
     public function stop()
     {
         $timeStamp = now();
-        $breakStatus = true;
         $userRow = Timelog::find(auth()->user()->id);
-        if ($userRow->BreakStatus == true) {
-            $breakStatus = true;
-            $userRow->BreakStatus = false;
-        }
         $userRow->ShiftStatus = false;
         $userRow->StopWork = $timeStamp;
         $userRow->save();
-
-        $this->makeTimeSheet($userRow, $breakStatus, $timeStamp);
+        $this->makeTimeSheet($userRow, $timeStamp);
+        
+       
 
         return redirect('/dashboard');
     }
 
-    public function makeTimeSheet($userRow, $breakStatus, $timeStamp)
+    public function makeTimeSheet($userRow, $timeStamp)
     {
         $newTimeSheet = new Timesheet;
         $newTimeSheet->UserId = auth()->user()->id;
         $newTimeSheet->ClockedIn = $userRow->StartWork;
         $newTimeSheet->ClockedOut = $userRow->StopWork;
-        if ($breakStatus == true) {
-            $newTimeSheet->BreakStart = $userRow->StartBreak;
-            $newTimeSheet->BreakStop = $userRow->EndBreak;
-            $newTimeSheet->BreakHours = $this->calculateBreakHours($newTimeSheet, $userRow);
-        }
+        
+        $newTimeSheet->BreakStart = $userRow->StartBreak;
+        $newTimeSheet->BreakStop = $userRow->EndBreak;
+        $newTimeSheet->BreakHours = $this->calculateBreakHours($newTimeSheet, $userRow);
+           
+        
         $newTimeSheet->RegularHours = $this->calculateRegularHours($userRow);
-        // $newTimeSheet->OverTime = $this->calculateOverTime($newTimeSheet);
+        $newTimeSheet->OverTime = 0;
         $newTimeSheet->Month = $timeStamp;
         $newTimeSheet->save();
     }

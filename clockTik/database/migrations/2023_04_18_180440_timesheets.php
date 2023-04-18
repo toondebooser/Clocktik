@@ -16,11 +16,11 @@ return new class extends Migration
             $table->integer('UserId');
             $table->timestamp('ClockedIn');
             $table->timestamp('ClockedOut');
-            $table->timestamp('BreakStart')->nullable();
-            $table->timestamp('BreakStop')->nullable();
+            $table->timestamp('BreakStart');
+            $table->timestamp('BreakStop');
             $table->decimal('RegularHours',5,2);
-            $table->decimal('BreakHours',5,2)->nullable();
-            $table->decimal('OverTime',5,2)->nullable();
+            $table->decimal('BreakHours',5,2);
+            $table->decimal('OverTime',5,2);
             $table->date('Month');
             $table->timestamps();
 
