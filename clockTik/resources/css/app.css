@@ -2,6 +2,7 @@ body {
     height: 100vh;
 }
 .bodyContent {
+    gap: 10px;
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     grid-auto-rows: minmax(25px, auto);
@@ -192,7 +193,6 @@ footer {
 }
 
 .startButton {
-    
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     grid-auto-rows: minmax(50px, auto);
@@ -208,8 +208,41 @@ footer {
     background: linear-gradient(145deg, #a7de70, #32a43d);
     box-shadow: 5px 5px 10px #929292, -5px -5px 10px #ffffff;
 }
+.breakButton {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: minmax(50px, auto);
+    text-align: center;
+    font-size: small;
+    grid-row: 3/4;
+    grid-column: 5/7;
+    justify-self: center;
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    border-radius: 151px;
+    background: linear-gradient(145deg, #4e72c1, #2626da);
+    box-shadow: 5px 5px 10px #929292, -5px -5px 10px #ffffff;
+}
+
+.stopButton {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: minmax(50px, auto);
+    text-align: center;
+    font-size: small;
+    grid-row: 3/4;
+    grid-column: 7/9;
+    justify-self: center;
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    border-radius: 151px;
+    background: linear-gradient(145deg, #8a3333, #d21818);
+    box-shadow: 5px 5px 10px #929292, -5px -5px 10px #ffffff;
+}
 .buttonText {
-   font-size: large;
+    font-size: large;
     margin-bottom: 0px;
     color: white;
     font-weight: 600;
@@ -218,7 +251,16 @@ footer {
     justify-self: center;
     align-self: center;
 }
-.startButton:hover {
-    text-decoration: none;
-    scale: 105%;
+.startButton,
+.breakButton,
+.stopButton{ 
+transition: transform 0.2s ease-in;
 }
+.startButton:hover,
+.breakButton:hover,
+.stopButton:hover
+{
+    text-decoration: none;
+    transform: scale(1.05);
+}
+

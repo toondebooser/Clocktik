@@ -9,23 +9,54 @@ class DashboardController extends Controller
 {
     public function userDashboard()
     {
-        $DataBase = Timelog::find(auth()->user()->id);
-        $shiftStatus = $DataBase->ShiftStatus;
-        return view('dashboard', ['user' => auth()->user(), 'shiftStatus' => $shiftStatus]);
+        $userRow = Timelog::find(auth()->user()->id);
+        $shiftStatus = $userRow->ShiftStatus;
+        $breakStatus = $userRow->BreakStatus;
+        return view('dashboard', ['user' => auth()->user(), 'shiftStatus' => $shiftStatus, 'breakStatus' => $breakStatus]);
     }
 
     public function startWorking(Request $request)
     {
         $timestamp = now();
-        $newShift = Timelog::find(auth()->user()->id);
-        $newShift->StartWork = $timestamp;
-        $newShift->ShiftStatus = 1;
-        $newShift->save();
-        // $startTime = now();
-        // $userId = auth()->user()->id;
-        // $newTimestamp->start = $startTime;
-        // $newTimestamp->user_id = $userId;
-        // $newTimestamp->save();
+        $userRow = Timelog::find(auth()->user()->id);
+        $userRow->StartBreak = null;
+        $userRow->EndBreak = null;
+        $userRow->StopWork = null;
+        $userRow->StartWork = $timestamp;
+        $userRow->ShiftStatus = true;
+        $userRow->save();
+        return redirect('/dashboard');
+    }
+    public function break()
+    {
+        $timeStamp = now();
+        $userRow = Timelog::find(auth()->user()->id);
+        $userRow->BreakStatus = true;
+        $userRow->StartBreak = $timeStamp;
+        $userRow->save();
+        return redirect('/dashboard');
+    }
+    public function stopBreak()
+    {
+        $timeStamp = now();
+        $userRow = Timelog::find(auth()->user()->id);
+        $userRow->BreakStatus = false;
+
+        $userRow->EndBreak = $timeStamp;
+        $userRow->save();
+        return redirect('/dashboard');
+    }
+
+    public function stop()
+    {
+        $timeStamp = now();
+        $userRow = Timelog::find(auth()->user()->id);
+        if ($userRow->BreakStatus == true) {
+            $userRow->BreakStatus = false;
+        }
+        $userRow->ShiftStatus = false;
+        $userRow->StopWork = $timeStamp;
+        $userRow->save();
         return redirect('/dashboard');
     }
 }
