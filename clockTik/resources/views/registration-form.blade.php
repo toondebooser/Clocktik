@@ -6,11 +6,7 @@
         <p class="emailExists">{{$exists}}</p>
     @endif
 @endsection
-@section('header')
 
-<a href="{{route('login')}}">login</a>
-    
-@endsection
 @section('error')
 <div class="errorBox">
     @error('name')

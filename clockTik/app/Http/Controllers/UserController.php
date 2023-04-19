@@ -9,10 +9,10 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function newUser()
+    public function registrationForm()
     {
 
-        return view('newUser');
+        return view('registration-form');
     }
 
     public function registrate(Request $request)
@@ -52,6 +52,7 @@ class UserController extends Controller
         $newUser->password = $hashedPassword;
         $newUser->email_verified_at = now();
         $newUser->save();
+        auth()->login($newUser);
         $userRow->UserId = $newUser->id;
         $userRow->ShiftStatus = false;
         $userRow->BreakStatus = false;
@@ -59,7 +60,7 @@ class UserController extends Controller
 
 
 
-        return redirect('/');
+        return redirect('/dashboard');
     }
 
 }

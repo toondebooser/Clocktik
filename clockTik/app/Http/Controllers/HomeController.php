@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
+    public function login()
+    {
+        return view('login');
+    }
+
     public function show()
     {
         return view('welcome');
@@ -42,6 +47,6 @@ class HomeController extends Controller
     public function logout()
     {
         auth()->logout();
-        return redirect('/');
+        return redirect('/login');
     }
 }
