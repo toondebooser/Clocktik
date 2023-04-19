@@ -39,7 +39,7 @@ class UserController extends Controller
         $email = request()->input('email');
         $password = request()->input('password');
         $hashedPassword = bcrypt($password);
-        $checkEmail = User::where('email', $email)->first();
+        $checkEmail = $newUser->where('email', $email)->first();
 
 
         if ($checkEmail) {

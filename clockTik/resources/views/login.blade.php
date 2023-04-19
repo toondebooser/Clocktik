@@ -30,7 +30,7 @@
 @endif
 @endsection
 @section('login')
-    <div class="logincontainer">
+   
         <form class="loginForm" action="{{route('authentication')}}" method="post">
             @csrf
             <label class="userNameLabel" for="email">Email adress</label>
@@ -42,5 +42,5 @@
             <label class="rememberLabel" for="remember">Remember me</label>
             <input id="remember" type="checkbox" name="remember" class="remeberCheckbox">
         </form>
-    </div>
+    
 @endsection

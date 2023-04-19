@@ -19,7 +19,7 @@ class DashboardController extends Controller
 
     public function startWorking(Request $request)
     {
-        $timestamp = now();
+        $timestamp = now('Europe/Brussels');
         $userRow = Timelog::find(auth()->user()->id);
         $userRow->StartBreak = null;
         $userRow->EndBreak = null;
@@ -31,7 +31,7 @@ class DashboardController extends Controller
     }
     public function break()
     {
-        $timeStamp = now();
+        $timeStamp = now('Europe/Brussels');
         $userRow = Timelog::find(auth()->user()->id);
         $userRow->BreakStatus = true;
         $userRow->StartBreak = $timeStamp;
@@ -40,7 +40,7 @@ class DashboardController extends Controller
     }
     public function stopBreak()
     {
-        $timeStamp = now();
+        $timeStamp = now('Europe/Brussels');
         $userRow = Timelog::find(auth()->user()->id);
         $userRow->BreakStatus = false;
 
@@ -51,7 +51,7 @@ class DashboardController extends Controller
 
     public function stop()
     {
-        $timeStamp = now();
+        $timeStamp = now('Europe/Brussels');
         $userRow = Timelog::find(auth()->user()->id);
         $userRow->ShiftStatus = false;
         $userRow->StopWork = $timeStamp;
@@ -88,7 +88,7 @@ class DashboardController extends Controller
         $startParse = Carbon::parse($start);
         $endParse = Carbon::parse($end);
 
-        $diffInMin = $endParse->diffInMinutes($startParse);
+        $diffInMin = $endParse->diffInMinutes($startParse) + 30;
         $decimalTime = round($diffInMin / 60, 2);
         return $decimalTime;
     }
@@ -98,7 +98,7 @@ class DashboardController extends Controller
         $end = $userRow->StopWork;
         $startParse = Carbon::parse($start);
         $endParse = Carbon::parse($end);
-        $diffInMin = $endParse->diffInMinutes($startParse);
+        $diffInMin = $endParse->diffInMinutes($startParse) + 216 ;
         $decimalTime = round($diffInMin / 60, 2);
         return $decimalTime;
     }
@@ -106,4 +106,17 @@ class DashboardController extends Controller
     // {
 
     // }
+
+    public function myProfile()
+    {
+        $userProfile = new Timesheet;
+        $currentUser = auth()->user();
+        $now = now('Europe/Brussels');
+        $month = date('m', strtotime($now));
+        $monthData = $userProfile
+        ->where('userId','=',$currentUser->id)
+        ->whereMonth('created_at','=', $month)
+        ->get();
+        return view('profile',['']);
+    }
 }

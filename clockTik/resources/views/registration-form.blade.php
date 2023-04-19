@@ -1,14 +1,14 @@
 @extends('layout')
 
 @section('title')
-    <h4>User Registration</h4>
+    <h2>User Registration</h2>
     @if (isset($exists))
         <p class="emailExists">{{$exists}}</p>
     @endif
 @endsection
 
 @section('error')
-<div class="errorBox">
+<div class="loginError">
     @error('name')
     <p id='errName' class="text-danger">{{ $message }}</p>
     @enderror
@@ -23,12 +23,13 @@
 </div>
 @endsection
 @section('newUser')
-<div class="formContainer">
+
     <form class="newUserForm" name="newUserForm" action="{{ route('registrate') }}" method="post">
 
         @csrf
         <label class="nameLabel" for="name">Name</label>
         <input id="name" class="name" type="text" name="name">
+        
 
     
 
@@ -48,5 +49,5 @@
         <input class="registrationButton" type="submit" value="Registrate">
 
     </form>
-</div>
+
 @endsection
