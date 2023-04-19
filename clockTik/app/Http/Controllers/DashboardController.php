@@ -117,6 +117,8 @@ class DashboardController extends Controller
         ->where('userId','=',$currentUser->id)
         ->whereMonth('created_at','=', $month)
         ->get();
-        return view('profile',['']);
+
+
+        return view('profile',['timesheet'=>$monthData]);
     }
 }

@@ -50,7 +50,7 @@ class UserController extends Controller
         $newUser->name = $name;
         $newUser->email = $email;
         $newUser->password = $hashedPassword;
-        $newUser->email_verified_at = now();
+        $newUser->email_verified_at = now('Europe/Brussels');
         $newUser->save();
         auth()->login($newUser);
         $userRow->UserId = $newUser->id;
