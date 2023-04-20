@@ -91,7 +91,7 @@ class DashboardController extends Controller
                 $difference = $regularHours - 7.6;
                 $newTimeSheet->OverTime = $difference;
                 $newTimeSheet->RegularHours = $regularHours - $difference;
-        
+
                 if ($userTotal == null) {
 
                     $newUserTotal->UserId = auth()->user()->id;
@@ -105,7 +105,6 @@ class DashboardController extends Controller
                     $newUserTotal->RegularHours += ($regularHours - $difference);
                     $newUserTotal->BreakHours += $breakHours;
                     $newUserTotal->save();
-        
                 } else {
                     $userTotal->OverTime += $difference;
                     $userTotal->RegularHours += ($regularHours - $difference);
@@ -113,13 +112,13 @@ class DashboardController extends Controller
                     $userTotal->save();
                 }
                 break;
-        
+
             case ($regularHours < 7.6):
 
                 $missingHours = 7.6 - $regularHours;
                 $newTimeSheet->RegularHours = 7.6;
                 $newTimeSheet->OverTime = 0;
-        
+
                 if ($userTotal == null) {
                     $newUserTotal->UserId = auth()->user()->id;
                     $newUserTotal->Month = $timeStamp;
@@ -133,22 +132,23 @@ class DashboardController extends Controller
                     $newUserTotal->save();
                 } else {
                     $userTotal->OverTime -= $missingHours;
+                    $userTotal->RegularHours += 7.6;
+                    $userTotal->BreakHours += $breakHours;
                     $userTotal->save();
                 }
                 break;
-        
+
             default:
                 $newTimeSheet->RegularHours = 7.6;
                 $newTimeSheet->OverTime = 0;
+                $userTotal->RegularHours += 7.6;
+                $userTotal->BreakHours += $breakHours;
+                $userTotal->save();
                 break;
-        
-                
-                
-                
-            }
-            
-            $newTimeSheet->Month = $timeStamp;
-            $newTimeSheet->save();
+        }
+
+        $newTimeSheet->Month = $timeStamp;
+        $newTimeSheet->save();
     }
 
     public function calculateBreakHours($userRow)
