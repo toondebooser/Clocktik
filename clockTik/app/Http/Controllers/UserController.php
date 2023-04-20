@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Timelog;
 use App\Models\User;
+use App\Models\Usertotal;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -35,6 +36,8 @@ class UserController extends Controller
 
         $newUser = new User;
         $userRow = new Timelog;
+        $userTotal = new Usertotal;
+        
         $name = request()->input('name');
         $email = request()->input('email');
         $password = request()->input('password');
@@ -57,6 +60,15 @@ class UserController extends Controller
         $userRow->ShiftStatus = false;
         $userRow->BreakStatus = false;
         $userRow->save();
+
+        $userTotal->UserId = $newUser->id;
+        $userTotal->RegularHours = 0;
+        $userTotal->BreakHours = 0;
+        $userTotal->OverTime = 0;
+        $userTotal->Month = now('Europe/Brussels');
+        $userTotal->save();
+
+
 
 
 

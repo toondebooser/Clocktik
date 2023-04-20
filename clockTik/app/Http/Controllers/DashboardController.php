@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Timelog;
 use App\Models\Timesheet;
+use App\Models\Usertotal;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -68,19 +69,124 @@ class DashboardController extends Controller
     public function makeTimeSheet($userRow, $timeStamp)
     {
         $newTimeSheet = new Timesheet;
+        $newUserTotal = new Usertotal;
+        $userTotal = $newUserTotal->where('UserID', auth()->user()->id)->whereMonth('Month', '=', $timeStamp)->whereYear('Month', '=', $timeStamp)->first();
+
+
+
         $newTimeSheet->UserId = auth()->user()->id;
         $newTimeSheet->ClockedIn = $userRow->StartWork;
         $newTimeSheet->ClockedOut = $userRow->StopWork;
 
         $newTimeSheet->BreakStart = $userRow->StartBreak;
         $newTimeSheet->BreakStop = $userRow->EndBreak;
-        $newTimeSheet->BreakHours = $this->calculateBreakHours($userRow);
+        $breakHours = $this->calculateBreakHours($userRow);
+        $clockedTime = $this->calculateClockedHours($userRow);
+        $regularHours = $clockedTime - $breakHours;
+        $newTimeSheet->BreakHours = $breakHours;
 
+        // if ($regularHours > 7.6) {
 
-        $newTimeSheet->RegularHours = $this->calculateRegularHours($newTimeSheet);
-        $newTimeSheet->OverTime = 0;
-        $newTimeSheet->Month = $timeStamp;
-        $newTimeSheet->save();
+        //     $difference = $regularHours - 7.6;
+        //     $newTimeSheet->OverTime = $difference;
+        //     $newTimeSheet->RegularHours = $regularHours - $difference;
+
+        //     if ($userTotal == null) {
+        //         $newUserTotal->UserId = auth()->user()->id;
+        //         $newUserTotal->Month = $timeStamp;
+        //         $userTotal->RegularHours = 0;
+        //         $userTotal->BreakHours = 0;
+        //         $userTotal->OverTime = 0;
+        //         $newUserTotal->save();
+        //         $userTotal->OverTime = $userTotal->OverTime + $difference;
+        //         $userTotal->RegularHours = $userTotal->RegularHours + ($regularHours - $difference);
+        //         $userTotal->BreakHours = $userTotal->BreakHours + $breakHours;
+        //         $userTotal->save();
+                
+        //     } 
+            
+        // elseif ($regularHours < 7.6) {
+
+        //         $missingHours = 7.6 - $regularHours;
+        //         $newTimeSheet->RegularHours = 7.6;
+        //         if ($userTotal == null) {
+        //             $newUserTotal->UserId = auth()->user()->id;
+        //             $newUserTotal->Month = $timeStamp;
+        //             $userTotal->RegularHours = 0;
+        //             $userTotal->BreakHours = 0;
+        //             $userTotal->OverTime = 0;
+        //             $newUserTotal->save();
+        //             $userTotal->OverTime = $userTotal->OverTime - $missingHours;
+        //             $userTotal->RegularHours = $userTotal->RegularHours + 7.6;
+        //             $userTotal->BreakHours = $userTotal->BreakHours + $breakHours;
+        //             $userTotal->save();
+        //         } else {
+        //             $userTotal->OverTime = $userTotal->OverTime - $missingHours;
+        //             $userTotal->save();
+        //         }
+        //     }
+
+        switch (true) {
+            case ($regularHours > 7.6):
+                $difference = $regularHours - 7.6;
+                $newTimeSheet->OverTime = $difference;
+                $newTimeSheet->RegularHours = $regularHours - $difference;
+        
+                if ($userTotal == null) {
+
+                    $newUserTotal->UserId = auth()->user()->id;
+                    $newUserTotal->Month = $timeStamp;
+                    $newUserTotal->RegularHours = 0;
+                    $newUserTotal->BreakHours = 0;
+                    $newUserTotal->OverTime = 0;
+                    $newUserTotal->save();
+
+                    $newUserTotal->OverTime += $difference;
+                    $newUserTotal->RegularHours += ($regularHours - $difference);
+                    $newUserTotal->BreakHours += $breakHours;
+                    $newUserTotal->save();
+        
+                } else {
+                    $userTotal->OverTime += $difference;
+                    $userTotal->RegularHours += ($regularHours - $difference);
+                    $userTotal->BreakHours += $breakHours;
+                    $userTotal->save();
+                }
+                break;
+        
+            case ($regularHours < 7.6):
+
+                $missingHours = 7.6 - $regularHours;
+                $newTimeSheet->RegularHours = 7.6;
+        
+                if ($userTotal == null) {
+                    $newUserTotal->UserId = auth()->user()->id;
+                    $newUserTotal->Month = $timeStamp;
+                    $newUserTotal->RegularHours = 0;
+                    $newUserTotal->BreakHours = 0;
+                    $newUserTotal->OverTime = 0;
+                    $newUserTotal->save();
+                    $newUserTotal->OverTime -= $missingHours;
+                    $newUserTotal->RegularHours += 7.6;
+                    $newUserTotal->BreakHours += $breakHours;
+                    $newUserTotal->save();
+                } else {
+                    $userTotal->OverTime -= $missingHours;
+                    $userTotal->save();
+                }
+                break;
+        
+            default:
+                $newTimeSheet->OverTime = 0;
+                break;
+        
+                
+                
+                
+            }
+            
+            $newTimeSheet->Month = $timeStamp;
+            $newTimeSheet->save();
     }
 
     public function calculateBreakHours($userRow)
@@ -94,22 +200,22 @@ class DashboardController extends Controller
         $decimalTime = round($diffInMin / 60, 2);
         return $decimalTime;
     }
-    public function calculateRegularHours($newTimeSheet)
+    public function calculateClockedHours($userRow)
     {
-        $start = $newTimeSheet->ClockedIn;
-        $end = $newTimeSheet->ClockedOut;
+        $start = $userRow->StartWork;
+        $end = $userRow->StopWork;
         $startParse = Carbon::createFromTimestamp($start)->setTimezone('Europe/Brussels');
         $endParse = Carbon::createFromTimestamp($end)->setTimezone('Europe/Brussels');
 
 
-        $diffInMin = $endParse->diffInMinutes($startParse) ;
+        $diffInMin = $endParse->diffInMinutes($startParse) + 824.4;
         $decimalTime = round($diffInMin / 60, 2);
+
         return $decimalTime;
     }
-    // public function calculateOverTime($newTimeSheet)
-    // {
-
-    // }
+    public function calculateOverTime($userRow)
+    {
+    }
 
     public function myProfile()
     {

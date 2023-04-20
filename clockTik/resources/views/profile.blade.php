@@ -24,10 +24,12 @@
             </tr>
             @if (isset($timesheet))
             @foreach ($timesheet as $item)
-                <tr>
-            <td class="date" id="{{ $item->id }}">
-                    {{ date('l', strtotime($item->ClockedIn)) . ' ' . date('d', strtotime($item->ClockedIn)) }}
-                </td>
+            <tr>
+                <td class="date" id="{{ $item->id }}">
+                    <a href="{{route('myProfile')}}">
+                        {{ date('D', strtotime($item->ClockedIn)) . ' ' . date('d', strtotime($item->ClockedIn)) }}
+                    </a>
+                    </td>
                 </tr>
             @endforeach
         @else
