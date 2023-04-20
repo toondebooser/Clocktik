@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->boolean('BreakStatus');
             $table->boolean('ShiftStatus');
-            $table->timestamp('StartWork')->nullable();
-            $table->timestamp('StartBreak')->nullable();
-            $table->timestamp('EndBreak')->nullable();
-            $table->timestamp('StopWork')->nullable();
+            $table->timestamp('StartWork');
+            $table->timestamp('StartBreak');
+            $table->timestamp('EndBreak');
+            $table->timestamp('StopWork');
             $table->integer('UserId');
             $table->timestamps();
         });

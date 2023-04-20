@@ -5,22 +5,46 @@
 @section('userDashboard')
     <a href="">Update personal info</a>
     <div class="profileContent">
-        <div class="timesheetHeader"></div>
-            <p>Date</p>
-            <p class="clockedIn">Clocked in</p>
-            <p class="clockedOut">Clocked out</p>
-            <p class="breakStarted">Break started</p>
-            <p class="breakEnded">Break ended</p>
-
-        @if (isset($timesheet))
+        <div class="timesheetHeader">
+            {{-- @if (isser($timesheet))
+            {{date('A', strtotime($timesheet->))}}
+                
+            @endif --}}
+        </div>
+        {{-- <p class="date">Date</p>
+        <p class="displayRegular">Regular hours</p>
+        <p class="displayBreak">Break hours</p>
+        <p class="displayOverTime">overtime</p> --}}
+        <table>
+            <tr>
+              <th>Date</th>
+              <th>Regular hours</th>
+              <th>Break hours</th>
+              <th>Overtime</th>
+            </tr>
+            @if (isset($timesheet))
             @foreach ($timesheet as $item)
-                <p class="date" id="{{ $item->id }}">
-                    {{ date('l', strtotime($item->ClockedIn)) ." ". date('d', strtotime($item->ClockedIn))  }}
-                </p>
+                <tr>
+            <td class="date" id="{{ $item->id }}">
+                    {{ date('D', strtotime($item->Created_at)) . ' ' . date('d', strtotime($item->ClockedIn)) }}
+                </td>
+                </tr>
             @endforeach
         @else
             <p class="text-danger">No data for this month</p>
         @endif
+            
+          </table>
+          
+        {{-- @if (isset($timesheet))
+            @foreach ($timesheet as $item)
+                <p class="date" id="{{ $item->id }}">
+                    {{ date('D', strtotime($item->ClockedIn)) . ' ' . date('d', strtotime($item->ClockedIn)) }}
+                </p>
+            @endforeach
+        @else
+            <p class="text-danger">No data for this month</p>
+        @endif --}}
     </div>
 
 @endsection

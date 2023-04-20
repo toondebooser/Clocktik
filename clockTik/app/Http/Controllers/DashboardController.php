@@ -54,12 +54,14 @@ class DashboardController extends Controller
         $timeStamp = now('Europe/Brussels');
         $userRow = Timelog::find(auth()->user()->id);
         $userRow->ShiftStatus = false;
+        if ($userRow->BreakStatus == true) {
+            $userRow->BreakStatus = false;
+            $userRow->EndBreak = $timeStamp;
+            $userRow->save();
+        }
         $userRow->StopWork = $timeStamp;
         $userRow->save();
         $this->makeTimeSheet($userRow, $timeStamp);
-        
-       
-
         return redirect('/dashboard');
     }
 
@@ -69,13 +71,13 @@ class DashboardController extends Controller
         $newTimeSheet->UserId = auth()->user()->id;
         $newTimeSheet->ClockedIn = $userRow->StartWork;
         $newTimeSheet->ClockedOut = $userRow->StopWork;
-        
+
         $newTimeSheet->BreakStart = $userRow->StartBreak;
         $newTimeSheet->BreakStop = $userRow->EndBreak;
-        $newTimeSheet->BreakHours = $this->calculateBreakHours($newTimeSheet, $userRow);
-           
-        
-        $newTimeSheet->RegularHours = $this->calculateRegularHours($userRow);
+        $newTimeSheet->BreakHours = $this->calculateBreakHours($userRow);
+
+
+        $newTimeSheet->RegularHours = $this->calculateRegularHours($newTimeSheet);
         $newTimeSheet->OverTime = 0;
         $newTimeSheet->Month = $timeStamp;
         $newTimeSheet->save();
@@ -85,20 +87,22 @@ class DashboardController extends Controller
     {
         $start = $userRow->StartBreak;
         $end = $userRow->EndBreak;
-        $startParse = Carbon::parse($start);
-        $endParse = Carbon::parse($end);
+        $startParse = Carbon::createFromTimestamp($start)->setTimezone('Europe/Brussels');
+        $endParse = Carbon::createFromTimestamp($end)->setTimezone('Europe/Brussels');
 
-        $diffInMin = $endParse->diffInMinutes($startParse) + 30;
+        $diffInMin = $endParse->diffInMinutes($startParse);
         $decimalTime = round($diffInMin / 60, 2);
         return $decimalTime;
     }
-    public function calculateRegularHours($userRow)
+    public function calculateRegularHours($newTimeSheet)
     {
-        $start = $userRow->StartWork;
-        $end = $userRow->StopWork;
-        $startParse = Carbon::parse($start);
-        $endParse = Carbon::parse($end);
-        $diffInMin = $endParse->diffInMinutes($startParse) + 216 ;
+        $start = $newTimeSheet->ClockedIn;
+        $end = $newTimeSheet->ClockedOut;
+        $startParse = Carbon::createFromTimestamp($start)->setTimezone('Europe/Brussels');
+        $endParse = Carbon::createFromTimestamp($end)->setTimezone('Europe/Brussels');
+
+
+        $diffInMin = $endParse->diffInMinutes($startParse);
         $decimalTime = round($diffInMin / 60, 2);
         return $decimalTime;
     }
@@ -114,11 +118,11 @@ class DashboardController extends Controller
         $now = now('Europe/Brussels');
         $month = date('m', strtotime($now));
         $monthData = $userProfile
-        ->where('userId','=',$currentUser->id)
-        ->whereMonth('created_at','=', $month)
-        ->get();
+            ->where('userId', '=', $currentUser->id)
+            ->whereMonth('Month', '=', $month)
+            ->get();
 
 
-        return view('profile',['timesheet'=>$monthData]);
+        return view('profile', ['timesheet' => $monthData]);
     }
 }
