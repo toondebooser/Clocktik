@@ -102,7 +102,7 @@ class DashboardController extends Controller
         $endParse = Carbon::createFromTimestamp($end)->setTimezone('Europe/Brussels');
 
 
-        $diffInMin = $endParse->diffInMinutes($startParse);
+        $diffInMin = $endParse->diffInMinutes($startParse) ;
         $decimalTime = round($diffInMin / 60, 2);
         return $decimalTime;
     }
@@ -116,6 +116,9 @@ class DashboardController extends Controller
         $userProfile = new Timesheet;
         $currentUser = auth()->user();
         $now = now('Europe/Brussels');
+
+        //temporary month data.
+        $monthString = date('F', strtotime($now));
         $month = date('m', strtotime($now));
         $monthData = $userProfile
             ->where('userId', '=', $currentUser->id)
@@ -123,6 +126,6 @@ class DashboardController extends Controller
             ->get();
 
 
-        return view('profile', ['timesheet' => $monthData]);
+        return view('profile', ['timesheet' => $monthData, 'month' => $monthString]);
     }
 }

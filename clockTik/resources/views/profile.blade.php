@@ -6,10 +6,10 @@
     <a href="">Update personal info</a>
     <div class="profileContent">
         <div class="timesheetHeader">
-            {{-- @if (isser($timesheet))
-            {{date('A', strtotime($timesheet->))}}
+            @if (isset($month))
+            {{date('F', strtotime($month))}}
                 
-            @endif --}}
+            @endif
         </div>
         {{-- <p class="date">Date</p>
         <p class="displayRegular">Regular hours</p>
@@ -26,7 +26,7 @@
             @foreach ($timesheet as $item)
                 <tr>
             <td class="date" id="{{ $item->id }}">
-                    {{ date('D', strtotime($item->Created_at)) . ' ' . date('d', strtotime($item->ClockedIn)) }}
+                    {{ date('l', strtotime($item->ClockedIn)) . ' ' . date('d', strtotime($item->ClockedIn)) }}
                 </td>
                 </tr>
             @endforeach

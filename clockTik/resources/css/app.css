@@ -6,6 +6,7 @@ body {
 }
 table {
     grid-column: 1/13;
+    justify-self: center;
     font-size: smaller;
     font-family: 'Noto Sans', sans-serif;;
     border-collapse: collapse;
@@ -34,7 +35,8 @@ table {
 }
 .timesheetHeader {
     font-family: 'Noto Sans', sans-serif;
-    text-align: center;
+    font-size: x-large;
+    justify-self: center;
     grid-row: 1/2;
     grid-column: 1/13;
 }
@@ -346,7 +348,6 @@ footer {
     grid-auto-rows: max-content;
     overflow: auto;
     max-height: 350px;
-    max-width: 375px;
     white-space: nowrap;
 }
 p {
