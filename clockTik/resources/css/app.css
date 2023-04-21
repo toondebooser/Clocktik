@@ -8,25 +8,38 @@ table {
     grid-column: 1/13;
     justify-self: center;
     font-size: smaller;
-    font-family: 'Noto Sans', sans-serif;;
+    font-family: "Noto Sans", sans-serif;
     border-collapse: collapse;
     width: 100%;
-  }
-  
-  th, td {
+}
+
+th,
+td {
     border: 1px solid black;
     padding: 8px;
     text-align: left;
-  }
-  
-  th {
-    background-color:lightgrey;
-  }
+}
+
+th {
+    background-color: rgb(200, 215, 248);
+}
 .bodyContent {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: 10% 10% 55% 15% 10%;
     height: 100vh;
+}
+.displayRegular {
+    text-align: center;
+    color: #2626da;
+}
+.displayOvertTime {
+    text-align: center;
+    color: #daa30a;
+}
+.displayBreak {
+    text-align: center;
+    color: #da0a0a;
 }
 .errorBox {
     grid-row: 4/5;
@@ -35,11 +48,11 @@ table {
 }
 .timesheetHeader {
     margin-top: 20px;
-    font-family: 'Noto Sans', sans-serif;
+    font-family: "Noto Sans", sans-serif;
     font-size: x-large;
     justify-self: center;
     grid-row: 1/2;
-    grid-column: 1/13;
+    grid-column: 6/8;
 }
 header {
     grid-column: 1/13;
@@ -88,7 +101,7 @@ header {
     grid-row: 4/5;
 }
 h2 {
-    font-family: 'Noto Sans', sans-serif;
+    font-family: "Noto Sans", sans-serif;
 
     grid-column: 2/12;
     grid-row: 2/3;
@@ -110,7 +123,6 @@ h2 {
     margin-top: 10px;
     height: 28px;
 }
-
 .registerLink:hover {
     text-decoration: none;
     color: black;
@@ -166,11 +178,14 @@ img {
     align-self: center;
     transition: transform 0.2s ease-in;
 }
-
 .headerLinks {
     margin: 0px 10px;
     color: black;
     font-family: "Noto Sans", sans-serif;
+}
+.stikyHeader {
+    position: sticky;
+    top: 0;
 }
 .headerLinks:hover {
     text-decoration: none;
@@ -180,6 +195,7 @@ img {
 .authLinks {
     margin: 0px 10px;
     padding: 2px 5px;
+    padding-bottom: 4px;
     color: white;
     font-weight: 400;
     background-color: #019541;
@@ -193,9 +209,36 @@ img {
 .logoContainer:hover {
     transform: scale(1.05);
 }
-
+.displayDay {
+    color: black;
+}
+th {
+    text-align: center;
+}
+.updateProfile {
+    color: black;
+    font-family: "Noto Sans", sans-serif;
+    grid-row: 5/6;
+    grid-column: 1/4;
+    font-size: x-small;
+    align-self: end;
+    justify-self: end;
+    margin-bottom: 10px;
+}
+.updateProfile:hover{
+    color: black;
+    border-top: 1px solid black;
+    text-decoration: none;
+}
+.date {
+    text-align: center;
+}
+.displayDay:hover {
+    text-decoration: none;
+    border-bottom: 1px solid black;
+}
 h1 {
-    grid-column: 1/13;
+    grid-column: 5/9;
     grid-row: 2/3;
     justify-self: center;
     align-self: center;
@@ -275,7 +318,6 @@ ul {
     grid-row: 9/10;
     width: 100px;
 }
-
 footer {
     grid-row: 5/6;
     grid-column: 1/13;
@@ -298,7 +340,7 @@ footer {
     width: 100px;
     border-radius: 50%;
     border-radius: 151px;
-    background: linear-gradient(145deg, #a7de70, #32a43d);
+    background: linear-gradient(145deg, #a7de70, #019541);
     box-shadow: 5px 5px 10px #929292, -5px -5px 10px #ffffff;
 }
 .breakButton {
@@ -316,12 +358,11 @@ footer {
     width: 100px;
     border-radius: 50%;
     border-radius: 151px;
-    background: linear-gradient(145deg, #4e72c1, #2626da);
+    background: linear-gradient(145deg, rgb(200, 215, 248), #2626da);
     box-shadow: 5px 5px 10px #929292, -5px -5px 10px #ffffff;
 }
 
 .stopButton {
-    
     align-self: center;
     display: grid;
     grid-template-columns: repeat(12, 1fr);
@@ -335,7 +376,7 @@ footer {
     width: 100px;
     border-radius: 50%;
     border-radius: 151px;
-    background: linear-gradient(145deg, #8a3333, #d21818);
+    background: linear-gradient(145deg, rgb(248, 200, 200), #da0a0a);
     box-shadow: 5px 5px 10px #929292, -5px -5px 10px #ffffff;
 }
 .profileContent {
@@ -355,7 +396,7 @@ p {
     height: max-content;
 }
 .buttonText {
-    font-family: 'Noto Sans', sans-serif;
+    font-family: "Noto Sans", sans-serif;
     font-size: large;
     margin-bottom: 0px;
     color: white;
@@ -406,4 +447,43 @@ p {
     p {
         font-size: small;
     }
+}
+
+.displayTotalRegular {
+    text-align: center;
+
+    grid-row: 4/5;
+    grid-column: 3/5;
+    justify-self: center;
+    align-self: center;
+    color: #2626da;
+    background-color: rgb(200, 215, 248);
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #2626da;
+}
+.displayTotalBreak {
+    text-align: center;
+
+    grid-row: 4/5;
+    grid-column: 6/8;
+    justify-self: center;
+    align-self: center;
+    color: #da0a0a;
+    background-color: rgb(248, 200, 200);
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #da0a0a;
+}
+.displayTotalOverTime {
+    text-align: center;
+    grid-row: 4/5;
+    justify-self: center;
+    grid-column: 9/11;
+    align-self: center;
+    color: #daa30a;
+    background-color: rgb(248, 239, 200);
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #daa30a;
 }

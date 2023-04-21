@@ -116,8 +116,8 @@ class DashboardController extends Controller
             case ($regularHours < 7.6):
 
                 $missingHours = 7.6 - $regularHours;
-                $newTimeSheet->RegularHours = 7.6;
-                $newTimeSheet->OverTime = 0;
+                $newTimeSheet->RegularHours = $regularHours;
+                $newTimeSheet->OverTime = -$missingHours;
 
                 if ($userTotal == null) {
                     $newUserTotal->UserId = auth()->user()->id;
@@ -170,7 +170,7 @@ class DashboardController extends Controller
         $endParse = Carbon::createFromTimestamp($end)->setTimezone('Europe/Brussels');
 
 
-        $diffInMin = $endParse->diffInMinutes($startParse) + 70;
+        $diffInMin = $endParse->diffInMinutes($startParse);
         $decimalTime = round($diffInMin / 60, 2);
 
         return $decimalTime;
@@ -190,6 +190,7 @@ class DashboardController extends Controller
         $monthString = date('F', strtotime($now));
         $month = date('m', strtotime($now));
         $year = date('Y', strtotime($now));
+        
         $monthData = $userTimesheet
             ->where('UserId', '=', $currentUser->id)
             ->whereMonth('Month', '=', $month)
@@ -197,12 +198,12 @@ class DashboardController extends Controller
             ->get();
 
         $monthlyTotal = $userTotal
-        ->where('UserId','=',$currentUser->id)
-        ->whereMonth('Month', '=', $month)
-        ->whereYear('Month', '=', $year)
-        ->get();
+            ->where('UserId', '=', $currentUser->id)
+            ->whereMonth('Month', '=', $month)
+            ->whereYear('Month', '=', $year)
+            ->get();
 
 
-        return view('profile', ['timesheet' => $monthData, 'month' => $monthString]);
+        return view('profile', ['timesheet' => $monthData, 'month' => $monthString, 'userTotal' => $monthlyTotal]);
     }
 }
