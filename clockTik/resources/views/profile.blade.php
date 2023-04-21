@@ -29,9 +29,19 @@
                     <a href="{{route('myProfile')}}">
                         {{ date('D', strtotime($item->ClockedIn)) . ' ' . date('d', strtotime($item->ClockedIn)) }}
                     </a>
-                    </td>
+                </td>
+                <td>
+                    
+                </td>
+                <td>
+                    
+                </td>
+                <td>
+                    
+                </td>
                 </tr>
-            @endforeach
+              
+                @endforeach
         @else
             <p class="text-danger">No data for this month</p>
         @endif

@@ -34,6 +34,7 @@ table {
     word-break: break-all;
 }
 .timesheetHeader {
+    margin-top: 20px;
     font-family: 'Noto Sans', sans-serif;
     font-size: x-large;
     justify-self: center;

@@ -181,17 +181,26 @@ class DashboardController extends Controller
 
     public function myProfile()
     {
-        $userProfile = new Timesheet;
+        $userTimesheet = new Timesheet;
+        $userTotal = new Usertotal;
         $currentUser = auth()->user();
         $now = now('Europe/Brussels');
 
         //temporary month data.
         $monthString = date('F', strtotime($now));
         $month = date('m', strtotime($now));
-        $monthData = $userProfile
-            ->where('userId', '=', $currentUser->id)
+        $year = date('Y', strtotime($now));
+        $monthData = $userTimesheet
+            ->where('UserId', '=', $currentUser->id)
             ->whereMonth('Month', '=', $month)
+            ->whereYear('Month', '=', $year)
             ->get();
+
+        $monthlyTotal = $userTotal
+        ->where('UserId','=',$currentUser->id)
+        ->whereMonth('Month', '=', $month)
+        ->whereYear('Month', '=', $year)
+        ->get();
 
 
         return view('profile', ['timesheet' => $monthData, 'month' => $monthString]);
