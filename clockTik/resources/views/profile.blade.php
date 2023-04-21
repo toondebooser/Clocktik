@@ -3,7 +3,8 @@
 <?php 
 $now = now('Europe/Brussels');
 $monthNow = date('F', strtotime(now('Europe/Brussels')));
-$nextMonth = date('F', strtotime($now->modify('+1 month')))?>
+$nextMonth = date('F', strtotime($now->modify('+1 month')));
+// var_dump($clockedMonths)?>
     <h1>{{ auth()->user()->name }}</h1>
 @endsection
 @section('userDashboard')
@@ -11,13 +12,25 @@ $nextMonth = date('F', strtotime($now->modify('+1 month')))?>
     <a class="updateProfile" href="">Update profile</a>
     <div class="profileContent">
         <form class="timesheetForm" action="">
-            <select id="cars" name="cars" size="1">
-              <option value="{{$monthNow}}">{{$monthNow}}</option>
-              <option value="{{$nextMonth}}">{{$nextMonth}}</option>
-              <option value="fiat">Fiat</option>
-              <option value="audi">Audi</option>
-            </select><br><br>
-            <input type="submit">
+
+            <select id="month" name="month" size="1">
+                <option value="0"></option>
+                @foreach ($clockedMonths as $allMonths)
+              <option value="{{date('F', strtotime($allMonths->Month))}}">{{date('F', strtotime($allMonths->Month))}}</option>
+              @endforeach
+            </select>
+                @php
+                    $thisYear = date('Y');
+                    $endYear = date('Y')+10;
+                    $years = range($thisYear, $endYear);
+                @endphp
+                 <select id="month" name="month" size="1">
+                    <option value="0"></option>
+                    @foreach ($years as $year)
+                  <option value="{{$year}}">{{$year}}</option>
+                  @endforeach
+                </select>
+            {{-- <input type="submit"> --}}
         </form>
         <div class="timesheetHeader">
 

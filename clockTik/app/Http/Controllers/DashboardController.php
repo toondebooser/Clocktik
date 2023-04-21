@@ -190,7 +190,8 @@ class DashboardController extends Controller
         $monthString = date('F', strtotime($now));
         $month = date('m', strtotime($now));
         $year = date('Y', strtotime($now));
-        
+
+
         $monthData = $userTimesheet
             ->where('UserId', '=', $currentUser->id)
             ->whereMonth('Month', '=', $month)
@@ -203,7 +204,12 @@ class DashboardController extends Controller
             ->whereYear('Month', '=', $year)
             ->get();
 
+        $clockedMonths = $userTotal
+            ->where('UserId', '=', $currentUser->id)
+            ->whereYear('month', '=', $year)
+            ->get();
 
-        return view('profile', ['timesheet' => $monthData, 'month' => $monthString, 'userTotal' => $monthlyTotal]);
+
+        return view('profile', ['clockedMonths' => $clockedMonths,'timesheet' => $monthData, 'month' => $monthString, 'userTotal' => $monthlyTotal]);
     }
 }
