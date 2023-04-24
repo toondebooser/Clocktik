@@ -209,7 +209,9 @@ class DashboardController extends Controller
             ->whereYear('month', '=', $year)
             ->get();
 
-
-        return view('profile', ['clockedMonths' => $clockedMonths,'timesheet' => $monthData, 'month' => $monthString, 'userTotal' => $monthlyTotal]);
+        $clockedYears = $userTotal->select($userTotal->raw('DISTINCT YEAR(Month) AS year'))
+        ->where('UserId', '=', $currentUser->id)
+        ->get();
+        return view('profile', ['clockedYears' => $clockedYears,'clockedMonths' => $clockedMonths,'timesheet' => $monthData, 'month' => $monthString, 'userTotal' => $monthlyTotal]);
     }
 }
