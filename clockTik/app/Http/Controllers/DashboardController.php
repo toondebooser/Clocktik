@@ -188,13 +188,14 @@ class DashboardController extends Controller
 
         //posted data
         $targetDate = $request->month . $request->year;
-        $trgetMonth = 
         // current month data.
         $monthString = date('F', strtotime($now));
         $month = date('m', strtotime($now));
         $year = date('Y', strtotime($now));
 
-           
+        if (isset($request->month)) {
+            $month = $request->month;
+        }
 
 
         $timesheet = $userTimesheet

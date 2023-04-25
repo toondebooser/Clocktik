@@ -1,22 +1,19 @@
 @extends('layout')
 @section('title')
-    <?php
-    $now = now('Europe/Brussels');
-    $monthNow = date('F', strtotime(now('Europe/Brussels')));
-    $nextMonth = date('F', strtotime($now->modify('+1 month')));
-    var_dump($targetDate);
-    ?>
+@php
+    $requestedMonth = ''
+@endphp
     <h1>{{ auth()->user()->name }}</h1>
 @endsection
 @section('userDashboard')
-    {{ $targetDate }}
+    {{-- {{ var_dump($_POST )}} --}}
     <a class="updateProfile" href="">Update profile</a>
     <div class="profileContent">
         <form class="timesheetForm" method="POST" action="{{ route('postDate') }}">
             @csrf
             <select name="month" size="1">
                 @foreach ($clockedMonths as $allMonths)
-                    <option value="{{ $allMonths->month }}">
+                    <option value="{{$allMonths->month}}">
                         @php
                             switch (true) {
                                 case $allMonths->month == '1':
@@ -56,20 +53,21 @@
                                     echo 'December';
                                     break;
                                 default:
-                                    'somehting went wrong';
+                                    'No months this year';
                                     break;
                             }
                         @endphp
-
+                        
                     </option>
                 @endforeach
             </select>
 
-            <select name="year" size="1">
+            {{-- <select name="year" size="1">
                 @foreach ($clockedYears as $year)
                     <option value="{{ $year->year }}">{{ $year->year }}</option>
+                   
                 @endforeach
-            </select>
+            </select> --}}
             <input type="submit">
         </form>
         <div class="timesheetHeader">
