@@ -4,42 +4,80 @@
     $now = now('Europe/Brussels');
     $monthNow = date('F', strtotime(now('Europe/Brussels')));
     $nextMonth = date('F', strtotime($now->modify('+1 month')));
-    // var_dump($clockedMonths)
+    var_dump($targetDate);
     ?>
     <h1>{{ auth()->user()->name }}</h1>
 @endsection
 @section('userDashboard')
-
+    {{ $targetDate }}
     <a class="updateProfile" href="">Update profile</a>
     <div class="profileContent">
-        <form class="timesheetForm" action="">
-
-            <select  name="month" size="1">
-                <option value="0"></option>
+        <form class="timesheetForm" method="POST" action="{{ route('postDate') }}">
+            @csrf
+            <select name="month" size="1">
                 @foreach ($clockedMonths as $allMonths)
-                    <option value="{{ date('F', strtotime($allMonths->Month)) }}">
-                        {{ date('F', strtotime($allMonths->Month)) }}</option>
+                    <option value="{{ $allMonths->month }}">
+                        @php
+                            switch (true) {
+                                case $allMonths->month == '1':
+                                    echo 'January';
+                                    break;
+                                case $allMonths->month == '2':
+                                    echo 'February';
+                                    break;
+                                case $allMonths->month == '3':
+                                    echo 'March';
+                                    break;
+                                case $allMonths->month == '4':
+                                    echo 'April';
+                                    break;
+                                case $allMonths->month == '5':
+                                    echo 'May';
+                                    break;
+                                case $allMonths->month == '6':
+                                    echo 'June';
+                                    break;
+                                case $allMonths->month == '7':
+                                    echo 'July';
+                                    break;
+                                case $allMonths->month == '8':
+                                    echo 'August';
+                                    break;
+                                case $allMonths->month == '9':
+                                    echo 'September';
+                                    break;
+                                case $allMonths->month == '10':
+                                    echo 'October';
+                                    break;
+                                case $allMonths->month == '11':
+                                    echo 'November';
+                                    break;
+                                case $allMonths->month == '12':
+                                    echo 'December';
+                                    break;
+                                default:
+                                    'somehting went wrong';
+                                    break;
+                            }
+                        @endphp
+
+                    </option>
                 @endforeach
             </select>
-        
-            <select name="month" size="1">
-                <option value="0"></option>
+
+            <select name="year" size="1">
                 @foreach ($clockedYears as $year)
                     <option value="{{ $year->year }}">{{ $year->year }}</option>
                 @endforeach
             </select>
-            {{-- <input type="submit"> --}}
+            <input type="submit">
         </form>
         <div class="timesheetHeader">
 
-            @if (isset($month))
-                {{ date('F', strtotime($month)) }}
+            @if (isset($monthString))
+                {{ date('F', strtotime($monthString)) }}
             @endif
         </div>
-        {{-- <p class="date">Date</p>
-        <p class="displayRegular">Regular hours</p>
-        <p class="displayBreak">Break hours</p>
-        <p class="displayOverTime">overtime</p> --}}
         <table>
             <thead class="stikyHeader">
                 <tr>
@@ -101,8 +139,8 @@
             <p class="text-danger">No data for this month</p>
         @endif --}}
     </div>
-    @if (isset($userTotal))
-        @foreach ($userTotal as $item)
+    @if (isset($monthlyTotal))
+        @foreach ($monthlyTotal as $item)
             <div class="displayTotalRegular">Regular {{ $item->RegularHours }}</div>
             <div class="displayTotalBreak"> Break {{ $item->BreakHours }}</div>
             <div class="displayTotalOverTime">Overtime {{ $item->OverTime }}</div>

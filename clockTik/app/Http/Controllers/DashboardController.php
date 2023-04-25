@@ -179,20 +179,25 @@ class DashboardController extends Controller
     {
     }
 
-    public function myProfile()
+    public function myProfile(Request $request)
     {
         $userTimesheet = new Timesheet;
         $userTotal = new Usertotal;
         $currentUser = auth()->user();
         $now = now('Europe/Brussels');
 
-        //temporary month data.
+        //posted data
+        $targetDate = $request->month . $request->year;
+        $trgetMonth = 
+        // current month data.
         $monthString = date('F', strtotime($now));
         $month = date('m', strtotime($now));
         $year = date('Y', strtotime($now));
 
+           
 
-        $monthData = $userTimesheet
+
+        $timesheet = $userTimesheet
             ->where('UserId', '=', $currentUser->id)
             ->whereMonth('Month', '=', $month)
             ->whereYear('Month', '=', $year)
@@ -204,14 +209,24 @@ class DashboardController extends Controller
             ->whereYear('Month', '=', $year)
             ->get();
 
-        $clockedMonths = $userTotal
-            ->where('UserId', '=', $currentUser->id)
-            ->whereYear('month', '=', $year)
+        $clockedMonths = $userTotal->select($userTotal->raw('DISTINCT MONTH(Month) AS month'))
+            ->where('UserId','=', $currentUser->id)
+            ->whereyear('Month','=',$year)
             ->get();
-
+        
+        
         $clockedYears = $userTotal->select($userTotal->raw('DISTINCT YEAR(Month) AS year'))
         ->where('UserId', '=', $currentUser->id)
         ->get();
-        return view('profile', ['clockedYears' => $clockedYears,'clockedMonths' => $clockedMonths,'timesheet' => $monthData, 'month' => $monthString, 'userTotal' => $monthlyTotal]);
+
+
+        return view('profile', ['targetDate' => $targetDate, 'clockedMonths' => $clockedMonths,'clockedYears' => $clockedYears,'timesheet' => $timesheet, 'monthString' => $monthString, 'monthlyTotal' => $monthlyTotal]);
+    }
+
+    public function getDates(Request $request){
+
+
+
     }
 }
+
