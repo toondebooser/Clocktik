@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Timelog;
 use App\Models\Timesheet;
 use App\Models\Usertotal;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-
 class DashboardController extends Controller
 {
     public function userDashboard()
@@ -17,7 +17,7 @@ class DashboardController extends Controller
         $breakStatus = $userRow->BreakStatus;
         return view('dashboard', ['user' => auth()->user(), 'shiftStatus' => $shiftStatus, 'breakStatus' => $breakStatus]);
     }
-
+    
     public function startWorking(Request $request)
     {
         $timestamp = now('Europe/Brussels');
@@ -77,18 +77,18 @@ class DashboardController extends Controller
         $newTimeSheet->UserId = auth()->user()->id;
         $newTimeSheet->ClockedIn = $userRow->StartWork;
         $newTimeSheet->ClockedOut = $userRow->StopWork;
-
+        
         $newTimeSheet->BreakStart = $userRow->StartBreak;
         $newTimeSheet->BreakStop = $userRow->EndBreak;
         $breakHours = $this->calculateBreakHours($userRow);
         $clockedTime = $this->calculateClockedHours($userRow);
+
         $regularHours = $clockedTime - $breakHours;
         $newTimeSheet->BreakHours = $breakHours;
 
-
         switch (true) {
-            case ($regularHours > 7.6):
-                $difference = $regularHours - 7.6;
+            case ($regularHours > 7.60):
+                $difference = $regularHours - 7.60;
                 $newTimeSheet->OverTime = $difference;
                 $newTimeSheet->RegularHours = $regularHours - $difference;
 
@@ -113,9 +113,9 @@ class DashboardController extends Controller
                 }
                 break;
 
-            case ($regularHours < 7.6):
+            case ($regularHours < 7.60):
 
-                $missingHours = 7.6 - $regularHours;
+                $missingHours = 7.60 - $regularHours;
                 $newTimeSheet->RegularHours = $regularHours;
                 $newTimeSheet->OverTime = -$missingHours;
 
@@ -139,9 +139,9 @@ class DashboardController extends Controller
                 break;
 
             default:
-                $newTimeSheet->RegularHours = 7.6;
+                $newTimeSheet->RegularHours = 7.60;
                 $newTimeSheet->OverTime = 0;
-                $userTotal->RegularHours += 7.6;
+                $userTotal->RegularHours += 7.60;
                 $userTotal->BreakHours += $breakHours;
                 $userTotal->save();
                 break;
@@ -155,22 +155,31 @@ class DashboardController extends Controller
     {
         $start = $userRow->StartBreak;
         $end = $userRow->EndBreak;
-        $startParse = Carbon::createFromTimestamp($start)->setTimezone('Europe/Brussels');
-        $endParse = Carbon::createFromTimestamp($end)->setTimezone('Europe/Brussels');
-
-        $diffInMin = $endParse->diffInMinutes($startParse);
-        $decimalTime = round($diffInMin / 60, 2);
-        return $decimalTime;
+        $start = $start ? Carbon::parse($start, 'Europe/Brussels') : null;
+        $end = $end ? Carbon::parse($end, 'Europe/Brussels') : null;
+        if($start===null){
+           $start = now('Europe/Brussels');
+           $end = now('Europe/Brussels');
+        }
+        
+            
+            $diffInMin = $end->diffInMinutes($start);
+            $decimalTime = round($diffInMin / 60, 2);
+            return $decimalTime;
+        
     }
+
     public function calculateClockedHours($userRow)
     {
         $start = $userRow->StartWork;
         $end = $userRow->StopWork;
-        $startParse = Carbon::createFromTimestamp($start)->setTimezone('Europe/Brussels');
-        $endParse = Carbon::createFromTimestamp($end)->setTimezone('Europe/Brussels');
+       
+        $start = $start ? Carbon::parse($start, 'Europe/Brussels') : null;
+        $end = $end ? Carbon::parse($end, 'Europe/Brussels') : null;
 
-
-        $diffInMin = $endParse->diffInMinutes($startParse);
+        
+        $diffInMin = $end->diffInMinutes($start);
+        
         $decimalTime = round($diffInMin / 60, 2);
 
         return $decimalTime;

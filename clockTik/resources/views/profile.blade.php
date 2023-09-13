@@ -14,6 +14,7 @@
             <select name="month" size="1">
                 @foreach ($clockedMonths as $allMonths)
                     <option value="{{$allMonths->month}}">
+                    
                         @php
                             switch (true) {
                                 case $allMonths->month == '1':
@@ -90,7 +91,14 @@
                     <tr>
                         <td class="date" id="{{ $item->id }}">
                             <a class='displayDay'href="{{ route('myProfile') }}">
-                                {{ date('D', strtotime($item->ClockedIn)) . ' ' . date('d', strtotime($item->ClockedIn)) }}
+                            <?php 
+            $toTime = strtotime($item->ClockedIn);
+            $days = ['Mon' => 'Ma', 'Tue' => 'Di', 'Wed' => 'Wo', 'Thu' => 'Do', 'Fri' => 'Vr', 'Sat' => 'Za', 'Sun' => 'Zo'];
+            $englishDay = date('D', $toTime);
+            $dutchDay = $days[$englishDay];
+            $dayOfMonth = date('d', $toTime);
+            echo $dutchDay . ' ' . $dayOfMonth;
+        ?>
                             </a>
                         </td>
                         <td>
@@ -108,7 +116,7 @@
                         <td>
                             <div class="displayBreak">
                                 @if ($item->BreakHours > 0)
-                                    <s>{{ $item->BreakHours }}</s>
+                                    {{ $item->BreakHours }}
                                 @else
                                     {{ $item->BreakHours }}
                                 @endif
