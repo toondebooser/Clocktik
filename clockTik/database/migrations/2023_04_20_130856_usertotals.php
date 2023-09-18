@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('UserId');
             $table->decimal('RegularHours',5,2);
             $table->decimal('BreakHours',5,2);
-            $table->decimal('OverTimes',5,2);
+            $table->decimal('OverTime',5,2);
             $table->date('Month');
             $table->timestamps();
 
