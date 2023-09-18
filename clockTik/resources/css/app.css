@@ -52,7 +52,7 @@ th {
     font-size: x-large;
     justify-self: center;
     grid-row: 1/2;
-    grid-column: 6/8;
+    grid-column: 4/10;
 }
 header {
     grid-column: 1/13;
@@ -209,9 +209,14 @@ img {
 .logoContainer:hover {
     transform: scale(1.05);
 }
+.getMonthButton{
+    border: none;
+    background-color: none;
+}
 .displayDay {
     color: black;
 }
+
 th {
     text-align: center;
 }

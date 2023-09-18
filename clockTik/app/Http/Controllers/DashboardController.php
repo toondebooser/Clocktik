@@ -101,16 +101,16 @@ class DashboardController extends Controller
                     $newUserTotal->OverTime = 0;
                     $newUserTotal->save();
 
-                    $newUserTotal->OverTime += $difference;
-                    $newUserTotal->RegularHours += ($regularHours - $difference);
-                    $newUserTotal->BreakHours += $breakHours;
-                    $newUserTotal->save();
-                } else {
+                    // $newUserTotal->OverTime += $difference;
+                    // $newUserTotal->RegularHours += ($regularHours - $difference);
+                    // $newUserTotal->BreakHours += $breakHours;
+                    // $newUserTotal->save();
+                } 
                     $userTotal->OverTime += $difference;
                     $userTotal->RegularHours += ($regularHours - $difference);
                     $userTotal->BreakHours += $breakHours;
                     $userTotal->save();
-                }
+                
                 break;
 
             case ($regularHours < 7.6):
@@ -126,16 +126,16 @@ class DashboardController extends Controller
                     $newUserTotal->BreakHours = 0;
                     $newUserTotal->OverTime = 0;
                     $newUserTotal->save();
-                    $newUserTotal->OverTime -= $missingHours;
-                    $newUserTotal->RegularHours += 7.6;
-                    $newUserTotal->BreakHours += $breakHours;
-                    $newUserTotal->save();
-                } else {
+                    // $newUserTotal->OverTime -= $missingHours;
+                    // $newUserTotal->RegularHours += 7.6;
+                    // $newUserTotal->BreakHours += $breakHours;
+                    // $newUserTotal->save();
+                }
                     $userTotal->OverTime -= $missingHours;
                     $userTotal->RegularHours += 7.6;
                     $userTotal->BreakHours += $breakHours;
                     $userTotal->save();
-                }
+                
                 break;
 
             default:
@@ -211,23 +211,20 @@ class DashboardController extends Controller
             ->get();
 
         $clockedMonths = $userTotal->select($userTotal->raw('DISTINCT MONTH(Month) AS month'))
-            ->where('UserId','=', $currentUser->id)
-            ->whereyear('Month','=',$year)
+            ->where('UserId', '=', $currentUser->id)
+            ->whereyear('Month', '=', $year)
             ->get();
-        
-        
+
+
         $clockedYears = $userTotal->select($userTotal->raw('DISTINCT YEAR(Month) AS year'))
-        ->where('UserId', '=', $currentUser->id)
-        ->get();
+            ->where('UserId', '=', $currentUser->id)
+            ->get();
 
 
-        return view('profile', ['targetDate' => $targetDate, 'clockedMonths' => $clockedMonths,'clockedYears' => $clockedYears,'timesheet' => $timesheet, 'monthString' => $monthString, 'monthlyTotal' => $monthlyTotal]);
+        return view('profile', ['targetDate' => $targetDate, 'clockedMonths' => $clockedMonths, 'clockedYears' => $clockedYears, 'timesheet' => $timesheet, 'monthString' => $monthString, 'monthlyTotal' => $monthlyTotal]);
     }
 
-    public function getDates(Request $request){
-
-
-
+    public function getDates(Request $request)
+    {
     }
 }
-

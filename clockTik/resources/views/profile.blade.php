@@ -3,7 +3,7 @@
 @php
     $requestedMonth = ''
 @endphp
-    <h1>{{ auth()->user()->name }}</h1>
+    <h2>{{ auth()->user()->name }}</h2>
 @endsection
 @section('userDashboard')
     {{-- {{ var_dump($_POST )}} --}}
@@ -62,13 +62,7 @@
                 @endforeach
             </select>
 
-            {{-- <select name="year" size="1">
-                @foreach ($clockedYears as $year)
-                    <option value="{{ $year->year }}">{{ $year->year }}</option>
-                   
-                @endforeach
-            </select> --}}
-            <input type="submit">
+            <input class="getMonthButton" type="submit" value="Go">
         </form>
         <div class="timesheetHeader">
 
