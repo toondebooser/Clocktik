@@ -77,7 +77,7 @@
                 {{ date('F', strtotime($monthString)) }}
             @endif
         </div>
-        <table>
+        <table class="timesheetTable">
             <thead class="stikyHeader">
                 <tr>
                     <th>Date</th>
