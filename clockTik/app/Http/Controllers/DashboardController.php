@@ -13,15 +13,37 @@ class DashboardController extends Controller
     public function userDashboard()
     {
         $userRow = Timelog::find(auth()->user()->id);
+      
         $shiftStatus = $userRow->ShiftStatus;
         $breakStatus = $userRow->BreakStatus;
+        
         return view('dashboard', ['user' => auth()->user(), 'shiftStatus' => $shiftStatus, 'breakStatus' => $breakStatus]);
     }
     
     public function startWorking(Request $request)
-    {
+    {  
+        $userTimesheet = new Timesheet;
+        $currentUser = auth()->user();
         $timestamp = now('Europe/Brussels');
-        $userRow = Timelog::find(auth()->user()->id);
+        $userRow = Timelog::find($currentUser->id);
+        $day = date ('d', strtotime($timestamp));
+        $month = date('m', strtotime($timestamp));
+        $year = date('Y', strtotime($timestamp));
+
+        $dayCheck = $userTimesheet
+        ->where('UserId', '=', $currentUser->id)
+        ->whereDay('Month','=',$day)
+        ->whereMonth('Month', '=', $month)
+        ->whereYear('Month', '=', $year)
+        ->first();
+
+        if($dayCheck !== null){
+            $userRow->StartWork = $dayCheck->ClockedIn;
+            $userTotals = new Usertotal;
+            $userTotal = $userTotals->where('UserID', auth()->user()->id)->whereMonth('Month', '=', $timeStamp)->whereYear('Month', '=', $timeStamp)->first();
+
+
+        }
         $userRow->StartBreak = null;
         $userRow->EndBreak = null;
         $userRow->StopWork = null;
@@ -101,10 +123,7 @@ class DashboardController extends Controller
                     $newUserTotal->OverTime = 0;
                     $newUserTotal->save();
 
-                    // $newUserTotal->OverTime += $difference;
-                    // $newUserTotal->RegularHours += ($regularHours - $difference);
-                    // $newUserTotal->BreakHours += $breakHours;
-                    // $newUserTotal->save();
+                  
                 } 
                     $userTotal->OverTime += $difference;
                     $userTotal->RegularHours += ($regularHours - $difference);
@@ -126,10 +145,7 @@ class DashboardController extends Controller
                     $newUserTotal->BreakHours = 0;
                     $newUserTotal->OverTime = 0;
                     $newUserTotal->save();
-                    // $newUserTotal->OverTime -= $missingHours;
-                    // $newUserTotal->RegularHours += 7.6;
-                    // $newUserTotal->BreakHours += $breakHours;
-                    // $newUserTotal->save();
+                 
                 }
                     $userTotal->OverTime -= $missingHours;
                     $userTotal->RegularHours += 7.6;
