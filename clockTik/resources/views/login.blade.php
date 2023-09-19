@@ -8,16 +8,7 @@
 @endsection
 
 @section('error')
-{{-- <div class="errorBox">
 
-    @error('email')
-    <p id='errEmail' class="text-danger">{{ $message }}</p>
-    @enderror
-    
-    @error('password')
-    <div class="text-danger">{{ $message }}</div>
-    @enderror
-</div> --}}
    
 @if ($errors->any())
 <div class="loginError">

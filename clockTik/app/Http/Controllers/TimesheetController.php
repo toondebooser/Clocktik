@@ -10,18 +10,41 @@ use Illuminate\Http\Request;
 
 class TimesheetController extends Controller
 {
+    public function newUserTotal()
+    {
+        $newUserTotal = new Usertotal;
+        $now = now('Europe/Brussels');
+        $newUserTotal->UserId = auth()->user()->id;
+        $newUserTotal->Month = $now;
+        $newUserTotal->RegularHours = 0;
+        $newUserTotal->BreakHours = 0;
+        $newUserTotal->OverTime = 0;
+        $newUserTotal->save();
+    }
+    public function fetchUserTotal()
+    {        
+        $newUserTotal = new Usertotal;
+        $now = now('Europe/Brussels');
+        $userTotal = $newUserTotal
+        ->where('UserID', '=', auth()->user()->id)
+        ->whereMonth('Month', '=', $now)
+            ->whereYear('Month', '=', $now)
+            ->first();
+            return $userTotal;
+    }
     public function makeTimesheet()
     {
         $userRow = Timelog::find(auth()->user()->id);
         $now = now('Europe/Brussels');
         $newTimeSheet = new Timesheet;
-        $newUserTotal = new Usertotal;
-        $userTotal = $newUserTotal
-        ->where('UserID','=', auth()->user()->id)
-        ->whereMonth('Month', '=', $now)
-        ->whereYear('Month', '=', $now)
-        ->first();
+        $userTotal = $this->fetchUserTotal();
+        if ($userTotal == null)  
+        {
+            $this->newUserTotal();
+            $userTotal = $this->fetchUserTotal();
 
+        }
+        
         $newTimeSheet->UserId = auth()->user()->id;
         $newTimeSheet->ClockedIn = $userRow->StartWork;
         $newTimeSheet->ClockedOut = $userRow->StopWork;
@@ -34,47 +57,27 @@ class TimesheetController extends Controller
         $regularHours = $clockedTime - $breakHours;
         $newTimeSheet->BreakHours = $breakHours;
 
+
         switch (true) {
             case ($regularHours > 7.60):
                 $difference = $regularHours - 7.60;
                 $newTimeSheet->OverTime = $difference;
                 $newTimeSheet->RegularHours = $regularHours - $difference;
-
-                if ($userTotal == null) {
-
-                    $newUserTotal->UserId = auth()->user()->id;
-                    $newUserTotal->Month = $now;
-                    $newUserTotal->RegularHours = 0;
-                    $newUserTotal->BreakHours = 0;
-                    $newUserTotal->OverTime = 0;
-                    $newUserTotal->save();
-                }
                 $userTotal->OverTime += $difference;
                 $userTotal->RegularHours += ($regularHours - $difference);
                 $userTotal->BreakHours += $breakHours;
                 $userTotal->save();
-
                 break;
 
             case ($regularHours < 7.60):
-
                 $missingHours = 7.60 - $regularHours;
                 $newTimeSheet->RegularHours = $regularHours;
                 $newTimeSheet->OverTime = -$missingHours;
 
-                if ($userTotal == null) {
-                    $newUserTotal->UserId = auth()->user()->id;
-                    $newUserTotal->Month = $now;
-                    $newUserTotal->RegularHours = 0;
-                    $newUserTotal->BreakHours = 0;
-                    $newUserTotal->OverTime = 0;
-                    $newUserTotal->save();
-                }
                 $userTotal->OverTime -= $missingHours;
                 $userTotal->RegularHours += 7.6;
                 $userTotal->BreakHours += $breakHours;
                 $userTotal->save();
-
                 break;
 
             default:
@@ -85,7 +88,6 @@ class TimesheetController extends Controller
                 $userTotal->save();
                 break;
         }
-
         $newTimeSheet->Month = $now;
         $newTimeSheet->save();
         return redirect('/dashboard');
@@ -122,4 +124,5 @@ class TimesheetController extends Controller
 
         return $decimalTime;
     }
+
 }
