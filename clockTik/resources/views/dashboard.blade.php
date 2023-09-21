@@ -36,8 +36,8 @@
             @endif
         @endif
 
-        @if (isset($start))
-            <p class="startTime">{{ $start }}</p>
         @endif
-    @endif
+        {{-- @if (isset($start))
+            <p class="startTime">{{ $start }}</p>
+        @endif --}}
 @endsection

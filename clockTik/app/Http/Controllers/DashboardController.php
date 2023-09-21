@@ -13,8 +13,9 @@ class DashboardController extends Controller
 
         $shiftStatus = $userRow->ShiftStatus;
         $breakStatus = $userRow->BreakStatus;
+        $start = $userRow->StartWork;
 
-        return view('dashboard', ['user' => auth()->user(), 'shiftStatus' => $shiftStatus, 'breakStatus' => $breakStatus]);
+        return view('dashboard', ['user' => auth()->user(),'start' => $start , 'shiftStatus' => $shiftStatus, 'breakStatus' => $breakStatus]);
     }
 
     

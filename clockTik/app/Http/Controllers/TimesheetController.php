@@ -31,18 +31,18 @@ class TimesheetController extends Controller
             ->whereYear('Month', '=', $now)
             ->first();
             return $userTotal;
-    }
-    public function makeTimesheet()
-    {
-        $userRow = Timelog::find(auth()->user()->id);
-        $now = now('Europe/Brussels');
-        $newTimeSheet = new Timesheet;
-        $userTotal = $this->fetchUserTotal();
-        if ($userTotal == null)  
+        }
+        public function makeTimesheet()
         {
+            $userRow = Timelog::find(auth()->user()->id);
+            $now = now('Europe/Brussels');
+            $newTimeSheet = new Timesheet;
+            $userTotal = $this->fetchUserTotal();
+            if ($userTotal == null)  
+            {
             $this->newUserTotal();
             $userTotal = $this->fetchUserTotal();
-
+            
         }
         
         $newTimeSheet->UserId = auth()->user()->id;
@@ -53,43 +53,51 @@ class TimesheetController extends Controller
         $newTimeSheet->BreakStop = $userRow->EndBreak;
         $breakHours = $this->calculateBreakHours($userRow);
         $clockedTime = $this->calculateClockedHours($userRow);
-
+        
         $regularHours = $clockedTime - $breakHours;
         $newTimeSheet->BreakHours = $breakHours;
-
-
+        
+        
         switch (true) {
-            case ($regularHours > 7.60):
+            case ($regularHours > 7.60 && $userRow->Weekend == false):
                 $difference = $regularHours - 7.60;
                 $newTimeSheet->OverTime = $difference;
                 $newTimeSheet->RegularHours = $regularHours - $difference;
+                $newTimeSheet->Weekend = false;
                 $userTotal->OverTime += $difference;
                 $userTotal->RegularHours += ($regularHours - $difference);
                 $userTotal->BreakHours += $breakHours;
-                $userTotal->save();
                 break;
 
-            case ($regularHours < 7.60):
+                case ($regularHours < 7.60 && $userRow->Weekend == false):
                 $missingHours = 7.60 - $regularHours;
                 $newTimeSheet->RegularHours = $regularHours;
                 $newTimeSheet->OverTime = -$missingHours;
+                $newTimeSheet->Weekend = false;
 
                 $userTotal->OverTime -= $missingHours;
                 $userTotal->RegularHours += 7.6;
                 $userTotal->BreakHours += $breakHours;
-                $userTotal->save();
                 break;
 
+                case ($userRow->Weekend == true):
+                $newTimeSheet->Weekend = true;
+                $newTimeSheet->RegularHours = $regularHours;
+                $userTotal->BreakHours += $breakHours;
+                $userTotal->OverTime += $regularHours;
+
+                break;
             default:
                 $newTimeSheet->RegularHours = 7.60;
                 $newTimeSheet->OverTime = 0;
                 $userTotal->RegularHours += 7.60;
                 $userTotal->BreakHours += $breakHours;
-                $userTotal->save();
                 break;
-        }
+            }
+            
         $newTimeSheet->Month = $now;
         $newTimeSheet->save();
+        $userTotal->save();
         return redirect('/dashboard');
     }
     public function calculateBreakHours($userRow)

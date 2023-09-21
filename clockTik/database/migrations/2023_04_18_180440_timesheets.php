@@ -18,10 +18,11 @@ return new class extends Migration
             $table->timestamp('ClockedOut');
             $table->timestamp('BreakStart');
             $table->timestamp('BreakStop');
-            $table->decimal('RegularHours',5,2);
-            $table->decimal('BreakHours',5,2);
-            $table->decimal('OverTime',5,2);
+            $table->decimal('RegularHours',5,2)->default(0,00);
+            $table->decimal('BreakHours',5,2)->default(0,00);
+            $table->decimal('OverTime',5,2)->default(0,00);
             $table->date('Month');
+            $table->boolean('Weekend')->default(false);
             $table->timestamps();
 
         });

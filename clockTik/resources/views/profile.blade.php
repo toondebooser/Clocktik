@@ -1,8 +1,8 @@
 @extends('layout')
 @section('title')
-@php
-    $requestedMonth = ''
-@endphp
+    @php
+        $requestedMonth = '';
+    @endphp
     <h2>{{ auth()->user()->name }}</h2>
 @endsection
 @section('userDashboard')
@@ -13,8 +13,8 @@
             @csrf
             <select name="month" size="1">
                 @foreach ($clockedMonths as $allMonths)
-                    <option value="{{$allMonths->month}}">
-                    
+                    <option value="{{ $allMonths->month }}">
+
                         @php
                             switch (true) {
                                 case $allMonths->month == '1':
@@ -58,7 +58,7 @@
                                     break;
                             }
                         @endphp
-                        
+
                     </option>
                 @endforeach
             </select>
@@ -85,23 +85,25 @@
                     <tr>
                         <td class="date" id="{{ $item->id }}">
                             <a class='displayDay'href="{{ route('myProfile') }}">
-                            <?php 
-            $toTime = strtotime($item->ClockedIn);
-            $days = ['Mon' => 'Ma', 'Tue' => 'Di', 'Wed' => 'Wo', 'Thu' => 'Do', 'Fri' => 'Vr', 'Sat' => 'Za', 'Sun' => 'Zo'];
-            $englishDay = date('D', $toTime);
-            $dutchDay = $days[$englishDay];
-            $dayOfMonth = date('d', $toTime);
-            echo $dutchDay . ' ' . $dayOfMonth;
-        ?>
+                                <?php
+                                $toTime = strtotime($item->ClockedIn);
+                                $days = ['Mon' => 'Ma', 'Tue' => 'Di', 'Wed' => 'Wo', 'Thu' => 'Do', 'Fri' => 'Vr', 'Sat' => 'Za', 'Sun' => 'Zo'];
+                                $englishDay = date('D', $toTime);
+                                $dutchDay = $days[$englishDay];
+                                $dayOfMonth = date('d', $toTime);
+                                echo $dutchDay . ' ' . $dayOfMonth;
+                                ?>
                             </a>
                         </td>
                         <td>
                             <div class="displayRegular">
-                                @if ($item->RegularHours < 7.6)
+                                @if ( $item->RegularHours < 7.60 && $item->Weekend == false)
                                     <s>{{ $item->RegularHours }}</s>
                                     => 7.60
+                                @elseif($item->Weekend == true)
+                                    {{ $item->RegularHours }} Weekend
                                 @else
-                                    {{ $item->RegularHours }}
+                                     {{ $item->RegularHours }}
                                 @endif
 
 
@@ -144,7 +146,7 @@
             <div class="displayTotalRegular">
                 Regular {{ $item->RegularHours }}
             </div>
-            <div class="displayTotalBreak"> 
+            <div class="displayTotalBreak">
                 Break {{ $item->BreakHours }}
             </div>
             <div class="displayTotalOverTime">

@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->boolean('BreakStatus');
             $table->boolean('ShiftStatus');
+            $table->boolean('Weekend');
+            $table->boolean('SecondShift');
             $table->timestamp('StartWork')->nullable();
             $table->timestamp('StartBreak')->nullable();
             $table->timestamp('EndBreak')->nullable();

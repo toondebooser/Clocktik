@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Timelog;
 use App\Models\Timesheet;
 use App\Models\Usertotal;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -19,6 +20,7 @@ class TimeclockController extends Controller
         $day = date('d', strtotime($timestamp));
         $month = date('m', strtotime($timestamp));
         $year = date('Y', strtotime($timestamp));
+        
         
         $dayCheck = $userTimesheet
         ->where('UserId', '=', $currentUser->id)
@@ -46,6 +48,10 @@ class TimeclockController extends Controller
         } else {
             $userRow->StartWork = $timestamp;
         }
+
+        $weekDay = Carbon::parse($timestamp)->weekday();
+        if ($weekDay === 4 || $weekDay === 6) $userRow->Weekend = true;
+
         $userRow->StartBreak = null;
         $userRow->EndBreak = null;
         $userRow->StopWork = null;

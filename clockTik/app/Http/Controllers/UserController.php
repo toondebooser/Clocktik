@@ -59,6 +59,8 @@ class UserController extends Controller
         $userRow->UserId = $newUser->id;
         $userRow->ShiftStatus = false;
         $userRow->BreakStatus = false;
+        $userRow->weekend = false;
+        $userRow->SecondShift = false;
         $userRow->save();
 
         $userTotal->UserId = $newUser->id;

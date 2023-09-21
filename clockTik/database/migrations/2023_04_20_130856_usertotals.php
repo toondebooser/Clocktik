@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('Usertotals', function (Blueprint $table) {
             $table->id();
             $table->integer('UserId');
-            $table->decimal('RegularHours',5,2);
-            $table->decimal('BreakHours',5,2);
-            $table->decimal('OverTime',5,2);
+            $table->decimal('RegularHours',5,2)->default(0,00);
+            $table->decimal('BreakHours',5,2)->default(0,00);
+            $table->decimal('OverTime',5,2)->default(0,00);
             $table->date('Month');
             $table->timestamps();
 
