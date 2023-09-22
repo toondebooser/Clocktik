@@ -17,14 +17,14 @@ class UsersheetsController extends Controller
         $now = now('Europe/Brussels');
 
         //posted data
-        $targetDate = $request->month . $request->year;
+        // $targetDate = $request->month . $request->year;
         // current month data.
         $monthString = date('F', strtotime($now));
         $month = date('m', strtotime($now));
         $year = date('Y', strtotime($now));
 
         if (isset($request->month)) {
-            $month = $request->month;
+        $month = $request->month;
         }
 
 
@@ -46,12 +46,12 @@ class UsersheetsController extends Controller
             ->get();
 
 
-        $clockedYears = $userTotal->select($userTotal->raw('DISTINCT YEAR(Month) AS year'))
-            ->where('UserId', '=', $currentUser->id)
-            ->get();
+        // $clockedYears = $userTotal->select($userTotal->raw('DISTINCT YEAR(Month) AS year'))
+        //     ->where('UserId', '=', $currentUser->id)
+        //     ->get();
 
         // $userTotalRegular = Timesheet::where('UserId', '=', $currentUser->id)->sum('RegularHours');
 
-        return view('profile', ['targetDate' => $targetDate, 'clockedMonths' => $clockedMonths, 'clockedYears' => $clockedYears, 'timesheet' => $timesheet, 'monthString' => $monthString, 'monthlyTotal' => $monthlyTotal]);
+        return view('profile', ['clockedMonths' => $clockedMonths, 'timesheet' => $timesheet, 'monthString' => $monthString, 'monthlyTotal' => $monthlyTotal]);
     }
 }

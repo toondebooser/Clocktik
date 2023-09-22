@@ -19,6 +19,7 @@ return new class extends Migration
             $table->timestamp('BreakStart');
             $table->timestamp('BreakStop');
             $table->decimal('RegularHours',5,2)->default(0,00);
+            $table->decimal('accountableHours')->default(0,00);
             $table->decimal('BreakHours',5,2)->default(0,00);
             $table->decimal('OverTime',5,2)->default(0,00);
             $table->date('Month');

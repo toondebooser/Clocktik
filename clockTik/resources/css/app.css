@@ -158,6 +158,13 @@ h2 {
     align-self: center;
     justify-self: end;
 }
+.text-danger{
+color: red;
+font-size: xx-large;
+grid-row: 4/5;
+grid-column: 1/13;
+justify-self: center;
+}
 h4 {
     grid-row: 2/3;
     grid-column: 1/13;

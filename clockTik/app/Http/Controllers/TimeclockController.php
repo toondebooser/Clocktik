@@ -30,19 +30,19 @@ class TimeclockController extends Controller
         ->first();
         
         if ($dayCheck !== null) {
-            $userTotals = new Usertotal;
+            // $userTotals = new Usertotal;
             $userRow->StartWork = $dayCheck->ClockedIn;
-            $userTotal = $userTotals
-            ->where('UserId','=', $currentUser->id)
-            ->whereMonth('Month', '=', $timestamp)
-            ->whereYear('Month', '=', $timestamp)
-            ->first();
+            // $userTotal = $userTotals
+            // ->where('UserId','=', $currentUser->id)
+            // ->whereMonth('Month', '=', $timestamp)
+            // ->whereYear('Month', '=', $timestamp)
+            // ->first();
 
-            $userTotal->RegularHours -= 7.6;
-            $userTotal->BreakHours -= $dayCheck->BreakHours;
-            $dayCheck->OverTime < 0 ? $userTotal->OverTime += ($dayCheck->OverTime * (-1)) 
-            : $userTotal->OverTime -= $dayCheck->OverTime;
-            $userTotal->save();
+            // $userTotal->RegularHours -= 7.6;
+            // $userTotal->BreakHours -= $dayCheck->BreakHours;
+            // $dayCheck->OverTime < 0 ? $userTotal->OverTime += ($dayCheck->OverTime * (-1)) 
+            // : $userTotal->OverTime -= $dayCheck->OverTime;
+            // $userTotal->save();
             $dayCheck->delete();
 
         } else {
@@ -50,7 +50,7 @@ class TimeclockController extends Controller
         }
 
         $weekDay = Carbon::parse($timestamp)->weekday();
-        if ($weekDay === 4 || $weekDay === 6) $userRow->Weekend = true;
+        $weekDay === 0 || $weekDay === 6? $userRow->Weekend = true: $userRow->Weekend = false;
 
         $userRow->StartBreak = null;
         $userRow->EndBreak = null;

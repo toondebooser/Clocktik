@@ -3,11 +3,13 @@
     @php
         $requestedMonth = '';
     @endphp
-    <h2>{{ auth()->user()->name }}</h2>
+    <h2>
+
+        {{ auth()->user()->name }}
+
+    </h2>
 @endsection
 @section('userDashboard')
-    {{-- {{ var_dump($_POST )}} --}}
-    <a class="updateProfile" href="">Update profile</a>
     <div class="profileContent">
         <form class="timesheetForm" method="POST" action="{{ route('postDate') }}">
             @csrf
@@ -52,9 +54,9 @@
                                     break;
                                 case $allMonths->month == '12':
                                     echo 'December';
-                                    break;
+                                    break;                              
                                 default:
-                                    'No months this year';
+                                    null;
                                     break;
                             }
                         @endphp
@@ -80,7 +82,7 @@
                     <th>Overtime</th>
                 </tr>
             </thead>
-            @if (isset($timesheet))
+            @if (isset($timesheet) && $timesheet->count() > 0)
                 @foreach ($timesheet as $item)
                     <tr>
                         <td class="date" id="{{ $item->id }}">
@@ -97,13 +99,13 @@
                         </td>
                         <td>
                             <div class="displayRegular">
-                                @if ( $item->RegularHours < 7.60 && $item->Weekend == false)
+                                @if ($item->RegularHours < 7.6 && $item->Weekend == false)
                                     <s>{{ $item->RegularHours }}</s>
                                     => 7.60
                                 @elseif($item->Weekend == true)
                                     {{ $item->RegularHours }} Weekend
                                 @else
-                                     {{ $item->RegularHours }}
+                                    {{ $item->RegularHours }}
                                 @endif
 
 
@@ -111,11 +113,11 @@
                         </td>
                         <td>
                             <div class="displayBreak">
-                                @if ($item->BreakHours > 0)
-                                    {{ $item->BreakHours }}
-                                @else
-                                    {{ $item->BreakHours }}
-                                @endif
+                                {{-- @if ($item->BreakHours > 0) --}}
+                                {{ $item->BreakHours }}
+                                {{-- @else --}}
+                                {{-- {{ $item->BreakHours }}
+                                @endif --}}
                             </div>
                         </td>
                         <td>
@@ -126,7 +128,7 @@
                     </tr>
                 @endforeach
             @else
-                <p class="text-danger">No data for this month</p>
+                <p class="text-danger">No data</p>
             @endif
 
         </table>

@@ -22,15 +22,19 @@
     <div class="bodyContent">
 
         @yield('error')
-        @yield('logo')
+        @yield('content')
         
         @yield('title')
         <header>
             @yield('header')
             <a class="headerLinks" href="{{ route('home') }}">Home</a>
             @auth
+            @if ($currentUser->admin == false)
                 <a class="headerLinks" href="{{ route('dashboard') }}">Time Clock</a>
                 <a class="authLinks"href="{{route('myProfile')}}">My profile</a>
+                @else
+                <a class="authLinks" href = "">My workers</a>
+                @endif
                 <a class="authLinks" href="{{ route('logout') }}">Logout</a>
             @endauth
             @guest
