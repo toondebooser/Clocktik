@@ -24,6 +24,12 @@ return new class extends Migration
             $table->decimal('OverTime',5,2)->default(0,00);
             $table->date('Month');
             $table->boolean('Weekend')->default(false);
+            $table->boolean('ziek')->default(false);
+            $table->boolean('weerverlet')->default(false);
+            $table->boolean('onbetaald')->default(false);
+            $table->boolean('feestdag')->default(false);
+            $table->boolean('vakantie')->default(false);
+            $table->boolean('solicitatie')->default(false);
             $table->timestamps();
 
         });

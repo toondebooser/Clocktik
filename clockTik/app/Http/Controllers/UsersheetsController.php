@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Timelog;
 use App\Models\Timesheet;
+use App\Models\User;
 use App\Models\Usertotal;
 use Illuminate\Http\Request;
 
@@ -25,6 +26,9 @@ class UsersheetsController extends Controller
 
         if (isset($request->month)) {
         $month = $request->month;
+        }
+        if(isset($request->worker)){
+            $currentUser = User::find($request->worker);
         }
 
 
@@ -52,6 +56,6 @@ class UsersheetsController extends Controller
 
         // $userTotalRegular = Timesheet::where('UserId', '=', $currentUser->id)->sum('RegularHours');
 
-        return view('profile', ['clockedMonths' => $clockedMonths, 'timesheet' => $timesheet, 'monthString' => $monthString, 'monthlyTotal' => $monthlyTotal]);
+        return view('profile', [ 'user' => $currentUser,'clockedMonths' => $clockedMonths, 'timesheet' => $timesheet, 'monthString' => $monthString, 'monthlyTotal' => $monthlyTotal]);
     }
 }

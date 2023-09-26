@@ -20,15 +20,15 @@ class TimeclockController extends Controller
         $day = date('d', strtotime($timestamp));
         $month = date('m', strtotime($timestamp));
         $year = date('Y', strtotime($timestamp));
-        
-        
+
+
         $dayCheck = $userTimesheet
-        ->where('UserId', '=', $currentUser->id)
-        ->whereDay('Month', '=', $day)
-        ->whereMonth('Month', '=', $month)
-        ->whereYear('Month', '=', $year)
-        ->first();
-        
+            ->where('UserId', '=', $currentUser->id)
+            ->whereDay('Month', '=', $day)
+            ->whereMonth('Month', '=', $month)
+            ->whereYear('Month', '=', $year)
+            ->first();
+
         if ($dayCheck !== null) {
             // $userTotals = new Usertotal;
             $userRow->StartWork = $dayCheck->ClockedIn;
@@ -44,13 +44,12 @@ class TimeclockController extends Controller
             // : $userTotal->OverTime -= $dayCheck->OverTime;
             // $userTotal->save();
             $dayCheck->delete();
-
         } else {
             $userRow->StartWork = $timestamp;
         }
 
         $weekDay = Carbon::parse($timestamp)->weekday();
-        $weekDay === 0 || $weekDay === 6? $userRow->Weekend = true: $userRow->Weekend = false;
+        $weekDay === 0 || $weekDay === 6 ? $userRow->Weekend = true : $userRow->Weekend = false;
 
         $userRow->StartBreak = null;
         $userRow->EndBreak = null;

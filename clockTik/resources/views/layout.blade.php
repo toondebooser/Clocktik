@@ -33,7 +33,7 @@
                 <a class="headerLinks" href="{{ route('dashboard') }}">Time Clock</a>
                 <a class="authLinks"href="{{route('myProfile')}}">My profile</a>
                 @else
-                <a class="authLinks" href = "">My workers</a>
+                <a class="authLinks" href = "{{route('myWorkers')}}">My workers</a>
                 @endif
                 <a class="authLinks" href="{{ route('logout') }}">Logout</a>
             @endauth

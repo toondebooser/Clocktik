@@ -30,7 +30,7 @@ class TimesheetController extends Controller
             ->whereMonth('Month', '=', $now)
             ->whereYear('Month', '=', $now)
             ->first();
-        if($userTotal == null){
+        if ($userTotal == null) {
             $newUserTotal->UserId = auth()->user()->id;
             $newUserTotal->Month = $now;
             $newUserTotal->RegularHours = 0;
@@ -38,10 +38,10 @@ class TimesheetController extends Controller
             $newUserTotal->OverTime = 0;
             $newUserTotal->save();
             $userTotal = $newUserTotal
-            ->where('UserID', '=', auth()->user()->id)
-            ->whereMonth('Month', '=', $now)
-            ->whereYear('Month', '=', $now)
-            ->first();
+                ->where('UserID', '=', auth()->user()->id)
+                ->whereMonth('Month', '=', $now)
+                ->whereYear('Month', '=', $now)
+                ->first();
         }
         return $userTotal;
     }
@@ -112,14 +112,13 @@ class TimesheetController extends Controller
         // $newTimeSheet->save();
         // $userTotal->save();
         $total = $this->calculateUserTotal();
-       if($result == true && $total == true) return redirect('/dashboard');
-       
-    //    return redirect('/dashboard');
+        if ($result == true && $total == true) return redirect('/dashboard');
+
+        //    return redirect('/dashboard');
     }
 
     public function updateTimesheet()
     {
-        
     }
     public function calculateBreakHours($start, $end)
     {
@@ -149,8 +148,8 @@ class TimesheetController extends Controller
 
         return $decimalTime;
     }
-    
-    public function calculateHourBalance ($regularHours, $userRow, $timesheet,$type)
+
+    public function calculateHourBalance($regularHours, $userRow, $timesheet, $type)
     {
         $now = now('Europe/Brussels');
 
@@ -181,6 +180,7 @@ class TimesheetController extends Controller
             case ($userRow->Weekend == true):
                 $timesheet->Weekend = true;
                 $timesheet->RegularHours = $regularHours;
+                $timesheet->OverTime += $regularHours;
                 // $userTotal->BreakHours += $breakHours;
                 // $userTotal->OverTime += $regularHours;
 
@@ -193,16 +193,15 @@ class TimesheetController extends Controller
                 // $userTotal->BreakHours += $breakHours;
                 break;
         }
-        if($type == 'new')$timesheet->Month = $now;
+        if ($type == 'new') $timesheet->Month = $now;
         $timesheet->save();
         return true;
-
     }
     public function calculateUserTotal()
     {
         $userTotal = $this->fetchUserTotal();
         $userId = auth()->user()->id;
-        if($userTotal != null){
+        if ($userTotal != null) {
             $userTotal->RegularHours = Timesheet::where('UserId', $userId)->sum('accountableHours');
             $userTotal->BreakHours = Timesheet::where('UserId', $userId)->sum('BreakHours');
             $userTotal->OverTime = Timesheet::where('UserId', $userId)->sum('OverTime');
@@ -210,6 +209,4 @@ class TimesheetController extends Controller
         $userTotal->save();
         return true;
     }
-
 }
-  

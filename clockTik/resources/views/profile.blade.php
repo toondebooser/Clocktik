@@ -5,13 +5,13 @@
     @endphp
     <h2>
 
-        {{ auth()->user()->name }}
+        {{ $user->name }}
 
     </h2>
 @endsection
 @section('userDashboard')
     <div class="profileContent">
-        <form class="timesheetForm" method="POST" action="{{ route('postDate') }}">
+        <form class="timesheetForm" method="POST" action="{{ route('getData') }}">
             @csrf
             <select name="month" size="1">
                 @foreach ($clockedMonths as $allMonths)
@@ -64,7 +64,9 @@
                     </option>
                 @endforeach
             </select>
-
+            @if(isset($user))
+            <input type="hidden" name="worker" value='{{$user->id}}'>
+            @endif
             <input class="getMonthButton" type="submit" value="Go">
         </form>
         <div class="timesheetHeader">
