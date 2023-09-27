@@ -11,6 +11,7 @@ class MyWorkersController extends Controller
     public function fetchWorkers()
     {
         $workers = User::with('timelogs')->get();
-        return view('my-workers', ['workers' => $workers]);
+        $setForTimesheet = true;
+        return view('my-workers', ['workers' => $workers, 'setForTimesheet' => $setForTimesheet]);
     }
 }

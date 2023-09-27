@@ -117,8 +117,14 @@ class TimesheetController extends Controller
         //    return redirect('/dashboard');
     }
 
-    public function updateTimesheet()
+    public function updateTimesheet(Request $request)
     {
+
+    }
+
+    public function setSpecial(Request $request)
+    {
+
     }
     public function calculateBreakHours($start, $end)
     {
