@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MyWorkersController;
+use App\Http\Controllers\SpecialsController;
 use App\Http\Controllers\TimeclockController;
 use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\UserController;
@@ -27,3 +28,4 @@ Route::get('/my-profile', [UsersheetsController::class, 'myProfile'])->name('myP
 Route::post('/my-profile', [UsersheetsController::class, 'myProfile'])->name('getData')->middleware('auth');
 Route::get('/make-timesheet', [TimesheetController::class, 'makeTimesheet']) -> name('makeTimesheet')->middleware('auth');
 Route::get('/my-workers', [MyWorkersController::class, 'fetchworkers'])->name('myWorkers')->middleware('admin');
+Route::get('/specials', [SpecialsController::class, 'specials'])->name('specials')->middleware('admin');

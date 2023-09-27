@@ -23,8 +23,8 @@
 
         @yield('error')
         @yield('content')
-        
         @yield('title')
+        
         <header>
             @yield('header')
             <a class="headerLinks" href="{{ route('home') }}">Home</a>
