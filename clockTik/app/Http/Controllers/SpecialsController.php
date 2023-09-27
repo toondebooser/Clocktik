@@ -14,8 +14,17 @@ class SpecialsController extends Controller
         return view('my-workers', ['workers' => $workers, 'setForTimesheet' => $setForTimesheet]);
     }
 
-    public function specials()
+    public function specials(Request $request)
     {
-        return view('specials');
+        $worker = User::find($request->worker);
+        $workersArray = json_decode($request->input('worker'), true);
+
+        if (is_array($workersArray) && count($workersArray) > 1) {
+            $forWho = 'iedereen';
+        } else {
+            $forWho = $worker->name;
+        }
+    
+        return view('specials', ['forWho' => $forWho]);
     }
 }

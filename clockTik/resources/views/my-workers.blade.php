@@ -1,6 +1,10 @@
 @extends('layout')
 @section('content')
-    <h2>Welcome {{ auth()->user()->name }}</h2>
+    @if (isset($setForTimesheet) && $setForTimesheet == true)
+        <h2>Welcome {{ auth()->user()->name }}</h2>
+    @else
+        <h2>Voor wie ?</h2>
+    @endif
 
     <div class="workersForm">
         @foreach ($workers as $worker)
@@ -31,8 +35,15 @@
                 </form>
             @endif
         @endforeach
+        @if (isset($setForTimesheet) && $setForTimesheet == false)
+            <form class="workerForm" method="post" action="{{ route('specials') }}">
+                @csrf
+                <button class="workerButton" type="submit" name="worker" value="{{ $workers }}">
+                    Voor iedereen</button>
+            </form>
+        @endif
     </div>
     @if (isset($setForTimesheet) && $setForTimesheet == true)
-        <a href="{{ route('forWorker') }}" class='specialsButton'>Specials</a>
+        <a href="{{ route('forWorker') }}" class='specialsButton'>Dagen instellen</a>
     @endif
 @endsection

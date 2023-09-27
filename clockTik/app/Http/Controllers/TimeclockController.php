@@ -30,19 +30,8 @@ class TimeclockController extends Controller
             ->first();
 
         if ($dayCheck !== null) {
-            // $userTotals = new Usertotal;
             $userRow->StartWork = $dayCheck->ClockedIn;
-            // $userTotal = $userTotals
-            // ->where('UserId','=', $currentUser->id)
-            // ->whereMonth('Month', '=', $timestamp)
-            // ->whereYear('Month', '=', $timestamp)
-            // ->first();
-
-            // $userTotal->RegularHours -= 7.6;
-            // $userTotal->BreakHours -= $dayCheck->BreakHours;
-            // $dayCheck->OverTime < 0 ? $userTotal->OverTime += ($dayCheck->OverTime * (-1)) 
-            // : $userTotal->OverTime -= $dayCheck->OverTime;
-            // $userTotal->save();
+           
             $dayCheck->delete();
         } else {
             $userRow->StartWork = $timestamp;

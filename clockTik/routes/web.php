@@ -30,3 +30,4 @@ Route::get('/make-timesheet', [TimesheetController::class, 'makeTimesheet'])->na
 Route::get('/my-workers', [MyWorkersController::class, 'fetchworkers'])->name('myWorkers')->middleware('admin');
 Route::get('/forWorker', [SpecialsController::class, 'forWorker'])->name('forWorker')->middleware('admin');
 Route::post('/specials', [SpecialsController::class, 'specials'])->name('specials')->middleware('admin');
+Route::post('/setSpecial', [TimesheetController::class, 'setSpecial'])->name('setSpecial')->middleware('admin');

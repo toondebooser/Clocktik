@@ -49,11 +49,7 @@ class TimesheetController extends Controller
     {
         $userRow = Timelog::find(auth()->user()->id);
         $newTimeSheet = new Timesheet;
-        // $userTotal = $this->fetchUserTotal();
-        // if ($userTotal == null) {
-        //     $this->newUserTotal();
-        //     $userTotal = $this->fetchUserTotal();
-        // }
+   
 
         $newTimeSheet->UserId = auth()->user()->id;
         $newTimeSheet->ClockedIn = $userRow->StartWork;
@@ -68,53 +64,10 @@ class TimesheetController extends Controller
         $newTimeSheet->BreakHours = $breakHours;
 
         $result = $this->calculateHourBalance($regularHours, $userRow, $newTimeSheet, 'new');
-        // switch (true) {
-        //     case ($regularHours > 7.60 && $userRow->Weekend == false):
-        //         $difference = $regularHours - 7.60;
-        //         $newTimeSheet->OverTime = $difference;
-        //         $newTimeSheet->RegularHours = $regularHours - $difference;
-        //         $newTimeSheet->accountableHours = 7.60;
-        //         $newTimeSheet->Weekend = false;
-        //         // $userTotal->OverTime += $difference;
-        //         // $userTotal->RegularHours += ($regularHours - $difference);
-        //         // $userTotal->BreakHours += $breakHours;
-        //         break;
-
-        //     case ($regularHours < 7.60 && $userRow->Weekend == false):
-        //         $missingHours = 7.60 - $regularHours;
-        //         $newTimeSheet->RegularHours = $regularHours;
-        //         $newTimeSheet->accountableHours = 7.60;
-        //         $newTimeSheet->OverTime = -$missingHours;
-        //         $newTimeSheet->Weekend = false;
-
-        //         // $userTotal->OverTime -= $missingHours;
-        //         // $userTotal->RegularHours += 7.6;
-        //         // $userTotal->BreakHours += $breakHours;
-        //         break;
-
-        //     case ($userRow->Weekend == true):
-        //         $newTimeSheet->Weekend = true;
-        //         $newTimeSheet->RegularHours = $regularHours;
-        //         // $userTotal->BreakHours += $breakHours;
-        //         // $userTotal->OverTime += $regularHours;
-
-        //         break;
-        //     default:
-        //         $newTimeSheet->RegularHours = 7.60;
-        //         $newTimeSheet->accountableHours = 7.60;
-        //         $newTimeSheet->OverTime = 0;
-        //         // $userTotal->RegularHours += 7.60;
-        //         // $userTotal->BreakHours += $breakHours;
-        //         break;
-        // }
-
-        // $newTimeSheet->Month = $now;
-        // $newTimeSheet->save();
-        // $userTotal->save();
+       
         $total = $this->calculateUserTotal();
         if ($result == true && $total == true) return redirect('/dashboard');
 
-        //    return redirect('/dashboard');
     }
 
     public function updateTimesheet(Request $request)
@@ -166,9 +119,7 @@ class TimesheetController extends Controller
                 $timesheet->RegularHours = $regularHours - $difference;
                 $timesheet->accountableHours = 7.60;
                 $timesheet->Weekend = false;
-                // $userTotal->OverTime += $difference;
-                // $userTotal->RegularHours += ($regularHours - $difference);
-                // $userTotal->BreakHours += $breakHours;
+               
                 break;
 
             case ($regularHours < 7.60 && $userRow->Weekend == false):
@@ -177,29 +128,21 @@ class TimesheetController extends Controller
                 $timesheet->accountableHours = 7.60;
                 $timesheet->OverTime = -$missingHours;
                 $timesheet->Weekend = false;
-
-                // $userTotal->OverTime -= $missingHours;
-                // $userTotal->RegularHours += 7.6;
-                // $userTotal->BreakHours += $breakHours;
                 break;
 
             case ($userRow->Weekend == true):
                 $timesheet->Weekend = true;
                 $timesheet->RegularHours = $regularHours;
                 $timesheet->OverTime += $regularHours;
-                // $userTotal->BreakHours += $breakHours;
-                // $userTotal->OverTime += $regularHours;
 
                 break;
             default:
                 $timesheet->RegularHours = 7.60;
                 $timesheet->accountableHours = 7.60;
                 $timesheet->OverTime = 0;
-                // $userTotal->RegularHours += 7.60;
-                // $userTotal->BreakHours += $breakHours;
                 break;
         }
-        if ($type == 'new') $timesheet->Month = $now;
+        if ($type == 'new') $timesheet->Month = $userRow->StartWork;
         $timesheet->save();
         return true;
     }
