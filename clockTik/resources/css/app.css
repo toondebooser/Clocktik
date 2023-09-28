@@ -369,6 +369,7 @@ footer {
     color: black;
 }
 
+
 .working,
 .onBreak,
 .notWorking {
@@ -394,6 +395,8 @@ footer {
 .specialsButton {
     grid-row: 4/5;
     grid-column: 2/12;
+    text-decoration: none;
+    color: black;
     justify-self: center;
 }
 .startButton {

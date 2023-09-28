@@ -36,6 +36,7 @@ class UsersheetsController extends Controller
             ->where('UserId', '=', $currentUser->id)
             ->whereMonth('Month', '=', $month)
             ->whereYear('Month', '=', $year)
+            ->orderBy('Month', 'asc')
             ->get();
 
         $monthlyTotal = $userTotal

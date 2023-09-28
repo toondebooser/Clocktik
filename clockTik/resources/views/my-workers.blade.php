@@ -1,7 +1,7 @@
 @extends('layout')
 @section('content')
     @if (isset($setForTimesheet) && $setForTimesheet == true)
-        <h2>Welcome {{ auth()->user()->name }}</h2>
+        <h2>Uurroosters</h2>
     @else
         <h2>Voor wie ?</h2>
     @endif
