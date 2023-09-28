@@ -368,6 +368,16 @@ footer {
     border: 1px solid grey;
     color: black;
 }
+.specialDays{
+    grid-column: 2/12;
+    grid-row: 3/4;
+    justify-self: center;
+    display: flex;
+    flex-direction: column;
+}
+.instellenVoor{
+    text-align: center;
+}
 
 
 .working,
