@@ -379,6 +379,31 @@ footer {
     text-align: center;
 }
 
+.specialDayForm{
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr;
+    grid-row: 1fr 1fr;
+}
+.radioInput{
+    grid-row: 1/2;
+    justify-self: center;
+}
+.dateInput{
+    width:min-content;
+    grid-row: 2/3;
+    justify-self: center;
+}
+.startDateInput{
+    margin: 10px 0px;
+}
+.dagSubmit{
+    margin-top: 10px;
+}
+.periodeSubmit{
+    margin-top: 10px;
+}
+
 
 .working,
 .onBreak,

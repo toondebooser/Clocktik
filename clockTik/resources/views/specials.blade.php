@@ -1,20 +1,32 @@
 @extends('layout')
 @section('content')
-    <h2 class='instellenVoor'>Instellen voor {{$forWho}}</h2>
+    <h2 class='instellenVoor'>Instellen voor {{ $forWho }}</h2>
 
-    {{-- <form class="workersForm" method="POST" action="{{route('setSpecial')}}">
-    <input type="submit" name="ziek" value="ziek">
-    <input type="submit" name="weerverlet" value="weerverlet">
-    </form> --}}
+
 
     <div class="specialDays">
         @if (isset($specialDays))
-        @foreach ($specialDays as $specialDay)
-        <form action="{{route('setSpecial')}}" method="POST" class="specialDayForm">
-        <input type="submit" name="{{$specialDay}}" value="{{$specialDay}}">
-        </form>
-        @endforeach
+            <form action="{{ route('setSpecial') }}" method="POST" class="specialDayForm">
+                @csrf
+                <span class="radioInput">
+                    @foreach ($specialDays as $specialDay)
+                        <input type="radio" id='{{ $specialDay }}' name="specialDay" value="{{ $specialDay }}"
+                            @if ($loop->first) required @endif>
+                        <label for="{{ $specialDay }}">{{ $specialDay }}</label>
+                        <br>
+                    @endforeach
+                </span>
+                <span class="dateInput">
+                    <input type="datetime-local" name="singleDay" id="singleDayInput"> <br>
+                    <input class="dagSubmit" type="submit" name="submitType" value="Dag Toevoegen"><br>
+                    <hr>
+
+                    <input class="startDateInput" type="datetime-local" name="period" id="startDateInput">
+                    <input class="endDateInput" type="datetime-local" name="period" id="endDateInput"><br>
+                    <input class="periodeSubmit" type="submit" name="submitType" value="Periode Toevoegen">
+            </form>
+                </span>
         @endif
     </div>
 
-    @endsection
+@endsection

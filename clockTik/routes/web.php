@@ -25,7 +25,7 @@ Route::get('/dashboard-break', [TimeclockController::class, 'break'])->name('bre
 Route::get('/dashboard-stop-break', [TimeclockController::class, 'stopBreak'])->name('stopBreak')->middleware('worker');
 Route::get('/dashboard-stop', [TimeclockController::class, 'stop'])->name('stop')->middleware('worker');
 Route::get('/my-profile', [UsersheetsController::class, 'myProfile'])->name('myProfile')->middleware('auth');
-Route::post('/my-profile', [UsersheetsController::class, 'myProfile'])->name('getData')->middleware('auth');
+Route::post('/my-profile-post', [UsersheetsController::class, 'myProfile'])->name('getData')->middleware('auth');
 Route::get('/make-timesheet', [TimesheetController::class, 'makeTimesheet'])->name('makeTimesheet')->middleware('auth');
 Route::get('/my-workers', [MyWorkersController::class, 'fetchworkers'])->name('myWorkers')->middleware('admin');
 Route::get('/forWorker', [SpecialsController::class, 'forWorker'])->name('forWorker')->middleware('admin');

@@ -88,7 +88,7 @@
                 @foreach ($timesheet as $item)
                     <tr>
                         <td class="date" id="{{ $item->id }}">
-                            <a class='displayDay'href="{{ route('myProfile') }}">
+                            <a class='displayDay'href="{{ route('myProfile', ['timesheet' => $item->id]) }}">
                                 <?php
                                 $toTime = strtotime($item->ClockedIn);
                                 $days = ['Mon' => 'Ma', 'Tue' => 'Di', 'Wed' => 'Wo', 'Thu' => 'Do', 'Fri' => 'Vr', 'Sat' => 'Za', 'Sun' => 'Zo'];

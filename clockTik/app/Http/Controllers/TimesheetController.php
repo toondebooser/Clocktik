@@ -10,17 +10,7 @@ use Illuminate\Http\Request;
 
 class TimesheetController extends Controller
 {
-    // public function newUserTotal()
-    // {
-    //     $newUserTotal = new Usertotal;
-    //     $now = now('Europe/Brussels');
-    //     $newUserTotal->UserId = auth()->user()->id;
-    //     $newUserTotal->Month = $now;
-    //     $newUserTotal->RegularHours = 0;
-    //     $newUserTotal->BreakHours = 0;
-    //     $newUserTotal->OverTime = 0;
-    //     $newUserTotal->save();
-    // }
+   
     public function fetchUserTotal()
     {
         $newUserTotal = new Usertotal;
@@ -49,6 +39,7 @@ class TimesheetController extends Controller
     {
         $userRow = Timelog::find(auth()->user()->id);
         $newTimeSheet = new Timesheet;
+        $weekend = $userRow->weekend;
    
 
         $newTimeSheet->UserId = auth()->user()->id;
@@ -63,7 +54,7 @@ class TimesheetController extends Controller
         $regularHours = $clockedTime - $breakHours;
         $newTimeSheet->BreakHours = $breakHours;
 
-        $result = $this->calculateHourBalance($regularHours, $userRow, $newTimeSheet, 'new');
+        $result = $this->calculateHourBalance($regularHours, $userRow, $weekend,  $newTimeSheet, 'new');
        
         $total = $this->calculateUserTotal();
         if ($result == true && $total == true) return redirect('/dashboard');
@@ -77,8 +68,10 @@ class TimesheetController extends Controller
 
     public function setSpecial(Request $request)
     {
-
+        dd($request);
+        return redirect('/dashboard');
     }
+
     public function calculateBreakHours($start, $end)
     {
         $start = $start ? Carbon::parse($start, 'Europe/Brussels') : null;
@@ -108,12 +101,12 @@ class TimesheetController extends Controller
         return $decimalTime;
     }
 
-    public function calculateHourBalance($regularHours, $userRow, $timesheet, $type)
+    public function calculateHourBalance($regularHours, $userRow, $weekend, $timesheet, $type)
     {
         $now = now('Europe/Brussels');
 
         switch (true) {
-            case ($regularHours > 7.60 && $userRow->Weekend == false):
+            case ($regularHours > 7.60 && $weekend == false):
                 $difference = $regularHours - 7.60;
                 $timesheet->OverTime = $difference;
                 $timesheet->RegularHours = $regularHours - $difference;
@@ -122,7 +115,7 @@ class TimesheetController extends Controller
                
                 break;
 
-            case ($regularHours < 7.60 && $userRow->Weekend == false):
+            case ($regularHours < 7.60 && $weekend == false):
                 $missingHours = 7.60 - $regularHours;
                 $timesheet->RegularHours = $regularHours;
                 $timesheet->accountableHours = 7.60;
@@ -130,7 +123,7 @@ class TimesheetController extends Controller
                 $timesheet->Weekend = false;
                 break;
 
-            case ($userRow->Weekend == true):
+            case ($weekend == true):
                 $timesheet->Weekend = true;
                 $timesheet->RegularHours = $regularHours;
                 $timesheet->OverTime += $regularHours;
@@ -142,10 +135,14 @@ class TimesheetController extends Controller
                 $timesheet->OverTime = 0;
                 break;
         }
+
         if ($type == 'new') $timesheet->Month = $userRow->StartWork;
+
         $timesheet->save();
         return true;
     }
+
+
     public function calculateUserTotal()
     {
         $userTotal = $this->fetchUserTotal();
