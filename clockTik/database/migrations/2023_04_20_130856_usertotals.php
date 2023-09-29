@@ -17,7 +17,13 @@ return new class extends Migration
             $table->decimal('RegularHours',5,2)->default(0,00);
             $table->decimal('BreakHours',5,2)->default(0,00);
             $table->decimal('OverTime',5,2)->default(0,00);
+            $table->decimal('Ziek')->default(0,00);
             $table->date('Month');
+            $table->decimal('Weerverlet')->default(0,00);
+            $table->decimal('Onbetaald verlof')->default(0,00);
+            $table->decimal('Feestdag')->default(0,00);
+            $table->decimal('Betaald verlof')->default(0,00);
+            $table->decimal('Solicitatie verlof')->default(0,00);
             $table->timestamps();
 
         });

@@ -6,43 +6,53 @@ use App\Models\Timelog;
 use App\Models\Timesheet;
 use App\Models\Usertotal;
 use Carbon\Carbon;
+use Hamcrest\Type\IsString;
 use Illuminate\Http\Request;
 
 class TimesheetController extends Controller
 {
    
-    public function fetchUserTotal()
+    public function fetchUserTotal($date, $id)
     {
         $newUserTotal = new Usertotal;
-        $now = now('Europe/Brussels');
+        if(is_string($date))
+        {
+            $date = Carbon::parse($date);
+        }else
+        {
+        $date = $date;
+        }
+        $userId = $id;
         $userTotal = $newUserTotal
-            ->where('UserID', '=', auth()->user()->id)
-            ->whereMonth('Month', '=', $now)
-            ->whereYear('Month', '=', $now)
-            ->first();
+        ->where('UserID', '=', $userId)
+        ->whereMonth('Month', '=', $date)
+        ->whereYear('Month', '=', $date)
+        ->first();
         if ($userTotal == null) {
-            $newUserTotal->UserId = auth()->user()->id;
-            $newUserTotal->Month = $now;
+            $newUserTotal->UserId = $userId;
+            $newUserTotal->Month = $date;
             $newUserTotal->RegularHours = 0;
             $newUserTotal->BreakHours = 0;
             $newUserTotal->OverTime = 0;
             $newUserTotal->save();
             $userTotal = $newUserTotal
-                ->where('UserID', '=', auth()->user()->id)
-                ->whereMonth('Month', '=', $now)
-                ->whereYear('Month', '=', $now)
-                ->first();
+            ->where('UserID', '=', $userId)
+            ->whereMonth('Month', '=', $date)
+            ->whereYear('Month', '=', $date)
+            ->first();
         }
         return $userTotal;
     }
-    public function makeTimesheet()
+
+
+    public function makeTimesheet($id)
     {
-        $userRow = Timelog::find(auth()->user()->id);
+        $userRow = Timelog::find($id);
         $newTimeSheet = new Timesheet;
-        $weekend = $userRow->weekend;
+         
    
 
-        $newTimeSheet->UserId = auth()->user()->id;
+        $newTimeSheet->UserId = $id;
         $newTimeSheet->ClockedIn = $userRow->StartWork;
         $newTimeSheet->ClockedOut = $userRow->StopWork;
 
@@ -54,9 +64,9 @@ class TimesheetController extends Controller
         $regularHours = $clockedTime - $breakHours;
         $newTimeSheet->BreakHours = $breakHours;
 
-        $result = $this->calculateHourBalance($regularHours, $userRow, $weekend,  $newTimeSheet, 'new');
+        $result = $this->calculateHourBalance($regularHours, $userRow, $userRow->weekend,  $newTimeSheet, 'new');
        
-        $total = $this->calculateUserTotal();
+        $total = $this->calculateUserTotal(now('Europe/Brussels'), $id);
         if ($result == true && $total == true) return redirect('/dashboard');
 
     }
@@ -68,8 +78,40 @@ class TimesheetController extends Controller
 
     public function setSpecial(Request $request)
     {
-        dd($request);
-        return redirect('/dashboard');
+        $newSpecialTimesheet = new Timesheet;
+        $dayType = $request->input('specialDay');
+        $worker = $request->input('worker');
+        $singleDay = $request->input('singleDay');
+        $submitType = $request->input('submitType');
+        $workerArray = json_decode($worker, true);
+        
+        
+        if (is_array($workerArray) && count($workerArray) > 1) 
+        {
+            //if setSpecial is for multiple worker
+            
+        } else 
+        {
+            if($submitType == "Dag Toevoegen"){
+                $newSpecialTimesheet->type = $dayType;
+                $newSpecialTimesheet->Month = $singleDay;
+                $newSpecialTimesheet->UserId = $worker;
+                $newSpecialTimesheet->accountableHours = 7.6;
+                
+            $userTotal = $this->fetchUserTotal($singleDay, $worker);
+            $userTotal->UserId = $worker;
+            $userTotal->Month = $singleDay;
+            $userTotal->Ziek += 1;
+            $userTotal->save();
+            $this->calculateUserTotal($singleDay, $worker);
+
+            
+            }
+
+
+        }
+        $newSpecialTimesheet->save();
+        return redirect('/my-workers');
     }
 
     public function calculateBreakHours($start, $end)
@@ -77,8 +119,7 @@ class TimesheetController extends Controller
         $start = $start ? Carbon::parse($start, 'Europe/Brussels') : null;
         $end = $end ? Carbon::parse($end, 'Europe/Brussels') : null;
         if ($start === null) {
-            $start = now('Europe/Brussels');
-            $end = now('Europe/Brussels');
+           return 0;
         }
 
 
@@ -103,7 +144,6 @@ class TimesheetController extends Controller
 
     public function calculateHourBalance($regularHours, $userRow, $weekend, $timesheet, $type)
     {
-        $now = now('Europe/Brussels');
 
         switch (true) {
             case ($regularHours > 7.60 && $weekend == false):
@@ -143,10 +183,10 @@ class TimesheetController extends Controller
     }
 
 
-    public function calculateUserTotal()
+    public function calculateUserTotal($date, $id)
     {
-        $userTotal = $this->fetchUserTotal();
-        $userId = auth()->user()->id;
+        $userTotal = $this->fetchUserTotal($date, $id);
+        $userId = $id;
         if ($userTotal != null) {
             $userTotal->RegularHours = Timesheet::where('UserId', $userId)->sum('accountableHours');
             $userTotal->BreakHours = Timesheet::where('UserId', $userId)->sum('BreakHours');

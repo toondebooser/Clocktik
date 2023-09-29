@@ -49,14 +49,7 @@ class UsersheetsController extends Controller
             ->where('UserId', '=', $currentUser->id)
             ->whereyear('Month', '=', $year)
             ->get();
-
-
-        // $clockedYears = $userTotal->select($userTotal->raw('DISTINCT YEAR(Month) AS year'))
-        //     ->where('UserId', '=', $currentUser->id)
-        //     ->get();
-
-        // $userTotalRegular = Timesheet::where('UserId', '=', $currentUser->id)->sum('RegularHours');
-
+        
         return view('profile', [ 'user' => $currentUser,'clockedMonths' => $clockedMonths, 'timesheet' => $timesheet, 'monthString' => $monthString, 'monthlyTotal' => $monthlyTotal]);
     }
 }

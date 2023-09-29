@@ -14,22 +14,18 @@ return new class extends Migration
         Schema::create('timesheets', function (Blueprint $table) {
             $table->id();
             $table->integer('UserId');
-            $table->timestamp('ClockedIn');
-            $table->timestamp('ClockedOut');
-            $table->timestamp('BreakStart');
-            $table->timestamp('BreakStop');
+            $table->timestamp('ClockedIn')->nullable();
+            $table->timestamp('ClockedOut')->nullable();
+            $table->timestamp('BreakStart')->nullable();
+            $table->timestamp('BreakStop')->nullable();
             $table->decimal('RegularHours',5,2)->default(0,00);
             $table->decimal('accountableHours')->default(0,00);
             $table->decimal('BreakHours',5,2)->default(0,00);
             $table->decimal('OverTime',5,2)->default(0,00);
+            $table->string('type')->default('workday');
             $table->date('Month');
             $table->boolean('Weekend')->default(false);
-            $table->boolean('ziek')->default(false);
-            $table->boolean('weerverlet')->default(false);
-            $table->boolean('onbetaald')->default(false);
-            $table->boolean('feestdag')->default(false);
-            $table->boolean('vakantie')->default(false);
-            $table->boolean('solicitatie')->default(false);
+         
             $table->timestamps();
 
         });

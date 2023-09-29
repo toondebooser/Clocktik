@@ -80,6 +80,6 @@ class TimeclockController extends Controller
         }
         $userRow->StopWork = $timeStamp;
         $userRow->save();
-        return Redirect::route('makeTimesheet');
+        return Redirect::route('makeTimesheet',['id' => auth()->user()->id]);
     }
 }

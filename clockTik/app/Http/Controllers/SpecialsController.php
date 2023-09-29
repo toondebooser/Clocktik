@@ -16,18 +16,18 @@ class SpecialsController extends Controller
 
     public function specials(Request $request)
     {
-        $worker = User::find($request->worker);
         $workersArray = json_decode($request->input('worker'), true);
-
+         
         if (is_array($workersArray) && count($workersArray) > 1) {
             $forWho = 'iedereen';
         } else {
+            $worker = User::find($request->worker);
             $forWho = $worker->name;
         }
 
         $specialDays = ['Ziek', 'Weerverlet', 'Onbetaald verlof','Betaald verlof', 'Feestdag', 'Solicitatie verlof'];
 
     
-        return view('specials', ['forWho' => $forWho, 'specialDays' => $specialDays]);
+        return view('specials', ['forWho' => $forWho, 'specialDays' => $specialDays, 'worker' => $request->input('worker')]);
     }
 }
