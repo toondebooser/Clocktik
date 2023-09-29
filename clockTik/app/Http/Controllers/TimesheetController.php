@@ -94,8 +94,14 @@ class TimesheetController extends Controller
         {
             if($submitType == "Dag Toevoegen"){
                 $newSpecialTimesheet->type = $dayType;
+                $newSpecialTimesheet->ClockedIn = $singleDay;
                 $newSpecialTimesheet->Month = $singleDay;
                 $newSpecialTimesheet->UserId = $worker;
+                if($dayType == 'Onbetaald verlof')
+                {
+                    $newSpecialTimesheet->save();
+                    return redirect('/my-workers');
+                }
                 $newSpecialTimesheet->accountableHours = 7.6;
                 $newSpecialTimesheet->save();
             $userTotal = $this->fetchUserTotal($singleDay, $worker);
