@@ -97,7 +97,7 @@ class TimesheetController extends Controller
                 $newSpecialTimesheet->Month = $singleDay;
                 $newSpecialTimesheet->UserId = $worker;
                 $newSpecialTimesheet->accountableHours = 7.6;
-                
+                $newSpecialTimesheet->save();
             $userTotal = $this->fetchUserTotal($singleDay, $worker);
             $userTotal->UserId = $worker;
             $userTotal->Month = $singleDay;
@@ -110,7 +110,7 @@ class TimesheetController extends Controller
 
 
         }
-        $newSpecialTimesheet->save();
+        
         return redirect('/my-workers');
     }
 
@@ -186,11 +186,12 @@ class TimesheetController extends Controller
     public function calculateUserTotal($date, $id)
     {
         $userTotal = $this->fetchUserTotal($date, $id);
+        is_string($date)? $date = Carbon::parse($date):$date = $date;
         $userId = $id;
         if ($userTotal != null) {
-            $userTotal->RegularHours = Timesheet::where('UserId', $userId)->sum('accountableHours');
-            $userTotal->BreakHours = Timesheet::where('UserId', $userId)->sum('BreakHours');
-            $userTotal->OverTime = Timesheet::where('UserId', $userId)->sum('OverTime');
+            $userTotal->RegularHours = Timesheet::where('UserId', $userId)->whereMonth('Month','=',$date)->sum('accountableHours');
+            $userTotal->BreakHours = Timesheet::where('UserId', $userId)->whereMonth('Month','=',$date)->sum('BreakHours');
+            $userTotal->OverTime = Timesheet::where('UserId', $userId)->whereMonth('Month','=',$date)->sum('OverTime');
         }
         $userTotal->save();
         return true;

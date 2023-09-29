@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Timelog;
 use App\Models\Timesheet;
 use App\Models\User;
+use Carbon\Carbon;
 use App\Models\Usertotal;
 use Illuminate\Http\Request;
+use App\Http\Controllers\TimesheetController;
 
 class UsersheetsController extends Controller
 {
@@ -26,6 +28,8 @@ class UsersheetsController extends Controller
 
         if (isset($request->month)) {
         $month = $request->month;
+        $carbonDate = Carbon::create(null, $month, 1);
+        $monthString =  $carbonDate->format('F');
         }
         if(isset($request->worker)){
             $currentUser = User::find($request->worker);
@@ -44,7 +48,7 @@ class UsersheetsController extends Controller
             ->whereMonth('Month', '=', $month)
             ->whereYear('Month', '=', $year)
             ->get();
-
+        
         $clockedMonths = $userTotal->select($userTotal->raw('DISTINCT MONTH(Month) AS month'))
             ->where('UserId', '=', $currentUser->id)
             ->whereyear('Month', '=', $year)

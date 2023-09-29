@@ -16,8 +16,11 @@
             <select name="month" size="1">
                 @foreach ($clockedMonths as $allMonths)
                     <option value="{{ $allMonths->month }}">
-
                         @php
+                        $carbonDate = \Carbon\Carbon::create(null,  $allMonths->month,1);
+                        echo $carbonDate->format('F');
+                        @endphp
+                       {{-- @php
                             switch (true) {
                                 case $allMonths->month == '1':
                                     echo 'January';
@@ -59,7 +62,7 @@
                                     null;
                                     break;
                             }
-                        @endphp
+                        @endphp --}}
 
                     </option>
                 @endforeach
@@ -70,7 +73,7 @@
             <input class="getMonthButton" type="submit" value="Go">
         </form>
         <div class="timesheetHeader">
-
+        
             @if (isset($monthString))
                 {{ date('F', strtotime($monthString)) }}
             @endif
