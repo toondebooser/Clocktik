@@ -75,13 +75,33 @@ class TimesheetController extends Controller
     {
 
     }
-
+    public function setDay($newSpecialTimesheet, $dayType, $worker,$singleDay)
+    {
+        $newSpecialTimesheet->type = $dayType;
+        $newSpecialTimesheet->ClockedIn = $singleDay;
+        $newSpecialTimesheet->Month = $singleDay;
+        $newSpecialTimesheet->UserId = $worker;
+        if($dayType == 'Onbetaald verlof')
+        {
+            $newSpecialTimesheet->save();
+            return redirect('/my-workers');
+        }
+        $newSpecialTimesheet->accountableHours = 7.6;
+        $newSpecialTimesheet->save();
+    $userTotal = $this->fetchUserTotal($singleDay, $worker);
+    $userTotal->$dayType += 1;
+    $userTotal->save();
+    $this->calculateUserTotal($singleDay, $worker);
+    }
+    
     public function setSpecial(Request $request)
     {
         $newSpecialTimesheet = new Timesheet;
         $dayType = $request->input('specialDay');
         $worker = $request->input('worker');
         $singleDay = $request->input('singleDay');
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
         $submitType = $request->input('submitType');
         $workerArray = json_decode($worker, true);
         
@@ -93,25 +113,16 @@ class TimesheetController extends Controller
         } else 
         {
             if($submitType == "Dag Toevoegen"){
-                $newSpecialTimesheet->type = $dayType;
-                $newSpecialTimesheet->ClockedIn = $singleDay;
-                $newSpecialTimesheet->Month = $singleDay;
-                $newSpecialTimesheet->UserId = $worker;
-                if($dayType == 'Onbetaald verlof')
-                {
-                    $newSpecialTimesheet->save();
-                    return redirect('/my-workers');
-                }
-                $newSpecialTimesheet->accountableHours = 7.6;
-                $newSpecialTimesheet->save();
-            $userTotal = $this->fetchUserTotal($singleDay, $worker);
-            $userTotal->UserId = $worker;
-            $userTotal->Month = $singleDay;
-            $userTotal->Ziek += 1;
-            $userTotal->save();
-            $this->calculateUserTotal($singleDay, $worker);
 
-            
+                $timesheetCheck = Timesheet::where('UserId', $worker)
+                ->where('Month', $singleDay)
+                ->first();
+                if(!$timesheetCheck)
+                { $this->setDay($newSpecialTimesheet,$dayType,$worker,$singleDay);
+                }else
+                {
+                return redirect()->route('specials',['worker' => $worker])->with('error', 'Er is al een dag toegevoegd op:'. $singleDay);
+                }
             }
 
 
@@ -119,6 +130,7 @@ class TimesheetController extends Controller
         
         return redirect('/my-workers');
     }
+
 
     public function calculateBreakHours($start, $end)
     {

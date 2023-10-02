@@ -15,7 +15,11 @@
             @csrf
             <select class="dropDownMonth"  name="month" size="1">
                 @foreach ($clockedMonths as $allMonths)
-                    <option value="{{ $allMonths->month }}">
+                @php
+                         $currentMonth = \Carbon\Carbon::now()->month;
+
+                @endphp
+                    <option value="{{ $allMonths->month }}" {{$allMonths->month == $currentMonth? 'selected':''}}>
                         @php
                         $carbonDate = \Carbon\Carbon::create(null,  $allMonths->month,1);
                         echo $carbonDate->format('F');

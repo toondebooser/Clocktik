@@ -2,7 +2,11 @@
 @section('content')
     <h2 class='instellenVoor'>Instellen voor {{ $forWho }}</h2>
 
-
+    @if(session('error'))
+    <div class="error">
+        {{ session('error') }}
+    </div>
+    @endif
 
     <div class="specialDays">
         @if (isset($specialDays))

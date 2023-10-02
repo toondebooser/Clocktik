@@ -49,6 +49,13 @@ th {
     grid-column: 2/12;
     word-break: break-all;
 }
+.error{
+    position: absolute;
+    background-color: pink;
+    color: red;
+    height: 100px;
+    width: auto;
+}
 .timesheetHeader {
     margin-top: 20px;
     font-family: "Noto Sans", sans-serif;
