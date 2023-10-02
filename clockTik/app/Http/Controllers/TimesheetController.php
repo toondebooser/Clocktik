@@ -98,8 +98,27 @@ class TimesheetController extends Controller
         }
     }
 
-    public function setPeriod()
+    public function setPeriod($dayType, $worker, $startDate, $endDate)
     {
+        $errors = [];
+        while ($startDate <= $endDate) {
+            $newSpecialTimesheet = new Timesheet;
+              if (!$startDate->isWeekend()) {
+                  $addDay =  $this->setDay($newSpecialTimesheet, $dayType, $worker, $startDate);
+                  if (!$addDay) {
+                      array_push($errors, $startDate->toDateString());
+                  }
+              }
+              $startDate->addDay();
+          }
+
+        if (!empty($errors)) {
+            
+            return redirect()->route('specials', ['worker' => $worker])->with('errors', $errors);
+        }else 
+        {
+            return true;
+        }
     }
 
     public function setSpecial(Request $request)
@@ -111,7 +130,6 @@ class TimesheetController extends Controller
         $endDate = Carbon::parse($request->input('endDate'));
         $submitType = $request->input('submitType');
         $workerArray = json_decode($worker, true);
-        $errors = [];
         if (is_array($workerArray) && count($workerArray) > 1) {
             //if setSpecial is for multiple worker
 
@@ -121,26 +139,14 @@ class TimesheetController extends Controller
                 if (!$singleDay->isWeekend()) {
                     $addDay = $this->setDay($newSpecialTimesheet, $dayType, $worker, $singleDay);
                     if (!$addDay) {
-                        return redirect()->route('specials', ['worker' => $worker])->with('error', 'Er is al een dag toegevoegd op:' . $singleDay);
+                        return redirect()->route('specials', ['worker' => $worker])->with('error', 'Er is al een dag toegevoegd op: ' . $singleDay->toDateString());
                     }
                 }
             } elseif ($submitType == 'Periode Toevoegen') {
-                while ($startDate <= $endDate) {
-                  $newSpecialTimesheet = new Timesheet;
-                    if (!$startDate->isWeekend()) {
-                        $addDay =  $this->setDay($newSpecialTimesheet, $dayType, $worker, $startDate);
-                        if (!$addDay) {
-                            array_push($errors, $startDate->toDateString());
-                        }
-                    }
-                    $startDate->addDay();
-                }
+                $result = $this->setPeriod($dayType,$worker,$startDate,$endDate);
+              if($result !== true) return $result;
             }
         }
-        if (!empty($errors)) {
-            return redirect()->route('specials', ['worker' => $worker])->with('errors', $errors);
-        }
-
         return redirect('/my-workers');
     }
 

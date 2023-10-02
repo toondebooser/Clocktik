@@ -31,7 +31,7 @@
             @if(isset($user))
             <input type="hidden" name="worker" value='{{$user->id}}'>
             @endif
-            <input class="getMonthButton" type="submit" value="Go">
+            <input class="getMonthButton" type="submit" value="Ga naar maand">
         </form>
         <div class="timesheetHeader">
         
@@ -65,13 +65,15 @@
                         </td>
                         <td>
                             <div class="displayRegular">
-                                @if ($item->RegularHours < 7.6 && $item->Weekend == false)
+                                @if ($item->RegularHours < 7.6 && $item->Weekend == false && $item->type == 'workday')
                                     <s>{{ $item->RegularHours }}</s>
                                     => 7.60
-                                @elseif($item->Weekend == true)
+                                @elseif($item->Weekend == true && $item->type == 'workday')
                                     {{ $item->RegularHours }} Weekend
+                                @elseif ($item->Weekend == false && $item->type !== 'workday')
+                                    {{ $item->type }}
                                 @else
-                                    {{ $item->RegularHours }}
+                                    {{$item->RegularHours}}
                                 @endif
 
 
