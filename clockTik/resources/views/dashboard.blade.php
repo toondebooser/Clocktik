@@ -6,6 +6,13 @@
 @endsection
 
 @section('userDashboard')
+
+@if(session('error'))
+<div class="error">
+    {{ session('error') }}
+    <a class="removeError" href="">ok</a>
+</div>
+@endif
     @if ($shiftStatus == false)
         <a href="{{ route('start') }}" class="startButton">
             <p class="buttonText">Start</p>

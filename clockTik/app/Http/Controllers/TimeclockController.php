@@ -29,11 +29,15 @@ class TimeclockController extends Controller
             ->whereYear('Month', '=', $year)
             ->first();
 
-        if ($dayCheck !== null) {
+        if ($dayCheck !== null && $dayCheck->type == "workday") {
             $userRow->StartWork = $dayCheck->ClockedIn;
            
             $dayCheck->delete();
-        } else {
+        } elseif ( $dayCheck !== null && $dayCheck !== "workday")
+        {
+            return redirect()->route('dashboard')->with('error', "Vandaag is ".$dayCheck->type." geregistreerd");
+        }
+        else {
             $userRow->StartWork = $timestamp;
         }
 

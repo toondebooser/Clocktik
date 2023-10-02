@@ -43,14 +43,22 @@ class TimesheetController extends Controller
         return $userTotal;
     }
 
+    public function timesheetCheck($date, $id)
+    {
+        $timesheetCheck = Timesheet::where('UserId', $id)
+            ->where('Month', $date)
+            ->first();
+        return $timesheetCheck;
+
+    }
 
     public function makeTimesheet($id)
     {
         $userRow = Timelog::find($id);
         $newTimeSheet = new Timesheet;
 
-
-
+        $timesheetCheck = $this->timesheetCheck(now('Europe/Brussels'), $id);
+        if($timesheetCheck == null) return redirect()->route('dashboard')->with('error', 'Vandaag kan jij geen werkuren ingeven, Controleer je profiel of belt de wim');
         $newTimeSheet->UserId = $id;
         $newTimeSheet->ClockedIn = $userRow->StartWork;
         $newTimeSheet->ClockedOut = $userRow->StopWork;
@@ -74,9 +82,7 @@ class TimesheetController extends Controller
     }
     public function setDay($newSpecialTimesheet, $dayType, $worker, $singleDay)
     {
-        $timesheetCheck = Timesheet::where('UserId', $worker)
-            ->where('Month', $singleDay)
-            ->first();
+        $timesheetCheck = $this->timesheetCheck($singleDay, $worker);
         if (!$timesheetCheck) {
             $newSpecialTimesheet->type = $dayType;
             $newSpecialTimesheet->ClockedIn = $singleDay;
