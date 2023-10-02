@@ -92,6 +92,10 @@ class TimesheetController extends Controller
             $newSpecialTimesheet->UserId = $worker;
             if ($dayType == 'Onbetaald verlof') {
                 $newSpecialTimesheet->save();
+                $userTotal = $this->fetchUserTotal($singleDay, $worker);
+                $userTotal->$dayType += 1;
+                $this->calculateUserTotal($singleDay, $worker);
+                $userTotal->save();
                 return true;
             }
             $newSpecialTimesheet->accountableHours = 7.6;

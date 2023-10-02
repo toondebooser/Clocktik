@@ -1,15 +1,12 @@
 @extends('layout')
 @section('title')
-    @php
-        $requestedMonth = '';
-    @endphp
+    
     <h2>
-
         {{ $user->name }}
-
     </h2>
 @endsection
-@section('userDashboard')
+@section('userDashboard') 
+
     <div class="profileContent">
         <form class="timesheetForm" method="POST" action="{{ route('getData') }}">
             @csrf
@@ -33,6 +30,14 @@
             @endif
             <input class="getMonthButton" type="submit" value="Ga naar maand">
         </form>
+           @if (auth()->user()->admin == true)
+            <form class="dagenInstellen" action="{{route('specials')}}" method="post">
+                @csrf
+            <input type="hidden" name="worker" value="{{$user->id}}">
+            <input class="submit" type="image" src="{{asset('images/2849830-gear-interface-multimedia-options-setting-settings_107986.png')}}" name="submitUserId" alt="Submit">
+
+            </form>
+            @endif
         <div class="timesheetHeader">
         
             @if (isset($monthString))
@@ -52,7 +57,7 @@
                 @foreach ($timesheet as $item)
                     <tr class="timesheetRow">
                         <td class="date" id="{{ $item->id }}">
-                            <a class='displayDay'href="{{ route('myProfile', ['timesheet' => $item->id]) }}">
+                            <a class='displayDay'href="">
                                 <?php
                                 $toTime = strtotime($item->ClockedIn);
                                 $days = ['Mon' => 'Ma', 'Tue' => 'Di', 'Wed' => 'Wo', 'Thu' => 'Do', 'Fri' => 'Vr', 'Sat' => 'Za', 'Sun' => 'Zo'];
