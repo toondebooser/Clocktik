@@ -2,12 +2,15 @@
 @section('content')
     <h2 class='instellenVoor'>Instellen voor {{ $forWho }}</h2>
 
-    @if(session('error'))
     <div class="error">
+    @if(session('error'))
         {{ session('error') }}
+        @elseif ( session('errors'))
+        @foreach(session('errors') as $error)
+        Datum al in gebruik: {{$error}} <br>
+        @endforeach
+        @endif
     </div>
-    @endif
-
     <div class="specialDays">
         @if (isset($specialDays))
             <form action="{{ route('setSpecial') }}" method="POST" class="specialDayForm">

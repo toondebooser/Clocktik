@@ -50,11 +50,13 @@ th {
     word-break: break-all;
 }
 .error{
+    padding: 10px 10px ;
     position: absolute;
     background-color: pink;
     color: red;
-    height: 100px;
+    height:max-content;
     width: auto;
+    z-index: 1;
 }
 .timesheetHeader {
     margin-top: 20px;
