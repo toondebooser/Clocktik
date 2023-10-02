@@ -13,57 +13,14 @@
     <div class="profileContent">
         <form class="timesheetForm" method="POST" action="{{ route('getData') }}">
             @csrf
-            <select name="month" size="1">
+            <select class="dropDownMonth"  name="month" size="1">
                 @foreach ($clockedMonths as $allMonths)
                     <option value="{{ $allMonths->month }}">
                         @php
                         $carbonDate = \Carbon\Carbon::create(null,  $allMonths->month,1);
                         echo $carbonDate->format('F');
                         @endphp
-                       {{-- @php
-                            switch (true) {
-                                case $allMonths->month == '1':
-                                    echo 'January';
-                                    break;
-                                case $allMonths->month == '2':
-                                    echo 'February';
-                                    break;
-                                case $allMonths->month == '3':
-                                    echo 'March';
-                                    break;
-                                case $allMonths->month == '4':
-                                    echo 'April';
-                                    break;
-                                case $allMonths->month == '5':
-                                    echo 'May';
-                                    break;
-                                case $allMonths->month == '6':
-                                    echo 'June';
-                                    break;
-                                case $allMonths->month == '7':
-                                    echo 'July';
-                                    break;
-                                case $allMonths->month == '8':
-                                    echo 'August';
-                                    break;
-                                case $allMonths->month == '9':
-                                    echo 'September';
-                                    break;
-                                case $allMonths->month == '10':
-                                    echo 'October';
-                                    break;
-                                case $allMonths->month == '11':
-                                    echo 'November';
-                                    break;
-                                case $allMonths->month == '12':
-                                    echo 'December';
-                                    break;                              
-                                default:
-                                    null;
-                                    break;
-                            }
-                        @endphp --}}
-
+                      
                     </option>
                 @endforeach
             </select>
@@ -89,7 +46,7 @@
             </thead>
             @if (isset($timesheet) && $timesheet->count() > 0)
                 @foreach ($timesheet as $item)
-                    <tr>
+                    <tr class="timesheetRow">
                         <td class="date" id="{{ $item->id }}">
                             <a class='displayDay'href="{{ route('myProfile', ['timesheet' => $item->id]) }}">
                                 <?php

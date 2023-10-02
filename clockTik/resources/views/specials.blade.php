@@ -10,9 +10,12 @@
                 @csrf
                 <span class="radioInput">
                     @foreach ($specialDays as $specialDay)
-                        <input type="radio" id='{{ $specialDay }}' name="specialDay" value="{{ $specialDay }}"
-                            @if ($loop->first) required @endif>
-                        <label for="{{ $specialDay }}">{{ $specialDay }}</label>
+                    <label class="checkboxContainer" for="{{ $specialDay }}">
+                        <input class="radioBox" type="radio" id='{{ $specialDay }}' name="specialDay" value="{{ $specialDay }}"
+                        @if ($loop->first) required @endif>
+                        {{ $specialDay }}
+                        <span class="checkMark"></span>
+                        </label>
                         <br>
                     @endforeach
                 </span>

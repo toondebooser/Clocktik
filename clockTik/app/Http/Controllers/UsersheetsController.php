@@ -51,6 +51,7 @@ class UsersheetsController extends Controller
         
         $clockedMonths = $userTotal->select($userTotal->raw('DISTINCT MONTH(Month) AS month'))
             ->where('UserId', '=', $currentUser->id)
+            ->orderBy('Month', 'asc')
             ->whereyear('Month', '=', $year)
             ->get();
         
