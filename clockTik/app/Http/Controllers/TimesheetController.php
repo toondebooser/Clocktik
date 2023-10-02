@@ -45,9 +45,10 @@ class TimesheetController extends Controller
 
     public function timesheetCheck($date, $id)
     {
-        $timesheetCheck = Timesheet::where('UserId', $id)
-            ->where('Month', $date)
-            ->first();
+        $timesheetCheck = Timesheet::where('UserId','=', $id)
+        ->whereMonth('Month','=', $date)
+        ->whereDay('Month',$date)
+        ->first();
         return $timesheetCheck;
 
     }
@@ -58,7 +59,7 @@ class TimesheetController extends Controller
         $newTimeSheet = new Timesheet;
 
         $timesheetCheck = $this->timesheetCheck(now('Europe/Brussels'), $id);
-        if($timesheetCheck == null) return redirect()->route('dashboard')->with('error', 'Vandaag kan jij geen werkuren ingeven, Controleer je profiel of belt de wim');
+        if($timesheetCheck !== null) return redirect()->route('dashboard')->with('error', 'Vandaag kan jij geen werkuren ingeven, Controleer je profiel of belt de wim');
         $newTimeSheet->UserId = $id;
         $newTimeSheet->ClockedIn = $userRow->StartWork;
         $newTimeSheet->ClockedOut = $userRow->StopWork;
@@ -83,6 +84,7 @@ class TimesheetController extends Controller
     public function setDay($newSpecialTimesheet, $dayType, $worker, $singleDay)
     {
         $timesheetCheck = $this->timesheetCheck($singleDay, $worker);
+        
         if (!$timesheetCheck) {
             $newSpecialTimesheet->type = $dayType;
             $newSpecialTimesheet->ClockedIn = $singleDay;
@@ -116,6 +118,7 @@ class TimesheetController extends Controller
                   }
               }
               $startDate->addDay();
+
           }
 
         if (!empty($errors)) {

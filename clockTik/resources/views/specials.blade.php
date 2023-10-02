@@ -10,8 +10,8 @@
         @elseif ( session('errors'))
     <div class="error">
         @foreach(session('errors') as $error)
-        Datum al in gebruik: {{$error}} <br>
-        @endforeach
+        Datum al in gebruik: {{$error}} 
+        @endforeach <br>
         <a class="removeError" href="">ok</a>
 
     </div>
