@@ -17,7 +17,7 @@ class SpecialsController extends Controller
     public function specials(Request $request)
     {   
         $workerInput = $request->input('worker');
-        if($workerInput == null) $workerInput = $request->old('worker');
+        // if($workerInput == null) $workerInput = $request->old('worker');
         $workersArray = json_decode($workerInput, true);
              
         if (is_array($workersArray) && count($workersArray) > 1) {
@@ -30,6 +30,6 @@ class SpecialsController extends Controller
         $specialDays = ['Ziek', 'Weerverlet', 'Onbetaald verlof','Betaald verlof', 'Feestdag', 'Solicitatie verlof'];
 
     
-        return view('specials', ['forWho' => $forWho, 'specialDays' => $specialDays, 'worker' => $request->input('worker')]);
+        return view('specials', ['forWho' => $forWho, 'specialDays' => $specialDays, 'worker' => $workerInput]);
     }
 }

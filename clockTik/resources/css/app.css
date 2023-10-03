@@ -65,6 +65,9 @@ th {
     border-radius: 10px;
     z-index: 1;
 }
+.specifiedError{
+    color: black;
+}
 .dagenInstellen{
     grid-row: 2/3;
     grid-column: 2/5;
