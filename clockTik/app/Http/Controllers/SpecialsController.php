@@ -15,13 +15,15 @@ class SpecialsController extends Controller
     }
 
     public function specials(Request $request)
-    {
-        $workersArray = json_decode($request->input('worker'), true);
-         
+    {   
+        $workerInput = $request->input('worker');
+        if($workerInput == null) $workerInput = $request->old('worker');
+        $workersArray = json_decode($workerInput, true);
+             
         if (is_array($workersArray) && count($workersArray) > 1) {
             $forWho = 'iedereen';
         } else {
-            $worker = User::find($request->worker);
+            $worker = User::find($workerInput);
             $forWho = $worker->name;
         }
 

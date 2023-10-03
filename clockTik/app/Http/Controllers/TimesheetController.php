@@ -6,6 +6,7 @@ use App\Models\Timelog;
 use App\Models\Timesheet;
 use App\Models\Usertotal;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Hamcrest\Type\IsString;
 use Illuminate\Http\Request;
@@ -136,6 +137,7 @@ class TimesheetController extends Controller
 
     public function setSpecial(Request $request)
     {
+        
         $dayType = $request->input('specialDay');
         $worker = $request->input('worker');
         $singleDay = Carbon::parse($request->input('singleDay'));
@@ -143,6 +145,21 @@ class TimesheetController extends Controller
         $endDate = Carbon::parse($request->input('endDate'));
         $submitType = $request->input('submitType');
         $workerArray = json_decode($worker, true);
+        
+        $validator = Validator::make($request->all(), 
+        [
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
+        ]);
+    
+        if ($validator->fails()) 
+        {
+            return back()
+                ->withErrors($validator)
+                ->withInput(['worker' => $worker]);
+        }
+
+
         if (is_array($workerArray) && count($workerArray) > 1) {
             //if setSpecial is for multiple worker
 
