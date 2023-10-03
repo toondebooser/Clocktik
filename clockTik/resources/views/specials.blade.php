@@ -4,23 +4,30 @@
 
     @if (session('error'))
         <div class="error">
-            {{ session('error') }}
+            @foreach (session('error') as $userError)
+                @php
+                    $findUser = \App\Models\User::find($userError['id']);
+                    $findUser? $user = $findUser->name: $user = 'iedereen'
+                @endphp
+                <p class='specifiedError'>Voor uurrooster van: {{ $user}}</p>
+                {{ $userError['errorList'] }}
+            @endforeach
             <a class="removeError" href="">ok</a>
         </div>
     @elseif (session('errors'))
-    @foreach (session('errors') as $userError)
-        @php
-            $user = \app\Models\User::find($userError['id']);
-        @endphp
         <div class="error">
-            <p class="specifiedError">Voor uurrooster van: {{ $user->name }}</p>
-            @foreach ($userError['errorList'] as $error)
-                Datum al in gebruik: {{ $error }} <br>
-            @endforeach <br>
-            <a class="removeError" href="">ok</a>
-
-        </div>
-    @endforeach
+            @foreach (session('errors') as $userError)
+                @php
+                    $findUser = \App\Models\User::find($userError['id']);
+                    $findUser? $user = $findUser->name: $user = 'iedereen'
+                @endphp
+                <p class="specifiedError">Voor uurrooster van: {{ $user }}</p>
+                @foreach ($userError['errorList'] as $error)
+                    {{$error}}<br>
+                @endforeach <br>
+            @endforeach
+    <a class="removeError" href="">ok</a>
+    </div>
     @endif
     <div class="specialDays">
         @if (isset($specialDays))
@@ -50,5 +57,4 @@
             </span>
         @endif
     </div>
-
 @endsection

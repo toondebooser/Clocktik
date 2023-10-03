@@ -16,6 +16,7 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $user = auth()->user();
+        if($user == null) return redirect('/');
         if($user->admin == true){
             return $next($request);
         }

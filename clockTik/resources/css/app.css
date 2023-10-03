@@ -60,7 +60,7 @@ th {
     background-color: pink;
     color: red;
     height:max-content;
-    width: auto;
+    width:80%;
     align-items: center;
     border-radius: 10px;
     z-index: 1;
@@ -747,6 +747,9 @@ p {
     border: 1px solid #daa30a;
 }
 @media  (min-width: 768px) {
+    .error{
+        width: auto;
+    }
     .specialDays{
         grid-column: 2/12;
         grid-row: 3/5;
