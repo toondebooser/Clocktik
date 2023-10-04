@@ -18,6 +18,13 @@
             <p class="buttonText">Start</p>
         </a>
     @else
+        @if ($shiftStatus !== false)
+          <form method="POST" name="userNoteForm" action="{{route('dashboard')}}" class="userNoteForm">
+                @csrf
+            <textarea class="userNoteInput" name="userNote" rows="2" cols="30">{{ $userNote }}</textarea> <br>
+            <input class="userNoteSubmit" type="submit" value='Voeg notitie toe'>
+            </form>
+        @endif
         @if ($shiftStatus == true && $breakStatus == false)
             <a onclick="return confirm('Are you sure you want to take a break?')" href="{{ route('break') }}"
                 class="breakButton">
@@ -27,6 +34,7 @@
                 class="stopButton">
                 <p class="buttonText">Stop</p>
             </a>
+          
         @else
             @if ($shiftStatus == true && $breakStatus == true)
                 <a onclick="return confirm('Are you sure you want to start working again?')" href="{{ route('stopBreak') }}"

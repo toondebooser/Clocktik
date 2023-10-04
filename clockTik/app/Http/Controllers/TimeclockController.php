@@ -15,11 +15,14 @@ class TimeclockController extends Controller
     {
         $currentUser = auth()->user();
         $userTimesheet = new Timesheet;
-        $userRow = Timelog::find($currentUser->id);
+        $userRow = Timelog::where('UserId',auth()->user()->id)->first();
         $timestamp = now('Europe/Brussels');
         $day = date('d', strtotime($timestamp));
         $month = date('m', strtotime($timestamp));
         $year = date('Y', strtotime($timestamp));
+        $userRow->userNote = null;
+        $userRow->BreakHours = 0 ;
+        $userRow->RegularHours = 0 ;
 
 
         $dayCheck = $userTimesheet
@@ -28,25 +31,27 @@ class TimeclockController extends Controller
             ->whereMonth('Month', '=', $month)
             ->whereYear('Month', '=', $year)
             ->first();
-
+            
         if ($dayCheck !== null && $dayCheck->type == "workday") {
-            $userRow->StartWork = $dayCheck->ClockedIn;
+            $userRow->BreakHours += $dayCheck->BreakHours;
+            $userRow->RegularHours += $dayCheck->RegularHours;
+            $dayCheck->userNote !== null ? $userRow->userNote = $dayCheck->userNote: null;
            
             $dayCheck->delete();
         } elseif ( $dayCheck !== null && $dayCheck !== "workday")
         {
             return redirect()->route('dashboard')->with('error', "Vandaag is ".$dayCheck->type." geregistreerd");
         }
-        else {
-            $userRow->StartWork = $timestamp;
-        }
+            
+        
 
         $weekDay = Carbon::parse($timestamp)->weekday();
         $weekDay === 0 || $weekDay === 6 ? $userRow->Weekend = true : $userRow->Weekend = false;
-
+        $userRow->StartWork = $timestamp;
         $userRow->StartBreak = null;
         $userRow->EndBreak = null;
         $userRow->StopWork = null;
+        
         $userRow->ShiftStatus = true;
         $userRow->save();
         return redirect('/dashboard');
@@ -54,7 +59,7 @@ class TimeclockController extends Controller
     public function break()
     {
         $timeStamp = now('Europe/Brussels');
-        $userRow = Timelog::find(auth()->user()->id);
+        $userRow = Timelog::where('UserId',auth()->user()->id)->first();
         $userRow->BreakStatus = true;
         $userRow->StartBreak = $timeStamp;
         $userRow->save();
@@ -64,7 +69,7 @@ class TimeclockController extends Controller
     public function stopBreak()
     {
         $timeStamp = now('Europe/Brussels');
-        $userRow = Timelog::find(auth()->user()->id);
+        $userRow = Timelog::where('UserId',auth()->user()->id)->first();
         $userRow->BreakStatus = false;
 
         $userRow->EndBreak = $timeStamp;
@@ -75,7 +80,7 @@ class TimeclockController extends Controller
     public function stop()
     {
         $timeStamp = now('Europe/Brussels');
-        $userRow = Timelog::find(auth()->user()->id);
+        $userRow = Timelog::where('UserId',auth()->user()->id)->first();
         $userRow->ShiftStatus = false;
         if ($userRow->BreakStatus == true) {
             $userRow->BreakStatus = false;

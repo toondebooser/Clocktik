@@ -34,7 +34,7 @@
             <form class="dagenInstellen" action="{{route('specials')}}" method="post">
                 @csrf
             <input type="hidden" name="worker" value="{{$user->id}}">
-            <input class="submit" type="image" src="{{asset('images/2849830-gear-interface-multimedia-options-setting-settings_107986.png')}}" name="submitUserId" alt="Submit">
+            <input class="submit" type="image" src="{{asset('/images/2849830-gear-interface-multimedia-options-setting-settings_107986.png')}}" name="submitUserId" alt="Submit">
 
             </form>
             @endif
@@ -67,6 +67,9 @@
                                 echo $dutchDay . ' ' . $dayOfMonth;
                                 ?>
                             </a>
+                            @if ($item->userNote !== null)
+                            <img class="noteIcon"src="{{asset('/images/148883.png')}}" alt="Icon">
+                            @endif
                         </td>
                         <td>
                             <div class="displayRegular">

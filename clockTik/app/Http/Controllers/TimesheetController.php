@@ -55,7 +55,7 @@ class TimesheetController extends Controller
 
     public function makeTimesheet($id)
     {
-        $userRow = Timelog::find($id);
+        $userRow = Timelog::where('UserId',$id)->first();
         $newTimeSheet = new Timesheet;
 
         $timesheetCheck = $this->timesheetCheck(now('Europe/Brussels'), $id);
@@ -63,14 +63,17 @@ class TimesheetController extends Controller
         $newTimeSheet->UserId = $id;
         $newTimeSheet->ClockedIn = $userRow->StartWork;
         $newTimeSheet->ClockedOut = $userRow->StopWork;
+        $userRow->userNote !== null? $newTimeSheet->userNote = $userRow->userNote: null;
+        $userRow->save();
 
         $newTimeSheet->BreakStart = $userRow->StartBreak;
         $newTimeSheet->BreakStop = $userRow->EndBreak;
         $breakHours = $this->calculateBreakHours($userRow->StartBreak, $userRow->EndBreak);
         $clockedTime = $this->calculateClockedHours($userRow->StartWork, $userRow->StopWork);
 
-        $regularHours = $clockedTime - $breakHours;
-        $newTimeSheet->BreakHours = $breakHours;
+        $regularHours = ($clockedTime - $breakHours) + $userRow->RegularHours;
+        $newTimeSheet->BreakHours = $breakHours +$userRow->BreakHours;
+        
 
         $result = $this->calculateHourBalance($regularHours, $userRow, $userRow->weekend,  $newTimeSheet, 'new');
 
@@ -252,6 +255,7 @@ class TimesheetController extends Controller
 
         $diffInMin = $end->diffInMinutes($start);
         $decimalTime = round($diffInMin / 60, 2);
+        
         return $decimalTime;
     }
 
@@ -265,6 +269,7 @@ class TimesheetController extends Controller
         $diffInMin = $end->diffInMinutes($start);
 
         $decimalTime = round($diffInMin / 60, 2);
+        
 
         return $decimalTime;
     }

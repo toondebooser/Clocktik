@@ -296,6 +296,13 @@ img {
 .displayDay {
     color: black;
 }
+.noteIcon{
+   height: 10px;
+   position: absolute;
+   top: 0;
+   left: 10px;
+
+}
 
 th {
     text-align: center;
@@ -328,6 +335,7 @@ th {
 }
 .date {
     text-align: center;
+    position: relative;
 }
 .displayDay:hover {
     text-decoration: none;
@@ -622,7 +630,20 @@ footer {
     background: linear-gradient(145deg, rgb(200, 215, 248), #2626da);
     box-shadow: 5px 5px 10px #929292, -5px -5px 10px #ffffff;
 }
+.userNoteForm{
+    grid-row: 4/5;
+    grid-column: 2/12;
+    justify-self: center;
+}
 
+.userNoteSubmit{
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    height: 30px;
+
+}
 .stopButton {
     align-self: center;
     display: grid;
