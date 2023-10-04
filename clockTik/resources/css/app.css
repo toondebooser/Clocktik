@@ -52,6 +52,7 @@ th {
 .error{
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
     padding: 10px 20px ;
     position: fixed;
     top: 50%;
@@ -59,7 +60,7 @@ th {
     transform: translate(-50%, -50%);
     background-color: pink;
     color: red;
-    height:max-content;
+    max-height: 350px;
     width:80%;
     align-items: center;
     border-radius: 10px;
@@ -309,6 +310,7 @@ th {
     border-radius: 10px;
     grid-row: 3/4;
 }
+
 .updateProfile {
     color: black;
     font-family: "Noto Sans", sans-serif;
@@ -651,6 +653,13 @@ footer {
     max-height: 350px;
     white-space: nowrap;
 }
+.profileContent::-webkit-scrollbar {
+    display: none;
+}
+.profileContent {
+    -ms-overflow-style: none; 
+    scrollbar-width: none; 
+  }
 p {
     height: max-content;
 }

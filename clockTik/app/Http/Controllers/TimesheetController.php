@@ -90,7 +90,7 @@ class TimesheetController extends Controller
             $newSpecialTimesheet->ClockedIn = $singleDay;
             $newSpecialTimesheet->Month = $singleDay;
             $newSpecialTimesheet->UserId = $worker;
-            if ($dayType == 'Onbetaald verlof'|| $dayType == 'Weerverlet') {
+            if ($dayType == 'Onbetaald verlof') {
                 $newSpecialTimesheet->save();
                 $userTotal = $this->fetchUserTotal($singleDay, $worker);
                 $userTotal->$dayType += 1;
@@ -106,7 +106,7 @@ class TimesheetController extends Controller
             $this->calculateUserTotal($singleDay, $worker);
             return true;
         } else {
-            return  $singleDay->toDateString();
+            return  'Datum al in gebruik: '.$singleDay->toDateString();
         }
     }
 
@@ -119,7 +119,7 @@ class TimesheetController extends Controller
             if (!$currentDate->isWeekend()) {
                 $addDay =  $this->setDay($newSpecialTimesheet, $dayType, $worker, $currentDate);
                 if ($addDay !== true) {
-                    array_push($errors, $currentDate->toDateString());
+                    array_push($errors, 'Datum al in gebruik: '.$currentDate->toDateString());
                 }
             }
             $currentDate->addDay();
@@ -198,7 +198,7 @@ class TimesheetController extends Controller
                         }
                         $result = $this->setday($newSpecialTimesheetForEveryone, $dayType, $user['id'], $singleDay);
                         if ($result !== true) {
-                            array_push($results, ['id' => $user['id'], 'errorList' => 'Datum al in gebruik: '.$result]);
+                            array_push($results, ['id' => $user['id'], 'errorList' => $result]);
                         }
                     }
                     if (!empty($results)) {
@@ -208,7 +208,7 @@ class TimesheetController extends Controller
 
                     $addDay = $this->setDay($newSpecialTimesheet, $dayType, $worker, $singleDay);
                     if ($addDay !== true) {
-                        array_push($results, ['id' => $worker, 'errorList' => 'Datum al in gebruik: ' . $singleDay->toDateString()]);
+                        array_push($results, ['id' => $worker, 'errorList' => $addDay]);
                         return redirect()->route('specials', ['worker' => $worker])->with('error', $results);
                     }
                 }
@@ -222,7 +222,7 @@ class TimesheetController extends Controller
                     }
                     $result = $this->setPeriod($dayType, $user['id'], $startDate, $endDate);
                     if ($result !== true) {
-                        array_push($results, ['id' => $user['id'], 'errorList' => 'Datum al in gebruik: '.$result]);
+                        array_push($results, ['id' => $user['id'], 'errorList' => $result]);
                     }
                 }
                 if (!empty($results)) {
@@ -231,7 +231,7 @@ class TimesheetController extends Controller
             } else {
                 $result = $this->setPeriod($dayType, $worker, $startDate, $endDate);
                 if ($result !== true) {
-                    array_push($results, ['id' => $worker, 'errorList' => 'Datum al in gebruik: '.$result]);
+                    array_push($results, ['id' => $worker, 'errorList' => $result]);
                     return redirect()->route('specials', ['worker' => $worker])->with('errors',  $results);
                 }
             }
