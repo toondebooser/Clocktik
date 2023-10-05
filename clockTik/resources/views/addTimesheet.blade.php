@@ -7,6 +7,6 @@
 <input class="newTimesheetInput" type="hidden" name="workerId" value="{{$id}}">
 <input class="newTimesheetInput" type="time" name="startTime">
 <input class="newTimesheetInput" type="time" name="endTime" >
-<input class="newTimesheetSubmit" type="submit" value="Voeg toe">
+<input class="userNoteSubmit" type="submit" value="Voeg toe">
 </form>
 @endsection

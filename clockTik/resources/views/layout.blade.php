@@ -30,10 +30,10 @@
             <a class="headerLinks" href="{{ route('home') }}">Home</a>
             @auth
             @if ($currentUser->admin == false)
-                <a class="headerLinks" href="{{ route('dashboard') }}">Time Clock</a>
-                <a class="authLinks"href="{{route('myProfile')}}">My profile</a>
+                <a class="headerLinks" href="{{ route('dashboard') }}">Klok</a>
+                <a class="authLinks"href="{{route('myProfile')}}">Mijn profiel</a>
                 @else
-                <a class="authLinks" href = "{{route('myWorkers')}}">My workers</a>
+                <a class="authLinks" href = "{{route('myWorkers')}}">Personeel</a>
                 @endif
                 <a class="authLinks" href="{{ route('logout') }}">Logout</a>
             @endauth

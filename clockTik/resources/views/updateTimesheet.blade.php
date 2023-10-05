@@ -1,14 +1,14 @@
 @extends('layout')
 @section('content')
     <h2>Update rooster van: {{ $worker->name }}</h2>
-    <form action="" class="updateTimesheet">
-        @php
+    @php
             $startShift = \Carbon\Carbon::parse($timesheet->ClockedIn)->format('H:i');
             $endShift = \Carbon\Carbon::parse($timesheet->ClockedOut)->format('H:i');
             $startBreak = $timesheet->StartBreak ? \Carbon\Carbon::parse($timesheet->StartBreak)->format('H:i') : null;
             $endBreak = $timesheet->EndBreak ? \Carbon\Carbon::parse($timesheet->EndBreak)->format('H:i') : null;
             
-        @endphp
+            @endphp
+            <form action="{{route('updateTimesheet')}}" class="updateTimesheet" method="POST">
         <fieldset>
             <legend>Time</legend>
             <div>
@@ -28,7 +28,7 @@
                 <input type="time" name="endBreak" class="updateEndBreak" value="">
             </div>
         </fieldset>
-        <input type="submit" value="update">
+        <input class="userNoteSubmit" type="submit" value="update">
 
     </form>
 @endsection

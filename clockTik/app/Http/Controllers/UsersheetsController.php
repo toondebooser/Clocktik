@@ -20,9 +20,6 @@ class UsersheetsController extends Controller
         $currentUser = auth()->user();
         $now = now('Europe/Brussels');
 
-        //posted data
-        // $targetDate = $request->month . $request->year;
-        // current month data.
         $monthString = date('F', strtotime($now));
         $month = date('m', strtotime($now));
         $year = date('Y', strtotime($now));

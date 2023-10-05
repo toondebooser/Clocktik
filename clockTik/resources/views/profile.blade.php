@@ -1,6 +1,10 @@
 @extends('layout')
 @section('title')
-    
+<script>
+    @if ($user->admin)
+        window.location.href = "{{ route('myWorkers') }}";
+    @endif
+</script>
     <h2>
         {{ $user->name }}
     </h2>

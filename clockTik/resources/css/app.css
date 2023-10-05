@@ -496,6 +496,7 @@ footer {
 .newTimesheetInput{
     margin: 0px 5px;
 }
+
 .checkMark {
     position: absolute;
     top: 0;
@@ -672,6 +673,8 @@ footer {
     background-color: var(--primary-color);
     color: white;
     border: none;
+    padding-bottom: 3px;
+    margin-top: 10px;
     border-radius: 5px;
     height: 30px;
 
