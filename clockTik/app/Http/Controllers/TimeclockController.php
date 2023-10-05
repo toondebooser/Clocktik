@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\Redirect;
 
 class TimeclockController extends Controller
 {
+    public function calculateDecimale($start, $end)
+    {
+        $diffInMin = $end->diffInMinutes($start);
+        $decimalTime = round($diffInMin / 60, 2);
+        return $decimalTime;
+    }
     public function startWorking(Request $request)
     {
         $currentUser = auth()->user();
@@ -43,15 +49,12 @@ class TimeclockController extends Controller
             return redirect()->route('dashboard')->with('error', "Vandaag is ".$dayCheck->type." geregistreerd");
         }
             
-        
-
         $weekDay = Carbon::parse($timestamp)->weekday();
         $weekDay === 0 || $weekDay === 6 ? $userRow->Weekend = true : $userRow->Weekend = false;
         $userRow->StartWork = $timestamp;
         $userRow->StartBreak = null;
         $userRow->EndBreak = null;
-        $userRow->StopWork = null;
-        
+        $userRow->StopWork = null;        
         $userRow->ShiftStatus = true;
         $userRow->save();
         return redirect('/dashboard');
@@ -71,8 +74,9 @@ class TimeclockController extends Controller
         $timeStamp = now('Europe/Brussels');
         $userRow = Timelog::where('UserId',auth()->user()->id)->first();
         $userRow->BreakStatus = false;
-
-        $userRow->EndBreak = $timeStamp;
+        $start = Carbon::parse($userRow->StartBreak, 'Europe/Brussels');
+        $end = Carbon::parse($timeStamp, 'Europe/Brussels');
+        $userRow->BreakHours += $this->calculateDecimale($start, $end);
         $userRow->save();
         return redirect('/dashboard');
     }
@@ -84,7 +88,9 @@ class TimeclockController extends Controller
         $userRow->ShiftStatus = false;
         if ($userRow->BreakStatus == true) {
             $userRow->BreakStatus = false;
-            $userRow->EndBreak = $timeStamp;
+            $start = Carbon::parse($userRow->StartBreak, 'Europe/Brussels');
+            $end = Carbon::parse($timeStamp, 'Europe/Brussels');
+            $userRow->BreakHours += $this->calculateDecimale($start, $end);
             $userRow->save();
         }
         $userRow->StopWork = $timeStamp;

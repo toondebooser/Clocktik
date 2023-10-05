@@ -215,7 +215,8 @@ h2 {
 }
 .text-danger {
     color: red;
-    font-size: xx-large;
+    padding: 10px;
+    font-size: medium;
     grid-row: 4/5;
     grid-column: 1/13;
     justify-self: center;
@@ -373,7 +374,7 @@ ul {
     height: fit-content;
     justify-content: center;
     align-self: center;
-
+    border-radius: 5px;
     grid-row: 4/5;
     grid-column: 3/11;
     background-color: pink;
@@ -464,6 +465,21 @@ footer {
 .instellenVoor{
     text-align: center;
 } 
+
+.addNewTimesheetForm{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    grid-row: 3/4;
+    grid-column: 2/12;
+    align-self: center;
+}
+.newTimesheetSubmit{
+    margin-top: 10px;
+}
+.newTimesheetInput{
+    margin: 0px 5px;
+}
 .checkMark {
     position: absolute;
     top: 0;

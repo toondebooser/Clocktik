@@ -68,19 +68,47 @@ class TimesheetController extends Controller
 
         $newTimeSheet->BreakStart = $userRow->StartBreak;
         $newTimeSheet->BreakStop = $userRow->EndBreak;
-        $breakHours = $this->calculateBreakHours($userRow->StartBreak, $userRow->EndBreak);
+        $breakHours = $userRow->BreakHours;
         $clockedTime = $this->calculateClockedHours($userRow->StartWork, $userRow->StopWork);
 
         $regularHours = ($clockedTime - $breakHours) + $userRow->RegularHours;
-        $newTimeSheet->BreakHours = $breakHours +$userRow->BreakHours;
+        $newTimeSheet->BreakHours = $breakHours;
         
 
-        $result = $this->calculateHourBalance($regularHours, $userRow, $userRow->weekend,  $newTimeSheet, 'new');
+        $result = $this->calculateHourBalance($regularHours, $userRow->startWork, $userRow->weekend,  $newTimeSheet, 'new');
 
         $total = $this->calculateUserTotal(now('Europe/Brussels'), $id);
         if ($result == true && $total == true) return redirect('/dashboard');
     }
 
+    public function addNewTimesheet(Request $request)
+    {
+        $newTimesheet = new Timesheet;
+        $weekend = false;
+        $date = $request->input('newTimesheetDate');
+        $id = $request->input('workerId');
+        $carbonDate = Carbon::parse($date, 'Europe/Brussels');
+        $timesheetCheck = $this->timesheetCheck($date, $id);
+
+        if($timesheetCheck !== null) dd($timesheetCheck);
+        if($carbonDate->isWeekend()) $weekend = true;
+
+        $start = $request->input('startTime');
+        $end = $request->input('endTime');
+        $dateTimeStart = $date . ' ' . $start;
+        $dateTimeEnd = $date. ' '.$end;
+        $break = 0.5;
+        $newTimesheet->UserId = $id;
+        $newTimesheet->ClockedIn = Carbon::parse($dateTimeStart, 'Europe/Brussels');
+        $newTimesheet->ClockedOut = Carbon::parse($dateTimeEnd, 'Europe/Brussels');
+        $newTimesheet->BreakHours = $break;
+        $clockedTime = $this->calculateClockedHours($start, $end);
+        $regularHours = $clockedTime - $break;
+        $balance = $this->calculateHourBalance($regularHours, $date,$weekend, $newTimesheet, 'new');
+        $total = $this->calculateUserTotal($date,$id);
+        if ($balance == true && $total == true) return redirect('/my-workers');
+
+    }
     public function updateTimesheet(Request $request)
     {
     }
@@ -274,7 +302,7 @@ class TimesheetController extends Controller
         return $decimalTime;
     }
 
-    public function calculateHourBalance($regularHours, $userRow, $weekend, $timesheet, $type)
+    public function calculateHourBalance($regularHours, $date, $weekend, $timesheet, $type)
     {
 
         switch (true) {
@@ -308,7 +336,7 @@ class TimesheetController extends Controller
                 break;
         }
 
-        if ($type == 'new') $timesheet->Month = $userRow->StartWork;
+         if($type == 'new') $timesheet->Month = $date;
 
         $timesheet->save();
         return true;

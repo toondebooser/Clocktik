@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddCustomTimesheetController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MyWorkersController;
@@ -27,6 +28,8 @@ Route::get('/dashboard-stop', [TimeclockController::class, 'stop'])->name('stop'
 Route::get('/my-profile', [UsersheetsController::class, 'myProfile'])->name('myProfile')->middleware('worker');
 Route::post('/my-profile-post', [UsersheetsController::class, 'myProfile'])->name('getData')->middleware('auth');
 Route::get('/make-timesheet/{id}', [TimesheetController::class, 'makeTimesheet'])->name('makeTimesheet')->middleware('auth');
+Route::post('/new-timesheet-form', [AddCustomTimesheetController::class, 'customTimesheetForm'])->name('timesheetForm')->middleware('admin');
+Route::post('/add-new-timesheet', [TimesheetController::class, 'addNewTimesheet'])->name('newTimesheet')->middleware('admin');
 Route::get('/my-workers', [MyWorkersController::class, 'fetchworkers'])->name('myWorkers')->middleware('admin');
 Route::get('/forWorker', [SpecialsController::class, 'forWorker'])->name('forWorker')->middleware('admin');
 Route::match(['get', 'post'], '/specials', [SpecialsController::class, 'specials'])->name('specials')->middleware('admin');

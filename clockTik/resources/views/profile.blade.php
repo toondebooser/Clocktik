@@ -35,7 +35,11 @@
                 @csrf
             <input type="hidden" name="worker" value="{{$user->id}}">
             <input class="submit" type="image" src="{{asset('/images/2849830-gear-interface-multimedia-options-setting-settings_107986.png')}}" name="submitUserId" alt="Submit">
-
+            </form>
+            <form class="timesheetToevoegen" action="{{route('timesheetForm')}}" method="post">
+                @csrf
+            <input type="hidden" name="worker" value="{{$user->id}}">
+            <input class="submit" type="image" src="{{asset('/images/image_processing20210616-17152-dcj4lq.png')}}" name="submitUserId" alt="Submit">
             </form>
             @endif
         <div class="timesheetHeader">
