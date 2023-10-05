@@ -75,7 +75,7 @@ class TimesheetController extends Controller
         $newTimeSheet->BreakHours = $breakHours;
         
 
-        $result = $this->calculateHourBalance($regularHours, $userRow->startWork, $userRow->weekend,  $newTimeSheet, 'new');
+        $result = $this->calculateHourBalance($regularHours, $userRow->StartWork, $userRow->weekend,  $newTimeSheet, 'new');
 
         $total = $this->calculateUserTotal(now('Europe/Brussels'), $id);
         if ($result == true && $total == true) return redirect('/dashboard');
@@ -335,7 +335,6 @@ class TimesheetController extends Controller
                 $timesheet->OverTime = 0;
                 break;
         }
-
          if($type == 'new') $timesheet->Month = $date;
 
         $timesheet->save();

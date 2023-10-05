@@ -71,8 +71,14 @@ th {
 }
 .dagenInstellen{
     grid-row: 2/3;
-    grid-column: 2/5;
+    grid-column: 3/5;
     justify-self: start;
+    align-self: center;
+}
+.timesheetToevoegen{
+    grid-row: 2/3;
+    grid-column: 1/3;
+    justify-self: end;
     align-self: center;
 }
 .submit{
