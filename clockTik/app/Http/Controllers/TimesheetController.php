@@ -289,7 +289,6 @@ class TimesheetController extends Controller
 
     public function calculateClockedHours($start, $end)
     {
-
         $start = $start ? Carbon::parse($start, 'Europe/Brussels') : null;
         $end = $end ? Carbon::parse($end, 'Europe/Brussels') : null;
 

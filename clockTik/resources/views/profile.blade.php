@@ -6,6 +6,12 @@
     </h2>
 @endsection
 @section('userDashboard') 
+@if (session('error'))
+<div class="error">
+    {{session('error')}} <br>
+    <a class="removeError" href=""> ok </a>
+</div>
+@endif
 
     <div class="profileContent">
         <form class="timesheetForm" method="POST" action="{{ route('getData') }}">
@@ -59,9 +65,10 @@
             </thead>
             @if (isset($timesheet) && $timesheet->count() > 0)
                 @foreach ($timesheet as $item)
+
                     <tr class="timesheetRow">
                         <td class="date" id="{{ $item->id }}">
-                            <a class='displayDay'href="">
+                            <a class='displayDay'href="{{route('update',['id' => $user->id ,"timesheet" => $item])}}">
                                 <?php
                                 $toTime = strtotime($item->ClockedIn);
                                 $days = ['Mon' => 'Ma', 'Tue' => 'Di', 'Wed' => 'Wo', 'Thu' => 'Do', 'Fri' => 'Vr', 'Sat' => 'Za', 'Sun' => 'Zo'];
@@ -81,7 +88,7 @@
                                     <s>{{ $item->RegularHours }}</s>
                                     => 7.60
                                 @elseif($item->Weekend == true && $item->type == 'workday')
-                                    {{ $item->RegularHours }} Weekend
+                                     Weekend
                                 @elseif ($item->Weekend == false && $item->type !== 'workday')
                                     {{ $item->type }}
                                 @else
