@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Timelog;
+use App\Http\Controllers\TimesheetController;
 use App\Models\Timesheet;
 use App\Models\Usertotal;
 use Carbon\Carbon;
@@ -11,12 +12,12 @@ use Illuminate\Support\Facades\Redirect;
 
 class TimeclockController extends Controller
 {
-    public function calculateDecimale($start, $end)
-    {
-        $diffInMin = $end->diffInMinutes($start);
-        $decimalTime = round($diffInMin / 60, 2);
-        return $decimalTime;
-    }
+    // public function calculateDecimale($start, $end)
+    // {
+    //     $diffInMin = $end->diffInMinutes($start);
+    //     $decimalTime = round($diffInMin / 60, 2);
+    //     return $decimalTime;
+    // }
     public function startWorking(Request $request)
     {
         $currentUser = auth()->user();
@@ -71,12 +72,13 @@ class TimeclockController extends Controller
 
     public function stopBreak()
     {
+        $timesheet = new TimesheetController();
         $timeStamp = now('Europe/Brussels');
         $userRow = Timelog::where('UserId',auth()->user()->id)->first();
         $userRow->BreakStatus = false;
-        $start = Carbon::parse($userRow->StartBreak, 'Europe/Brussels');
-        $end = Carbon::parse($timeStamp, 'Europe/Brussels');
-        $userRow->BreakHours += $this->calculateDecimale($start, $end);
+        $start = $userRow->StartBreak;
+        $end = $timeStamp;
+        $userRow->BreakHours += $timesheet->calculateBreakHours($start, $end);
         $userRow->save();
         return redirect('/dashboard');
     }

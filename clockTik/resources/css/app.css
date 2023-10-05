@@ -496,7 +496,9 @@ footer {
 .newTimesheetInput{
     margin: 0px 5px;
 }
-
+fieldset{
+    margin: 30px 0px;
+}
 .checkMark {
     position: absolute;
     top: 0;

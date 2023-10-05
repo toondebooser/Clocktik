@@ -9,8 +9,11 @@
             
             @endphp
             <form action="{{route('updateTimesheet')}}" class="updateTimesheet" method="POST">
+                @csrf
+                <input type="hidden" name="id" value="{{$worker->id}}">
+                <input type="hidden" name="timesheet" value="{{$timesheet->id}}">
         <fieldset>
-            <legend>Time</legend>
+            <legend>Gewerkte periode</legend>
             <div>
                 <label for="startTime">Start:</label>
                 <input class="updateStartTime" name="startTime" type="time" value="{{ $startShift }}">
@@ -18,9 +21,7 @@
                 <input class="updateEndTime" type="time" name="endTime" value="{{ $endShift }}">
             </div>
         </fieldset>
-
-        <fieldset>
-            <legend>Break</legend>
+            <legend>Gepauzeerde periode</legend>
             <div>
                 <label for="startBreak">Start:</label>
                 <input class="updateStartBreak" type="time" name="startBreak" value="">

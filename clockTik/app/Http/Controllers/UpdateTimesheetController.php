@@ -6,6 +6,7 @@ use App\Models\Timesheet;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\TimesheetController;
+use Illuminate\Support\Carbon;
 
 class UpdateTimesheetController extends Controller
 {
@@ -27,8 +28,24 @@ class UpdateTimesheetController extends Controller
     public function updateTimesheet (Request $request)
     {
         $timesheetController = new TimesheetController();
+        $timesheet = Timesheet::find($request->timesheet);
+        $date = $timesheet->Month;
+        $startWork = Carbon::parse($date. ' ' .$request->startTime, 'Europe/Brussels');
+        $stopWork = Carbon::parse($date. ' ' .$request->endTime, 'Europe/Brussels');
+        $startBreak = Carbon::parse($date. ' ' .$request->startBreak, 'Europe/Brussels');
+        $endBreak = Carbon::parse($date. ' ' .$request->endBreak, 'Europe/Brussels');
+        $id = $request->id;
         
-        // $clockedTime = $timesheetController->calculateClockedHours($timesheet->ClockedIn,$timesheet->ClockedOut);
+        $clockedHours = $timesheetController->calculateClockedHours($startWork,$stopWork);
+        $breakHours = $timesheetController->calculateBreakHours($startBreak, $endBreak);
+        $regularHours = $clockedHours - $breakHours;
+        $timesheet->ClockedIn = $startWork;
+        $timesheet->ClockedOut = $stopWork;
+        $timesheet->BreakStart = $startBreak;
+        $timesheet->BreakStop = $endBreak;
+        $balanceResult = $timesheetController->calculateHourBalance($regularHours,$date,$timesheet->Weekend,$timesheet, 'update');
+        $userTotal = $timesheetController->calculateUserTotal($date,$id);
+        if($balanceResult && $userTotal == true) return redirect()->route('myWorkers');
         
     }
 }
