@@ -51,12 +51,11 @@
             <input type="hidden" name="worker" value="{{$user->id}}">
             <input class="submit" type="image" src="{{asset('/images/image_processing20210616-17152-dcj4lq.png')}}" name="submitUserId" alt="Submit">
             </form>
-            <a href="{{route('exportPdf')}}">export</a>
             @endif
-        <div class="timesheetHeader">
-        
-            @if (isset($monthString))
-                {{ date('F', strtotime($monthString)) }}
+            <div class="timesheetHeader">
+                
+            @if (isset($timesheet))
+            {{ date('F', strtotime($timesheet[0]->Month))}}
             @endif
         </div>
         <table class="timesheetTable">
@@ -69,7 +68,16 @@
                 </tr>
             </thead>
             @if (isset($timesheet) && $timesheet->count() > 0)
-                @foreach ($timesheet as $item)
+            @php
+            $userJSONstring = json_encode($user);
+            $timesheetJSONstring = json_encode($timesheet);
+            $totalJSONstring = json_encode($monthlyTotal);
+
+            @endphp
+            <a href="{{route('exportPdf', ['userJSONstring' => $userJSONstring, 'timesheetJSONstring' => $timesheetJSONstring, 'totalJSONstring' => $totalJSONstring,'type' => 'preview'])}}" target="_blank">Preview</a>
+            <a href="{{route('exportPdf', ['userJSONstring' => $userJSONstring, 'timesheetJSONstring' => $timesheetJSONstring, 'totalJSONstring' => $totalJSONstring,'type' => 'download'])}}">Download</a>
+ 
+            @foreach ($timesheet as $item)
 
                     <tr class="timesheetRow">
                         <td class="date" id="{{ $item->id }}">
