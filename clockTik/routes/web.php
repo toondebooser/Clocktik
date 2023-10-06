@@ -46,6 +46,7 @@ Route::get('/export-pdf', function () {
     ];
 
     $pdf = Pdf::loadView('pdf', compact('data'));
+    dd($pdf);
 
     return $pdf->download('exported-document.pdf');
 })->name('exportPdf')->middleware('admin');
