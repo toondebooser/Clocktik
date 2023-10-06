@@ -51,6 +51,7 @@
             <input type="hidden" name="worker" value="{{$user->id}}">
             <input class="submit" type="image" src="{{asset('/images/image_processing20210616-17152-dcj4lq.png')}}" name="submitUserId" alt="Submit">
             </form>
+            <a href="{{route('exportPdf')}}">export</a>
             @endif
         <div class="timesheetHeader">
         

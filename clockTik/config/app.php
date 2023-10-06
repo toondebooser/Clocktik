@@ -159,6 +159,7 @@ return [
         /*
          * Laravel Framework Service Providers...
          */
+
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
@@ -185,7 +186,7 @@ return [
         /*
          * Package Service Providers...
          */
-
+        Barryvdh\DomPDF\ServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -209,6 +210,8 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
+
+        'Pdf' => Barryvdh\DomPDF\Facade::class
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 

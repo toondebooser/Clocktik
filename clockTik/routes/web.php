@@ -11,6 +11,7 @@ use App\Http\Controllers\UpdateTimesheetController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UsersheetsController;
 use App\Http\Controllers\WorkersController;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Routing\Route as RoutingRoute;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -37,3 +38,14 @@ Route::match(['get', 'post'], '/update-timesheet/{id}/{timesheet}', [UpdateTimes
 Route::post('/update-worker-timesheet', [UpdateTimesheetController::class, 'updateTimesheet'])->name('updateTimesheet')->middleware('admin');
 Route::match(['get', 'post'], '/specials', [SpecialsController::class, 'specials'])->name('specials')->middleware('admin');
 Route::post('/setSpecial', [TimesheetController::class, 'setSpecial'])->name('setSpecial')->middleware('admin');
+Route::get('/export-pdf', function () {
+    $data = [
+        ['column1' => 'value1', 'column2' => 'value2'],
+        ['column1' => 'value3', 'column2' => 'value4'],
+        // ... other rows
+    ];
+
+    $pdf = Pdf::loadView('pdf', compact('data'));
+
+    return $pdf->download('exported-document.pdf');
+})->name('exportPdf')->middleware('admin');
