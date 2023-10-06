@@ -12,9 +12,9 @@ class DashboardController extends Controller
     {
         $userRow = Timelog::where('UserId',auth()->user()->id)->first();
         $userNoteInput = $request->input('userNote');
-        if($userNoteInput)
+        if($userNoteInput || $userNoteInput == '')
         {
-            
+            $userNoteInput == ''? $userRow->userNote = null : null;
             $userRow->userNote = $userNoteInput;
             $userRow->save();
         }

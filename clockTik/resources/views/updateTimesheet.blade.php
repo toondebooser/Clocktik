@@ -32,4 +32,10 @@
         <input class="userNoteSubmit" type="submit" value="update">
 
     </form>
+    @if ($timesheet->userNote !== null)
+        <fieldset class="userNoteContainer">
+            <legend>Notitie</legend>
+            <div class="userNote">{{$timesheet->userNote}}</div>
+        </fieldset>
+    @endif
 @endsection

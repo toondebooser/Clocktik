@@ -681,6 +681,11 @@ fieldset{
     height: 30px;
 
 }
+.userNoteContainer{
+    grid-row: 4/5;
+    grid-column: 2/12;
+    justify-self: center;
+}
 .stopButton {
     align-self: center;
     display: grid;

@@ -15,7 +15,7 @@ class UpdateTimesheetController extends Controller
         
         $worker = User::find($id);
         $timesheet = Timesheet::find($timesheet);
-        if($timesheet->type !== 'workday') 
+        if(  $timesheet == null || $timesheet->type !== 'workday') 
         {
             $postData = [
                 'worker' => $id,
@@ -43,6 +43,7 @@ class UpdateTimesheetController extends Controller
         $timesheet->ClockedOut = $stopWork;
         $timesheet->BreakStart = $startBreak;
         $timesheet->BreakStop = $endBreak;
+        $timesheet->BreakHours = $breakHours;
         $balanceResult = $timesheetController->calculateHourBalance($regularHours,$date,$timesheet->Weekend,$timesheet, 'update');
         $userTotal = $timesheetController->calculateUserTotal($date,$id);
         if($balanceResult && $userTotal == true) return redirect()->route('myWorkers');
