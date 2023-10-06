@@ -82,6 +82,12 @@ th {
     justify-self: end;
     align-self: center;
 }
+.previewIcon{
+    height: 100%;
+}
+.previewLink{
+    height: 50px;
+}
 .updateTimesheet{
     grid-row: 3/3;
     grid-column: 2/12;
