@@ -10,15 +10,17 @@
             font-family: "Noto Sans", sans-serif;
 
         }
+
         h1 {
             color: #333;
             text-align: center;
         }
-        .notitie{
+
+        .notitie {
             word-break: break-all;
         }
-        header {
-        }
+
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -38,12 +40,15 @@
             height: 40px;
             background-color: rgb(200, 215, 248);
         }
-        td{
-            width: 100px;
+
+        td {
+            width: 130px;
         }
-        .notitie{
+
+        .notitie {
             min-height: 60px;
-            width: 100%;
+            width: 95%;
+            margin: 5px;
             word-break: break-all;
         }
 
@@ -90,6 +95,18 @@
             border: 1px solid #da0a0a;
         }
 
+        .totalContainer{
+            text-align: center;
+        }
+
+        .total {
+            display: inline-block;
+            width: 150px;
+            margin: 10px;
+        }
+        h3{
+            text-align: start;
+        }
         .displayTotalOverTime {
             text-align: center;
             justify-self: center;
@@ -104,11 +121,31 @@
 </head>
 
 <body>
-    
+
     <div class="content">
         <header>
             <h1>{{ date('F', strtotime($timesheet[0]->Month)) }} {{ $user->name }}</h1>
         </header>
+        <div class="totalContainer">
+            <h3>Maand Totaal</h3>
+        @if (isset($monthlyTotal))
+            @foreach ($monthlyTotal as $item)
+                    <div class="displayTotalRegular total">
+                        Regular {{ $item->RegularHours }}
+                    </div>
+                    <div class="displayTotalBreak total">
+                        Break {{ $item->BreakHours }}
+                    </div>
+                    <div class="displayTotalOverTime total">
+                        Overtime {{ $item->OverTime }}
+                    </div>
+                    @endforeach
+                    @else
+                </div>
+            <div class="text-danger">Something went wrong pls call Toon.</div>
+        </div>
+        @endif
+        <h3>Uurrooster</h3>
         <main>
             <table>
                 <thead>
@@ -122,8 +159,8 @@
                 </thead>
                 <tbody>
                     @foreach ($timesheet as $item)
-                    <tr class="timesheetRow">
-                        <td class="date" id="{{ $item->id }}">
+                        <tr class="timesheetRow">
+                            <td class="date" id="{{ $item->id }}">
                                 <?php
                                 $toTime = strtotime($item->ClockedIn);
                                 $days = ['Mon' => 'Ma', 'Tue' => 'Di', 'Wed' => 'Wo', 'Thu' => 'Do', 'Fri' => 'Vr', 'Sat' => 'Za', 'Sun' => 'Zo'];
@@ -150,7 +187,7 @@
                             <td>
                                 <div class="displayBreak">
                                     {{ $item->BreakHours }}
-                                   
+
                                 </div>
                             </td>
                             <td>
@@ -161,33 +198,16 @@
                             <td>
                                 <div class="notitie">
                                     @if ($item->userNote !== null)
-                                    {{$item->userNote}}
+                                        {{ $item->userNote }}
                                     @endif
                                 </div>
                             </td>
-                            
+
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </main>
-        <h3>Maand Totaal</h3>
-        @if (isset($monthlyTotal))
-            @foreach ($monthlyTotal as $item)
-                <div class="displayTotalRegular">
-                    Regular {{ $item->RegularHours }}
-                </div>
-                <div class="displayTotalBreak">
-                    Break {{ $item->BreakHours }}
-                </div>
-                <div class="displayTotalOverTime">
-                    Overtime {{ $item->OverTime }}
-                </div>
-            @endforeach
-        @else
-            <div class="text-danger">Something went wrong pls call Toon.</div>
-        @endif
-    </div>
 </body>
 
 </html>
