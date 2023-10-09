@@ -17,11 +17,7 @@ class DeleteTimesheetController extends Controller
         if($total == true)
         {
             
-                $postData = [
-                    'worker' => $id,
-                ];
-
-                return redirect()->route('getData', $postData);
+            return redirect('/my-workers');
             
         }
         else 

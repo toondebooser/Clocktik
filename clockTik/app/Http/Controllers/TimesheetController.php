@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Hamcrest\Type\IsString;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
 
 class TimesheetController extends Controller
 {
@@ -267,13 +266,7 @@ class TimesheetController extends Controller
             }
         }
 
-        if(is_array($workerArray) && count($workerArray) > 1)return Redirect::route('myWorkers',['workers' => $worker, 'setForTimesheet' => false]);
-        $postData = [
-            'worker' => $worker,
-        ];
-        
-        dd($worker);
-        return redirect()->route('getData', $postData);
+        return redirect('/my-workers');
     }
 
 
