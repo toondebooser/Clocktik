@@ -7,7 +7,7 @@
     </script>
     @php
         $userId = $user->id;
-        $month = $timesheet[0]->Month;
+        if(isset($timesheet[0]))$month = $timesheet[0]->Month;
         // $totalJSONstring = json_encode($monthlyTotal);
         
     @endphp

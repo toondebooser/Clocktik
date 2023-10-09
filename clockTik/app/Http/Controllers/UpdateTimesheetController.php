@@ -27,14 +27,65 @@ class UpdateTimesheetController extends Controller
 
     public function updateTimesheet(Request $request)
     {
+
         $timesheetController = new TimesheetController();
         $timesheet = Timesheet::find($request->timesheet);
+        $type = $request->updateSpecial;
         $date = $timesheet->Month;
+        $id = $request->id;
+        if ($type == "Onbetaald verlof") {
+            $timesheet->accountableHours = 0;
+            $timesheet->type = $type;
+            $save = $timesheet->save();
+            $fetchTotal = $timesheetController->calculateUserTotal($date, $id);
+            if ($save == true && $fetchTotal == true) 
+            {
+                $postData = [
+                    'worker' => $id,
+                ];
+
+                return redirect()->route('getData', $postData);
+            }
+            else 
+            {
+                $postData = [
+                    'worker' => $id,
+                ];
+
+                return redirect()->route('getData', $postData)->with('error', 'Er ging iets mis, kijk even na of de dag in het uurrooster is aangepast.');
+            }
+        }elseif($type !== 'workday')
+        {
+            $timesheet->accountableHours = 7.6;
+            $timesheet->type = $type;
+            $save = $timesheet->save();
+            $fetchTotal = $timesheetController->calculateUserTotal($date, $id);
+            if ($save == true && $fetchTotal == true) 
+            {
+                {
+                    $postData = [
+                        'worker' => $id,
+                    ];
+    
+                    return redirect()->route('getData', $postData);
+                }
+            }
+            else 
+            {
+                $postData = [
+                    'worker' => $id,
+                ];
+
+                return redirect()->route('getData', $postData)->with('error', 'Er ging iets mis, kijk even na of de dag in het uurrooster is aangepast.');
+            }
+
+        }
+        else
+        {
         $startWork = Carbon::parse($date . ' ' . $request->startTime, 'Europe/Brussels');
         $stopWork = Carbon::parse($date . ' ' . $request->endTime, 'Europe/Brussels');
         $startBreak = Carbon::parse($date . ' ' . $request->startBreak, 'Europe/Brussels');
         $endBreak = Carbon::parse($date . ' ' . $request->endBreak, 'Europe/Brussels');
-        $id = $request->id;
 
         $clockedHours = $timesheetController->calculateClockedHours($startWork, $stopWork);
         $breakHours = $timesheetController->calculateBreakHours($startBreak, $endBreak);
@@ -47,5 +98,8 @@ class UpdateTimesheetController extends Controller
         $balanceResult = $timesheetController->calculateHourBalance($regularHours, $date, $timesheet->Weekend, $timesheet, 'update');
         $userTotal = $timesheetController->calculateUserTotal($date, $id);
         if ($balanceResult && $userTotal == true) return redirect()->route('myWorkers');
+        }
     }
+
+    
 }

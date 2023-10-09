@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Hamcrest\Type\IsString;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class TimesheetController extends Controller
 {
@@ -266,7 +267,13 @@ class TimesheetController extends Controller
             }
         }
 
-        return redirect('/my-workers');
+        if(is_array($workerArray) && count($workerArray) > 1)return Redirect::route('myWorkers',['workers' => $worker, 'setForTimesheet' => false]);
+        $postData = [
+            'worker' => $worker,
+        ];
+        
+        dd($worker);
+        return redirect()->route('getData', $postData);
     }
 
 
@@ -334,8 +341,8 @@ class TimesheetController extends Controller
         }
          if($type == 'new') $timesheet->Month = $date;
 
-        $timesheet->save();
-        return true;
+        
+        return $timesheet->save();
     }
 
 
@@ -349,7 +356,7 @@ class TimesheetController extends Controller
             $userTotal->BreakHours = Timesheet::where('UserId', $userId)->whereMonth('Month', '=', $date)->sum('BreakHours');
             $userTotal->OverTime = Timesheet::where('UserId', $userId)->whereMonth('Month', '=', $date)->sum('OverTime');
         }
-        $userTotal->save();
-        return true;
+        
+        return $userTotal->save();
     }
 }

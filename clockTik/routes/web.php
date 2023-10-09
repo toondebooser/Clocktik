@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AddCustomTimesheetController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DeleteTimesheetController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MyWorkersController;
 use App\Http\Controllers\PdfExportController;
@@ -40,3 +41,4 @@ Route::post('/update-worker-timesheet', [UpdateTimesheetController::class, 'upda
 Route::match(['get', 'post'], '/specials', [SpecialsController::class, 'specials'])->name('specials')->middleware('admin');
 Route::post('/setSpecial', [TimesheetController::class, 'setSpecial'])->name('setSpecial')->middleware('admin');
 Route::get('/export-pdf',[PdfExportController::class, 'exportPdf'])->name('exportPdf')->middleware('admin');
+Route::post('/delete-timesheet', [DeleteTimesheetController::class, 'deleteTimesheet'])->name('delete')->middleware('admin');

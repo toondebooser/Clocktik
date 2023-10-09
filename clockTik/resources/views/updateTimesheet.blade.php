@@ -9,11 +9,12 @@
     @endphp
     <div class="formContainer">
         <h3>{{ \Carbon\Carbon::parse($timesheet->Month)->format('d/m/Y') }}</h3>
-        @if ($timesheet->type == 'workday')
-            <form  action="{{ route('updateTimesheet') }}" class="updateTimesheet" method="POST">
-                @csrf
-                <input type="hidden" name="id" value="{{ $worker->id }}">
-                <input type="hidden" name="timesheet" value="{{ $timesheet->id }}">
+        <form action="{{ route('updateTimesheet') }}" class="updateTimesheet" method="POST">
+            @csrf
+            <input type="hidden" name="id" value="{{ $worker->id }}">
+            <input type="hidden" name="timesheet" value="{{ $timesheet->id }}">
+            <input type="hidden" name="type" value="{{$timesheet->type}}">
+            @if ($timesheet->type == 'workday')
                 <fieldset>
                     <legend>Gewerkte periode</legend>
                     <div>
@@ -31,10 +32,27 @@
                     <input type="time" name="endBreak" class="updateEndBreak" value="{{ $endBreak }}">
                 </div>
                 </fieldset>
-                <input class="userNoteSubmit" type="submit" value="update">
-            </form>
-        @endif
+                @else
+                @php
+            $specialDays = ['Ziek', 'Weerverlet', 'Onbetaald verlof', 'Betaald verlof', 'Feestdag', 'Solicitatie verlof'] 
+            @endphp
+            <select name="updateSpecial" size="1">
+                @foreach ($specialDays as $specialDay)
+                <option value="{{$specialDay}}" {{$specialDay == $timesheet->type? 'selected':''}}>{{$specialDay}}</option>
+                @endforeach
+            </select>
+            @endif
+            <input class="userNoteSubmit" type="submit" value="update">
+        </form>
     </div>
+    <form action="{{route('delete')}}" class="delete" method="POST">
+        @csrf
+        <input type="hidden" name="workerId" value="{{ $worker->id }}">
+        <input type="hidden" name="deleteSheet" value="{{ $timesheet->id }}">
+        <input type="hidden" name="date" value="{{$timesheet->Month}}">
+        <input class="submit" type="image" src="{{ asset('/images/1843344.png') }}"
+                    name="deleteThisSheet" alt="Delete">
+    </form>
     @if ($timesheet->userNote !== null)
         <fieldset class="userNoteContainer">
             <div><b>Notitie:</b></div>
