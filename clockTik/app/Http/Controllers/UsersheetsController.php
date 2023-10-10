@@ -20,14 +20,14 @@ class UsersheetsController extends Controller
         $currentUser = auth()->user();
         $now = now('Europe/Brussels');
 
-        $monthString = date('F', strtotime($now));
+        // $monthString = date('F', strtotime($now));
         $month = date('m', strtotime($now));
         $year = date('Y', strtotime($now));
 
         if (isset($request->month)) {
         $month = $request->month;
-        $carbonDate = Carbon::create(null, $month, 1);
-        $monthString =  $carbonDate->format('F');
+        // $carbonDate = Carbon::create(null, $month, 1);
+        // $monthString =  $carbonDate->format('F');
         }
         if(isset($request->worker)){
             $currentUser = User::find($request->worker);
@@ -54,6 +54,6 @@ class UsersheetsController extends Controller
             ->whereyear('Month', '=', $year)
             ->get();
         
-        return view('profile', [ 'user' => $currentUser,'clockedMonths' => $clockedMonths, 'timesheet' => $timesheet, 'monthString' => $monthString, 'monthlyTotal' => $monthlyTotal]);
+        return view('profile', [ 'user' => $currentUser,'clockedMonths' => $clockedMonths, 'timesheet' => $timesheet, 'monthlyTotal' => $monthlyTotal]);
     }
 }

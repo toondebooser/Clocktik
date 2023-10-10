@@ -2,9 +2,15 @@
 @section('title')
 <script>
     @if ($user->admin)
-        window.location.href = "{{ route('myWorkers') }}";
+    window.location.href = "{{ route('myWorkers') }}";
     @endif
 </script>
+@php
+$userJSONstring = json_encode($user);
+$timesheetJSONstring = json_encode($timesheet);
+$totalJSONstring = json_encode($monthlyTotal);
+
+@endphp
     <h2>
         {{ $user->name }}
     </h2>
@@ -48,15 +54,14 @@
             </form>
             <form class="timesheetToevoegen" action="{{route('timesheetForm')}}" method="post">
                 @csrf
-            <input type="hidden" name="worker" value="{{$user->id}}">
-            <input class="submit" type="image" src="{{asset('/images/image_processing20210616-17152-dcj4lq.png')}}" name="submitUserId" alt="Submit">
+                <input type="hidden" name="worker" value="{{$user->id}}">
+                <input class="submit" type="image" src="{{asset('/images/image_processing20210616-17152-dcj4lq.png')}}" name="submitUserId" alt="Submit">
             </form>
-            <a href="{{route('exportPdf')}}">export</a>
             @endif
-        <div class="timesheetHeader">
-        
-            @if (isset($monthString))
-                {{ date('F', strtotime($monthString)) }}
+            <div class="timesheetHeader">
+                
+                @if (isset($timesheet))
+                        {{count($timesheet) !== 0? date('F', strtotime($timesheet[0]->Month)):date('F',strtotime(now('Europe/Brussels')))}}
             @endif
         </div>
         <table class="timesheetTable">
@@ -69,11 +74,16 @@
                 </tr>
             </thead>
             @if (isset($timesheet) && $timesheet->count() > 0)
-                @foreach ($timesheet as $item)
+            <a class="previewLink" href="{{route('exportPdf', ['userJSONstring' => $userJSONstring, 'timesheetJSONstring' => $timesheetJSONstring, 'totalJSONstring' => $totalJSONstring,'type' => 'preview'])}}" target="_blank">
+            <img class="previewIcon" src="{{asset('/images/preview-65.png')}}" alt="Preview">
+            </a>
+            <a href="{{route('exportPdf', ['userJSONstring' => $userJSONstring, 'timesheetJSONstring' => $timesheetJSONstring, 'totalJSONstring' => $totalJSONstring,'type' => 'download'])}}">Download</a>
+   
+            @foreach ($timesheet as $item)
 
                     <tr class="timesheetRow">
                         <td class="date" id="{{ $item->id }}">
-                            <a class='displayDay'href="{{route('update',['id' => $user->id ,"timesheet" => $item])}}">
+                            <a class='displayDay'href="{{route('update',['id' => $user->id ,'timesheet' => $item])}}">
                                 <?php
                                 $toTime = strtotime($item->ClockedIn);
                                 $days = ['Mon' => 'Ma', 'Tue' => 'Di', 'Wed' => 'Wo', 'Thu' => 'Do', 'Fri' => 'Vr', 'Sat' => 'Za', 'Sun' => 'Zo'];

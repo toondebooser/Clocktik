@@ -109,9 +109,7 @@ class TimesheetController extends Controller
         if ($balance == true && $total == true) return redirect('/my-workers');
 
     }
-    public function updateTimesheet(Request $request)
-    {
-    }
+   
     public function setDay($newSpecialTimesheet, $dayType, $worker, $singleDay)
     {
         $timesheetCheck = $this->timesheetCheck($singleDay, $worker);

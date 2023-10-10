@@ -4,8 +4,8 @@
     @php
             $startShift = \Carbon\Carbon::parse($timesheet->ClockedIn)->format('H:i');
             $endShift = \Carbon\Carbon::parse($timesheet->ClockedOut)->format('H:i');
-            $startBreak = $timesheet->StartBreak ? \Carbon\Carbon::parse($timesheet->StartBreak)->format('H:i') : null;
-            $endBreak = $timesheet->EndBreak ? \Carbon\Carbon::parse($timesheet->EndBreak)->format('H:i') : null;
+            $startBreak = $timesheet->BreakStart ? \Carbon\Carbon::parse($timesheet->BreakStart)->format('H:i') : null;
+            $endBreak = $timesheet->BreakStop ? \Carbon\Carbon::parse($timesheet->BreakStop)->format('H:i') : null;
             
             @endphp
             <form action="{{route('updateTimesheet')}}" class="updateTimesheet" method="POST">
@@ -24,9 +24,9 @@
             <legend>Gepauzeerde periode</legend>
             <div>
                 <label for="startBreak">Start:</label>
-                <input class="updateStartBreak" type="time" name="startBreak" value="">
+                <input class="updateStartBreak" type="time" name="startBreak" value="{{$startBreak}}">
                 <label for="endBreak">End:</label>
-                <input type="time" name="endBreak" class="updateEndBreak" value="">
+                <input type="time" name="endBreak" class="updateEndBreak" value="{{$endBreak}}">
             </div>
         </fieldset>
         <input class="userNoteSubmit" type="submit" value="update">

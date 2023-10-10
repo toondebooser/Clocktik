@@ -1,5 +1,6 @@
 body {
     height: 100vh;
+    font-family: "Noto Sans", sans-serif;
 }
 :root {
     --primary-color: #019541;
@@ -80,6 +81,12 @@ th {
     grid-column: 1/2;
     justify-self: end;
     align-self: center;
+}
+.previewIcon{
+    height: 100%;
+}
+.previewLink{
+    height: 50px;
 }
 .updateTimesheet{
     grid-row: 3/3;
@@ -223,6 +230,7 @@ h2 {
     margin-bottom: 0;
 }
 .remeberCheckbox {
+    margin-right: 10px;
     grid-row: 6/7;
     grid-column: 7/9;
     height: 25px;

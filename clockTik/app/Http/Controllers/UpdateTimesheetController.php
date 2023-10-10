@@ -20,6 +20,7 @@ class UpdateTimesheetController extends Controller
             $postData = [
                 'worker' => $id,
             ];
+            
         return redirect()->route('getData',$postData)->with('error', 'Dit is geen werkdag.');
         }
         return view('updateTimesheet',['worker'=>$worker, 'timesheet'=>$timesheet]);
