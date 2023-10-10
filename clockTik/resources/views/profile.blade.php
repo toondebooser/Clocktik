@@ -76,7 +76,7 @@
                     <th>Overtime</th>
                 </tr>
             </thead>
-            @if (isset($timesheet) && $timesheet->count() > 0)
+            @if ($timesheet->count() > 0 && auth()->user()->admin == true)
                 <a class="previewLink"
                     href="{{ route('exportPdf', ['userId' => $userId, 'month' => $month, 'type' => 'preview']) }}"
                     target="_blank">

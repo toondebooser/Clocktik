@@ -82,13 +82,9 @@ th {
     justify-self: end;
     align-self: center;
 }
-.previewIcon{
-    
-    height: 100%;
-}
 .previewLink{
     grid-row: 2/3;
-    grid-column: 9/10;
+    grid-column: 11/12;
     height: 50px;
     align-self: center;
     justify-self: end;
@@ -97,7 +93,7 @@ th {
     height:40px;
     align-self: center;
     grid-row:2/3;
-    grid-column: 10/12;
+    grid-column: 12/13;
 }
 
 .updateTimesheet{
@@ -206,7 +202,7 @@ h2 {
     color: white;
     border-radius: 10px;
     width: 80px;
-    padding-bottom: 4px;
+    padding-top: 1px;
     margin-top: 10px;
     height: 28px;
 }
@@ -225,7 +221,7 @@ h2 {
     color: white;
     border-radius: 10px;
     width: 70px;
-    padding-bottom: 4px;
+    padding-bottom: 2px;
 }
 .loginButton:hover {
     color: black;
@@ -242,6 +238,7 @@ h2 {
     grid-row: 6/7;
     grid-column: 7/9;
     height: 25px;
+    margin-right: 10px;
     align-self: center;
     justify-self: end;
 }
@@ -383,6 +380,7 @@ h1 {
     font-weight: 400;
 }
 .formContainer {
+    text-align: center;
     grid-row: 3/4;
     grid-column: 2/12;
     min-width: 300px;
@@ -700,7 +698,7 @@ fieldset{
     border: none;
     padding-bottom: 3px;
     border-radius: 5px;
-    height: 30px;
+    height: 25px;
 
 }
 .userNoteContainer{
@@ -709,6 +707,11 @@ fieldset{
     grid-column: 4/10;
     justify-self: center;
 }
+.delete{
+    grid-row: 4/5;
+    grid-column: 2/3;
+}
+
 .stopButton {
     align-self: center;
     display: grid;
