@@ -115,6 +115,10 @@ th {
 .submit:hover{
     color: black;
 }
+input:hover{
+    color: black;
+    cursor: pointer;
+}
 .removeError{
     text-decoration: none;
     background-color:#ccc;
@@ -602,9 +606,17 @@ fieldset{
 
 }
 .dagSubmit{
+    color: white;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 5px;
     margin-top: 10px;
 }
 .periodeSubmit{
+    color: white;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 5px;
     margin-top: 10px;
 }
 
@@ -698,8 +710,15 @@ fieldset{
     border: none;
     padding-bottom: 3px;
     border-radius: 5px;
+    margin-top: 10px;
     height: 25px;
 
+}
+.updateTimesheetSubmit{
+    background-color: var(--primary-color);
+    color: white;
+    border:none;
+    border-radius: 5px;
 }
 .userNoteContainer{
     margin: 0px;

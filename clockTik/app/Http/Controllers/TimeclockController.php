@@ -21,6 +21,7 @@ class TimeclockController extends Controller
     public function startWorking(Request $request)
     {
         $currentUser = auth()->user();
+        $timesheetController = new TimesheetController;
         $userTimesheet = new Timesheet;
         $userRow = Timelog::where('UserId',auth()->user()->id)->first();
         $timestamp = now('Europe/Brussels');
@@ -42,9 +43,9 @@ class TimeclockController extends Controller
         if ($dayCheck !== null && $dayCheck->type == "workday") {
             $userRow->BreakHours += $dayCheck->BreakHours;
             $userRow->RegularHours += $dayCheck->RegularHours;
-            $dayCheck->userNote !== null ? $userRow->userNote = $dayCheck->userNote: null;
-           
+            $dayCheck->userNote !== null ? $userRow->userNote = $dayCheck->userNote: null;        
             $dayCheck->delete();
+            $timesheetController->calculateUserTotal($timestamp,$currentUser->id);
         } elseif ( $dayCheck !== null && $dayCheck !== "workday")
         {
             return redirect()->route('dashboard')->with('error', "Vandaag is ".$dayCheck->type." geregistreerd");

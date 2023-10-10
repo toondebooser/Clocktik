@@ -2,13 +2,13 @@
 @section('content')
     <h2>Update rooster van: {{ $worker->name }}</h2>
     @php
-        $startShift = \Carbon\Carbon::parse($timesheet->ClockedIn)->format('H:i');
-        $endShift = \Carbon\Carbon::parse($timesheet->ClockedOut)->format('H:i');
-        $startBreak = $timesheet->BreakStart ? \Carbon\Carbon::parse($timesheet->BreakStart)->format('H:i') : null;
-        $endBreak = $timesheet->BreakStop ? \Carbon\Carbon::parse($timesheet->BreakStop)->format('H:i') : null;
+   if ($timesheet === null) {
+    header('Location: /my-workers');
+    exit;
+}
     @endphp
     <div class="formContainer">
-        <h3>{{ \Carbon\Carbon::parse($timesheet->Month)->format('d/m/Y') }}</h3>
+        <h3>{{ $monthString }}</h3>
         <form action="{{ route('updateTimesheet') }}" class="updateTimesheet" method="POST">
             @csrf
             <input type="hidden" name="id" value="{{ $worker->id }}">
@@ -42,7 +42,7 @@
                 @endforeach
             </select>
             @endif
-            <input class="userNoteSubmit" type="submit" value="update">
+            <input class="updateTimesheetSubmit" type="submit" value="update">
         </form>
     </div>
     <form action="{{route('delete')}}" class="delete" method="POST">
