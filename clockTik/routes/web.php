@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\AddCustomTimesheetController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DeleteTimesheetController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MyWorkersController;
+use App\Http\Controllers\PdfExportController;
 use App\Http\Controllers\SpecialsController;
 use App\Http\Controllers\TimeclockController;
 use App\Http\Controllers\TimesheetController;
@@ -11,7 +13,6 @@ use App\Http\Controllers\UpdateTimesheetController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UsersheetsController;
 use App\Http\Controllers\WorkersController;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Route as RoutingRoute;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,7 @@ Route::match(['get', 'post'], '/update-timesheet/{id}/{timesheet}', [UpdateTimes
 Route::post('/update-worker-timesheet', [UpdateTimesheetController::class, 'updateTimesheet'])->name('updateTimesheet')->middleware('admin');
 Route::match(['get', 'post'], '/specials', [SpecialsController::class, 'specials'])->name('specials')->middleware('admin');
 Route::post('/setSpecial', [TimesheetController::class, 'setSpecial'])->name('setSpecial')->middleware('admin');
+<<<<<<< HEAD
 Route::get('/export-pdf', function () {
 
     $user = json_decode(request('userJSONstring'));
@@ -63,3 +65,7 @@ Route::get('/export-pdf', function () {
     return $pdf->download($filename);
     }
 })->name('exportPdf')->middleware('admin');
+=======
+Route::get('/export-pdf',[PdfExportController::class, 'exportPdf'])->name('exportPdf')->middleware('admin');
+Route::post('/delete-timesheet', [DeleteTimesheetController::class, 'deleteTimesheet'])->name('delete')->middleware('admin');
+>>>>>>> f58775f77562ad71ad161a7d605dfe98ddd52580

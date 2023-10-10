@@ -334,8 +334,8 @@ class TimesheetController extends Controller
         }
          if($type == 'new') $timesheet->Month = $date;
 
-        $timesheet->save();
-        return true;
+        
+        return $timesheet->save();
     }
 
 
@@ -349,7 +349,7 @@ class TimesheetController extends Controller
             $userTotal->BreakHours = Timesheet::where('UserId', $userId)->whereMonth('Month', '=', $date)->sum('BreakHours');
             $userTotal->OverTime = Timesheet::where('UserId', $userId)->whereMonth('Month', '=', $date)->sum('OverTime');
         }
-        $userTotal->save();
-        return true;
+        
+        return $userTotal->save();
     }
 }

@@ -82,12 +82,20 @@ th {
     justify-self: end;
     align-self: center;
 }
-.previewIcon{
-    height: 100%;
-}
 .previewLink{
+    grid-row: 2/3;
+    grid-column: 11/12;
     height: 50px;
+    align-self: center;
+    justify-self: end;
 }
+.downloadLink{
+    height:40px;
+    align-self: center;
+    grid-row:2/3;
+    grid-column: 12/13;
+}
+
 .updateTimesheet{
     grid-row: 3/3;
     grid-column: 2/12;
@@ -99,16 +107,17 @@ th {
 }
 
 .submit{
-    background-color: white;
     border-radius: 5px;
     margin-top: 5px;
     height: 50px;
-    color: white;
-    border: none;
 }
 
 .submit:hover{
     color: black;
+}
+input:hover{
+    color: black;
+    cursor: pointer;
 }
 .removeError{
     text-decoration: none;
@@ -197,7 +206,7 @@ h2 {
     color: white;
     border-radius: 10px;
     width: 80px;
-    padding-bottom: 4px;
+    padding-top: 1px;
     margin-top: 10px;
     height: 28px;
 }
@@ -216,7 +225,7 @@ h2 {
     color: white;
     border-radius: 10px;
     width: 70px;
-    padding-bottom: 4px;
+    padding-bottom: 2px;
 }
 .loginButton:hover {
     color: black;
@@ -234,6 +243,7 @@ h2 {
     grid-row: 6/7;
     grid-column: 7/9;
     height: 25px;
+    margin-right: 10px;
     align-self: center;
     justify-self: end;
 }
@@ -272,6 +282,7 @@ img {
 }
 .stikyHeader {
     position: sticky;
+    z-index: 2;
     top: 0;
 }
 .headerLinks:hover {
@@ -321,12 +332,12 @@ img {
 .displayDay {
     color: black;
 }
-.noteIcon{
-   height: 10px;
-   position: absolute;
-   top: 0;
-   left: 10px;
 
+.noteIcon {
+    height: 10px;
+    position: absolute;
+    top: 0;
+    left: 10px;
 }
 
 th {
@@ -360,7 +371,6 @@ th {
 }
 .date {
     text-align: center;
-    position: relative;
 }
 .displayDay:hover {
     text-decoration: none;
@@ -375,11 +385,13 @@ h1 {
     font-weight: 400;
 }
 .formContainer {
+    text-align: center;
     grid-row: 3/4;
     grid-column: 2/12;
     min-width: 300px;
     max-width: 500px;
     justify-self: center;
+    align-self: center;
 }
 .logincontainer {
     grid-column: 2/12;
@@ -494,6 +506,7 @@ footer {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
     grid-row: 3/4;
     grid-column: 2/12;
     align-self: center;
@@ -502,7 +515,7 @@ footer {
     margin-top: 10px;
 }
 .newTimesheetInput{
-    margin: 0px 5px;
+    margin: 5px 5px;
 }
 fieldset{
     margin: 30px 0px;
@@ -594,9 +607,17 @@ fieldset{
 
 }
 .dagSubmit{
+    color: white;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 5px;
     margin-top: 10px;
 }
 .periodeSubmit{
+    color: white;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 5px;
     margin-top: 10px;
 }
 
@@ -678,22 +699,39 @@ fieldset{
     grid-column: 2/12;
     justify-self: center;
 }
+.userNote{
+    word-break: break-all;
+    max-height: 60px;
+    overflow-y:auto;
+}
 
 .userNoteSubmit{
     background-color: var(--primary-color);
     color: white;
     border: none;
     padding-bottom: 3px;
-    margin-top: 10px;
     border-radius: 5px;
-    height: 30px;
+    margin-top: 10px;
+    height: 25px;
 
 }
+.updateTimesheetSubmit{
+    background-color: var(--primary-color);
+    color: white;
+    border:none;
+    border-radius: 5px;
+}
 .userNoteContainer{
+    margin: 0px;
     grid-row: 4/5;
-    grid-column: 2/12;
+    grid-column: 4/10;
     justify-self: center;
 }
+.delete{
+    grid-row: 4/5;
+    grid-column: 2/3;
+}
+
 .stopButton {
     align-self: center;
     display: grid;
@@ -758,34 +796,7 @@ p {
 }
 .date {
     grid-column: 1/2;
-}
-@media (max-width: 768px) {
-    h2 {
-        font-size: x-large;
-    }
-    h1 {
-        grid-column: 1/13;
-        text-align: center;
-    }
-    .bodyContent {
-        grid-auto-rows: 20% 5% 45% 25% 5%;
-    }
-    .newUserForm {
-        scale: 0.9;
-    }
-    header {
-        justify-self: end;
-        margin-right: 5px;
-    }
-    .headerLinks {
-        margin: 0px 2px;
-    }
-    .authLinks {
-        margin: 0 2px;
-    }
-    p {
-        font-size: small;
-    }
+    position: relative;
 }
 
 .displayTotalRegular {
@@ -830,6 +841,7 @@ p {
     .error{
         width: auto;
     }
+    
     .specialDays{
         grid-column: 2/12;
         grid-row: 3/5;
@@ -857,3 +869,40 @@ p {
     }
    
 }
+    @media (max-width: 768px) {
+        h2 {
+            font-size: x-large;
+        }
+        h1 {
+            grid-column: 1/13;
+            text-align: center;
+        }
+        .formContainer{
+            text-align: center;
+        }
+        
+        .bodyContent {
+            grid-auto-rows: 20% 5% 45% 25% 5%;
+        }
+        .newUserForm {
+            scale: 0.9;
+        }
+        header {
+            justify-self: end;
+            margin-right: 5px;
+        }
+        .headerLinks {
+            margin: 0px 2px;
+        }
+        .newTimesheetDate{
+       margin: 0px 50px;
+       margin-bottom: 10px;
+       
+        }
+        .authLinks {
+            margin: 0 2px;
+        }
+        p {
+            font-size: small;
+        }
+    }
