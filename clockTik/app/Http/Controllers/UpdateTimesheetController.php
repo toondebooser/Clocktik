@@ -31,6 +31,7 @@ class UpdateTimesheetController extends Controller
         $timesheetController = new TimesheetController();
         $timesheet = Timesheet::find($request->timesheet);
         $type = $request->updateSpecial;
+        $type == null? $type = $timesheet->type: null;
         $date = $timesheet->Month;
         $id = $request->id;
         if ($type == "Onbetaald verlof") {
@@ -56,6 +57,7 @@ class UpdateTimesheetController extends Controller
             }
         }elseif($type !== 'workday')
         {
+            dd($type);
             $timesheet->accountableHours = 7.6;
             $timesheet->type = $type;
             $save = $timesheet->save();

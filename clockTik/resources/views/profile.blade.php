@@ -76,7 +76,8 @@
                     <th>Overtime</th>
                 </tr>
             </thead>
-            @if ($timesheet->count() > 0 && auth()->user()->admin == true)
+            @if ($timesheet->count() > 0)
+                @if(auth()->user()->admin == true)
                 <a class="previewLink"
                     href="{{ route('exportPdf', ['userId' => $userId, 'month' => $month, 'type' => 'preview']) }}"
                     target="_blank">
@@ -86,7 +87,7 @@
                     href="{{ route('exportPdf', ['userId' => $userId, 'month' => $month, 'type' => 'download']) }}">
                     <img class="downloadIcon" src="{{ asset('/images/2021663-200.png') }}" alt="Download">
                 </a>
-
+                @endif
                 @foreach ($timesheet as $item)
                     <tr class="timesheetRow">
                         <td class="date" id="{{ $item->id }}">
