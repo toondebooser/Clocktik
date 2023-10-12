@@ -91,16 +91,20 @@ class TimesheetController extends Controller
         $timesheetCheck = $this->timesheetCheck($date, $id);
 
         if($timesheetCheck !== null) dd($timesheetCheck);
-        if($carbonDate->isWeekend()) $weekend = true;
+        if( Carbon::parse($date, 'Europe/Brussels')->isWeekend()) $weekend = true ;
 
         $start = $request->input('startTime');
         $end = $request->input('endTime');
-        $dateTimeStart = $date . ' ' . $start;
-        $dateTimeEnd = $date. ' '.$end;
-        $break = 0.5;
+        $dateTimeStart = Carbon::parse($date . ' ' . $start, 'Europe/Brussels');
+        $dateTimeEnd = Carbon::parse($date. ' '.$end, 'Europe/Brussels');
+        $dateTimeEndClone = clone $dateTimeEnd;
+        $startBreak = $dateTimeEndClone->subMinutes(30);
+        $break = $this->calculateBreakHours($startBreak, $dateTimeEnd);
         $newTimesheet->UserId = $id;
-        $newTimesheet->ClockedIn = Carbon::parse($dateTimeStart, 'Europe/Brussels');
-        $newTimesheet->ClockedOut = Carbon::parse($dateTimeEnd, 'Europe/Brussels');
+        $newTimesheet->ClockedIn = $dateTimeStart;
+        $newTimesheet->ClockedOut = $dateTimeEnd;
+        $newTimesheet->BreakStart = $startBreak;
+        $newTimesheet->BreakStop = $dateTimeEnd; 
         $newTimesheet->BreakHours = $break;
         $clockedTime = $this->calculateClockedHours($start, $end);
         $regularHours = $clockedTime - $break;
@@ -323,7 +327,7 @@ class TimesheetController extends Controller
             case ($weekend == true):
                 $timesheet->Weekend = true;
                 $timesheet->RegularHours = $regularHours;
-                $timesheet->OverTime += $regularHours;
+                $timesheet->OverTime = $regularHours;
 
                 break;
             default:
