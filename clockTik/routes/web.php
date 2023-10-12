@@ -32,8 +32,8 @@ Route::get('/dashboard-stop', [TimeclockController::class, 'stop'])->name('stop'
 Route::get('/my-profile', [UsersheetsController::class, 'myProfile'])->name('myProfile')->middleware('worker');
 Route::match(['get', 'post'],'/my-profile-post', [UsersheetsController::class, 'myProfile'])->name('getData')->middleware('auth');
 Route::get('/make-timesheet/{id}', [TimesheetController::class, 'makeTimesheet'])->name('makeTimesheet')->middleware('auth');
-Route::post('/new-timesheet-form', [AddCustomTimesheetController::class, 'customTimesheetForm'])->name('timesheetForm')->middleware('admin');
-Route::post('/add-new-timesheet', [TimesheetController::class, 'addNewTimesheet'])->name('newTimesheet')->middleware('admin');
+Route::match(['get', 'post'],'/new-timesheet-form', [AddCustomTimesheetController::class, 'customTimesheetForm'])->name('timesheetForm')->middleware('admin');
+Route::match(['get', 'post'],'/add-new-timesheet', [TimesheetController::class, 'addNewTimesheet'])->name('newTimesheet')->middleware('admin');
 Route::get('/my-workers', [MyWorkersController::class, 'fetchWorkers'])->name('myWorkers')->middleware('admin');
 Route::get('/forWorker', [SpecialsController::class, 'forWorker'])->name('forWorker')->middleware('admin');
 Route::match(['get', 'post'], '/update-timesheet/{id}/{timesheet}', [UpdateTimesheetController::class, 'updateForm'])->name('update')->middleware('admin');

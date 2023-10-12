@@ -2,6 +2,7 @@
 @section('content')
     <h2>Update rooster van: {{ $worker->name }}</h2>
     @php
+    $specialDays = ['Ziek', 'Weerverlet', 'Onbetaald verlof', 'Betaald verlof', 'Feestdag', 'Solicitatie verlof'];
    if ($timesheet === null) {
     header('Location: /my-workers');
     exit;
@@ -14,6 +15,7 @@
             <input type="hidden" name="id" value="{{ $worker->id }}">
             <input type="hidden" name="timesheet" value="{{ $timesheet->id }}">
             <input type="hidden" name="type" value="{{$timesheet->type}}">
+
             @if ($timesheet->type == 'workday')
                 <fieldset>
                     <legend>Gewerkte periode</legend>
@@ -33,9 +35,7 @@
                 </div>
                 </fieldset>
                 @else
-                @php
-            $specialDays = ['Ziek', 'Weerverlet', 'Onbetaald verlof', 'Betaald verlof', 'Feestdag', 'Solicitatie verlof'] 
-            @endphp
+
             <select name="updateSpecial" size="1">
                 @foreach ($specialDays as $specialDay)
                 <option value="{{$specialDay}}" {{$specialDay == $timesheet->type? 'selected':''}}>{{$specialDay}}</option>

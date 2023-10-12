@@ -46,6 +46,11 @@ class TimesheetController extends Controller
 
     public function timesheetCheck($date, $id)
     {
+        if (is_string($date)) {
+            $date = Carbon::parse($date);
+        } else {
+            $date = $date;
+        }
         $timesheetCheck = Timesheet::where('UserId', '=', $id)
             ->whereMonth('Month', '=', $date)
             ->whereDay('Month', $date)
@@ -87,20 +92,27 @@ class TimesheetController extends Controller
         $weekend = false;
         $date = $request->input('newTimesheetDate');
         $id = $request->input('workerId');
-        $carbonDate = Carbon::parse($date, 'Europe/Brussels');
+        
+        // $carbonDate = Carbon::parse($date, 'Europe/Brussels');
         $timesheetCheck = $this->timesheetCheck($date, $id);
 
-        if($timesheetCheck !== null) dd($timesheetCheck);
-        if($carbonDate->isWeekend()) $weekend = true;
+        if($timesheetCheck !== null){
+            return redirect()->route('timesheetForm',['worker' => $id ])->with('error', 'Datum al in gebruik');
+        }
+        if( Carbon::parse($date, 'Europe/Brussels')->isWeekend()) $weekend = true ;
 
         $start = $request->input('startTime');
         $end = $request->input('endTime');
-        $dateTimeStart = $date . ' ' . $start;
-        $dateTimeEnd = $date. ' '.$end;
-        $break = 0.5;
+        $dateTimeStart = Carbon::parse($date . ' ' . $start, 'Europe/Brussels');
+        $dateTimeEnd = Carbon::parse($date. ' '.$end, 'Europe/Brussels');
+        $dateTimeEndClone = clone $dateTimeEnd;
+        $startBreak = $dateTimeEndClone->subMinutes(30);
+        $break = $this->calculateBreakHours($startBreak, $dateTimeEnd);
         $newTimesheet->UserId = $id;
-        $newTimesheet->ClockedIn = Carbon::parse($dateTimeStart, 'Europe/Brussels');
-        $newTimesheet->ClockedOut = Carbon::parse($dateTimeEnd, 'Europe/Brussels');
+        $newTimesheet->ClockedIn = $dateTimeStart;
+        $newTimesheet->ClockedOut = $dateTimeEnd;
+        $newTimesheet->BreakStart = $startBreak;
+        $newTimesheet->BreakStop = $dateTimeEnd; 
         $newTimesheet->BreakHours = $break;
         $clockedTime = $this->calculateClockedHours($start, $end);
         $regularHours = $clockedTime - $break;
@@ -280,7 +292,7 @@ class TimesheetController extends Controller
 
 
         $diffInMin = $end->diffInMinutes($start);
-        $decimalTime = round($diffInMin / 60, 2);
+        $decimalTime = round($diffInMin / 60, 2,PHP_ROUND_HALF_UP);
         
         return $decimalTime;
     }
@@ -293,7 +305,7 @@ class TimesheetController extends Controller
 
         $diffInMin = $end->diffInMinutes($start);
 
-        $decimalTime = round($diffInMin / 60, 2);
+        $decimalTime = round($diffInMin / 60, 2, PHP_ROUND_HALF_UP);
         
 
         return $decimalTime;
@@ -323,7 +335,7 @@ class TimesheetController extends Controller
             case ($weekend == true):
                 $timesheet->Weekend = true;
                 $timesheet->RegularHours = $regularHours;
-                $timesheet->OverTime += $regularHours;
+                $timesheet->OverTime = $regularHours;
 
                 break;
             default:
