@@ -280,7 +280,7 @@ class TimesheetController extends Controller
 
 
         $diffInMin = $end->diffInMinutes($start);
-        $decimalTime = round($diffInMin / 60, 2);
+        $decimalTime = round($diffInMin / 60, 2,PHP_ROUND_HALF_UP);
         
         return $decimalTime;
     }
@@ -293,7 +293,7 @@ class TimesheetController extends Controller
 
         $diffInMin = $end->diffInMinutes($start);
 
-        $decimalTime = round($diffInMin / 60, 2);
+        $decimalTime = round($diffInMin / 60, 2, PHP_ROUND_HALF_UP);
         
 
         return $decimalTime;

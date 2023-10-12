@@ -12,12 +12,7 @@ use Illuminate\Support\Facades\Redirect;
 
 class TimeclockController extends Controller
 {
-    // public function calculateDecimale($start, $end)
-    // {
-    //     $diffInMin = $end->diffInMinutes($start);
-    //     $decimalTime = round($diffInMin / 60, 2);
-    //     return $decimalTime;
-    // }
+   
     public function startWorking(Request $request)
     {
         $currentUser = auth()->user();
@@ -79,6 +74,7 @@ class TimeclockController extends Controller
         $userRow->BreakStatus = false;
         $start = $userRow->StartBreak;
         $end = $timeStamp;
+        $userRow->EndBreak = $end;
         $userRow->BreakHours += $timesheet->calculateBreakHours($start, $end);
         $userRow->save();
         return redirect('/dashboard');

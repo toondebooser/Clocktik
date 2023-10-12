@@ -15,13 +15,13 @@ class UpdateTimesheetController extends Controller
 
         $worker = User::find($id);
         $timesheet = Timesheet::find($timesheet);
-        // if ($timesheet == null || $timesheet->type !== 'workday') {
-        //     $postData = [
-        //         'worker' => $id,
-        //     ];
+        if ($timesheet === null) {
+            $postData = [
+                'worker' => $id,
+            ];
 
-        //     return redirect()->route('getData', $postData)->with('error', 'Dit is geen werkdag.');
-        // }
+            return redirect()->route('getData', $postData)->with('error', $worker->name.' heeft juist ingeklokt. ');
+        }
         $startShift = Carbon::parse($timesheet->ClockedIn)->format('H:i');
         $endShift = Carbon::parse($timesheet->ClockedOut)->format('H:i');
         $startBreak = $timesheet->BreakStart ? Carbon::parse($timesheet->BreakStart)->format('H:i') : null;
@@ -29,16 +29,24 @@ class UpdateTimesheetController extends Controller
         $monthString = Carbon::parse($timesheet->Month)->format('d/m/Y');
         return view('updateTimesheet', ['worker' => $worker, 'timesheet' => $timesheet, 'startShift' => $startShift, 'endShift' => $endShift, 'startBreak' => $startBreak, 'endBreak' => $endBreak, 'monthString' =>$monthString]);
     }
-
+    
     public function updateTimesheet(Request $request)
     {
-
+        $id = $request->id;
+        $worker = User::find($id);
         $timesheetController = new TimesheetController();
         $timesheet = Timesheet::find($request->timesheet);
+        if ($timesheet === null) {
+            $postData = [
+                'worker' => $id,
+            ];
+
+            return redirect()->route('getData', $postData)->with('error', $worker->name.' heeft juist ingeklokt. ');
+        }
         $type = $request->updateSpecial;
         $type == null ? $type = $timesheet->type : null;
         $date = $timesheet->Month;
-        $id = $request->id;
+
         if ($type == "Onbetaald verlof") {
             $timesheet->accountableHours = 0;
             $timesheet->type = $type;
@@ -58,7 +66,6 @@ class UpdateTimesheetController extends Controller
                 return redirect()->route('getData', $postData)->with('error', 'Er ging iets mis, kijk even na of de dag in het uurrooster is aangepast.');
             }
         } elseif ($type !== 'workday') {
-            dd($type);
             $timesheet->accountableHours = 7.6;
             $timesheet->type = $type;
             $save = $timesheet->save();
