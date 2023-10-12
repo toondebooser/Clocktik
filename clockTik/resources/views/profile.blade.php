@@ -1,11 +1,11 @@
 @extends('layout')
 @section('title')
-    <script>
-        if ($user->admin){
-            window.location.href = "{{ route('myWorkers') }}";
-        }
-        
-    </script>
+<script>
+    @if($user->admin)
+        window.location.href = "{{ route('myWorkers') }}";
+    @endif
+</script>
+
     @php
         $userId = $user->id;
         if(isset($timesheet[0]))$month = $timesheet[0]->Month;
