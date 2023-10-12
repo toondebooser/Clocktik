@@ -46,6 +46,11 @@ class TimesheetController extends Controller
 
     public function timesheetCheck($date, $id)
     {
+        if (is_string($date)) {
+            $date = Carbon::parse($date);
+        } else {
+            $date = $date;
+        }
         $timesheetCheck = Timesheet::where('UserId', '=', $id)
             ->whereMonth('Month', '=', $date)
             ->whereDay('Month', $date)
@@ -87,10 +92,13 @@ class TimesheetController extends Controller
         $weekend = false;
         $date = $request->input('newTimesheetDate');
         $id = $request->input('workerId');
-        $carbonDate = Carbon::parse($date, 'Europe/Brussels');
+        
+        // $carbonDate = Carbon::parse($date, 'Europe/Brussels');
         $timesheetCheck = $this->timesheetCheck($date, $id);
 
-        if($timesheetCheck !== null) dd($timesheetCheck);
+        if($timesheetCheck !== null){
+            return redirect()->route('timesheetForm',['worker' => $id ])->with('error', 'Datum al in gebruik');
+        }
         if( Carbon::parse($date, 'Europe/Brussels')->isWeekend()) $weekend = true ;
 
         $start = $request->input('startTime');

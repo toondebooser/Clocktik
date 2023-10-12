@@ -1,9 +1,10 @@
 @extends('layout')
 @section('title')
     <script>
-        @if ($user->admin)
+        if ($user->admin){
             window.location.href = "{{ route('myWorkers') }}";
-        @endif
+        }
+        
     </script>
     @php
         $userId = $user->id;
