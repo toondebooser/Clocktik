@@ -50,11 +50,11 @@ th {
     grid-column: 2/12;
     word-break: break-all;
 }
-.error{
+.error {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    padding: 10px 20px ;
+    padding: 10px 20px;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -62,76 +62,78 @@ th {
     background-color: pink;
     color: red;
     max-height: 350px;
-    width:80%;
+    width: 80%;
     align-items: center;
     border-radius: 10px;
     z-index: 1;
 }
-.specifiedError{
+.specifiedError {
     color: black;
 }
-.dagenInstellen{
+.dagenInstellen {
     grid-row: 2/3;
     grid-column: 2/3;
     justify-self: start;
     align-self: center;
 }
-.timesheetToevoegen{
+.timesheetToevoegen {
     grid-row: 2/3;
     grid-column: 1/2;
     justify-self: end;
     align-self: center;
 }
-.previewLink{
+.previewLink {
     grid-row: 2/3;
     grid-column: 11/12;
     height: 50px;
     align-self: center;
     justify-self: end;
 }
-.downloadLink{
-    height:40px;
+.downloadLink {
+    height: 40px;
     align-self: center;
-    grid-row:2/3;
+    grid-row: 2/3;
     grid-column: 12/13;
 }
 
-.updateTimesheet{
+.updateTimesheet {
     grid-row: 3/3;
     grid-column: 2/12;
     justify-self: center;
     align-self: center;
 }
-.updateStartTime,.updateEndTime,.updateStartBreak,.updateEndBreak{
+.updateStartTime,
+.updateEndTime,
+.updateStartBreak,
+.updateEndBreak {
     color: red;
 }
 
-.submit{
+.submit {
     border-radius: 5px;
     margin-top: 5px;
     height: 50px;
 }
 
-.submit:hover{
+.submit:hover {
     color: black;
 }
-input:hover{
+input:hover {
     color: black;
     cursor: pointer;
 }
-.removeError{
+.removeError {
     text-decoration: none;
-    background-color:#ccc;
+    background-color: #ccc;
     margin-top: 10px;
     border: 1px solid black;
     color: black;
     width: 50%;
     text-align: center;
 }
-.removeError:hover{
+.removeError:hover {
     text-decoration: none;
     color: white;
-
 }
 .timesheetHeader {
     margin-top: 20px;
@@ -313,15 +315,13 @@ img {
     padding-bottom: 2px;
     border-radius: 5px;
     color: #ffffff;
-    background-color:var(--primary-color);
+    background-color: var(--primary-color);
 }
-.getMonthButton:hover{
+.getMonthButton:hover {
     color: black;
 }
 
-
-
-.dropDownMonth{
+.dropDownMonth {
     height: 35px;
     width: 120px;
     border-radius: 10px;
@@ -487,21 +487,21 @@ footer {
     border: 1px solid grey;
     color: black;
 }
-.workerButton:hover{
+.workerButton:hover {
     background-color: #ccc;
 }
-.specialDays{
+.specialDays {
     grid-column: 2/12;
     grid-row: 3/5;
     justify-self: center;
     display: flex;
     flex-direction: column;
 }
-.instellenVoor{
+.instellenVoor {
     text-align: center;
-} 
+}
 
-.addNewTimesheetForm{
+.addNewTimesheetForm {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -510,13 +510,13 @@ footer {
     grid-column: 2/12;
     align-self: center;
 }
-.newTimesheetSubmit{
+.newTimesheetSubmit {
     margin-top: 10px;
 }
-.newTimesheetInput{
+.newTimesheetInput {
     margin: 5px 5px;
 }
-fieldset{
+fieldset {
     margin: 30px 0px;
 }
 .checkMark {
@@ -527,8 +527,8 @@ fieldset{
     width: 25px;
     background-color: #eee;
     border-radius: 50%;
-  }
-.checkboxContainer{
+}
+.checkboxContainer {
     display: block;
     position: relative;
     padding-left: 35px;
@@ -536,90 +536,102 @@ fieldset{
     cursor: pointer;
     font-size: 20px;
     user-select: none;
-  }
+}
 
-  .checkboxContainer .radioBox{
+.checkboxContainer .radioBox {
     position: absolute;
     opacity: 0;
     cursor: pointer;
-  }
-  .checkboxContainer:hover .radioBox ~ .checkMark {
+}
+.checkboxContainer:hover .radioBox ~ .checkMark {
     background-color: #ccc;
-  }
+}
 .checkboxContainer .radioBox:checked ~ .checkMark {
     background-color: var(--primary-color);
-  }
-  .checkMark:after {
+}
+.checkMark:after {
     content: "";
     position: absolute;
     display: none;
-  }
-  .checkboxContainer .radioBox:checked ~ .checkMark:after {
+}
+.radioBox:checked ~ .checkMark:after {
     display: block;
-  }
-  
-  .checkboxContainer .checkMark:after {
-       top: 9px;
-      left: 9px;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: white;
-  }
- 
-.specialDayForm{
+}
+
+.checkMark:after {
+    top: 9px;
+    left: 9px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+}
+.customInput{
+    display: none;
+    width: 150px;
+}
+
+#customInput:checked ~ .customInput{
+    display: inline;
+
+}
+
+#customInput:checked ~ .labelAndere{
+    display: none;
+    
+}
+
+.specialDayForm {
     overflow-y: scroll;
     display: grid;
     gap: 20px;
     grid-template-columns: 1fr;
     grid-row: 1fr 1fr;
-    width:auto;
+    width: auto;
 }
 
 .specialDayForm::-webkit-scrollbar {
     display: none;
 }
 .specialDayForm {
-    -ms-overflow-style: none; 
-    scrollbar-width: none; 
-  }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
 
-.radioInput{
+.radioInput {
     grid-row: 1/2;
     justify-self: center;
 }
-.dateInput{
-    width:min-content;
+.dateInput {
+    width: min-content;
     grid-row: 2/3;
     justify-self: center;
 }
-.startDateInput{
+.startDateInput {
     margin: 10px 0px;
 }
-.startDateInput:after{
-    content: ' Start ';
+.startDateInput:after {
+    content: " Start ";
     padding: 0px 5px;
 }
-.endDateInput:after{
-    content:'End';
+.endDateInput:after {
+    content: "End";
     padding: 0px 5px;
-
 }
-.dagSubmit{
+.dagSubmit {
     color: white;
     background-color: var(--primary-color);
     border: none;
     border-radius: 5px;
     margin-top: 10px;
 }
-.periodeSubmit{
+.periodeSubmit {
     color: white;
     background-color: var(--primary-color);
     border: none;
     border-radius: 5px;
     margin-top: 10px;
 }
-
 
 .working,
 .onBreak,
@@ -654,7 +666,7 @@ fieldset{
     color: white;
     justify-self: center;
 }
-.specialsButton:hover{
+.specialsButton:hover {
     text-decoration: none;
     color: black;
 }
@@ -693,18 +705,18 @@ fieldset{
     background: linear-gradient(145deg, rgb(200, 215, 248), #2626da);
     box-shadow: 5px 5px 10px #929292, -5px -5px 10px #ffffff;
 }
-.userNoteForm{
+.userNoteForm {
     grid-row: 4/5;
     grid-column: 2/12;
     justify-self: center;
 }
-.userNote{
+.userNote {
     word-break: break-all;
     max-height: 60px;
-    overflow-y:auto;
+    overflow-y: auto;
 }
 
-.userNoteSubmit{
+.userNoteSubmit {
     background-color: var(--primary-color);
     color: white;
     border: none;
@@ -712,21 +724,20 @@ fieldset{
     border-radius: 5px;
     margin-top: 10px;
     height: 25px;
-
 }
-.updateTimesheetSubmit{
+.updateTimesheetSubmit {
     background-color: var(--primary-color);
     color: white;
-    border:none;
+    border: none;
     border-radius: 5px;
 }
-.userNoteContainer{
+.userNoteContainer {
     margin: 0px;
     grid-row: 4/5;
     grid-column: 4/10;
     justify-self: center;
 }
-.delete{
+.delete {
     grid-row: 4/5;
     grid-column: 2/3;
 }
@@ -765,9 +776,9 @@ fieldset{
     display: none;
 }
 .profileContent {
-    -ms-overflow-style: none; 
-    scrollbar-width: none; 
-  }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
 p {
     height: max-content;
 }
@@ -836,12 +847,12 @@ p {
     border-radius: 10px;
     border: 1px solid #daa30a;
 }
-@media  (min-width: 768px) {
-    .error{
+@media (min-width: 768px) {
+    .error {
         width: auto;
     }
-    
-    .specialDays{
+
+    .specialDays {
         grid-column: 2/12;
         grid-row: 3/5;
         justify-self: center;
@@ -849,59 +860,57 @@ p {
         display: flex;
         flex-direction: column;
     }
-    .specialDayForm{
+    .specialDayForm {
         overflow-y: scroll;
         display: grid;
         gap: 100px;
-        grid-template-columns: 1fr  1fr;
-        width:auto;
+        grid-template-columns: 1fr 1fr;
+        width: auto;
     }
-    .radioInput{
+    .radioInput {
         grid-row: 1/2;
         justify-self: center;
     }
-    .dateInput{
-        width:min-content;
+    .dateInput {
+        width: min-content;
         grid-row: 1/2;
         justify-self: center;
         align-self: center;
     }
-   
 }
-    @media (max-width: 768px) {
-        h2 {
-            font-size: x-large;
-        }
-        h1 {
-            grid-column: 1/13;
-            text-align: center;
-        }
-        .formContainer{
-            text-align: center;
-        }
-        
-        .bodyContent {
-            grid-auto-rows: 20% 5% 45% 25% 5%;
-        }
-        .newUserForm {
-            scale: 0.9;
-        }
-        header {
-            justify-self: end;
-            margin-right: 5px;
-        }
-        .headerLinks {
-            margin: 0px 2px;
-        }
-        .newTimesheetDate{
-       margin: 0px 50px;
-       margin-bottom: 10px;
-       
-        }
-        .authLinks {
-            margin: 0 2px;
-        }
-        p {
-            font-size: small;
-        }
+@media (max-width: 768px) {
+    h2 {
+        font-size: x-large;
     }
+    h1 {
+        grid-column: 1/13;
+        text-align: center;
+    }
+    .formContainer {
+        text-align: center;
+    }
+
+    .bodyContent {
+        grid-auto-rows: 20% 5% 45% 25% 5%;
+    }
+    .newUserForm {
+        scale: 0.9;
+    }
+    header {
+        justify-self: end;
+        margin-right: 5px;
+    }
+    .headerLinks {
+        margin: 0px 2px;
+    }
+    .newTimesheetDate {
+        margin: 0px 50px;
+        margin-bottom: 10px;
+    }
+    .authLinks {
+        margin: 0 2px;
+    }
+    p {
+        font-size: small;
+    }
+}

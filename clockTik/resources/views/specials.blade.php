@@ -43,6 +43,13 @@
                         </label>
                         <br>
                     @endforeach
+                    <label for="customInput" id="andereLabel" class="checkboxContainer" for="customInput">
+                        <input type="radio" class="radioBox" id="customInput" name="specialDay" value="" >
+                        <span class="labelAndere">Andere</span>
+                        <input type="text" class="customInput" name="customInput" >
+                        <span class="checkMark"></span>
+                    </label>         
+                    <br>
                 </span>
                 <input type="hidden" name="worker" value="{{ $worker }}">
                 <span class="dateInput">
@@ -53,8 +60,9 @@
                     <input class="startDateInput" type="date" name="startDate" id="startDateInput">
                     <input class="endDateInput" type="date" name="endDate" id="endDateInput"><br>
                     <input class="periodeSubmit" type="submit" name="submitType" value="Periode Toevoegen">
+                </span>
             </form>
-            </span>
         @endif
     </div>
+ 
 @endsection
