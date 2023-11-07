@@ -122,7 +122,7 @@ class TimesheetController extends Controller
 
     }
    
-    public function setDay($newSpecialTimesheet, $dayType, $worker, $singleDay, $custom)
+    public function setDay($newSpecialTimesheet, $dayType, $worker, $singleDay, $specialDays )
     {
         $timesheetCheck = $this->timesheetCheck($singleDay, $worker);
 
@@ -131,10 +131,9 @@ class TimesheetController extends Controller
             $newSpecialTimesheet->ClockedIn = $singleDay;
             $newSpecialTimesheet->Month = $singleDay;
             $newSpecialTimesheet->UserId = $worker;
-            if ($dayType == 'Onbetaald verlof' || $custom == true ) {
+            if ($dayType == 'Onbetaald verlof' || !in_array($dayType, $specialDays) ) {
                 $newSpecialTimesheet->save();
                 $userTotal = $this->fetchUserTotal($singleDay, $worker);
-                if ($custom == false) $userTotal->$dayType += 1;
                 $this->calculateUserTotal($singleDay, $worker);
                 $userTotal->save();
                 return true;
@@ -151,14 +150,14 @@ class TimesheetController extends Controller
         }
     }
 
-    public function setPeriod($dayType, $worker, $startDate, $endDate, $custom)
+    public function setPeriod($dayType, $worker, $startDate, $endDate, $specialDays)
     {
         $errors = [];
         $currentDate = clone $startDate;
         while ($currentDate <= $endDate) {
             $newSpecialTimesheet = new Timesheet;
             if (!$currentDate->isWeekend()) {
-                $addDay =  $this->setDay($newSpecialTimesheet, $dayType, $worker, $currentDate, $custom);
+                $addDay =  $this->setDay($newSpecialTimesheet, $dayType, $worker, $currentDate,$specialDays);
                 if ($addDay !== true) {
                     array_push($errors, 'Datum al in gebruik: '.$currentDate->toDateString());
                 }
@@ -178,7 +177,7 @@ class TimesheetController extends Controller
     {
 
         $dayType = $request->input('specialDay');
-        $custom = false;
+        $specialDays = ['Ziek', 'Weerverlet', 'Onbetaald verlof', 'Betaald verlof', 'Feestdag', 'Solicitatie verlof'];
         if($dayType == null)
         { 
             $dayType = $request->input('customInput');
@@ -249,7 +248,7 @@ class TimesheetController extends Controller
                         if ($user['admin'] == true) {
                             continue;
                         }
-                        $result = $this->setday($newSpecialTimesheetForEveryone, $dayType, $user['id'], $singleDay, $custom);
+                        $result = $this->setday($newSpecialTimesheetForEveryone, $dayType, $user['id'], $singleDay,$specialDays);
                         if ($result !== true) {
                             array_push($results, ['id' => $user['id'], 'errorList' => $result]);
                         }
@@ -259,7 +258,7 @@ class TimesheetController extends Controller
                     }
                 } else {
 
-                    $addDay = $this->setDay($newSpecialTimesheet, $dayType, $worker, $singleDay, $custom);
+                    $addDay = $this->setDay($newSpecialTimesheet, $dayType, $worker, $singleDay, $specialDays);
                     if ($addDay !== true) {
                         array_push($results, ['id' => $worker, 'errorList' => $addDay]);
                         return redirect()->route('specials', ['worker' => $worker])->with('error', $results);
@@ -273,7 +272,7 @@ class TimesheetController extends Controller
                     if ($user['admin'] == true) {
                         continue;
                     }
-                    $result = $this->setPeriod($dayType, $user['id'], $startDate, $endDate, $custom);
+                    $result = $this->setPeriod($dayType, $user['id'], $startDate, $endDate, $specialDays);
                     if ($result !== true) {
                         array_push($results, ['id' => $user['id'], 'errorList' => $result]);
                     }
@@ -282,7 +281,7 @@ class TimesheetController extends Controller
                     return redirect()->route('specials', ['worker' => $worker])->with('errors', $results);
                 }
             } else {
-                $result = $this->setPeriod($dayType, $worker, $startDate, $endDate, $custom);
+                $result = $this->setPeriod($dayType, $worker, $startDate, $endDate, $specialDays);
                 if ($result !== true) {
                     array_push($results, ['id' => $worker, 'errorList' => $result]);
                     return redirect()->route('specials', ['worker' => $worker])->with('errors',  $results);

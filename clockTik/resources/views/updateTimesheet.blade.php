@@ -2,11 +2,11 @@
 @section('content')
     <h2>Update rooster van: {{ $worker->name }}</h2>
     @php
-    $specialDays = ['Ziek', 'Weerverlet', 'Onbetaald verlof', 'Betaald verlof', 'Feestdag', 'Solicitatie verlof'];
-   if ($timesheet === null) {
-    header('Location: /my-workers');
-    exit;
-}
+        $specialDays = ['Ziek', 'Weerverlet', 'Onbetaald verlof', 'Betaald verlof', 'Feestdag', 'Solicitatie verlof'];
+        if ($timesheet === null) {
+            header('Location: /my-workers');
+            exit();
+        }
     @endphp
     <div class="formContainer">
         <h3>{{ $monthString }}</h3>
@@ -14,7 +14,7 @@
             @csrf
             <input type="hidden" name="id" value="{{ $worker->id }}">
             <input type="hidden" name="timesheet" value="{{ $timesheet->id }}">
-            <input type="hidden" name="type" value="{{$timesheet->type}}">
+            <input type="hidden" name="type" value="{{ $timesheet->type }}">
 
             @if ($timesheet->type == 'workday')
                 <fieldset>
@@ -34,24 +34,28 @@
                     <input type="time" name="endBreak" class="updateEndBreak" value="{{ $endBreak }}">
                 </div>
                 </fieldset>
+            @else
+                @if(in_array($timesheet->type, $specialDays))
+                <select name="updateSpecial" size="1">
+                    @foreach ($specialDays as $specialDay)
+                        <option value="{{ $specialDay }}" {{ $specialDay == $timesheet->type ? 'selected' : '' }}>
+                            {{ $specialDay }}</option>
+                    @endforeach
+                </select>
                 @else
-
-            <select name="updateSpecial" size="1">
-                @foreach ($specialDays as $specialDay)
-                <option value="{{$specialDay}}" {{$specialDay == $timesheet->type? 'selected':''}}>{{$specialDay}}</option>
-                @endforeach
-            </select>
+                <input type="text" name="updateSpecial" value="{{$timesheet->type}}">
+                @endif
             @endif
             <input class="updateTimesheetSubmit" type="submit" value="update">
         </form>
     </div>
-    <form action="{{route('delete')}}" class="delete" method="POST">
+    <form action="{{ route('delete') }}" class="delete" method="POST">
         @csrf
         <input type="hidden" name="workerId" value="{{ $worker->id }}">
         <input type="hidden" name="deleteSheet" value="{{ $timesheet->id }}">
-        <input type="hidden" name="date" value="{{$timesheet->Month}}">
-        <input onclick="return confirm('zedde zeker ?')" class="submit" type="image" src="{{ asset('/images/1843344.png') }}"
-                    name="deleteThisSheet" alt="Delete">
+        <input type="hidden" name="date" value="{{ $timesheet->Month }}">
+        <input onclick="return confirm('zedde zeker ?')" class="submit" type="image"
+            src="{{ asset('/images/1843344.png') }}" name="deleteThisSheet" alt="Delete">
     </form>
     @if ($timesheet->userNote !== null)
         <fieldset class="userNoteContainer">
