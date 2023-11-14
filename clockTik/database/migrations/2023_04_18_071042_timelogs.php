@@ -22,7 +22,6 @@ return new class extends Migration
             $table->decimal('BreakHours',5,2)->default(0,00);
             $table->decimal('RegularHours',5,2)->default(0,00);
             $table->timestamp('StopWork')->nullable();
-            $table->json('DayShifts')->default(json_encode([]))->nullable();
             $table->text('userNote')->nullable();
             $table->integer('UserId');
             $table->timestamps();
