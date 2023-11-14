@@ -16,7 +16,6 @@ return new class extends Migration
             $table->integer('UserId');
             $table->timestamp('ClockedIn')->nullable();
             $table->timestamp('ClockedOut')->nullable();
-            $table->json('DayShifts')->default(json_encode([]))->nullable();
             $table->timestamp('BreakStart')->nullable();
             $table->timestamp('BreakStop')->nullable();
             $table->decimal('RegularHours',5,2)->default(0,00);
