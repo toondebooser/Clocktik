@@ -11,8 +11,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="{{ asset('public/build/assets/app-1c497859.css') }}">
-    <script src="{{ asset('public/build/assets/app-1c4e55a6.js') }}"></script>
+    {{-- <link rel="stylesheet" href="{{ asset('public/build/assets/app-1c497859.css') }}">
+    <script src="{{ asset('public/build/assets/app-1c4e55a6.js') }}"></script> --}}
+    @vite('resources/css/app.css', 'resources/js/app.js');
     
     <title>clockTik</title>
 </head>
