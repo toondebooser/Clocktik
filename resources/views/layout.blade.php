@@ -13,7 +13,7 @@
 
     {{-- <link rel="stylesheet" href="{{ asset('public/build/assets/app-1c497859.css') }}">
     <script src="{{ asset('public/build/assets/app-1c4e55a6.js') }}"></script> --}}
-    @vite('resources/css/app.css', 'resources/js/app.js');
+    @vite('resources/css/app.css', 'resources/js/app.js')
     
     <title>clockTik</title>
 </head>
