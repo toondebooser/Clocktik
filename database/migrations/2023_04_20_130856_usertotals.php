@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('Usertotals', function (Blueprint $table) {
+        Schema::create('usertotals', function (Blueprint $table) {
             $table->id();
             $table->integer('UserId');
             $table->decimal('RegularHours', 5, 2)->default(0, 00);
