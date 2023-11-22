@@ -40,32 +40,5 @@ Route::match(['get', 'post'], '/update-timesheet/{id}/{timesheet}', [UpdateTimes
 Route::post('/update-worker-timesheet', [UpdateTimesheetController::class, 'updateTimesheet'])->name('updateTimesheet')->middleware('admin');
 Route::match(['get', 'post'], '/specials', [SpecialsController::class, 'specials'])->name('specials')->middleware('admin');
 Route::post('/setSpecial', [TimesheetController::class, 'setSpecial'])->name('setSpecial')->middleware('admin');
-<<<<<<< HEAD
-Route::get('/export-pdf', function () {
-
-    $user = json_decode(request('userJSONstring'));
-    $timesheet = json_decode(request('timesheetJSONstring'));
-    $total = request('totalJSONstring');
-    $type = request('type');
-    $pdf = Pdf::loadView('pdf', compact('user', 'timesheet', "total"));
-
-
-    // Define the filename for the download
-    $filename = 'Uurrooster'.'-'.$user->name.'-'.date('F', strtotime($timesheet[0]->Month)) . '.pdf'; // Customize the filename as needed
-
-    // Set the filename in the Content-Disposition header
-    $response = new Response($pdf->output());
-    $response->header('Content-Type', 'application/pdf');
-    $response->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
-    if ($type == 'preview')
-    {
-    return $pdf->stream();
-    }elseif($type =='download')
-    {
-    return $pdf->download($filename);
-    }
-})->name('exportPdf')->middleware('admin');
-=======
 Route::get('/export-pdf',[PdfExportController::class, 'exportPdf'])->name('exportPdf')->middleware('admin');
 Route::post('/delete-timesheet', [DeleteTimesheetController::class, 'deleteTimesheet'])->name('delete')->middleware('admin');
->>>>>>> f58775f77562ad71ad161a7d605dfe98ddd52580
