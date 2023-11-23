@@ -115,7 +115,6 @@ th {
 .updateStartBreak,
 .updateEndBreak {
     color: red;
-    max-width: 80px;
 }
 
 .submit {
@@ -502,19 +501,19 @@ footer {
 .newTimesheetInput {
     margin: 5px 5px;
 }
-.newTimesheetDate:after{
+.newTimesheetDate:after {
     content: " Datum ";
     padding: 0px 5px;
 }
-.addTimesheet{
+.addTimesheet {
     max-width: 100px;
     margin-top: 20px;
 }
-.startInput:after{
+.startInput:after {
     content: " Start ";
     padding: 0px 5px;
 }
-.endInput:after{
+.endInput:after {
     content: " End ";
     padding: 0px 5px;
 }
@@ -889,7 +888,7 @@ p {
     .headerLinks {
         margin: 0px 2px;
     }
-  
+
     .authLinks {
         margin: 0 2px;
     }
