@@ -32,14 +32,14 @@
             @auth
             @if ($currentUser->admin == false)
                 <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
-                <a class="authLinks"href="{{route('myProfile')}}">Mijn profiel</a>
+                <a class="authLinks button"href="{{route('myProfile')}}">Mijn profiel</a>
                 @else
-                <a class="authLinks" href = "{{route('myWorkers')}}">Personeel</a>
+                <a class="authLinks button" href = "{{route('myWorkers')}}">Personeel</a>
                 @endif
-                <a class="authLinks" href="{{ route('logout') }}">Logout</a>
+                <a class="authLinks button" href="{{ route('logout') }}">Logout</a>
             @endauth
             @guest
-                <a class="authLinks" href="{{ route('login') }}">Login</a>
+                <a class="authLinks button" href="{{ route('login') }}">Login</a>
             @endguest
         </header>
 

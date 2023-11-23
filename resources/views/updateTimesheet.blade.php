@@ -21,17 +21,18 @@
                     <legend>Gewerkte periode</legend>
                     <div>
                         <label for="startTime">Start:</label>
-                        <input class="updateStartTime" name="startTime" type="time" value="{{ $startShift }}">
+                        <input id="startTime" class="updateStartTime" name="startTime" type="time" value="{{ $startShift }}"> <br>
                         <label for="endTime">End:</label>
-                        <input class="updateEndTime" type="time" name="endTime" value="{{ $endShift }}">
+                        <input id="endTime" class="updateEndTime" type="time" name="endTime" value="{{ $endShift }}"> <br>
                     </div>
                 </fieldset>
+                <hr>
                 <legend>Gepauzeerde periode</legend>
                 <div>
                     <label for="startBreak">Start:</label>
-                    <input class="updateStartBreak" type="time" name="startBreak" value="{{ $startBreak }}">
+                    <input id="startBreak" class="updateStartBreak" type="time" name="startBreak" value="{{ $startBreak }}"> <br>
                     <label for="endBreak">End:</label>
-                    <input type="time" name="endBreak" class="updateEndBreak" value="{{ $endBreak }}">
+                    <input id="endBreak" type="time" name="endBreak" class="updateEndBreak" value="{{ $endBreak }}"> <br>
                 </div>
                 </fieldset>
             @else
@@ -46,7 +47,7 @@
                 <input type="text" name="updateSpecial" value="{{$timesheet->type}}">
                 @endif
             @endif
-            <input class="updateTimesheetSubmit" type="submit" value="update">
+            <input class="updateTimesheetSubmit button" type="submit" value="update">
         </form>
     </div>
     <form action="{{ route('delete') }}" class="delete" method="POST">
