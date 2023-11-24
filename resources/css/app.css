@@ -282,7 +282,6 @@ img {
     height: 50%;
     justify-self: center;
     align-self: center;
-    transition: transform 0.2s ease-in;
 }
 .headerLinks {
     margin: 0px 10px;
@@ -304,9 +303,9 @@ img {
     text-decoration: none;
     color: black;
 }
-.logoContainer:hover {
+/* .logoContainer:hover {
     transform: scale(1.05);
-}
+} */
 
 .dropDownMonth {
     height: 35px;
@@ -705,6 +704,8 @@ fieldset {
     word-break: break-all;
     max-height: 60px;
     overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 /* .updateTimesheetSubmit {
