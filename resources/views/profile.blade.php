@@ -45,7 +45,7 @@
             @if (isset($user))
                 <input type="hidden" name="worker" value='{{ $user->id }}'>
             @endif
-            <input class="getMonthButton" type="submit" value="Ga naar maand">
+            <input class="button" type="submit" value="Ga naar maand">
         </form>
         @if (auth()->user()->admin == true)
             <form class="dagenInstellen" action="{{ route('specials') }}" method="post">

@@ -22,7 +22,7 @@
           <form method="POST" name="userNoteForm" action="{{route('dashboard')}}" class="userNoteForm">
                 @csrf
             <textarea class="userNoteInput" name="userNote" rows="2" cols="30">{{ $userNote }}</textarea> <br>
-            <input class="userNoteSubmit" type="submit" value='Voeg notitie toe'>
+            <input class="button" type="submit" value='Voeg notitie toe'>
             </form>
         @endif
         @if ($shiftStatus == true && $breakStatus == false)

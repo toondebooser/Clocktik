@@ -46,32 +46,7 @@ class TimeclockController extends Controller
             $userRow->BreakHours += $dayCheck->BreakHours;
             $userRow->RegularHours += $dayCheck->RegularHours;
             $dayCheck->userNote !== null ? $userRow->userNote = $dayCheck->userNote : null;
-            // new 
-            // if($dayCheck->MultipleShifts == true)
-            // {
-            //     array_push($userRow->DayShifts, [count($dayCheck->Dayshift) + 1 =>
-            //     [
-            //         'ClockedIn' => $dayCheck->ClockedIn,
-            //         'ClockedOut' => $dayCheck->ClockedOut,
-            //         'BreakStart' => $dayCheck->BreakStart,
-            //         'BreakStop' => $dayCheck->BreakStop
-
-            //     ]]);
-            // }else
-            // {
-            //     $dayCheck->MultipleShifts = true;
-            //     $array = json_decode($userRow->DayShifts,true);
-            //     array_push($array, [
-            //         1 => [
-            //             'ClockedIn' => $dayCheck->ClockedIn,
-            //             'ClockedOut' => $dayCheck->ClockedOut,
-            //             'BreakStart' => $dayCheck->BreakStart,
-            //             'BreakStop' => $dayCheck->BreakStop
-            //         ]
-            //     ]);
-            //     $userRow->DayShifts = json_encode($array);
-            // }
-            // new
+          
             $dayCheck->delete();
             $timesheetController->calculateUserTotal($timestamp, $currentUser->id);
         } elseif ($dayCheck !== null && $dayCheck !== "workday") {

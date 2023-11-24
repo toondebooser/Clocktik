@@ -54,12 +54,12 @@
                 <input type="hidden" name="worker" value="{{ $worker }}">
                 <span class="dateInput">
                     <input type="date" name="singleDay" id="singleDayInput"> <br>
-                    <input class="dagSubmit" type="submit" name="submitType" value="Dag Toevoegen"><br>
+                    <input class="dagSubmit button" type="submit" name="submitType" value="Dag Toevoegen"><br>
                     <hr>
 
                     <input class="startDateInput" type="date" name="startDate" id="startDateInput">
                     <input class="endDateInput" type="date" name="endDate" id="endDateInput"><br>
-                    <input class="periodeSubmit" type="submit" name="submitType" value="Periode Toevoegen">
+                    <input class="periodeSubmit button" type="submit" name="submitType" value="Periode Toevoegen">
                 </span>
             </form>
         @endif

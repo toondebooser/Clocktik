@@ -8,6 +8,14 @@ body {
     --status-onBreak: rgb(18, 105, 244);
     --status-notWorking: rgb(252, 3, 3);
 }
+.button {
+    padding: 2px 5px;
+    background-color: var(--primary-color);
+    padding-bottom: 4px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
 table {
     grid-column: 1/13;
     justify-self: center;
@@ -274,7 +282,6 @@ img {
     height: 50%;
     justify-self: center;
     align-self: center;
-    transition: transform 0.2s ease-in;
 }
 .headerLinks {
     margin: 0px 10px;
@@ -291,35 +298,14 @@ img {
     color: black;
     border-top: solid 1px black;
 }
-.authLinks {
-    margin: 0px 10px;
-    padding: 2px 5px;
-    padding-bottom: 4px;
-    color: white;
-    font-weight: 400;
-    background-color: #019541;
-    border-radius: 5px;
-    font-family: "Noto Sans", sans-serif;
-}
+
 .authLinks:hover {
     text-decoration: none;
     color: black;
 }
-.logoContainer:hover {
+/* .logoContainer:hover {
     transform: scale(1.05);
-}
-
-.getMonthButton {
-    border: none;
-    width: auto;
-    padding-bottom: 2px;
-    border-radius: 5px;
-    color: #ffffff;
-    background-color: var(--primary-color);
-}
-.getMonthButton:hover {
-    color: black;
-}
+} */
 
 .dropDownMonth {
     height: 35px;
@@ -502,19 +488,33 @@ footer {
 }
 
 .addNewTimesheetForm {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    grid-row: 3/4;
+    display: grid;
+    grid-template-columns: 200px;
     grid-column: 2/12;
     align-self: center;
+    justify-self: center;
 }
 .newTimesheetSubmit {
     margin-top: 10px;
 }
 .newTimesheetInput {
     margin: 5px 5px;
+}
+.newTimesheetDate:after {
+    content: " Datum ";
+    padding: 0px 5px;
+}
+.addTimesheet {
+    max-width: 100px;
+    margin-top: 20px;
+}
+.startInput:after {
+    content: " Start ";
+    padding: 0px 5px;
+}
+.endInput:after {
+    content: " End ";
+    padding: 0px 5px;
 }
 fieldset {
     margin: 30px 0px;
@@ -566,19 +566,17 @@ fieldset {
     border-radius: 50%;
     background: white;
 }
-.customInput{
+.customInput {
     display: none;
     width: 150px;
 }
 
-#customInput:checked ~ .customInput{
+#customInput:checked ~ .customInput {
     display: inline;
-
 }
 
-#customInput:checked ~ .labelAndere{
+#customInput:checked ~ .labelAndere {
     display: none;
-    
 }
 
 .specialDayForm {
@@ -619,17 +617,9 @@ fieldset {
     padding: 0px 5px;
 }
 .dagSubmit {
-    color: white;
-    background-color: var(--primary-color);
-    border: none;
-    border-radius: 5px;
     margin-top: 10px;
 }
 .periodeSubmit {
-    color: white;
-    background-color: var(--primary-color);
-    border: none;
-    border-radius: 5px;
     margin-top: 10px;
 }
 
@@ -714,23 +704,19 @@ fieldset {
     word-break: break-all;
     max-height: 60px;
     overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
-.userNoteSubmit {
+/* .updateTimesheetSubmit {
+    padding: 2px 5px;
     background-color: var(--primary-color);
-    color: white;
-    border: none;
-    padding-bottom: 3px;
-    border-radius: 5px;
-    margin-top: 10px;
-    height: 25px;
-}
-.updateTimesheetSubmit {
-    background-color: var(--primary-color);
+    padding-bottom: 4px;
     color: white;
     border: none;
     border-radius: 5px;
-}
+} */
+
 .userNoteContainer {
     margin: 0px;
     grid-row: 4/5;
@@ -903,10 +889,7 @@ p {
     .headerLinks {
         margin: 0px 2px;
     }
-    .newTimesheetDate {
-        margin: 0px 50px;
-        margin-bottom: 10px;
-    }
+
     .authLinks {
         margin: 0 2px;
     }

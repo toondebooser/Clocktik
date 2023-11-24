@@ -48,7 +48,7 @@ class UpdateTimesheetController extends Controller
         $type == null ? $type = $timesheet->type : null;
         $date = $timesheet->Month;
 
-        if ($type == "Onbetaald verlof" || !in_array($type , $specialDays)) {
+        if ($type == "Onbetaald verlof" || !in_array($type , $specialDays) && $type !== 'workday' ) {
             $timesheet->accountableHours = 0;
             $timesheet->type = $type;
             $save = $timesheet->save();
@@ -90,7 +90,6 @@ class UpdateTimesheetController extends Controller
             $stopWork = Carbon::parse($date . ' ' . $request->endTime, 'Europe/Brussels');
             $startBreak = Carbon::parse($date . ' ' . $request->startBreak, 'Europe/Brussels');
             $endBreak = Carbon::parse($date . ' ' . $request->endBreak, 'Europe/Brussels');
-
             $clockedHours = $timesheetController->calculateClockedHours($startWork, $stopWork);
             $breakHours = $timesheetController->calculateBreakHours($startBreak, $endBreak);
             $regularHours = $clockedHours - $breakHours;

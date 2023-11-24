@@ -10,10 +10,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
+    <link rel="icon" href="{{asset('images/95090418_1090903184610004_7235939885578715136_n.png')}}" sizes="192x192" type="image/png">
     {{-- <link rel="stylesheet" href="{{ asset('public/build/assets/app-1c497859.css') }}">
     <script src="{{ asset('public/build/assets/app-1c4e55a6.js') }}"></script> --}}
-    @vite('resources/css/app.css', 'resources/js/app.js');
+    @vite('resources/css/app.css', 'resources/js/app.js')
     
     <title>clockTik</title>
 </head>
@@ -32,14 +32,14 @@
             @auth
             @if ($currentUser->admin == false)
                 <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
-                <a class="authLinks"href="{{route('myProfile')}}">Mijn profiel</a>
+                <a class="authLinks button"href="{{route('myProfile')}}">Mijn profiel</a>
                 @else
-                <a class="authLinks" href = "{{route('myWorkers')}}">Personeel</a>
+                <a class="authLinks button" href = "{{route('myWorkers')}}">Personeel</a>
                 @endif
-                <a class="authLinks" href="{{ route('logout') }}">Logout</a>
+                <a class="authLinks button" href="{{ route('logout') }}">Logout</a>
             @endauth
             @guest
-                <a class="authLinks" href="{{ route('login') }}">Login</a>
+                <a class="authLinks button" href="{{ route('login') }}">Login</a>
             @endguest
         </header>
 
