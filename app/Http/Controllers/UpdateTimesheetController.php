@@ -48,7 +48,7 @@ class UpdateTimesheetController extends Controller
         $type == null ? $type = $timesheet->type : null;
         $date = $timesheet->Month;
 
-        if ($type == "Onbetaald verlof" || !in_array($type , $specialDays) && $type !== 'workday' ) {
+        if ($type == "Onbetaald verlof" || $type == "Weerverlet" || !in_array($type , $specialDays) && $type !== 'workday' ) {
             $timesheet->accountableHours = 0;
             $timesheet->type = $type;
             $save = $timesheet->save();

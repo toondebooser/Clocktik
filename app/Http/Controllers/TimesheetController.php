@@ -130,7 +130,7 @@ class TimesheetController extends Controller
             $newSpecialTimesheet->ClockedIn = $singleDay;
             $newSpecialTimesheet->Month = $singleDay;
             $newSpecialTimesheet->UserId = $worker;
-            if ($dayType == 'Onbetaald verlof' || !in_array($dayType, $specialDays)) {
+            if ($dayType == 'Onbetaald verlof' || !in_array($dayType, $specialDays)|| $dayType == 'Weerverlet')  {
                 $newSpecialTimesheet->save();
                 $userTotal = $this->fetchUserTotal($singleDay, $worker);
                 $this->calculateUserTotal($singleDay, $worker);
