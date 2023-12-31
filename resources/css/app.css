@@ -574,6 +574,13 @@ fieldset {
 #customInput:checked ~ .customInput {
     display: inline;
 }
+.hollidayNote{
+    display: none;
+    width: 150px;
+}
+#Feestdag:checked ~ .hollidayNote {
+    display: inline;
+}
 
 #customInput:checked ~ .labelAndere {
     display: none;

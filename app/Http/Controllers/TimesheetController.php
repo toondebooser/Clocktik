@@ -180,6 +180,7 @@ class TimesheetController extends Controller
             $dayType = $request->input('customInput');
             $custom = true;
         }
+        
         $worker = $request->input('worker');
         $singleDay = Carbon::parse($request->input('singleDay'));
         $startDate = Carbon::parse($request->input('startDate'));

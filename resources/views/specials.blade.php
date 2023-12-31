@@ -40,6 +40,10 @@
                                 value="{{ $specialDay }}" @if ($loop->first) required @endif>
                             {{ $specialDay }}
                             <span class="checkMark"></span>
+                            @if ($specialDay == "Feestdag")
+                            <br>
+                            <input type="text" class="hollidayNote" name="customInput" >
+                            @endif
                         </label>
                         <br>
                     @endforeach
