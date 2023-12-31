@@ -42,7 +42,7 @@
                             <span class="checkMark"></span>
                             @if ($specialDay == "Feestdag")
                             <br>
-                            <input type="text" class="hollidayNote" name="customInput" >
+                            <input type="text" class="hollidayNote" name="hollidayNote" >
                             @endif
                         </label>
                         <br>
