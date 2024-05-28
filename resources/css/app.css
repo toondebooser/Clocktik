@@ -585,6 +585,9 @@ fieldset {
 #customInput:checked ~ .labelAndere {
     display: none;
 }
+.smallText{
+    font-size:medium;
+}
 
 .specialDayForm {
     overflow-y: scroll;

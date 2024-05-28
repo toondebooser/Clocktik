@@ -27,7 +27,7 @@ class SpecialsController extends Controller
             $forWho = $worker->name;
         }
 
-        $specialDays = ['Ziek', 'Weerverlet', 'Onbetaald verlof','Betaald verlof', 'Feestdag', 'Solicitatie verlof'];
+        $specialDays = ['Ziek', 'Weerverlet', 'Onbetaald_verlof','Betaald_verlof', 'Feestdag', 'Solicitatie_verlof'];
 
     
         return view('specials', ['forWho' => $forWho, 'specialDays' => $specialDays, 'worker' => $workerInput]);

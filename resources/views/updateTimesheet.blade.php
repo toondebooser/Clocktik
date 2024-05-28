@@ -2,7 +2,7 @@
 @section('content')
     <h2>Update rooster van: {{ $worker->name }}</h2>
     @php
-        $specialDays = ['Ziek', 'Weerverlet', 'Onbetaald verlof', 'Betaald verlof', 'Feestdag', 'Solicitatie verlof'];
+        $specialDays = ['Ziek', 'Weerverlet', 'Onbetaald_verlof', 'Betaald_verlof', 'Feestdag', 'Solicitatie_verlof'];
         if ($timesheet === null) {
             header('Location: /my-workers');
             exit();

@@ -176,8 +176,8 @@ class TimesheetController extends Controller
     {
 
         $dayType = $request->input('specialDay');
-        $note = $request->input('hollidayNote');
-        $specialDays = ['Ziek', 'Weerverlet', 'Onbetaald verlof', 'Betaald verlof', 'Feestdag', 'Solicitatie verlof'];
+        $note = $request->input($dayType);
+        $specialDays = ['Ziek', 'Weerverlet', 'Onbetaald_verlof', 'Betaald_verlof', 'Feestdag', 'Solicitatie_verlof'];
         if ($dayType == null ) {
             $dayType = $request->input('customInput');
             $custom = true;
@@ -252,7 +252,8 @@ class TimesheetController extends Controller
                     if (!empty($results)) {
                         return redirect()->route('specials', ['worker' => $worker])->with('error', $results);
                     }
-                } else {
+                } 
+                else {
 
                     $addDay = $this->setDay($note,$newSpecialTimesheet, $dayType, $worker, $singleDay, $specialDays);
                     if ($addDay !== true) {

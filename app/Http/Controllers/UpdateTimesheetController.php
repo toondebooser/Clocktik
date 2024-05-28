@@ -32,7 +32,7 @@ class UpdateTimesheetController extends Controller
     
     public function updateTimesheet(Request $request)
     {
-        $specialDays = ['Ziek', 'Weerverlet', 'Onbetaald verlof', 'Betaald verlof', 'Feestdag', 'Solicitatie verlof'];
+        $specialDays = ['Ziek', 'Weerverlet', 'Onbetaald_verlof', 'Betaald_verlof', 'Feestdag', 'Solicitatie_verlof'];
         $id = $request->id;
         $worker = User::find($id);
         $timesheetController = new TimesheetController();
@@ -48,7 +48,7 @@ class UpdateTimesheetController extends Controller
         $type == null ? $type = $timesheet->type : null;
         $date = $timesheet->Month;
 
-        if ($type == "Onbetaald verlof" || $type == "Weerverlet" || !in_array($type , $specialDays) && $type !== 'workday' ) {
+        if ($type == "Onbetaald_verlof" || $type == "Weerverlet" || !in_array($type , $specialDays) && $type !== 'workday' ) {
             $timesheet->accountableHours = 0;
             $timesheet->type = $type;
             $save = $timesheet->save();

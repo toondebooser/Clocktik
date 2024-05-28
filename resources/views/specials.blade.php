@@ -37,19 +37,25 @@
                     @foreach ($specialDays as $specialDay)
                         <label class="checkboxContainer" for="{{ $specialDay }}">
                             <input class="radioBox" type="radio" id='{{ $specialDay }}' name="specialDay"
-                                value="{{ $specialDay }}" @if ($loop->first) required @endif>
-                            {{ $specialDay }}
+                                value="{{ $specialDay }}" @if ($loop->first) required @endif >
+                            {{ $specialDay }} @if ($specialDay == "Weerverlet")
+                            <span class="smallText">(onbetaald)</span>
+                        @endif
                             <span class="checkMark"></span>
                             @if ($specialDay == "Feestdag")
                             <br>
-                            <input type="text" class="hollidayNote" name="hollidayNote" >
+                            <input type="text" class="hollidayNote" name="Feestdag" >
+                            @endif
+                            @if ($specialDay == "Betaald_verlof")
+                            <br>
+                            <input type="text" class="bvNote" name="Betaald_verlof" >
                             @endif
                         </label>
                         <br>
                     @endforeach
                     <label for="customInput" id="andereLabel" class="checkboxContainer" for="customInput">
                         <input type="radio" class="radioBox" id="customInput" name="specialDay" value="" >
-                        <span class="labelAndere">Andere</span>
+                        <span class="labelAndere">Andere <span class="smallText">(onbetaald)</span></span>
                         <input type="text" class="customInput" name="customInput" >
                         <span class="checkMark"></span>
                     </label>         
