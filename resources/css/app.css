@@ -30,7 +30,9 @@ td {
     border: 1px solid black;
     padding: 8px;
     text-align: left;
+    
 }
+
 
 th {
     background-color: rgb(200, 215, 248);
@@ -78,6 +80,7 @@ th {
 .specifiedError {
     color: black;
 }
+
 .dagenInstellen {
     grid-row: 2/3;
     grid-column: 2/3;
@@ -520,6 +523,7 @@ fieldset {
     margin: 30px 0px;
 }
 .checkMark {
+    display: grid;
     position: absolute;
     top: 0;
     left: 0;
@@ -532,7 +536,9 @@ fieldset {
     display: block;
     position: relative;
     padding-left: 35px;
-    margin-bottom: 2px;
+    margin-bottom: 0px;
+    width: 185px;
+    height: 66px;
     cursor: pointer;
     font-size: 20px;
     user-select: none;
@@ -550,46 +556,40 @@ fieldset {
     background-color: var(--primary-color);
 }
 .checkMark:after {
-    content: "";
-    position: absolute;
     display: none;
 }
-.radioBox:checked ~ .checkMark:after {
-    display: block;
+.checkboxContainer .radioBox:checked ~ .checkMark:after {
+    display: grid;
 }
 
 .checkMark:after {
-    top: 9px;
-    left: 9px;
+    align-self: center;
+    justify-self: center;
+    content: "";
     width: 8px;
     height: 8px;
     border-radius: 50%;
     background: white;
 }
-.customInput {
+.betaaldInput {
     display: none;
     width: 150px;
 }
-
-#customInput:checked ~ .customInput {
-    display: inline;
-}
-.hollidayNote{
+.onbetaaldInput {
     display: none;
     width: 150px;
 }
-#Feestdag:checked ~ .hollidayNote {
+#betaaldInput:checked ~ .betaaldInput {
     display: inline;
 }
-
-#customInput:checked ~ .labelAndere {
-    display: none;
+#onbetaaldInput:checked ~ .onbetaaldInput {
+    display: inline;
 }
 
 .specialDayForm {
+    margin-top: 30px;
     overflow-y: scroll;
     display: grid;
-    gap: 20px;
     grid-template-columns: 1fr;
     grid-row: 1fr 1fr;
     width: auto;
@@ -604,7 +604,9 @@ fieldset {
 }
 
 .radioInput {
+    display: grid;
     grid-row: 1/2;
+    grid-template-rows: max-content;
     justify-self: center;
 }
 .dateInput {

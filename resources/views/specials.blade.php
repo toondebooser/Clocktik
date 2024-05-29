@@ -34,8 +34,8 @@
             <form action="{{ route('setSpecial') }}" method="POST" class="specialDayForm">
                 @csrf
                 <span class="radioInput">
-                    @foreach ($specialDays as $specialDay)
-                        <label class="checkboxContainer" for="{{ $specialDay }}">
+                    {{-- @foreach ($specialDays as $specialDay)
+                        <label for="{{ $specialDay }}" class="checkboxContainer" >
                             <input class="radioBox" type="radio" id='{{ $specialDay }}' name="specialDay"
                                 value="{{ $specialDay }}" @if ($loop->first) required @endif>
                             {{ $specialDay }}
@@ -46,14 +46,23 @@
                             @endif
                         </label>
                         <br>
-                    @endforeach
-                    <label for="customInput" id="andereLabel" class="checkboxContainer" for="customInput">
-                        <input type="radio" class="radioBox" id="customInput" name="specialDay" value="" >
-                        <span class="labelAndere">Andere</span>
-                        <input type="text" class="customInput" name="customInput" >
+                    @endforeach --}}
+                    <label for="betaaldInput"  class="checkboxContainer" >
+                        <input type="radio" class="radioBox" id="betaaldInput" name="dayType" value="betaald" >
+                        <span class="labelAndere">Betaald</span>
+                        <br>
+                        <input type="text" class="betaaldInput" name="betaald" >
                         <span class="checkMark"></span>
                     </label>         
-                    <br>
+                    <label for="onbetaaldInput"  class="checkboxContainer" >
+                        <input type="radio" class="radioBox" id="onbetaaldInput" name="dayType" value="onbetaald" >
+                        <span class="labelAndere">Onbetaald</span>
+                        <br>
+                        <input type="text" class="onbetaaldInput" name="onbetaald" >
+                        <span class="checkMark"></span>
+                    </label> 
+               
+
                 </span>
                 <input type="hidden" name="worker" value="{{ $worker }}">
                 <span class="dateInput">

@@ -15,4 +15,3 @@
 <input class="button addTimesheet" type="submit" value="Voeg toe">
 </form>
 @endsection
-{{-- testing new branch --}}
