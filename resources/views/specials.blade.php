@@ -30,7 +30,6 @@
     </div>
     @endif
     <div class="specialDays">
-        @if (isset($specialDays))
             <form action="{{ route('setSpecial') }}" method="POST" class="specialDayForm">
                 @csrf
                 <span class="radioInput">
@@ -62,7 +61,6 @@
                     <input class="periodeSubmit button" type="submit" name="submitType" value="Periode Toevoegen">
                 </span>
             </form>
-        @endif
     </div>
  
 @endsection
