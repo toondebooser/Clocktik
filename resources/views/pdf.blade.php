@@ -61,6 +61,11 @@
             color: #2626da;
         }
 
+        .inOut {
+            text-align:left;
+            color: black;
+        }
+
         .displayBreak {
             text-align: center;
             color: #da0a0a;
@@ -95,7 +100,7 @@
             border: 1px solid #da0a0a;
         }
 
-        .totalContainer{
+        .totalContainer {
             text-align: center;
         }
 
@@ -104,9 +109,11 @@
             width: 150px;
             margin: 10px;
         }
-        h3{
+
+        h3 {
             text-align: start;
         }
+
         .displayTotalOverTime {
             text-align: center;
             justify-self: center;
@@ -128,8 +135,8 @@
         </header>
         <div class="totalContainer">
             <h3>Maand Totaal</h3>
-        @if (isset($monthlyTotal))
-            @foreach ($monthlyTotal as $item)
+            @if (isset($monthlyTotal))
+                @foreach ($monthlyTotal as $item)
                     <div class="displayTotalRegular total">
                         Regular {{ $item->RegularHours }}
                     </div>
@@ -139,75 +146,86 @@
                     <div class="displayTotalOverTime total">
                         Overtime {{ $item->OverTime }}
                     </div>
-                    @endforeach
-                    @else
-                </div>
-            <div class="text-danger">Something went wrong pls call Toon.</div>
+                @endforeach
+            @else
         </div>
-        @endif
-        <h3>Uurrooster</h3>
-        <main>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Datum</th>
-                        <th>Werkuren</th>
-                        <th>Pauze</th>
-                        <th>Overuren</th>
-                        <th>Notitie</th>
+        <div class="text-danger">Something went wrong pls call Toon.</div>
+    </div>
+    @endif
+    <h3>Uurrooster</h3>
+    <main>
+        <table>
+            <thead>
+                <tr>
+                    <th>Datum</th>
+                    <th>Werkuren</th>
+                    <th>Pauze</th>
+                    <th>Overuren</th>
+                    <th>Notitie</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($timesheet as $item)
+                    <tr class="timesheetRow">
+                        <td class="date" id="{{ $item->id }}">
+                            <?php
+                            $toTime = strtotime($item->ClockedIn);
+                            $days = ['Mon' => 'Ma', 'Tue' => 'Di', 'Wed' => 'Wo', 'Thu' => 'Do', 'Fri' => 'Vr', 'Sat' => 'Za', 'Sun' => 'Zo'];
+                            $englishDay = date('D', $toTime);
+                            $dutchDay = $days[$englishDay];
+                            $dayOfMonth = date('d', $toTime);
+                            echo $dutchDay . ' ' . $dayOfMonth;
+                            ?>
+                        </td>
+                        <td>
+                            <div class="displayRegular">
+                                @if ($item->RegularHours < 7.6 && $item->Weekend == false && $item->type == 'workday')
+                                    <s>{{ $item->RegularHours }}</s>
+                                    => 7.60
+                                @elseif($item->Weekend == true && $item->type == 'workday')
+                                    Weekend
+                                @elseif ($item->Weekend == false && $item->type !== 'workday')
+                                    {{ $item->type }}
+                                @else
+                                    {{ $item->RegularHours }}
+                                @endif
+                                @if ($item->type == 'workday')
+                                        <span class="inOut">
+                                            <br> Clocked in: {{ date('H:i', $toTime) }}
+                                            <br> Clocked out: {{ date('H:i', strtotime($item->clockedOut)) }}
+                                        </span>
+                                @endif
+                            </div>
+                        </td>
+                        <td>
+                            <div class="displayBreak">
+                                {{ $item->BreakHours }}
+                                @if ($item->type == 'workday')
+                                <span class="inOut">
+                                    <br> Clocked in: {{ date('H:i', strtotime($item->BreakStart)) }}
+                                    <br> Clocked out: {{ date('H:i', strtotime($item->BreakStop)) }}
+                                </span>
+                        @endif
+                            </div>
+                        </td>
+                        <td>
+                            <div class="displayOvertTime">
+                                {{ $item->OverTime }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="notitie">
+                                @if ($item->userNote !== null)
+                                    {{ $item->userNote }}
+                                @endif
+                            </div>
+                        </td>
+
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach ($timesheet as $item)
-                        <tr class="timesheetRow">
-                            <td class="date" id="{{ $item->id }}">
-                                <?php
-                                $toTime = strtotime($item->ClockedIn);
-                                $days = ['Mon' => 'Ma', 'Tue' => 'Di', 'Wed' => 'Wo', 'Thu' => 'Do', 'Fri' => 'Vr', 'Sat' => 'Za', 'Sun' => 'Zo'];
-                                $englishDay = date('D', $toTime);
-                                $dutchDay = $days[$englishDay];
-                                $dayOfMonth = date('d', $toTime);
-                                echo $dutchDay . ' ' . $dayOfMonth;
-                                ?>
-                            </td>
-                            <td>
-                                <div class="displayRegular">
-                                    @if ($item->RegularHours < 7.6 && $item->Weekend == false && $item->type == 'workday')
-                                        <s>{{ $item->RegularHours }}</s>
-                                        => 7.60
-                                    @elseif($item->Weekend == true && $item->type == 'workday')
-                                        Weekend
-                                    @elseif ($item->Weekend == false && $item->type !== 'workday')
-                                        {{ $item->type }}
-                                    @else
-                                        {{ $item->RegularHours }}
-                                    @endif
-                                </div>
-                            </td>
-                            <td>
-                                <div class="displayBreak">
-                                    {{ $item->BreakHours }}
-
-                                </div>
-                            </td>
-                            <td>
-                                <div class="displayOvertTime">
-                                    {{ $item->OverTime }}
-                                </div>
-                            </td>
-                            <td>
-                                <div class="notitie">
-                                    @if ($item->userNote !== null)
-                                        {{ $item->userNote }}
-                                    @endif
-                                </div>
-                            </td>
-
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </main>
+                @endforeach
+            </tbody>
+        </table>
+    </main>
 </body>
 
 </html>
