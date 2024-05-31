@@ -19,9 +19,9 @@ body {
 table {
     grid-column: 1/13;
     justify-self: center;
+    border-collapse: collapse; 
     font-size: smaller;
     font-family: "Noto Sans", sans-serif;
-    border-collapse: collapse;
     width: 100%;
 }
 
@@ -30,7 +30,6 @@ td {
     border: 1px solid black;
     padding: 8px;
     text-align: left;
-    
 }
 
 
@@ -44,7 +43,9 @@ th {
     height: 100vh;
 }
 .displayRegular {
+    white-space: normal;
     text-align: center;
+    word-wrap: break-word;
     color: #2626da;
 }
 .displayOvertTime {
@@ -776,6 +777,7 @@ fieldset {
 }
 p {
     height: max-content;
+    
 }
 .buttonText {
     font-family: "Noto Sans", sans-serif;
