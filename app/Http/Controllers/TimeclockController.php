@@ -44,7 +44,7 @@ class TimeclockController extends Controller
 
         if ($dayCheck !== null && $dayCheck->type == "workday") {
             $userRow->BreakHours += $dayCheck->BreakHours;
-            $userRow->RegularHours += $dayCheck->RegularHours;
+            $userRow->RegularHours += $dayCheck->RegularHours += $dayCheck->BreakHours;
             $dayCheck->userNote !== null ? $userRow->userNote = $dayCheck->userNote : null;
           
             $dayCheck->delete();
