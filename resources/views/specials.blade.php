@@ -34,19 +34,6 @@
             <form action="{{ route('setSpecial') }}" method="POST" class="specialDayForm">
                 @csrf
                 <span class="radioInput">
-                    {{-- @foreach ($specialDays as $specialDay)
-                        <label for="{{ $specialDay }}" class="checkboxContainer" >
-                            <input class="radioBox" type="radio" id='{{ $specialDay }}' name="specialDay"
-                                value="{{ $specialDay }}" @if ($loop->first) required @endif>
-                            {{ $specialDay }}
-                            <span class="checkMark"></span>
-                            @if ($specialDay == "Feestdag")
-                            <br>
-                            <input type="text" class="hollidayNote" name="hollidayNote" >
-                            @endif
-                        </label>
-                        <br>
-                    @endforeach --}}
                     <label for="betaaldInput"  class="checkboxContainer" >
                         <input type="radio" class="radioBox" id="betaaldInput" name="dayType" value="betaald" >
                         <span class="labelAndere">Betaald</span>
@@ -54,12 +41,12 @@
                         <input type="text" class="betaaldInput" name="betaald" >
                         <span class="checkMark"></span>
                     </label>         
-                    <label for="onbetaaldInput"  class="checkboxContainer" >
+                    <label for="onbetaaldInput"  class="checkboxContainer" id="onbetaald">
                         <input type="radio" class="radioBox" id="onbetaaldInput" name="dayType" value="onbetaald" >
                         <span class="labelAndere">Onbetaald</span>
                         <br>
                         <input type="text" class="onbetaaldInput" name="onbetaald" >
-                        <span class="checkMark"></span>
+                        <span class="checkMark"></span>                      
                     </label> 
                
 

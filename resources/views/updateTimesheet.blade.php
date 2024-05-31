@@ -2,7 +2,6 @@
 @section('content')
     <h2>Update rooster van: {{ $worker->name }}</h2>
     @php
-        $specialDays = ['Ziek', 'Weerverlet', 'Onbetaald verlof', 'Betaald verlof', 'Feestdag', 'Solicitatie verlof'];
         if ($timesheet === null) {
             header('Location: /my-workers');
             exit();
@@ -36,20 +35,28 @@
                 </div>
                 </fieldset>
             @else
-                @if(in_array($timesheet->type, $specialDays))
-                <select name="updateSpecial" size="1">
-                    @foreach ($specialDays as $specialDay)
-                        <option value="{{ $specialDay }}" {{ $specialDay == $timesheet->type ? 'selected' : '' }}>
-                            {{ $specialDay }}</option>
-                    @endforeach
-                </select>
-                @else
-                <input type="text" name="updateSpecial" value="{{$timesheet->type}}">
-                @endif
+                <input class="updateSpecialInput" type="text" name="updateSpecial" value="{{$timesheet->type}}">
+                <br>
+                <span class="radioInput">
+                    <label for="betaaldInput"  class="checkboxContainer" >
+                        <input @if ($timesheet->accountableHours == 7.6) {{"checked"}} @endif type="radio" class="radioBox" id="betaaldInput" name="dayType" value="betaald" >
+                        <span class="labelAndere">Betaald</span>
+                    <br>
+                    <span class="checkMark"></span>
+                </label>         
+                <label for="onbetaaldInput"  class="checkboxContainer" id="onbetaald">
+                    <input @if ($timesheet->accountableHours == 0) {{"checked"}} @endif type="radio" class="radioBox" id="onbetaaldInput" name="dayType" value="onbetaald" >
+                    <span class="labelAndere">Onbetaald</span>
+                    <br>
+                    <span class="checkMark"></span>                      
+                </label> 
+            </span>
             @endif
             <input class="updateTimesheetSubmit button" type="submit" value="update">
+          
         </form>
     </div>
+    <br>
     <form action="{{ route('delete') }}" class="delete" method="POST">
         @csrf
         <input type="hidden" name="workerId" value="{{ $worker->id }}">
