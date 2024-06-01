@@ -192,7 +192,7 @@
                                 @if ($item->type == 'workday')
                                         <span class="inOut">
                                             <br> Clocked in: {{ date('H:i', $toTime) }}
-                                            <br> Clocked out: {{ date('H:i', strtotime($item->clockedOut)) }}
+                                            <br> Clocked out: {{ date('H:i', strtotime($item->ClockedOut)) }}
                                         </span>
                                 @endif
                             </div>
