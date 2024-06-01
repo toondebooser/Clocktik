@@ -1,4 +1,4 @@
-resources/views/layout.blade.php
+/resources/views
 /.phpunit.cache
 /node_modules
 /public/build
