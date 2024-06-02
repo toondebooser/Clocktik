@@ -11,9 +11,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="icon" href="{{asset('images/95090418_1090903184610004_7235939885578715136_n.png')}}" sizes="192x192" type="image/png">
-    {{-- <link rel="stylesheet" href="{{ asset('public/build/assets/app-1c497859.css') }}">
-    <script src="{{ asset('public/build/assets/app-1c4e55a6.js') }}"></script> --}}
-    @vite('resources/css/app.css', 'resources/js/app.js')
+   @if (env('APP_ENV') == 'local')
+   @vite('resources/css/app.css', 'resources/js/app.js')
+   @elseif (env('APP_ENV') == 'production')
+   <link rel="stylesheet" href="{{ asset('public/build/assets/app-1c497859.css')
+   @endif
+
     
     
     
@@ -24,7 +27,8 @@
 </head>
 
 <body>
-    <?php $currentUser = auth()->user(); ?>
+    <?php 
+    $currentUser = auth()->user(); ?>
     <div class="bodyContent">
 
         @yield('error')
