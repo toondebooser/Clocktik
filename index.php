@@ -1,1 +1,1 @@
-public/index.php
+/data/sites/web/atelier-taxusbe/subsites/clocktik.be/public/index.php
