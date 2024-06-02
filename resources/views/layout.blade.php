@@ -14,7 +14,7 @@
     @if (env('APP_ENV') == 'local')
     @vite('resources/css/app.css', 'resources/js/app.js')
     @elseif (env('APP_ENV') == 'production')
-    <link rel="stylesheet" href="{{ asset('public/build/assets/app-1c497859.css')}}">
+    <link rel="stylesheet" href="{{ asset('public/build/assets//app-721905ac.css ')}}">
     @endif
   
     
