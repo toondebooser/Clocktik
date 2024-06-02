@@ -200,12 +200,12 @@
                         <td>
                             <div class="displayBreak">
                                 {{ $item->BreakHours }}
-                                @if ($item->type == 'workday')
+                                @if ($item->type == 'workday' && $item->BreakStart !== $item->BreakStop)
                                 <span class="inOut">
                                     <br> Clocked in: {{ date('H:i', strtotime($item->BreakStart)) }}
                                     <br> Clocked out: {{ date('H:i', strtotime($item->BreakStop)) }}
                                 </span>
-                        @endif
+                        @endif  
                             </div>
                         </td>
                         <td>
