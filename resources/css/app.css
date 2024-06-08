@@ -1,4 +1,6 @@
+html,
 body {
+    height: 100vh;
     height: 100svh;
     font-family: "Noto Sans", sans-serif;
 }
@@ -40,7 +42,7 @@ th {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: 10% 10% 55% 15% 10%;
-    height: 100vh;
+    height: 100%;
 }
 .displayRegular {
     white-space: normal;
