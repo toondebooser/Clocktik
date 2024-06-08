@@ -68,7 +68,7 @@
                 {{ date('F', strtotime($timesheet[0]->Month)) }}
             @endif
         </div>
-        <table class="timesheetTable">
+        <table  class="timesheetTable">
             <thead class="stikyHeader">
                 <tr>
                     <th>Date</th>
@@ -106,8 +106,7 @@
                             <img class="noteIcon"src="{{ asset('/images/148883.png') }}" alt="Icon">
                             @endif
                         </td>
-                        <td>
-                            <div class="displayRegular">
+                        <td class="displayRegular">
                                 @if ($item->RegularHours < 7.6 && $item->Weekend == false && $item->type == 'workday')
                                     <s>{{ $item->RegularHours }}</s>
                                     => 7.60
@@ -120,7 +119,6 @@
                                 @endif
 
 
-                            </div>
                         </td>
                         <td>
                             <div class="displayBreak">
