@@ -25,6 +25,7 @@
             <input class="button" type="submit" value='Voeg notitie toe'>
             </form>
         @endif
+        
         @if ($shiftStatus == true && $breakStatus == false)
             <a onclick="return confirm('Are you sure you want to take a break?')" href="{{ route('break') }}"
                 class="breakButton">
