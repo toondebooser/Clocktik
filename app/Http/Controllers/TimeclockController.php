@@ -54,7 +54,8 @@ class TimeclockController extends Controller
         }
 
         $weekDay = Carbon::parse($timestamp)->weekday();
-        $weekDay === 0 || $weekDay === 6 ? $userRow->Weekend = true : $userRow->Weekend = false;
+        // Carbon::parse($timestamp, 'Europe/Brussels')->isWeekend()? $userRow->Weekend = true : $userRow->Weekend = false ;
+        $weekDay == 0 || $weekDay == 6 ? $userRow->Weekend = true : $userRow->Weekend = false;
         $userRow->StartWork = $timestamp;
         $userRow->StartBreak = null;
         $userRow->EndBreak = null;
