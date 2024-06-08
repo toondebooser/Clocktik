@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AddCustomTimesheetController;
+use App\Http\Controllers\ConfirmAction;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeleteTimesheetController;
 use App\Http\Controllers\HomeController;
@@ -25,10 +26,10 @@ Route::get('/registration-form', [UserController::class, 'registrationForm'])->n
 Route::post('/user-registration', [UserController::class, 'registrate'])->name('registrate');
 Route::post('/authentication', [HomeController::class, 'authentication'])->name('authentication');
 Route::match(['get', 'post'],'/dashboard', [DashboardController::class, 'userDashboard'])->name('dashboard')->middleware('worker');
-Route::get('/dashboard-start', [TimeclockController::class, 'startWorking'])->name('start')->middleware('worker');
-Route::get('/dashboard-break', [TimeclockController::class, 'break'])->name('break')->middleware('worker');
-Route::get('/dashboard-stop-break', [TimeclockController::class, 'stopBreak'])->name('stopBreak')->middleware('worker');
-Route::get('/dashboard-stop', [TimeclockController::class, 'stop'])->name('stop')->middleware('worker');
+Route::get('/dashboard-start', [TimeclockController::class, 'startWorking'])->name('start')->middleware('worker')->middleware('confirm.action');
+Route::get('/dashboard-break', [TimeclockController::class, 'break'])->name('break')->middleware('worker')->middleware('confirm.action');
+Route::get('/dashboard-stop-break', [TimeclockController::class, 'stopBreak'])->name('stopBreak')->middleware('worker')->middleware('confirm.action');
+Route::get('/dashboard-stop', [TimeclockController::class, 'stop'])->name('stop')->middleware('worker')->middleware('confirm.action');
 Route::get('/my-profile', [UsersheetsController::class, 'myProfile'])->name('myProfile')->middleware('worker');
 Route::match(['get', 'post'],'/my-profile-post', [UsersheetsController::class, 'myProfile'])->name('getData')->middleware('auth');
 Route::get('/make-timesheet/{id}', [TimesheetController::class, 'makeTimesheet'])->name('makeTimesheet')->middleware('auth');
@@ -42,3 +43,4 @@ Route::match(['get', 'post'], '/specials', [SpecialsController::class, 'specials
 Route::post('/setSpecial', [TimesheetController::class, 'setSpecial'])->name('setSpecial')->middleware('admin');
 Route::get('/export-pdf',[PdfExportController::class, 'exportPdf'])->name('exportPdf')->middleware('admin');
 Route::post('/delete-timesheet', [DeleteTimesheetController::class, 'deleteTimesheet'])->name('delete')->middleware('admin');
+Route::post('/confirm-action', [ConfirmAction::class, 'confirmAction']);
