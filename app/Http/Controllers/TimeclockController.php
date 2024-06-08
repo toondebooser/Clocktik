@@ -61,8 +61,11 @@ class TimeclockController extends Controller
         $userRow->StopWork = null;
         $userRow->ShiftStatus = true;
         $userRow->save();
+        
         return redirect('/dashboard');
     }
+
+
     public function break()
     {
         $timeStamp = now('Europe/Brussels');
