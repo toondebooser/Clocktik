@@ -8,32 +8,30 @@
 
     <div class="workersForm">
         @foreach ($workers as $worker)
-            @if (!$worker->admin)
-                <form class='workerForm'
-                    action="
+            <form class='workerForm'
+                action="
         @if (isset($setForTimesheet) && $setForTimesheet == true) {{ route('getData') }}
         @elseif (isset($setForTimesheet) && $setForTimesheet == false)
         {{ route('specials') }} @endif
         "
-                    method="post">
-                    @csrf
-                    <button class='workerButton' type="submit" name='worker' value="{{ $worker->id }}">
-                        {{ $worker->name }}
-                        @switch(true)
-                            @case($worker->timelogs[0]->ShiftStatus == true && $worker->timelogs[0]->BreakStatus == false)
-                                <div class="working"></div>
-                            @break
+                method="post">
+                @csrf
+                <button class='workerButton' type="submit" name='worker' value="{{ $worker->id }}">
+                    {{ $worker->name }}
+                    @switch(true)
+                        @case($worker->timelogs[0]->ShiftStatus == true && $worker->timelogs[0]->BreakStatus == false)
+                            <div class="working"></div>
+                        @break
 
-                            @case($worker->timelogs[0]->ShiftStatus == true && $worker->timelogs[0]->BreakStatus == true)
-                                <div class="onBreak"></div>
-                            @break
+                        @case($worker->timelogs[0]->ShiftStatus == true && $worker->timelogs[0]->BreakStatus == true)
+                            <div class="onBreak"></div>
+                        @break
 
-                            @default
-                                <div class="notWorking"></div>
-                        @endswitch
-                    </button>
-                </form>
-            @endif
+                        @default
+                            <div class="notWorking"></div>
+                    @endswitch
+                </button>
+            </form>
         @endforeach
         @if (isset($setForTimesheet) && $setForTimesheet == false)
             <form class="workerForm" method="post" action="{{ route('specials') }}">
