@@ -5,7 +5,7 @@ body {
     font-family: "Noto Sans", sans-serif;
 }
 :root {
-    --primary-color: #019541;
+    --primary-color: black;
     --status-working: rgb(33, 222, 33);
     --status-onBreak: rgb(18, 105, 244);
     --status-notWorking: rgb(252, 3, 3);
