@@ -209,10 +209,10 @@ return [
     |
     */
 
-    'aliases' => Facade::defaultAliases()->merge([
+    // 'aliases' => Facade::defaultAliases()->merge([
 
-        'Pdf' => Barryvdh\DomPDF\Facade::class
+    //     'Pdf' => Barryvdh\DomPDF\Facade::class
+    //     ])->toArray(),
+        
         // 'ExampleClass' => App\Example\ExampleClass::class,
-    ])->toArray(),
-
 ];

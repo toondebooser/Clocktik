@@ -78,9 +78,13 @@ class TimesheetController extends Controller
 
         $regularHours = ($clockedTime - $breakHours) + $userRow->RegularHours;
         $newTimeSheet->BreakHours = $breakHours;
-
-
         $result = $this->calculateHourBalance($regularHours, $userRow->StartWork, $userRow->Weekend,  $newTimeSheet, 'new');
+
+
+<<<<<<< HEAD
+        $result = $this->calculateHourBalance($regularHours, $userRow->StartWork, $userRow->Weekend,  $newTimeSheet, 'new');
+=======
+>>>>>>> main
 
         $total = $this->calculateUserTotal(now('Europe/Brussels'), $id);
         if ($result == true && $total == true) return redirect('/dashboard');
@@ -243,7 +247,8 @@ class TimesheetController extends Controller
                     if (!empty($results)) {
                         return redirect()->route('specials', ['worker' => $worker])->with('error', $results);
                     }
-                } else {
+                } 
+                else {
 
                     $addDay = $this->setDay($dayLabel, $newSpecialTimesheet, $dayType, $worker, $singleDay);
                     if ($addDay !== true) {

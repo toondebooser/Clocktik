@@ -594,6 +594,9 @@ fieldset {
 #onbetaaldInput:checked ~ .onbetaaldInput {
     display: inline;
 }
+.smallText{
+    font-size:medium;
+}
 
 .specialDayForm {
     margin-top: 30px;

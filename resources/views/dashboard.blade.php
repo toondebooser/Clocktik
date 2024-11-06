@@ -24,19 +24,19 @@
             </form>
         @if ($shiftStatus == true && $breakStatus == true)
             <a href="#"
-                onclick="openConfirmationModal('Are you sure you want to start working again?', '{{ route('stopBreak') }}')"
+                onclick="openConfirmationModal('wil je terug aan het werk?', '{{ route('stopBreak') }}')"
                 class="breakButton">
                 <p class="buttonText">Back to work</p>
             </a>
           @else
             <a href="#"
-            onclick="openConfirmationModal('Zedde zeker da ge wilt pauzeren ?', '{{ route('break') }}')"
+            onclick="openConfirmationModal('Ben je zeler dat je wil pauzeren?', '{{ route('break') }}')"
             class="breakButton">
             <p class="buttonText">Break</p>
             </a>
         @endif
             <a href="#"
-                onclick="openConfirmationModal('Gade nu al naar huis ?', '{{ route('stop') }}')"
+                onclick="openConfirmationModal('Ga je naar huis?', '{{ route('stop') }}')"
                 class="stopButton">
                 <p class="buttonText">Stop</p>
             </a>
@@ -128,53 +128,54 @@
         }
     </style>
 
-            <script>      document.addEventListener('DOMContentLoaded', function() {
-                function openConfirmationModal(message, actionUrl) {
-                    document.getElementById('modalText').innerText = message;
-                    document.getElementById('confirmButton').dataset.url = actionUrl;
-                    document.getElementById('confirmationModal').style.display = "block";
-                }
-        
-                function closeModal() {
-                    document.getElementById('confirmationModal').style.display = "none";
-                }
-        
-                document.getElementById('confirmButton').onclick = function() {
-                    const actionUrl = this.dataset.url;
-        
-                    fetch('/confirm-action', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}' 
-                            },
-                            body: JSON.stringify({
-                                action: actionUrl
-                            })
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            function openConfirmationModal(message, actionUrl) {
+                document.getElementById('modalText').innerText = message;
+                document.getElementById('confirmButton').dataset.url = actionUrl;
+                document.getElementById('confirmationModal').style.display = "block";
+            }
+    
+            function closeModal() {
+                document.getElementById('confirmationModal').style.display = "none";
+            }
+    
+            document.getElementById('confirmButton').onclick = function() {
+                const actionUrl = this.dataset.url;
+    
+                fetch('/confirm-action', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}' 
+                        },
+                        body: JSON.stringify({
+                            action: actionUrl
                         })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                window.location.href = actionUrl;
-                            } else {
-                                alert('Failed to confirm action.');
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.href = actionUrl;
+                        } else {
+                            alert('Failed to confirm action.');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+    
+            window.onclick = function(event) {
+                const modal = document.getElementById('confirmationModal');
+                if (event.target == modal) {
+                    closeModal();
                 }
-        
-                window.onclick = function(event) {
-                    const modal = document.getElementById('confirmationModal');
-                    if (event.target == modal) {
-                        closeModal();
-                    }
-                };
-        
-                window.openConfirmationModal = openConfirmationModal;
-                window.closeModal = closeModal;
-            });</script>
-
-   
+            };
+    
+            window.openConfirmationModal = openConfirmationModal;
+            window.closeModal = closeModal;
+        });
+    </script>
     
 
 
