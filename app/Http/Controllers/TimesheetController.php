@@ -81,10 +81,7 @@ class TimesheetController extends Controller
         $result = $this->calculateHourBalance($regularHours, $userRow->StartWork, $userRow->Weekend,  $newTimeSheet, 'new');
 
 
-<<<<<<< HEAD
         $result = $this->calculateHourBalance($regularHours, $userRow->StartWork, $userRow->Weekend,  $newTimeSheet, 'new');
-=======
->>>>>>> main
 
         $total = $this->calculateUserTotal(now('Europe/Brussels'), $id);
         if ($result == true && $total == true) return redirect('/dashboard');

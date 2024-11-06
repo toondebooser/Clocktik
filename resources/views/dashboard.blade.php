@@ -1,45 +1,40 @@
 @extends('layout')
 @section('title')
-<h2>Welcome {{ $user->name }}</h2>
+    <h2>Welcome {{ $user->name }}</h2>
 @endsection
 @section('userDashboard')
 
-@if (session('error'))
-<div class="error">
-    {{ session('error') }}
-    <a class="removeError" href="">ok</a>
-    </div>
+    @if (session('error'))
+        <div class="error">
+            {{ session('error') }}
+            <a class="removeError" href="">ok</a>
+        </div>
     @endif
-    
+
     @if ($shiftStatus == false)
-        <a href="#" class="startButton"
-            onclick="openConfirmationModal('Klaar om te werken ?', '{{ route('start') }}')">
+        <a href="#" class="startButton" onclick="openConfirmationModal('Klaar om te werken ?', '{{ route('start') }}')">
             <p class="buttonText">Start</p>
         </a>
     @else
-            <form method="POST" name="userNoteForm" action="{{ route('dashboard') }}" class="userNoteForm">
-                @csrf
-                <textarea class="userNoteInput" name="userNote" rows="2" cols="30">{{ $userNote }}</textarea> <br>
-                <input class="button" type="submit" value='Voeg notitie toe'>
-            </form>
+        <form method="POST" name="userNoteForm" action="{{ route('dashboard') }}" class="userNoteForm">
+            @csrf
+            <textarea class="userNoteInput" name="userNote" rows="2" cols="30">{{ $userNote }}</textarea> <br>
+            <input class="button" type="submit" value='Voeg notitie toe'>
+        </form>
         @if ($shiftStatus == true && $breakStatus == true)
-            <a href="#"
-                onclick="openConfirmationModal('wil je terug aan het werk?', '{{ route('stopBreak') }}')"
+            <a href="#" onclick="openConfirmationModal('wil je terug aan het werk?', '{{ route('stopBreak') }}')"
                 class="breakButton">
                 <p class="buttonText">Back to work</p>
             </a>
-          @else
-            <a href="#"
-            onclick="openConfirmationModal('Ben je zeler dat je wil pauzeren?', '{{ route('break') }}')"
-            class="breakButton">
-            <p class="buttonText">Break</p>
+        @else
+            <a href="#" onclick="openConfirmationModal('Ben je zeler dat je wil pauzeren?', '{{ route('break') }}')"
+                class="breakButton">
+                <p class="buttonText">Break</p>
             </a>
         @endif
-            <a href="#"
-                onclick="openConfirmationModal('Ga je naar huis?', '{{ route('stop') }}')"
-                class="stopButton">
-                <p class="buttonText">Stop</p>
-            </a>
+        <a href="#" onclick="openConfirmationModal('Ga je naar huis?', '{{ route('stop') }}')" class="stopButton">
+            <p class="buttonText">Stop</p>
+        </a>
     @endif
 
     <div id="confirmationModal" class="modal">
@@ -51,7 +46,7 @@
         </div>
     </div>
 
-    
+
 
 
     <style>
@@ -130,25 +125,25 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            
+
             function openConfirmationModal(message, actionUrl) {
                 document.getElementById('modalText').innerText = message;
                 document.getElementById('confirmButton').dataset.url = actionUrl;
                 document.getElementById('confirmationModal').style.display = "block";
             }
-    
+
             function closeModal() {
                 document.getElementById('confirmationModal').style.display = "none";
             }
-    
+
             document.getElementById('confirmButton').onclick = function() {
                 const actionUrl = this.dataset.url;
-    
+
                 fetch('/confirm-action', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}' 
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
                         body: JSON.stringify({
                             action: actionUrl
@@ -164,19 +159,19 @@
                     })
                     .catch(error => console.error('Error:', error));
             }
-    
+
             window.onclick = function(event) {
                 const modal = document.getElementById('confirmationModal');
                 if (event.target == modal) {
                     closeModal();
                 }
             };
-    
+
             window.openConfirmationModal = openConfirmationModal;
             window.closeModal = closeModal;
         });
     </script>
-    
+
 
 
 @endsection
