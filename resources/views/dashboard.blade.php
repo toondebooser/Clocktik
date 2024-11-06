@@ -24,19 +24,19 @@
             </form>
         @if ($shiftStatus == true && $breakStatus == true)
             <a href="#"
-                onclick="openConfirmationModal('Are you sure you want to start working again?', '{{ route('stopBreak') }}')"
+                onclick="openConfirmationModal('wil je terug aan het werk?', '{{ route('stopBreak') }}')"
                 class="breakButton">
                 <p class="buttonText">Back to work</p>
             </a>
           @else
             <a href="#"
-            onclick="openConfirmationModal('Zedde zeker da ge wilt pauzeren ?', '{{ route('break') }}')"
+            onclick="openConfirmationModal('Ben je zeler dat je wil pauzeren?', '{{ route('break') }}')"
             class="breakButton">
             <p class="buttonText">Break</p>
             </a>
         @endif
             <a href="#"
-                onclick="openConfirmationModal('Gade nu al naar huis ?', '{{ route('stop') }}')"
+                onclick="openConfirmationModal('Ga je naar huis?', '{{ route('stop') }}')"
                 class="stopButton">
                 <p class="buttonText">Stop</p>
             </a>
@@ -130,6 +130,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            
             function openConfirmationModal(message, actionUrl) {
                 document.getElementById('modalText').innerText = message;
                 document.getElementById('confirmButton').dataset.url = actionUrl;
