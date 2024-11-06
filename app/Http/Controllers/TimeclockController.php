@@ -53,7 +53,7 @@ class TimeclockController extends Controller
             return redirect()->route('dashboard')->with('error', "Vandaag is " . $dayCheck->type . " geregistreerd");
         }
 
-        $weekDay = Carbon::parse($timestamp)->weekday();
+        $weekDay = Carbon::parse($timestamp)->addDay()->weekday();
         $weekDay === 0 || $weekDay === 6 ? $userRow->Weekend = true : $userRow->Weekend = false;
         $userRow->StartWork = $timestamp;
         $userRow->StartBreak = null;
