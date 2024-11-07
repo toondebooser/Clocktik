@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class WorkerMiddleware
+class notSignedIn
 {
     /**
      * Handle an incoming request.
@@ -16,11 +16,8 @@ class WorkerMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $user = auth()->user();
-        if($user == null) return redirect('/');
-        if($user->admin == false){
-            return $next($request);
-        }
+        if(!$user) return $next($request);
+        else
         return redirect('/');
-        return $next($request);
     }
 }

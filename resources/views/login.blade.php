@@ -2,9 +2,7 @@
 <?php $currentUser = auth()->user();?>
 @section('title')
     <h1>ClockTik</h1>
-    @if (isset($currentUser))
-    <p>{{$currentUser->name}}</p>   
-    @endif
+ 
 @endsection
 
 @section('error')
@@ -18,6 +16,11 @@
 @endforeach  
     </ul>  
 </div>    
+@endif
+@if (session()->has('success'))
+<div class="success">
+ {{session('success')}}
+</div> 
 @endif
 @endsection
 @section('login')

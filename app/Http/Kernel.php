@@ -53,6 +53,7 @@ class Kernel extends HttpKernel
      * @var array<string, class-string|string>
      */
     protected $middlewareAliases = [
+        'notSigned' => \App\Http\Middleware\notSignedIn::class,
         'confirm.action' => \App\Http\Middleware\ConfirmMiddleware::class,
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'worker' => \App\Http\Middleware\WorkerMiddleware::class,
@@ -66,5 +67,6 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        
     ];
 }

@@ -81,6 +81,15 @@ th {
     border-radius: 10px;
     z-index: 1;
 }
+.success{
+    word-break: break-all;
+    grid-row: 4/5;
+    grid-column: 2/12;
+    background-color: lightgreen;
+    color: green;
+    text-align: center;
+    font-size: larger;
+}
 .specifiedError {
     color: black;
 }
@@ -286,6 +295,20 @@ img {
 }
 .logo {
     height: 100%;
+}
+.verificationMessage{
+    border: black solid;
+    padding: 10px;
+    background-color: lightgray;
+    grid-column: 2/12;
+    grid-row: 3/4;
+    justify-items: center;
+    align-content: center;
+    text-align: center;
+
+}
+.resendVerificationMessage{
+    color: red;
 }
 .logoContainer {
     grid-column: 1/13;
