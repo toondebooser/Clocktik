@@ -17,8 +17,9 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Models\User;
 
-// Auth::routes(['verify' => true]);
+Auth::routes(['verify' => true]);
 Route::get('/', [HomeController::class, 'show'])->name('home');
 Route::get('/login', [HomeController::class, 'login'])->name('login')->middleware('notSigned');
 Route::get('/logout', [HomeController::class, 'logout'])->name('logout');
@@ -48,11 +49,19 @@ Route::post('/confirm-action', [ConfirmAction::class, 'confirmAction']);
 Route::get('/email/verify', function () {
     return view('verify-email');
 })->middleware('auth')->name('verification.notice');
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    $request->fulfill();
- 
-    return redirect('/');
-})->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
+       $user = User::findOrFail($id);
+
+       if (!hash_equals($hash, sha1($user->getEmailForVerification()))) {
+           abort(403, 'Invalid verification link.');
+       }
+   
+       if (!$user->hasVerifiedEmail()) {
+           $user->markEmailAsVerified();
+       }
+    return redirect('/login')->with('verified', true);
+})->middleware(['signed'])->name('verification.verify');
 
 Route::post('/email/resend', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();

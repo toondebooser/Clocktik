@@ -17,7 +17,9 @@
     </ul>  
 </div>    
 @endif
-
+@if (session()->has('verified'))
+<div class="success">Thank you for verifying your email!</div>
+@endif
 @endsection
 @section('login')
    

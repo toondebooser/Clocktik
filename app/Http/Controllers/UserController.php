@@ -73,7 +73,7 @@ class UserController extends Controller
         // Optionally, log in the user after registration (comment if not needed)
         // Auth::login($newUser);
         
-        auth()->login($newUser);
+        // auth()->login($newUser);
         return redirect('/')->with('success', 'Registration successful! Please verify your email:');
 
 
