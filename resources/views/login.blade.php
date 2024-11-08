@@ -17,11 +17,7 @@
     </ul>  
 </div>    
 @endif
-@if (session()->has('success'))
-<div class="success">
- {{session('success')}}
-</div> 
-@endif
+
 @endsection
 @section('login')
    

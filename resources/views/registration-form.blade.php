@@ -1,5 +1,7 @@
 @extends('layout')
-
+@php
+    $isLoading = null
+@endphp
 @section('title')
     <h2>User Registration</h2>
     @if (isset($exists))
@@ -24,7 +26,7 @@
 @endsection
 @section('newUser')
 
-    <form class="newUserForm" name="newUserForm" action="{{ route('registrate') }}" method="post">
+    <form class="newUserForm" name="newUserForm" action="{{ route('registrate') }}" method="post" onsubmit="showLoader()">
 
         @csrf
         <label class="nameLabel" for="name">Name</label>
@@ -46,8 +48,14 @@
 
       
 
-        <input class="registrationButton" type="submit" value="Registrate">
-
+        <input class="registrationButton" type="submit" value="Registrate" >
+        
+        <div class="loader" style="display: {{$isLoading ? 'flex' : 'none'}}"></div>
     </form>
-
-@endsection
+    <script>
+        function showLoader() {
+            const loader = document.querySelector('.loader');
+            loader.style.display = 'flex';
+        }
+    </script>
+    @endsection

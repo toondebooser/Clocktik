@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
-Auth::routes(['verify' => true]);
+// Auth::routes(['verify' => true]);
 Route::get('/', [HomeController::class, 'show'])->name('home');
 Route::get('/login', [HomeController::class, 'login'])->name('login')->middleware('notSigned');
 Route::get('/logout', [HomeController::class, 'logout'])->name('logout');
