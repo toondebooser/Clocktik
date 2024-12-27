@@ -51,9 +51,10 @@ class TimesheetController extends Controller
         } else {
             $date = $date;
         }
-        $timesheetCheck = Timesheet::where('UserId', '=', $id)
-            ->whereMonth('Month', '=', $date)
+        $timesheetCheck = Timesheet::where('UserId', $id)
+            ->whereMonth('Month', $date)
             ->whereDay('Month', $date)
+            ->whereYear('Month',$date)
             ->first();
         return $timesheetCheck;
     }

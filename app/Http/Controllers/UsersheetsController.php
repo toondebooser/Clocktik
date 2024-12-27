@@ -25,15 +25,23 @@ class UsersheetsController extends Controller
         $year = date('Y', strtotime($now));
 
         if (isset($request->month)) {
-        $month = $request->month;
-        // $carbonDate = Carbon::create(null, $month, 1);
-        // $monthString =  $carbonDate->format('F');
+            $month = $request->month;
+            // $carbonDate = Carbon::create(null, $month, 1);
+            // $monthString =  $carbonDate->format('F');
         }
-        if(isset($request->worker)){
+        if (isset($request->worker)) {
             $currentUser = User::find($request->worker);
         }
-       
 
+        $threeMonthsAgo = Carbon::now()->subMonths(3);
+
+        $userTimesheet->where('UserId', '=', $currentUser->id)
+            ->whereMonth('Month', '<', $threeMonthsAgo)
+            ->delete();
+
+        $userTotal->where('UserId', '=', $currentUser->id)
+            ->where('Month', '<', $threeMonthsAgo)
+            ->delete();
 
         $timesheet = $userTimesheet
             ->where('UserId', '=', $currentUser->id)
@@ -47,13 +55,13 @@ class UsersheetsController extends Controller
             ->whereMonth('Month', '=', $month)
             ->whereYear('Month', '=', $year)
             ->get();
-        
+
         $clockedMonths = $userTotal->select($userTotal->raw('DISTINCT MONTH(Month) AS month'))
             ->where('UserId', '=', $currentUser->id)
             ->orderBy('Month', 'desc')
             ->whereyear('Month', '=', $year)
             ->get();
-        
-        return view('profile', [ 'user' => $currentUser,'clockedMonths' => $clockedMonths, 'timesheet' => $timesheet, 'monthlyTotal' => $monthlyTotal]);
+
+        return view('profile', ['user' => $currentUser, 'clockedMonths' => $clockedMonths, 'timesheet' => $timesheet, 'monthlyTotal' => $monthlyTotal]);
     }
 }
