@@ -75,9 +75,11 @@ class TimesheetController extends Controller
         $newTimeSheet->BreakStart = $userRow->StartBreak;
         $newTimeSheet->BreakStop = $userRow->EndBreak;
         $breakHours = $userRow->BreakHours;
-        $workedHours = $this->calculateClockedHours($userRow->StartWork, $userRow->StopWork);
+        $clockedTime = $this->calculateClockedHours($userRow->StartWork, $userRow->StopWork);
 
-        $regularHours = ($workedHours - $breakHours) + $userRow->RegularHours;
+        $regularHours = ($clockedTime - $breakHours) + $userRow->RegularHours;
+        $userRow->RegularHours = $regularHours;
+        $userRow->save();
         $newTimeSheet->BreakHours = $breakHours;
         $result = $this->calculateHourBalance($regularHours, $userRow->StartWork, $userRow->Weekend,  $newTimeSheet, 'new');
 
@@ -302,8 +304,8 @@ class TimesheetController extends Controller
 
     public function calculateClockedHours($start, $end)
     {
-        $start = $start ? Carbon::parse($start, 'Europe/Brussels') : null;
-        $end = $end ? Carbon::parse($end, 'Europe/Brussels') : null;
+        $start = Carbon::parse($start, 'Europe/Brussels');
+        $end =  Carbon::parse($end, 'Europe/Brussels') ;
 
 
         $diffInMin = $end->diffInMinutes($start);

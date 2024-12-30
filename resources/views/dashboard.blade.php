@@ -1,6 +1,7 @@
 @extends('layout')
 @section('title')
     <h2>Welcome {{ $user->name }}</h2>
+    <h3 style="height:fit-content;grid-row: 3/4; grid-column: 1/13; justify-self:center" id="clock"></h3>
 @endsection
 @section('userDashboard')
 
@@ -27,7 +28,6 @@
                 <p class="buttonText">Back to work</p>
             </a>
         @else
-            <h3 style="height:fit-content;grid-row: 3/4; grid-column: 1/13; justify-self:center" id="clock"></h3>
             <a href="#" onclick="openConfirmationModal('Ben je zeker dat je wil pauzeren?', '{{ route('break') }}')"
                 class="breakButton">
                 <p class="buttonText">Break</p>
@@ -38,8 +38,9 @@
         </a>
     @endif
     <div class="dayStatus" style="grid-column: 1/13; grid-row: 3/4; justify-self: center; align-self: end; height:100px">
-        <div class="workedHours">Gewerkte uren vandaag: {{ $workedHours }}</div>
-        <div class="pausedHours">Gepauzeerde uren vandaag: {{ $breakHours }}</div>
+        <div style="text-align: center"><span style="color: red">{{date('d-m-y')}}</span></div>
+        <div class="workedHours">Gewerkte uren: {{ $workedHours }}</div>
+        <div class="pausedHours">Gepauzeerde uren: {{ $breakHours }}</div>
     </div>
     <div id="confirmationModal" class="modal">
         <div class="modal-content">
@@ -130,20 +131,27 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const shiftStatus = {{ json_encode($shiftStatus) }};
-            const breakStatus = {{json_encode($breakStatus)}}
-            
+            const breakStatus = {{ json_encode($breakStatus) }}
+            const startBreak = new Date("{{ $startBreak }}").getTime();
+
             const startShift = new Date("{{ $start }}").getTime();
             const clockElement = document.getElementById('clock');
             const breakHours = parseFloat("{{ $breakHours }}"); // Assuming breakhours is in hours
-            
+
             const breakMilliseconds = breakHours * 60 * 60 * 1000;
 
 
             function updateClock(type) {
-                const now = new Date().getTime(); // Current time in milliseconds
-                const elapsed = now - startShift; // Difference in milliseconds
+                const now = new Date().getTime(); 
 
-                // Convert milliseconds to hours, minutes, seconds
+                let elapsed = null
+                if(type == "work"){
+                 elapsed = now - startShift - breakMilliseconds;
+                 
+                } else{
+                     elapsed = now - startBreak + breakMilliseconds;
+                }
+
                 const hours = Math.floor(elapsed / (1000 * 60 * 60));
                 const minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((elapsed % (1000 * 60)) / 1000);
@@ -152,21 +160,19 @@
                 clockElement.innerText =
                     `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             }
-                console.log(breakStatus);
-                
+            console.log(breakStatus);
+
             setInterval(() => {
-            if(shiftStatus && !breakStatus ){
-            updateClock("work");
-            }
-            else if(shiftStatus && breakStatus){
-                updateClock("break")
-            }
-            else{
-                null
-            }
-           
+                if (shiftStatus && !breakStatus) {
+                    updateClock("work");
+                } else if (shiftStatus && breakStatus) {
+                    updateClock("break")
+                } else {
+                    null
+                }
+
             }, 1000);
-            
+
 
             const openConfirmationModal = (message, actionUrl) => {
                 document.getElementById('modalText').innerText = message;
