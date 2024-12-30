@@ -33,10 +33,10 @@ class UsersheetsController extends Controller
             $currentUser = User::find($request->worker);
         }
 
-        $threeMonthsAgo = Carbon::now()->subMonths(3);
+        $threeMonthsAgo = Carbon::now()->startOfMonth()->subMonths(3);
 
         $userTimesheet->where('UserId', '=', $currentUser->id)
-            ->whereMonth('Month', '<', $threeMonthsAgo)
+            ->where('Month', '<=', $threeMonthsAgo)
             ->delete();
 
         $userTotal->where('UserId', '=', $currentUser->id)

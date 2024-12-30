@@ -1,15 +1,10 @@
 @extends('layout')
 @section('title')
-{{-- <script>
-    @if($user->admin)
-        window.location.href = "{{ route('myWorkers') }}";
-    @endif
-</script> --}}
+
 
     @php
         $userId = $user->id;
         if(isset($timesheet[0]))$month = $timesheet[0]->Month;
-        // $totalJSONstring = json_encode($monthlyTotal);
         
     @endphp
     <h2>
@@ -52,13 +47,14 @@
                 @csrf
                 <input type="hidden" name="worker" value="{{ $user->id }}">
                 <input class="submit" type="image"
-                    src="{{ asset('/images/2849830-gear-interface-multimedia-options-setting-settings_107986.png') }}"
-                    name="submitUserId" alt="Submit">
+                    src="{{ asset('/images/sunPic.png') }}"
+                    name="submitUserId" alt="Submit"
+                    >
             </form>
             <form class="timesheetToevoegen" action="{{ route('timesheetForm') }}" method="post">
                 @csrf
                 <input type="hidden" name="worker" value="{{ $user->id }}">
-                <input class="submit" type="image" src="{{ asset('/images/image_processing20210616-17152-dcj4lq.png') }}"
+                <input class="submit" type="image" src="{{ asset('/images/stopwatch.png') }}"
                     name="submitUserId" alt="Submit">
             </form>
         @endif
@@ -82,11 +78,11 @@
                 <a class="previewLink"
                     href="{{ route('exportPdf', ['userId' => $userId, 'month' => $month, 'type' => 'preview']) }}"
                     target="_blank">
-                    <img class="previewIcon" src="{{ asset('/images/preview-65.png') }}" alt="Preview">
+                    <img class="previewIcon" src="{{ asset('/images/preview.png') }}" alt="Preview">
                 </a>
                 <a class="downloadLink"
                     href="{{ route('exportPdf', ['userId' => $userId, 'month' => $month, 'type' => 'download']) }}">
-                    <img class="downloadIcon" src="{{ asset('/images/2021663-200.png') }}" alt="Download">
+                    <img class="downloadIcon" src="{{ asset('/images/download.png') }}" alt="Download">
                 </a>
                 @endif
                 @foreach ($timesheet as $item)
@@ -122,11 +118,7 @@
                         </td>
                         <td>
                             <div class="displayBreak">
-                                {{-- @if ($item->BreakHours > 0) --}}
                                 {{ $item->BreakHours }}
-                                {{-- @else --}}
-                                {{-- {{ $item->BreakHours }}
-                                @endif --}}
                             </div>
                         </td>
                         <td>
