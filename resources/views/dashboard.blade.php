@@ -37,10 +37,10 @@
             <p class="buttonText">Stop</p>
         </a>
     @endif
-<div class="dayStatus" style="grid-column: 1/13; grid-row: 3/4; justify-self: center; align-self: end; height:100px">
-    <div class="workedHours">Gewerkte uren vandaag: {{$workedHours}}</div>
-    <div class="pausedHours">Gepauzeerde uren vandaag: {{$breakHours}}</div>
-</div>
+    <div class="dayStatus" style="grid-column: 1/13; grid-row: 3/4; justify-self: center; align-self: end; height:100px">
+        <div class="workedHours">Gewerkte uren vandaag: {{ $workedHours }}</div>
+        <div class="pausedHours">Gepauzeerde uren vandaag: {{ $breakHours }}</div>
+    </div>
     <div id="confirmationModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
@@ -129,13 +129,19 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-
-            const startShift = new Date("{{ $start }}").getTime(); 
+            const shiftStatus = {{ json_encode($shiftStatus) }};
+            const breakStatus = {{json_encode($breakStatus)}}
+            
+            const startShift = new Date("{{ $start }}").getTime();
             const clockElement = document.getElementById('clock');
+            const breakHours = parseFloat("{{ $breakHours }}"); // Assuming breakhours is in hours
+            
+            const breakMilliseconds = breakHours * 60 * 60 * 1000;
 
-            function updateClock() {
+
+            function updateClock(type) {
                 const now = new Date().getTime(); // Current time in milliseconds
-                const elapsed = now - startShift  ; // Difference in milliseconds
+                const elapsed = now - startShift; // Difference in milliseconds
 
                 // Convert milliseconds to hours, minutes, seconds
                 const hours = Math.floor(elapsed / (1000 * 60 * 60));
@@ -146,9 +152,21 @@
                 clockElement.innerText =
                     `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             }
-
-            // Update the clock every second
-            setInterval(updateClock, 1000);
+                console.log(breakStatus);
+                
+            setInterval(() => {
+            if(shiftStatus && !breakStatus ){
+            updateClock("work");
+            }
+            else if(shiftStatus && breakStatus){
+                updateClock("break")
+            }
+            else{
+                null
+            }
+           
+            }, 1000);
+            
 
             const openConfirmationModal = (message, actionUrl) => {
                 document.getElementById('modalText').innerText = message;
