@@ -44,7 +44,7 @@ class TimeclockController extends Controller
 
         if ($dayCheck !== null && $dayCheck->type == "workday") {
             $userRow->BreakHours += $dayCheck->BreakHours;
-            $userRow->RegularHours += $dayCheck->RegularHours += $dayCheck->BreakHours;
+            $userRow->RegularHours += $dayCheck->RegularHours;
             $dayCheck->userNote !== null ? $userRow->userNote = $dayCheck->userNote : null;
           
             $dayCheck->delete();
@@ -68,8 +68,10 @@ class TimeclockController extends Controller
 
     public function break()
     {
+        $timeController = new TimesheetController();
         $timeStamp = now('Europe/Brussels');
         $userRow = Timelog::where('UserId', auth()->user()->id)->first();
+        $userRow->RegularHours += $timeController->calculateDecimal($userRow->StartWork,$timeStamp);
         $userRow->BreakStatus = true;
         $userRow->StartBreak = $timeStamp;
         $userRow->save();
@@ -78,14 +80,15 @@ class TimeclockController extends Controller
 
     public function stopBreak()
     {
-        $timesheet = new TimesheetController();
+        $timeController = new TimesheetController();
         $timeStamp = now('Europe/Brussels');
         $userRow = Timelog::where('UserId', auth()->user()->id)->first();
         $userRow->BreakStatus = false;
         $start = $userRow->StartBreak;
         $end = $timeStamp;
         $userRow->EndBreak = $end;
-        $userRow->BreakHours += $timesheet->calculateBreakHours($start, $end);
+        $userRow->BreakHours += $timeController->calculateDecimal($start, $end);
+        $userRow->StartWork = $timeStamp;
         $userRow->save();
         return redirect('/dashboard');
     }
@@ -102,12 +105,13 @@ class TimeclockController extends Controller
             $start = Carbon::parse($userRow->StartBreak, 'Europe/Brussels');
             $end = Carbon::parse($timeStamp, 'Europe/Brussels');
             $userRow->EndBreak = $timeStamp;
-            $userRow->BreakHours += $timesheetController->calculateClockedHours($start, $end);
+            $userRow->BreakHours += $timesheetController->calculateDecimal($start, $end);
             $userRow->save();
         }
         
       
         $userRow->StopWork = $timeStamp;
+        $userRow->RegularHours += $timesheetController->calculateDecimal($userRow->StartWork, $timeStamp);
         $userRow->save();
         return Redirect::route('makeTimesheet', ['id' => auth()->user()->id]);
     }

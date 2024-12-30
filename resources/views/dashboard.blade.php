@@ -131,13 +131,15 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const shiftStatus = {{ json_encode($shiftStatus) }};
-            const breakStatus = {{ json_encode($breakStatus) }}
+            const breakStatus = {{ json_encode($breakStatus) }};
+
             const startBreak = new Date("{{ $startBreak }}").getTime();
-
             const startShift = new Date("{{ $start }}").getTime();
-            const clockElement = document.getElementById('clock');
-            const breakHours = parseFloat("{{ $breakHours }}"); // Assuming breakhours is in hours
 
+            const clockElement = document.getElementById('clock');
+            const breakHours = parseFloat("{{ $breakHours }}"); 
+            const workedHours = parseFloat("{{$workedHours}}");
+            const workedMilliseconds = workedHours * 60 * 60 * 1000;
             const breakMilliseconds = breakHours * 60 * 60 * 1000;
 
 
@@ -146,7 +148,7 @@
 
                 let elapsed = null
                 if(type == "work"){
-                 elapsed = now - startShift - breakMilliseconds;
+                 elapsed = now - startShift  + workedMilliseconds;
                  
                 } else{
                      elapsed = now - startBreak + breakMilliseconds;
@@ -160,7 +162,6 @@
                 clockElement.innerText =
                     `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             }
-            console.log(breakStatus);
 
             setInterval(() => {
                 if (shiftStatus && !breakStatus) {
