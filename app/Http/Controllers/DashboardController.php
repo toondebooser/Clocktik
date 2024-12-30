@@ -18,13 +18,16 @@ class DashboardController extends Controller
             $userRow->userNote = $userNoteInput;
             $userRow->save();
         }
-        
+
         $userNote = $userRow->userNote;
         $shiftStatus = $userRow->ShiftStatus;
         $breakStatus = $userRow->BreakStatus;
         $start = $userRow->StartWork;
+        $startBreak = $userRow->StartBreak;
+        $breakHours = $userRow->BreakHours;
+        $workedHours = $userRow->RegularHours;
 
-        return view('dashboard', ['user' => auth()->user(),'start' => $start , 'shiftStatus' => $shiftStatus, 'breakStatus' => $breakStatus, 'userNote' => $userNote]);
+        return view('dashboard', ['user' => auth()->user(),'workedHours' => $workedHours ,'breakHours' => $breakHours ,'startBreak'=> $startBreak, 'start' => $start , 'shiftStatus' => $shiftStatus, 'breakStatus' => $breakStatus, 'userNote' => $userNote]);
     }
 
     

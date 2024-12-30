@@ -27,7 +27,8 @@
                 <p class="buttonText">Back to work</p>
             </a>
         @else
-            <a href="#" onclick="openConfirmationModal('Ben je zeler dat je wil pauzeren?', '{{ route('break') }}')"
+            <h3 style="height:fit-content;grid-row: 3/4; grid-column: 1/13; justify-self:center" id="clock"></h3>
+            <a href="#" onclick="openConfirmationModal('Ben je zeker dat je wil pauzeren?', '{{ route('break') }}')"
                 class="breakButton">
                 <p class="buttonText">Break</p>
             </a>
@@ -36,12 +37,15 @@
             <p class="buttonText">Stop</p>
         </a>
     @endif
-
+<div class="dayStatus" style="grid-column: 1/13; grid-row: 3/4; justify-self: center; align-self: end; height:100px">
+    <div class="workedHours">Gewerkte uren vandaag: {{$workedHours}}</div>
+    <div class="pausedHours">Gepauzeerde uren vandaag: {{$breakHours}}</div>
+</div>
     <div id="confirmationModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <p id="modalText"></p>
-            <button id="confirmButton" onclick="yes(this.dataset.url)" class="modal-button">Confirm</button>
+            <button id="confirmButton" class="modal-button">Confirm</button>
             <button class="modal-button cancel" onclick="closeModal()">Cancel</button>
         </div>
     </div>
@@ -126,13 +130,33 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
-            function openConfirmationModal(message, actionUrl) {
+            const startShift = new Date("{{ $start }}").getTime(); 
+            const clockElement = document.getElementById('clock');
+
+            function updateClock() {
+                const now = new Date().getTime(); // Current time in milliseconds
+                const elapsed = now - startShift  ; // Difference in milliseconds
+
+                // Convert milliseconds to hours, minutes, seconds
+                const hours = Math.floor(elapsed / (1000 * 60 * 60));
+                const minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((elapsed % (1000 * 60)) / 1000);
+
+                // Display the result
+                clockElement.innerText =
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            // Update the clock every second
+            setInterval(updateClock, 1000);
+
+            const openConfirmationModal = (message, actionUrl) => {
                 document.getElementById('modalText').innerText = message;
                 document.getElementById('confirmButton').dataset.url = actionUrl;
                 document.getElementById('confirmationModal').style.display = "block";
             }
 
-            function closeModal() {
+            const closeModal = () => {
                 document.getElementById('confirmationModal').style.display = "none";
             }
 

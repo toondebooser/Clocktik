@@ -75,9 +75,9 @@ class TimesheetController extends Controller
         $newTimeSheet->BreakStart = $userRow->StartBreak;
         $newTimeSheet->BreakStop = $userRow->EndBreak;
         $breakHours = $userRow->BreakHours;
-        $clockedTime = $this->calculateClockedHours($userRow->StartWork, $userRow->StopWork);
+        $workedHours = $this->calculateClockedHours($userRow->StartWork, $userRow->StopWork);
 
-        $regularHours = ($clockedTime - $breakHours) + $userRow->RegularHours;
+        $regularHours = ($workedHours - $breakHours) + $userRow->RegularHours;
         $newTimeSheet->BreakHours = $breakHours;
         $result = $this->calculateHourBalance($regularHours, $userRow->StartWork, $userRow->Weekend,  $newTimeSheet, 'new');
 

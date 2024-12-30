@@ -13,12 +13,12 @@ use Illuminate\Support\Facades\Redirect;
 class TimeclockController extends Controller
 {
     
-    public function calculateDecimale($start, $end)
-    {
-        $diffInMin = $end->diffInMinutes($start);
-        $decimalTime = round($diffInMin / 60, 2);
-        return $decimalTime;
-    }
+    // public function calculateDecimale($start, $end)
+    // {
+    //     $diffInMin = $end->diffInMinutes($start);
+    //     $decimalTime = round($diffInMin / 60, 2);
+    //     return $decimalTime;
+    // }
 
     public function startWorking(Request $request)
     {
@@ -54,7 +54,6 @@ class TimeclockController extends Controller
         }
 
         $weekDay = Carbon::parse($timestamp)->weekday();
-        // Carbon::parse($timestamp, 'Europe/Brussels')->isWeekend()? $userRow->Weekend = true : $userRow->Weekend = false ;
         $weekDay == 0 || $weekDay == 6 ? $userRow->Weekend = true : $userRow->Weekend = false;
         $userRow->StartWork = $timestamp;
         $userRow->StartBreak = null;
@@ -93,6 +92,7 @@ class TimeclockController extends Controller
 
     public function stop()
     {
+        $timesheetController = new TimesheetController;
         $timeStamp = now('Europe/Brussels');
         $userRow = Timelog::where('UserId', auth()->user()->id)->first();
         $userRow->ShiftStatus = false;
@@ -102,21 +102,11 @@ class TimeclockController extends Controller
             $start = Carbon::parse($userRow->StartBreak, 'Europe/Brussels');
             $end = Carbon::parse($timeStamp, 'Europe/Brussels');
             $userRow->EndBreak = $timeStamp;
-            $userRow->BreakHours += $this->calculateDecimale($start, $end);
+            $userRow->BreakHours += $timesheetController->calculateClockedHours($start, $end);
             $userRow->save();
         }
         
-        // elseif($userRow->StartBreak == null)
-        // {   
-        //     $end = Carbon::parse($timeStamp, 'Europe/Brussels');
-        //     $endClone = clone $end;
-        //     $start = $endClone->subMinutes(30);
-        //     dd($start.'+'.$end);
-        //     $userRow->BreakHours += $this->calculateDecimale($start, $end);
-        //     $userRow->EndBreak = $timeStamp;
-        //     $userRow->save();
-
-        // }
+      
         $userRow->StopWork = $timeStamp;
         $userRow->save();
         return Redirect::route('makeTimesheet', ['id' => auth()->user()->id]);
