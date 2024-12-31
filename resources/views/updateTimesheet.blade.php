@@ -17,43 +17,75 @@
 
             @if ($timesheet->type == 'workday')
                 <fieldset>
-                    <legend>Gewerkte periode</legend>
+                    <legend>Gewerkte @if($json)Shiften @else Periode @endif</legend>
+                    @if ($json)
+                    @foreach ($json as $timestamp)
                     <div>
                         <label for="startTime">Start:</label>
-                        <input id="startTime" class="updateStartTime" name="startTime" type="time" value="{{ $startShift }}"> <br>
+                        <input id="startTime" class="updateStartTime" name="startTime[]" type="time"
+                        value="{{ \Carbon\Carbon::parse($timestamp['ClockedIn'])->format('H:i') }}"> <br>
                         <label for="endTime">End:</label>
-                        <input id="endTime" class="updateEndTime" type="time" name="endTime" value="{{ $endShift }}"> <br>
+                        <input id="endTime" class="updateEndTime" type="time" name="endTime[]"
+                        value="{{ \Carbon\Carbon::parse($timestamp['ClockedOut'])->format('H:i') }}"> <br>
+                    </div>
+                    <hr>
+                    @endforeach
+                    @endif
+                    <div>
+                        <label for="startTime">Start:</label>
+                        <input id="startTime" class="updateStartTime" name="startTime" type="time"
+                            value="{{ $startShift }}"> <br>
+                        <label for="endTime">End:</label>
+                        <input id="endTime" class="updateEndTime" type="time" name="endTime"
+                            value="{{ $endShift }}"> <br>
                     </div>
                 </fieldset>
                 <hr>
                 <legend>Gepauzeerde periode</legend>
+                @if ($json)
+                    @foreach ($json as $timestamp)
+                        <div>
+                            <label for="startBreak">Start:</label>
+                            <input id="startBreak" class="updateStartBreak" type="time" name="startBreak[]"
+                                value="{{ \Carbon\Carbon::parse($timestamp['BreakIn'])->format('H:i') }}"> <br>
+                            <label for="endBreak">End:</label>
+                            <input id="endBreak" type="time" name="endBreak[]" class="updateEndBreak"
+                                value="{{ \Carbon\Carbon::parse($timestamp['BreakOut'])->format('H:i') }}"> <br>
+                        </div>
+                    @endforeach
+                    <hr>
+                @endif
                 <div>
                     <label for="startBreak">Start:</label>
-                    <input id="startBreak" class="updateStartBreak" type="time" name="startBreak" value="{{ $startBreak }}"> <br>
+                    <input id="startBreak" class="updateStartBreak" type="time" name="startBreak"
+                        value="{{ $startBreak }}"> <br>
                     <label for="endBreak">End:</label>
-                    <input id="endBreak" type="time" name="endBreak" class="updateEndBreak" value="{{ $endBreak }}"> <br>
+                    <input id="endBreak" type="time" name="endBreak" class="updateEndBreak" value="{{ $endBreak }}">
+                    <br>
                 </div>
                 </fieldset>
             @else
-                <input class="updateSpecialInput" type="text" name="updateSpecial" value="{{$timesheet->type}}">
+                <input class="updateSpecialInput" type="text" name="updateSpecial" value="{{ $timesheet->type }}">
                 <br>
                 <span class="radioInput">
-                    <label for="betaaldInput"  class="checkboxContainer" >
-                        <input @if ($timesheet->accountableHours == 7.6) {{"checked"}} @endif type="radio" class="radioBox" id="betaaldInput" name="dayType" value="betaald" >
+                    <label for="betaaldInput" class="checkboxContainer">
+                        <input @if ($timesheet->accountableHours == 7.6) {{ 'checked' }} @endif type="radio" class="radioBox"
+                            id="betaaldInput" name="dayType" value="betaald">
                         <span class="labelAndere">Betaald</span>
-                    <br>
-                    <span class="checkMark"></span>
-                </label>         
-                <label for="onbetaaldInput"  class="checkboxContainer" id="onbetaald">
-                    <input @if ($timesheet->accountableHours == 0) {{"checked"}} @endif type="radio" class="radioBox" id="onbetaaldInput" name="dayType" value="onbetaald" >
-                    <span class="labelAndere">Onbetaald</span>
-                    <br>
-                    <span class="checkMark"></span>                      
-                </label> 
-            </span>
+                        <br>
+                        <span class="checkMark"></span>
+                    </label>
+                    <label for="onbetaaldInput" class="checkboxContainer" id="onbetaald">
+                        <input @if ($timesheet->accountableHours == 0) {{ 'checked' }} @endif type="radio" class="radioBox"
+                            id="onbetaaldInput" name="dayType" value="onbetaald">
+                        <span class="labelAndere">Onbetaald</span>
+                        <br>
+                        <span class="checkMark"></span>
+                    </label>
+                </span>
             @endif
             <input class="updateTimesheetSubmit button" type="submit" value="update">
-          
+
         </form>
     </div>
     <br>

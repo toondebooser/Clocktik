@@ -6,17 +6,17 @@ use Illuminate\Http\Request;
 
 class JsonController extends Controller
 {
-    public function callJson($userRow)
+    public function callJson($table)
     {
-         $json = $userRow->AdditionalTimestamps
-    ? json_decode($userRow->AdditionalTimestamps, true)
-    : [];
-        return $json;
+         if($table &&  $table->AdditionalTimestamps){
+            $json = json_decode($table->AdditionalTimestamps, true);
+             return $json;
+
+         }else{
+            return [];
+         }
+     
     }
    
-    public function saveJson($userRow, $json)
-    {
-        $userRow->AdditionalTimestamps = json_encode($json);
-        $userRow->save();
-    }
+   
 }

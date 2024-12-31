@@ -62,17 +62,20 @@ class TimesheetController extends Controller
 
     public function makeTimesheet($id)
     {
-        $userRow = Timelog::where('UserId', $id)->first();
         $newTimeSheet = new Timesheet;
         $startTimeCalculator = new startTimeCalculator;
+        $jsonsMission = new JsonController;
+        $userRow = Timelog::where('UserId', auth()->user()->id)->first();
+
         $timesheetCheck = $this->timesheetCheck(now('Europe/Brussels'), $id);
         if ($timesheetCheck !== null) return redirect()->route('dashboard')->with('error', 'Vandaag kan jij geen werkuren ingeven, kijk je profiel na.');
+
+        $json = $jsonsMission->callJson($userRow);
+        $json ? $newTimeSheet->AdditionalTimestamps = json_encode($json) : null;    
         $userRow->userNote !== null ? $newTimeSheet->userNote = $userRow->userNote : null;
 
-        $userRow->save();
-
         $newTimeSheet->UserId = $id;
-        $newTimeSheet->ClockedIn = $startTimeCalculator->calculateStartTime($userRow->StopWork,$userRow->RegularHours, $userRow->BreakHours);
+        $newTimeSheet->ClockedIn = $userRow->StartWork;
         $newTimeSheet->ClockedOut = $userRow->StopWork;
         $newTimeSheet->BreakStart = $userRow->StartBreak;
         $newTimeSheet->BreakStop = $userRow->EndBreak;

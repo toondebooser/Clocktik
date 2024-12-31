@@ -30,7 +30,7 @@
         @else
             <a href="#" onclick="openConfirmationModal('Ben je zeker dat je wil pauzeren?', '{{ route('break') }}')"
                 class="breakButton">
-                <p class="buttonText">In pauze</p>
+                <p class="buttonText">pauze</p>
             </a>
         @endif
         <a href="#" onclick="openConfirmationModal('Ga je naar huis?', '{{ route('stop') }}')" class="stopButton">
@@ -144,8 +144,8 @@
 
 
             function updateClock(type) {
+                
                 const now = new Date().getTime(); 
-
                 let elapsed = null
                 if(type == "work"){
                  elapsed = now - startShift  + workedMilliseconds;

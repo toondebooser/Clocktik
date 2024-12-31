@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\TimesheetController;
 use Illuminate\Support\Carbon;
+use App\Http\Controllers\JsonController;
 
 class UpdateTimesheetController extends Controller
 {
@@ -15,6 +16,8 @@ class UpdateTimesheetController extends Controller
 
         $worker = User::find($id);
         $timesheet = Timesheet::find($timesheet);
+        $jsonsMission = new JsonController;
+        $json = $jsonsMission->callJson($timesheet);
         if ($timesheet === null) {
             $postData = [
                 'worker' => $id,
@@ -27,7 +30,8 @@ class UpdateTimesheetController extends Controller
         $startBreak = $timesheet->BreakStart ? Carbon::parse($timesheet->BreakStart)->format('H:i') : null;
         $endBreak = $timesheet->BreakStop ? Carbon::parse($timesheet->BreakStop)->format('H:i') : null;
         $monthString = Carbon::parse($timesheet->Month)->format('d/m/Y');
-        return view('updateTimesheet', ['worker' => $worker, 'timesheet' => $timesheet, 'startShift' => $startShift, 'endShift' => $endShift, 'startBreak' => $startBreak, 'endBreak' => $endBreak, 'monthString' =>$monthString]);
+        
+        return view('updateTimesheet', ['json'=> $json, 'worker' => $worker, 'timesheet' => $timesheet, 'startShift' => $startShift, 'endShift' => $endShift, 'startBreak' => $startBreak, 'endBreak' => $endBreak, 'monthString' =>$monthString]);
     }
     
     public function updateTimesheet(Request $request)

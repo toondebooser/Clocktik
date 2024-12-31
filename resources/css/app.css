@@ -411,6 +411,9 @@ h1 {
     max-width: 500px;
     justify-self: center;
     align-self: center;
+    max-height: 400px;
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden;
 }
 .logincontainer {
     grid-column: 2/12;
