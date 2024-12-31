@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamp('ClockedOut')->nullable();
             $table->timestamp('BreakStart')->nullable();
             $table->timestamp('BreakStop')->nullable();
+            $table->json('AdditionalTimestamps')->nullable();
             $table->decimal('RegularHours',5,2)->default(0,00);
             $table->decimal('accountableHours')->default(0,00);
             $table->decimal('BreakHours',5,2)->default(0,00);

@@ -19,9 +19,10 @@ return new class extends Migration
             $table->timestamp('StartWork')->nullable();
             $table->timestamp('StartBreak')->nullable();
             $table->timestamp('EndBreak')->nullable();
+            $table->timestamp('StopWork')->nullable();
+            $table->json('AdditionalTimestamps')->nullable();
             $table->decimal('BreakHours', 5, 2)->default(0, 00);
             $table->decimal('RegularHours', 5, 2)->default(0, 00);
-            $table->timestamp('StopWork')->nullable();
             $table->text('userNote')->nullable();
             $table->integer('UserId');
             $table->timestamps();

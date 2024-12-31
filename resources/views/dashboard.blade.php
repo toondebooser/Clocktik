@@ -25,12 +25,12 @@
         @if ($shiftStatus == true && $breakStatus == true)
             <a href="#" onclick="openConfirmationModal('wil je terug aan het werk?', '{{ route('stopBreak') }}')"
                 class="breakButton">
-                <p class="buttonText">Back to work</p>
+                <p class="buttonText">Uit pauze</p>
             </a>
         @else
             <a href="#" onclick="openConfirmationModal('Ben je zeker dat je wil pauzeren?', '{{ route('break') }}')"
                 class="breakButton">
-                <p class="buttonText">Break</p>
+                <p class="buttonText">In pauze</p>
             </a>
         @endif
         <a href="#" onclick="openConfirmationModal('Ga je naar huis?', '{{ route('stop') }}')" class="stopButton">

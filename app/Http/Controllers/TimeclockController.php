@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Timelog;
 use App\Http\Controllers\TimesheetController;
+use App\Http\Controllers\JsonController;
 use App\Models\Timesheet;
 use App\Models\Usertotal;
 use Carbon\Carbon;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Redirect;
 
 class TimeclockController extends Controller
 {
-    
+
     // public function calculateDecimale($start, $end)
     // {
     //     $diffInMin = $end->diffInMinutes($start);
@@ -25,6 +26,7 @@ class TimeclockController extends Controller
         $currentUser = auth()->user();
         $timesheetController = new TimesheetController;
         $userTimesheet = new Timesheet;
+        $jsonsMission = new JsonController;
         $userRow = Timelog::where('UserId', auth()->user()->id)->first();
         $timestamp = now('Europe/Brussels');
         $day = date('d', strtotime($timestamp));
@@ -43,10 +45,20 @@ class TimeclockController extends Controller
             ->first();
 
         if ($dayCheck !== null && $dayCheck->type == "workday") {
+
+            $json = $jsonsMission->callJson($userRow);
+            $json[]=[
+                'ClockedIn' => $dayCheck->ClockedIn, 
+                'ClockedOut' => $dayCheck->ClockedOut,
+                'BreakIn' => $dayCheck->BreakStart,
+                'BreakOut' => $dayCheck->BreakStop
+            ];
+            $jsonsMission->saveJson($userRow,$json);
+           
             $userRow->BreakHours += $dayCheck->BreakHours;
             $userRow->RegularHours += $dayCheck->RegularHours;
             $dayCheck->userNote !== null ? $userRow->userNote = $dayCheck->userNote : null;
-          
+
             $dayCheck->delete();
             $timesheetController->calculateUserTotal($timestamp, $currentUser->id);
         } elseif ($dayCheck !== null && $dayCheck !== "workday") {
@@ -61,7 +73,7 @@ class TimeclockController extends Controller
         $userRow->StopWork = null;
         $userRow->ShiftStatus = true;
         $userRow->save();
-        
+
         return redirect('/dashboard');
     }
 
@@ -71,7 +83,7 @@ class TimeclockController extends Controller
         $timeController = new TimesheetController();
         $timeStamp = now('Europe/Brussels');
         $userRow = Timelog::where('UserId', auth()->user()->id)->first();
-        $userRow->RegularHours += $timeController->calculateDecimal($userRow->StartWork,$timeStamp);
+        $userRow->RegularHours += $timeController->calculateDecimal($userRow->StartWork, $timeStamp);
         $userRow->BreakStatus = true;
         $userRow->StartBreak = $timeStamp;
         $userRow->save();
@@ -99,8 +111,7 @@ class TimeclockController extends Controller
         $timeStamp = now('Europe/Brussels');
         $userRow = Timelog::where('UserId', auth()->user()->id)->first();
         $userRow->ShiftStatus = false;
-        if ($userRow->BreakStatus == true) 
-        {
+        if ($userRow->BreakStatus == true) {
             $userRow->BreakStatus = false;
             $start = Carbon::parse($userRow->StartBreak, 'Europe/Brussels');
             $end = Carbon::parse($timeStamp, 'Europe/Brussels');
@@ -108,8 +119,8 @@ class TimeclockController extends Controller
             $userRow->BreakHours += $timesheetController->calculateDecimal($start, $end);
             $userRow->save();
         }
-        
-      
+
+
         $userRow->StopWork = $timeStamp;
         $userRow->RegularHours += $timesheetController->calculateDecimal($userRow->StartWork, $timeStamp);
         $userRow->save();
