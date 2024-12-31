@@ -16,53 +16,55 @@
             <input type="hidden" name="type" value="{{ $timesheet->type }}">
 
             @if ($timesheet->type == 'workday')
-                <fieldset>
-                    <legend>Gewerkte @if($json)Shiften @else Periode @endif</legend>
+                <fieldset class="gewerkt">
+                    <legend>Gewerkt</legend>
                     @if ($json)
-                    @foreach ($json as $timestamp)
-                    <div>
-                        <label for="startTime">Start:</label>
-                        <input id="startTime" class="updateStartTime" name="startTime[]" type="time"
-                        value="{{ \Carbon\Carbon::parse($timestamp['ClockedIn'])->format('H:i') }}"> <br>
-                        <label for="endTime">End:</label>
-                        <input id="endTime" class="updateEndTime" type="time" name="endTime[]"
-                        value="{{ \Carbon\Carbon::parse($timestamp['ClockedOut'])->format('H:i') }}"> <br>
-                    </div>
-                    <hr>
-                    @endforeach
+                        @foreach ($json as $timestamp)
+                            <div>
+                                <label for="startTime">Start:</label>
+                                <input id="startTime" class="updateStartTime" name="startTime[]" type="time"
+                                    value="{{ \Carbon\Carbon::parse($timestamp['ClockedIn'])->format('H:i') }}"> 
+                                 <br><label for="endTime">End:</label>
+                                <input id="endTime" class="updateEndTime" type="time" name="endTime[]"
+                                    value="{{ \Carbon\Carbon::parse($timestamp['ClockedOut'])->format('H:i') }}"> 
+                            </div>
+                            <hr>
+                        @endforeach
                     @endif
                     <div>
                         <label for="startTime">Start:</label>
                         <input id="startTime" class="updateStartTime" name="startTime" type="time"
-                            value="{{ $startShift }}"> <br>
-                        <label for="endTime">End:</label>
+                            value="{{ $startShift }}"> 
+                        <br><label for="endTime">End:</label>
                         <input id="endTime" class="updateEndTime" type="time" name="endTime"
-                            value="{{ $endShift }}"> <br>
+                            value="{{ $endShift }}"> 
                     </div>
                 </fieldset>
                 <hr>
-                <legend>Gepauzeerde periode</legend>
-                @if ($json)
-                    @foreach ($json as $timestamp)
-                        <div>
-                            <label for="startBreak">Start:</label>
-                            <input id="startBreak" class="updateStartBreak" type="time" name="startBreak[]"
-                                value="{{ \Carbon\Carbon::parse($timestamp['BreakIn'])->format('H:i') }}"> <br>
-                            <label for="endBreak">End:</label>
-                            <input id="endBreak" type="time" name="endBreak[]" class="updateEndBreak"
-                                value="{{ \Carbon\Carbon::parse($timestamp['BreakOut'])->format('H:i') }}"> <br>
-                        </div>
-                    @endforeach
-                    <hr>
-                @endif
-                <div>
-                    <label for="startBreak">Start:</label>
-                    <input id="startBreak" class="updateStartBreak" type="time" name="startBreak"
-                        value="{{ $startBreak }}"> <br>
-                    <label for="endBreak">End:</label>
-                    <input id="endBreak" type="time" name="endBreak" class="updateEndBreak" value="{{ $endBreak }}">
-                    <br>
-                </div>
+                <fieldset class="gepauzeerd">
+                    <legend>Gepauzeerd</legend>
+                    @if ($json)
+                        @foreach ($json as $timestamp)
+                            <div>
+                                <label for="startBreak">Start:</label>
+                                <input id="startBreak" class="updateStartBreak" type="time" name="startBreak[]"
+                                    value="{{$timestamp['BreakIn'] ? \Carbon\Carbon::parse($timestamp['BreakIn'])->format('H:i') : 00.00 }}"> <br>
+                                <label for="endBreak">End:</label>
+                                <input id="endBreak" type="time" name="endBreak[]" class="updateEndBreak"
+                                    value="{{ $timestamp['BreakIn'] ?\Carbon\Carbon::parse($timestamp['BreakOut'])->format('H:i'): 00.00 }}"> <br>
+                            </div>
+                            <hr>
+                        @endforeach
+                    @endif
+                    <div>
+                        <label for="startBreak">Start:</label>
+                        <input id="startBreak" class="updateStartBreak" type="time" name="startBreak"
+                            value="{{ $startBreak }}"> <br>
+                        <label for="endBreak">End:</label>
+                        <input id="endBreak" type="time" name="endBreak" class="updateEndBreak"
+                            value="{{ $endBreak }}">
+                        <br>
+                    </div>
                 </fieldset>
             @else
                 <input class="updateSpecialInput" type="text" name="updateSpecial" value="{{ $timesheet->type }}">
