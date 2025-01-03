@@ -63,7 +63,6 @@ class TimesheetController extends Controller
     public function makeTimesheet($id)
     {
         $newTimeSheet = new Timesheet;
-        $startTimeCalculator = new startTimeCalculator;
         $jsonsMission = new JsonController;
         $userRow = Timelog::where('UserId', auth()->user()->id)->first();
 

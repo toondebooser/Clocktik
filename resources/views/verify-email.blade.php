@@ -1,4 +1,3 @@
-<!-- resources/views/auth/verify-email.blade.php -->
 
 @extends('layout')
 
@@ -16,7 +15,6 @@
 
     <p class="resendVerificationMessage">If you did not receive the email, you can request a new verification link.</p>
 
-    <!-- Optionally, include a button to resend the verification email -->
     <form method="POST" action="{{ route('verification.resend') }}">
         @csrf
         <button type="submit" class="btn btn-primary">Resend Verification Email</button>

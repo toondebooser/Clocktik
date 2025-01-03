@@ -80,11 +80,13 @@ class TimeclockController extends Controller
         $jsonsMission = new JsonController;
         $timeStamp = now('Europe/Brussels');
         $userRow = Timelog::where('UserId', auth()->user()->id)->first();
-        $userRow->RegularHours += $timeController->calculateDecimal($userRow->StartWork, $timeStamp);
+        $userRow->RegularHours += $timeController->calculateDecimal($userRow->EndBreak? $userRow->EndBreak: $userRow->StartWork, $timeStamp);
         $userRow->BreakStatus = true;
         if ($userRow->StartBreak){
             $json = $jsonsMission->callJson($userRow);
             $json[]=[
+                'ClockedIn' => null,
+                'ClockedOut' => null,
                 'BreakIn'=>$userRow->StartBreak,
                 'BreakOut'=>$userRow->EndBreak
             ];
@@ -102,9 +104,8 @@ class TimeclockController extends Controller
         $userRow = Timelog::where('UserId', auth()->user()->id)->first();
         $userRow->BreakStatus = false;
         $start = $userRow->StartBreak;
-        $end = $timeStamp;
-        $userRow->EndBreak = $end;
-        $userRow->BreakHours += $timeController->calculateDecimal($start, $end);
+        $userRow->EndBreak = $timeStamp;
+        $userRow->BreakHours += $timeController->calculateDecimal($start, $timeStamp);
         // $userRow->StartWork = $timeStamp;!!!
         $userRow->save();
         return redirect('/dashboard');
