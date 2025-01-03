@@ -20,14 +20,11 @@ class UsersheetsController extends Controller
         $currentUser = auth()->user();
         $now = now('Europe/Brussels');
 
-        // $monthString = date('F', strtotime($now));
         $month = date('m', strtotime($now));
         $year = date('Y', strtotime($now));
 
         if (isset($request->month)) {
             $month = $request->month;
-            // $carbonDate = Carbon::create(null, $month, 1);
-            // $monthString =  $carbonDate->format('F');
         }
         if (isset($request->worker)) {
             $currentUser = User::find($request->worker);
@@ -46,20 +43,20 @@ class UsersheetsController extends Controller
         $timesheet = $userTimesheet
             ->where('UserId', '=', $currentUser->id)
             ->whereMonth('Month', '=', $month)
-            ->whereYear('Month', '=', $year)
+            // ->whereYear('Month', '=', $year)
             ->orderBy('Month', 'asc')
             ->get();
 
         $monthlyTotal = $userTotal
             ->where('UserId', '=', $currentUser->id)
             ->whereMonth('Month', '=', $month)
-            ->whereYear('Month', '=', $year)
+            // ->whereYear('Month', '=', $year)
             ->get();
 
         $clockedMonths = $userTotal->select($userTotal->raw('DISTINCT MONTH(Month) AS month'))
             ->where('UserId', '=', $currentUser->id)
             ->orderBy('Month', 'desc')
-            ->whereyear('Month', '=', $year)
+            // ->whereyear('Month', '=', $year)
             ->get();
 
         return view('profile', ['user' => $currentUser, 'clockedMonths' => $clockedMonths, 'timesheet' => $timesheet, 'monthlyTotal' => $monthlyTotal]);
