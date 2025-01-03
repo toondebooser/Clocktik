@@ -93,8 +93,8 @@ class UpdateTimesheetController extends Controller
             $stopWork = Carbon::parse($date . ' ' . $request->endTime, 'Europe/Brussels');
             $startBreak = Carbon::parse($date . ' ' . $request->startBreak, 'Europe/Brussels');
             $endBreak = Carbon::parse($date . ' ' . $request->endBreak, 'Europe/Brussels');
-            $clockedHours = $timesheetController->calculateClockedHours($startWork, $stopWork);
-            $breakHours = $timesheetController->calculateBreakHours($startBreak, $endBreak);
+            $clockedHours = $timesheetController->calculateDecimal($startWork, $stopWork);
+            $breakHours = $timesheetController->calculateDecimal($startBreak, $endBreak);
             $regularHours = $clockedHours - $breakHours;
             $timesheet->ClockedIn = $startWork;
             $timesheet->ClockedOut = $stopWork;

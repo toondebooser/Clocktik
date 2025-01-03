@@ -235,9 +235,9 @@ class TimesheetController extends Controller
                 if (is_array($workerArray) && count($workerArray) > 1) {
                     foreach ($workerArray as $user) {
                         $newSpecialTimesheetForEveryone = new Timesheet;
-                        // if ($user['admin'] == true) {
-                        //     continue;
-                        // }
+                        if ($user['admin'] == true) {
+                            continue;
+                        }
                         $result = $this->setday($dayLabel, $newSpecialTimesheetForEveryone, $dayType, $user['id'], $singleDay);
                         if ($result !== true) {
                             array_push($results, ['id' => $user['id'], 'errorList' => $result]);
@@ -262,9 +262,9 @@ class TimesheetController extends Controller
             if (is_array($workerArray) && count($workerArray) > 1) {
                 foreach ($workerArray as $user) {
 
-                    // if ($user['admin'] == true) {
-                    //     continue;
-                    // }
+                    if ($user['admin'] == true) {
+                        continue;
+                    }
                     $result = $this->setPeriod($dayLabel, $dayType, $user['id'], $startDate, $endDate);
                     if ($result !== true) {
                         array_push($results, ['id' => $user['id'], 'errorList' => $result]);
@@ -349,9 +349,9 @@ class TimesheetController extends Controller
         is_string($date) ? $date = Carbon::parse($date) : null;
         $userId = $id;
         if ($userTotal != null) {
-            $userTotal->RegularHours = Timesheet::where('UserId', $userId)->whereMonth('Month', '=', $date)->sum('accountableHours');
-            $userTotal->BreakHours = Timesheet::where('UserId', $userId)->whereMonth('Month', '=', $date)->sum('BreakHours');
-            $userTotal->OverTime = Timesheet::where('UserId', $userId)->whereMonth('Month', '=', $date)->sum('OverTime');
+            $userTotal->RegularHours = Timesheet::where('UserId', $userId)->whereMonth('Month', '=', $date)->whereYear('Month','=',$date)->sum('accountableHours');
+            $userTotal->BreakHours = Timesheet::where('UserId', $userId)->whereMonth('Month', '=', $date)->whereYear('Month','=',$date)->sum('BreakHours');
+            $userTotal->OverTime = Timesheet::where('UserId', $userId)->whereMonth('Month', '=', $date)->whereYear('Month','=',$date)->sum('OverTime');
         }
 
         return $userTotal->save();

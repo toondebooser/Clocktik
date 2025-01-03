@@ -136,17 +136,17 @@
     </div>
     @if (isset($monthlyTotal))
         @foreach ($monthlyTotal as $item)
-            <div class="displayTotalRegular">
-                Regular {{ $item->RegularHours }}
-            </div>
-            <div class="displayTotalBreak">
-                Break {{ $item->BreakHours }}
-            </div>
-            <div class="displayTotalOverTime">
-                Overtime {{ $item->OverTime }}
-            </div>
+        <div class="displayTotalRegular">
+            Regular {{ $item->RegularHours }}
+        </div>
+        <div class="displayTotalBreak">
+            Break {{ $item->BreakHours }}
+        </div>
+        <div class="displayTotalOverTime">
+            Overtime {{ $item->OverTime }}
+        </div>
         @endforeach
     @else
-        <div class="text-danger">Something went wrong pls call Toon.</div>
+        <div class="text-danger">Something went wrong.</div>
     @endif
 @endsection

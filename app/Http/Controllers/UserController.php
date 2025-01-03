@@ -37,7 +37,7 @@ class UserController extends Controller
         $newUser = new User;
         $userRow = new Timelog;
         $userTotal = new Usertotal;
-        
+
         $name = request()->input('name');
         $email = request()->input('email');
         $password = request()->input('password');
@@ -47,7 +47,7 @@ class UserController extends Controller
 
         if ($checkEmail) {
             $exists = "This email adres already exists!";
-            return redirect()->back()->withErrors(['email'=> $exists]);
+            return redirect()->back()->withErrors(['email' => $exists]);
         }
 
         $newUser->name = $name;
@@ -60,19 +60,19 @@ class UserController extends Controller
         $userRow->BreakStatus = false;
         $userRow->weekend = false;
         $userRow->save();
-        
+
         $userTotal->UserId = $newUser->id;
         $userTotal->RegularHours = 0;
         $userTotal->BreakHours = 0;
         $userTotal->OverTime = 0;
         $userTotal->Month = now('Europe/Brussels');
         $userTotal->save();
-        
+
         $newUser->sendEmailVerificationNotification();
-        
+
         // Optionally, log in the user after registration (comment if not needed)
         // Auth::login($newUser);
-        
+
         // auth()->login($newUser);
         return redirect('/')->with('success', 'Registration successful! Please verify your email:');
 
@@ -81,5 +81,4 @@ class UserController extends Controller
 
         // return redirect('/dashboard');
     }
-
 }
