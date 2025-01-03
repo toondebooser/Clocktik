@@ -53,8 +53,7 @@ class TimeclockController extends Controller
             $userRow->AdditionalTimestamps = json_encode($json);
             $userRow->BreakHours += $dayCheck->BreakHours;
             $userRow->RegularHours += $dayCheck->RegularHours;
-            $dayCheck->userNote !== null ? $userRow->userNote = $dayCheck->userNote : null;
-            
+            $dayCheck->userNote !== null ? $userRow->userNote = $dayCheck->userNote : null;       
             $timesheetController->calculateUserTotal($timestamp, $currentUser->id);
         } elseif ($dayCheck !== null && $dayCheck !== "workday") {
             return redirect()->route('dashboard')->with('error', "Vandaag is " . $dayCheck->type . " geregistreerd");
@@ -81,6 +80,7 @@ class TimeclockController extends Controller
         $timeStamp = now('Europe/Brussels');
         $userRow = Timelog::where('UserId', auth()->user()->id)->first();
         $userRow->RegularHours += $timeController->calculateDecimal($userRow->EndBreak? $userRow->EndBreak: $userRow->StartWork, $timeStamp);
+        
         $userRow->BreakStatus = true;
         if ($userRow->StartBreak){
             $json = $jsonsMission->callJson($userRow);
@@ -125,7 +125,10 @@ class TimeclockController extends Controller
             $userRow->BreakHours += $timesheetController->calculateDecimal($start, $end);
             $userRow->save();
         }
-
+        // if($userRow->EndBreak){
+        //     $userRow->StartWork = $userRow->EndBreak;
+        //     $userRow->save();
+        // }
 
         $userRow->StopWork = $timeStamp;
         $userRow->RegularHours += $timesheetController->calculateDecimal($userRow->EndBreak? $userRow->EndBreak: $userRow->StartWork, $timeStamp);

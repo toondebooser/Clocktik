@@ -22,7 +22,7 @@ class DashboardController extends Controller
         $userNote = $userRow->userNote;
         $shiftStatus = $userRow->ShiftStatus;
         $breakStatus = $userRow->BreakStatus;
-        $start = $userRow->StartWork;
+        $start = $userRow->EndBreak? $userRow->EndBreak : $userRow->StartWork;
         $startBreak = $userRow->StartBreak;
         $breakHours = $userRow->BreakHours;
         $workedHours = $userRow->RegularHours;

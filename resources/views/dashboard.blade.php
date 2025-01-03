@@ -142,7 +142,6 @@
             const workedHours = parseFloat("{{$workedHours}}");
             
             const workedMilliseconds = workedHours * 60 * 60 * 1000;
-            console.log(workedMilliseconds);
             const breakMilliseconds = breakHours * 60 * 60 * 1000;
 
 
@@ -152,7 +151,7 @@
                 
                 let elapsed = null
                 if(type == "work"){
-                 elapsed = now - startShift   + workedMilliseconds - breakMilliseconds;
+                 elapsed = now - startShift   + workedMilliseconds    ;
                  console.log(elapsed);
                  
                  
