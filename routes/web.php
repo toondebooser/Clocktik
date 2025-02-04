@@ -46,6 +46,7 @@ Route::get('/export-pdf', [PdfExportController::class, 'exportPdf'])->name('expo
 Route::post('/delete-timesheet', [DeleteTimesheetController::class, 'deleteTimesheet'])->name('delete')->middleware('admin');
 Route::post('/confirm-action', [ConfirmAction::class, 'confirmAction']);
 
+
 Route::get('/email/verify', function () {
     return view('verify-email');
 })->middleware('auth')->name('verification.notice');
