@@ -907,35 +907,27 @@ p {
     grid-row: 9/10;
     grid-column: 1/9;
     justify-self: center;
-     width: 80px;
-     height: 40px;
-    }
-    .loader::before,
-    .loader::after {
-     content: "";
-     flex: 1;
-     clip-path: polygon(0 0,100% 0,100% 100%);
-     background: black;
-     animation: 
-     l15-1 1s infinite linear alternate,
-     l15-2 2s infinite linear -.5s;
-    }
-    .loader::after {
-     --s:-1,-1;
-    }
-    @keyframes l15-1 {
-     0%,
-     10% {transform:scale(var(--s,1)) translate(0px) perspective(150px) rotateY(0deg) }
-     33% {transform:scale(var(--s,1)) translate(-10px) perspective(150px) rotateX(0deg) }
-     66% {transform:scale(var(--s,1)) translate(-10px) perspective(150px) rotateX(-180deg)}
-     90%,
-     100% {transform:scale(var(--s,1)) translate(0px) perspective(150px) rotateX(-180deg)}
-    }
-    @keyframes l15-2 {
-     0%,49.99% {background:black}
-     50%,100% {background:black}
-    }
+    width: 60px;
+    aspect-ratio: 2;
+    
+    --_g: radial-gradient(circle closest-side, black 40%, transparent 55%) no-repeat;
+    
+    background: 
+      var(--_g) 0% 50%,
+      var(--_g) 50% 50%,
+      var(--_g) 100% 50%;
+      
+    background-size: calc(100% / 3) 50%;
+    animation: l3 1s infinite linear;
+}
 
+@keyframes l3 {
+  20% { background-position: 0% 0%, 50% 50%, 100% 50%; }
+  40% { background-position: 0% 100%, 50% 0%, 100% 50%; }
+  60% { background-position: 0% 50%, 50% 100%, 100% 0%; }
+  80% { background-position: 0% 50%, 50% 50%, 100% 100%; }
+}
+                                    
 @media (min-width: 768px) {
     .error {
         width: auto;

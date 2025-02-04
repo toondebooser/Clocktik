@@ -207,6 +207,7 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
+                            console.log(data)
                             window.location.href = actionUrl;
                         } else {
                             alert('Failed to confirm action.');

@@ -1,6 +1,6 @@
 @extends('layout')
 @php
-    $isLoading = null
+    $isLoading = true
 @endphp
 @section('title')
     <h2>User Registration</h2>
