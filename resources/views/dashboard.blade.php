@@ -135,7 +135,6 @@
 
             const startBreak = new Date("{{ $startBreak }}").getTime();
             const startShift = new Date("{{ $start }}").getTime();
-            console.log(startShift);
             
             const clockElement = document.getElementById('clock');
             const breakHours = parseFloat("{{ $breakHours }}"); 

@@ -18,6 +18,23 @@
             @if ($timesheet->type == 'workday')
             <fieldset class="gewerkt">
                 <legend>Gewerkt</legend>
+                @if ($json)
+                    @foreach ($json as $timestamp)
+                    @if($loop->first && !$timestamp['ClockedIn'])
+                    @continue
+                    @endif
+                        <div>
+                            <label for="startTime">Start:</label>
+                            <input id="startTime" class="updateStartTime" name="startTime[]" type="time"
+                                value="{{ $timestamp['ClockedIn'] ?\Carbon\Carbon::parse($timestamp['ClockedIn'])->format('H:i') : null }}"> 
+                             <br><label for="endTime">End:</label>
+                            <input id="endTime" class="updateEndTime" type="time" name="endTime[]"
+                                value="{{ $timestamp['ClockedOut'] ?\Carbon\Carbon::parse($timestamp['ClockedOut'])->format('H:i') : null }}"> 
+                        </div>
+                        <hr>
+                    @endforeach
+                    <hr>
+                @endif
                 <div>
                     <label for="startTime">Start:</label>
                     <input id="startTime" class="updateStartTime" name="startTime" type="time"
@@ -26,20 +43,6 @@
                     <input id="endTime" class="updateEndTime" type="time" name="endTime"
                         value="{{ $endShift }}"> 
                 </div>
-                <hr>
-                    @if ($json)
-                        @foreach ($json as $timestamp)
-                            <div>
-                                <label for="startTime">Start:</label>
-                                <input id="startTime" class="updateStartTime" name="startTime[]" type="time"
-                                    value="{{ $timestamp['ClockedIn'] ?\Carbon\Carbon::parse($timestamp['ClockedIn'])->format('H:i') : null }}"> 
-                                 <br><label for="endTime">End:</label>
-                                <input id="endTime" class="updateEndTime" type="time" name="endTime[]"
-                                    value="{{ $timestamp['ClockedOut'] ?\Carbon\Carbon::parse($timestamp['ClockedOut'])->format('H:i') : null }}"> 
-                            </div>
-                            <hr>
-                        @endforeach
-                    @endif
                 </fieldset>
                 <hr>
                 <fieldset class="gepauzeerd">
