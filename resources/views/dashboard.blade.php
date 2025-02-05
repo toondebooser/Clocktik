@@ -38,7 +38,7 @@
         </a>
     @endif
     <div class="dayStatus" style="grid-column: 1/13; grid-row: 3/4; justify-self: center; align-self: end; height:100px">
-        <div style="text-align: center"><span style="color: red">{{date('d-m-y')}}</span></div>
+        <div style="text-align: center"><span style="color: red">{{date('d-m-y', strToTime($lastWorkedDate))}}</span></div>
         <div class="workedHours">Gewerkte uren: {{ $workedHours }}</div>
         <div class="pausedHours">Gepauzeerde uren: {{ $breakHours }}</div>
     </div>
