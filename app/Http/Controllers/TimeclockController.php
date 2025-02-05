@@ -27,6 +27,8 @@ class TimeclockController extends Controller
         // $day = date('d', strtotime($timestamp));
         // $month = date('m', strtotime($timestamp));
         // $year = date('Y', strtotime($timestamp));
+
+        //TODO: set number of breaks to 0
         $userRow->userNote = null;
         $userRow->BreakHours = 0;
         $userRow->RegularHours = 0;
@@ -90,6 +92,7 @@ class TimeclockController extends Controller
             $today = date('Y-m-d');
 
             if ($startBreakDate == $today) {
+                //TODO: increment the number of brakes in timelog today
                 $userRow->BreakHours += $timeController->calculateDecimal($userRow->StartBreak, $userRow->EndBreak);
             }
         }

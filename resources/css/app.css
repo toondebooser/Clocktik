@@ -2,7 +2,7 @@ html,
 body {
     height: 100vh;
     height: 100svh;
-    font-family: "Noto Sans", sans-serif;
+    font-family: "Roboto","Noto Sans", sans-serif;
 }
 :root {
     --primary-color: black;
@@ -23,7 +23,7 @@ table {
     justify-self: center;
     border-collapse: collapse; 
     font-size: smaller;
-    font-family: "Noto Sans", sans-serif;
+    font-family: "Roboto","Noto Sans", sans-serif;
     width: 100%;
 }
 
@@ -162,7 +162,7 @@ input:hover {
 }
 .timesheetHeader {
     margin-top: 20px;
-    font-family: "Noto Sans", sans-serif;
+    font-family: "Roboto","Noto Sans", sans-serif;
     font-size: x-large;
     justify-self: center;
     grid-row: 2/3;
@@ -215,7 +215,7 @@ header {
     grid-row: 4/5;
 }
 h2 {
-    font-family: "Noto Sans", sans-serif;
+    font-family: "Roboto","Noto Sans", sans-serif;
 
     grid-column: 2/12;
     grid-row: 2/3;
@@ -375,7 +375,7 @@ th {
 
 .updateProfile {
     color: black;
-    font-family: "Noto Sans", sans-serif;
+    font-family: "Roboto","Noto Sans", sans-serif;
     grid-row: 5/6;
     grid-column: 1/4;
     font-size: x-small;
@@ -400,7 +400,7 @@ h1 {
     grid-row: 2/3;
     justify-self: center;
     align-self: center;
-    font-family: "Noto Sans", sans-serif;
+    font-family: "Roboto","Noto Sans", sans-serif;
     font-weight: 400;
 }
 .formContainer {
