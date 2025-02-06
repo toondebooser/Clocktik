@@ -40,10 +40,8 @@ class UsersheetsController extends Controller
             ->where('Month', '<', $threeMonthsAgo)
             ->delete();
 
-        $timesheet = $userTimesheet
-            ->where('UserId', '=', $currentUser->id)
+        $timesheet = $currentUser->timesheets()
             ->whereMonth('Month', '=', $month)
-            // ->whereYear('Month', '=', $year)
             ->orderBy('Month', 'asc')
             ->get();
 

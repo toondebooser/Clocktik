@@ -26,7 +26,8 @@ return new class extends Migration
             $table->string('type')->default('workday');
             $table->text('userNote')->nullable();
             $table->date('Month');
-            $table->boolean('Weekend')->default(false);         
+            $table->boolean('Weekend')->default(false);
+            $table->boolean('NightShift')->default(false);                  
             $table->timestamps();
 
         });

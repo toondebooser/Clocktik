@@ -69,7 +69,7 @@ class TimesheetController extends Controller
         $timesheetCheck = $this->timesheetCheck(now('Europe/Brussels'), $id);
         if ($timesheetCheck !== null && $timesheetCheck->type !== 'workday') {
             return redirect()->route('dashboard')->with('error', 'Vandaag kan jij geen werkuren ingeven, kijk je profiel na.');
-        } elseif ($timesheetCheck) {
+        } elseif ($timesheetCheck->type == 'workday') {
             //TODO: 
             //- daytimelog of new timesheet += count of data retrieved
         }

@@ -14,7 +14,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
-    
+
     public function sendEmailVerificationNotification()
     {
         $this->notify(new CustomVerifyEmail);
@@ -52,5 +52,8 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Timelog::class, 'UserId');
     }
-   
+    public function timesheets()
+    {
+        return $this->hasMany(Timesheet::class, 'UserId');
+    }
 }

@@ -14,11 +14,11 @@ class DashboardController extends Controller
     {
         $userRow = Timelog::where('UserId',auth()->user()->id)->first();
 
-        $timesheetCheck = Timesheet::where('UserId', auth()->user()->id)
-            ->whereMonth('Month', now('Europe/Brussels'))
-            ->whereDay('Month', now('Europe/Brussels'))
-            ->whereYear('Month',now('Europe/Brussels'))
-            ->first();
+        // $timesheetCheck = Timesheet::where('UserId', auth()->user()->id)
+        //     ->whereMonth('Month', now('Europe/Brussels'))
+        //     ->whereDay('Month', now('Europe/Brussels'))
+        //     ->whereYear('Month',now('Europe/Brussels'))
+        //     ->first();
 
         $userNoteInput = $request->input('userNote');
         if($userNoteInput !== null || $userNoteInput === '')
