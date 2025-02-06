@@ -20,18 +20,17 @@ return new class extends Migration
             $table->timestamp('BreakStart')->nullable();
             $table->timestamp('BreakStop')->nullable();
             $table->decimal('DaytimeCount')->default(1);
-            $table->decimal('RegularHours',5,2)->default(0,00);
+            $table->decimal('RegularHours', 5, 2)->default(0, 00);
             $table->decimal('BreaksTaken')->default(0);
-            $table->decimal('BreakHours',5,2)->default(0,00);
-            $table->decimal('OverTime',5,2)->default(0,00);
+            $table->decimal('BreakHours', 5, 2)->default(0, 00);
+            $table->decimal('OverTime', 5, 2)->default(0, 00);
             $table->string('type')->default('workday');
             $table->text('userNote')->nullable();
             $table->date('Month');
             $table->index('Month');
             $table->boolean('Weekend')->default(false);
-            $table->boolean('NightShift')->default(false);                  
+            $table->boolean('NightShift')->default(false);
             $table->timestamps();
-
         });
     }
 

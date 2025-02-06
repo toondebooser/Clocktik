@@ -56,7 +56,7 @@ class TimesheetController extends Controller
             ->whereMonth('Month', $date)
             ->whereDay('Month', $date)
             ->whereYear('Month', $date)
-            ->get();
+            ->exists();
         return $timesheetCheck;
     }
 
@@ -66,9 +66,9 @@ class TimesheetController extends Controller
         // $jsonsMission = new JsonController;
         $userRow = auth()->user()->timelogs;
         $timesheetCheck = $this->timesheetCheck(now('Europe/Brussels'), $id);
-        if ($timesheetCheck !== null && $timesheetCheck->type !== 'workday') {
+        if ($timesheetCheck && $timesheetCheck->type !== 'workday') {
             return redirect()->route('dashboard')->with('error', 'Vandaag kan jij geen werkuren ingeven, kijk je profiel na.');
-        } elseif ($timesheetCheck->type == 'workday') {
+        } elseif ($timesheetCheck && $timesheetCheck->type == 'workday') {
             //TODO: 
             //- daytimelog of new timesheet += count of data retrieved
             $newTimeSheet->DaytimeCount += count($timesheetCheck);

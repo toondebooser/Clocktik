@@ -27,16 +27,18 @@ class TimeclockController extends Controller
         $month = date('m', strtotime($timestamp));
         $year = date('Y', strtotime($timestamp));
 
-        //TODO: set number of breaks to 0
+        //TODO: rewrite start logic when a user has already logged this day
         $userRow->userNote = null;
-        $userRow->BreakHours = 0;
-        $userRow->RegularHours = 0;
-        $dayCheck = auth()->user()->timesheets
+        $dayCheck = Timesheet::where('UserId', $currentUser->id)
         ->whereDay('Month', '=', $day)
         ->whereMonth('Month', '=', $month)
         ->whereYear('Month', '=', $year)
-        ->first();
-        !$dayCheck ? $userRow->BreaksTaken = 0 : null;
+        ->exists();
+        if(!$dayCheck) {
+            $userRow->BreakHours = 0;
+            $userRow->BreaksTaken = 0;
+            $userRow->RegularHours = 0;
+        }
 
         // $json = $jsonsMission->callJson($dayCheck);
         // $json ? $userRow->AdditionalTimestamps = json_encode($json) : $userRow->AdditionalTimestamps = null;
@@ -84,12 +86,11 @@ class TimeclockController extends Controller
         $userRow = auth()->user()->timelogs;
         $userRow->RegularHours += $timeController->calculateDecimal($userRow->EndBreak ? $userRow->EndBreak : $userRow->StartWork, $timeStamp);
         $userRow->BreakStatus = true;
-        if ($userRow->BreaksTaken == 1) {
+        if ($userRow->BreaksTaken >= 1) {
             $startBreakDate = date('Y-m-d', strtotime($userRow->StartBreak));
             $today = date('Y-m-d');
             if ($startBreakDate == $today) {
                 //TODO: increment the number of brakes in timelog today
-                $userRow->BreaksTaken += 1;
                 $userRow->BreakHours += $timeController->calculateDecimal($userRow->StartBreak, $userRow->EndBreak);
             }
         }
@@ -103,6 +104,7 @@ class TimeclockController extends Controller
         //     $userRow->AdditionalTimestamps = json_encode($json);
         // }
         $userRow->StartBreak = $timeStamp;
+        $userRow->BreaksTaken += 1;
         $userRow->save();
         return redirect('/dashboard');
     }
