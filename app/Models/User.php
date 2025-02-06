@@ -50,10 +50,14 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
     public function timelogs()
     {
-        return $this->hasMany(Timelog::class, 'UserId');
+        return $this->hasOne(Timelog::class, 'UserId');
     }
     public function timesheets()
     {
         return $this->hasMany(Timesheet::class, 'UserId');
+    }
+    public function userTotal()
+    {
+        return $this->hasMany(Usertotal::class, 'UserId');
     }
 }

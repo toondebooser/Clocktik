@@ -20,11 +20,11 @@
                 <button class='workerButton' type="submit" name='worker' value="{{ $worker->id }}">
                     {{ $worker->name }}
                     @switch(true)
-                    @case($worker->timelogs[0]->ShiftStatus == true && $worker->timelogs[0]->BreakStatus == false)
+                    @case($worker->timelogs->ShiftStatus == true && $worker->timelogs->BreakStatus == false)
                             <div class="working"></div>
                         @break
 
-                        @case($worker->timelogs[0]->ShiftStatus == true && $worker->timelogs[0]->BreakStatus == true)
+                        @case($worker->timelogs->ShiftStatus == true && $worker->timelogs->BreakStatus == true)
                             <div class="onBreak"></div>
                         @break
                         

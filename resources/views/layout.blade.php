@@ -20,7 +20,7 @@
     
     
     
-    <title>clockTik</title>
+    <title>Clocktik</title>
     
 
 
