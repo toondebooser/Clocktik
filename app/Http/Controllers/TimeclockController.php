@@ -19,27 +19,25 @@ class TimeclockController extends Controller
     {
         $currentUser = auth()->user();
         // $timesheetController = new TimesheetController;
-        // $userTimesheet = new Timesheet;
         // $jsonsMission = new JsonController;
         $userRow = Timelog::where('UserId', $currentUser->id)->first();
 
         $timestamp = now('Europe/Brussels');
-        // $day = date('d', strtotime($timestamp));
-        // $month = date('m', strtotime($timestamp));
-        // $year = date('Y', strtotime($timestamp));
+        $day = date('d', strtotime($timestamp));
+        $month = date('m', strtotime($timestamp));
+        $year = date('Y', strtotime($timestamp));
 
         //TODO: set number of breaks to 0
         $userRow->userNote = null;
         $userRow->BreakHours = 0;
         $userRow->RegularHours = 0;
+        $dayCheck = auth()->user()->timesheets
+        ->whereDay('Month', '=', $day)
+        ->whereMonth('Month', '=', $month)
+        ->whereYear('Month', '=', $year)
+        ->first();
+        !$dayCheck ? $userRow->BreaksTaken = 0 : null;
 
-
-        // $dayCheck = $userTimesheet
-        // ->where('UserId', '=', $currentUser->id)
-        // ->whereDay('Month', '=', $day)
-        // ->whereMonth('Month', '=', $month)
-        // ->whereYear('Month', '=', $year)
-        // ->first();
         // $json = $jsonsMission->callJson($dayCheck);
         // $json ? $userRow->AdditionalTimestamps = json_encode($json) : $userRow->AdditionalTimestamps = null;
 
@@ -83,16 +81,15 @@ class TimeclockController extends Controller
         $timeController = new TimesheetController();
         // $jsonsMission = new JsonController;
         $timeStamp = now('Europe/Brussels');
-        $userRow = Timelog::where('UserId', auth()->user()->id)->first();
+        $userRow = auth()->user()->timelogs;
         $userRow->RegularHours += $timeController->calculateDecimal($userRow->EndBreak ? $userRow->EndBreak : $userRow->StartWork, $timeStamp);
-
         $userRow->BreakStatus = true;
-        if ($userRow->StartBreak) {
+        if ($userRow->BreaksTaken == 1) {
             $startBreakDate = date('Y-m-d', strtotime($userRow->StartBreak));
             $today = date('Y-m-d');
-
             if ($startBreakDate == $today) {
                 //TODO: increment the number of brakes in timelog today
+                $userRow->BreaksTaken += 1;
                 $userRow->BreakHours += $timeController->calculateDecimal($userRow->StartBreak, $userRow->EndBreak);
             }
         }

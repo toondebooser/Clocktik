@@ -64,14 +64,14 @@ class TimesheetController extends Controller
     {
         $newTimeSheet = new Timesheet;
         // $jsonsMission = new JsonController;
-        $userRow = Timelog::where('UserId', auth()->user()->id)->first();
-
+        $userRow = auth()->user()->timelogs;
         $timesheetCheck = $this->timesheetCheck(now('Europe/Brussels'), $id);
         if ($timesheetCheck !== null && $timesheetCheck->type !== 'workday') {
             return redirect()->route('dashboard')->with('error', 'Vandaag kan jij geen werkuren ingeven, kijk je profiel na.');
         } elseif ($timesheetCheck->type == 'workday') {
             //TODO: 
             //- daytimelog of new timesheet += count of data retrieved
+            $newTimeSheet->DaytimeCount += count($timesheetCheck);
         }
 
         // $json = $jsonsMission->callJson($userRow);
