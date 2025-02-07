@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Usertotal extends Model
 {
     use HasFactory;
+    protected $fillable = ['UserId','RegularHours','BreakHours', 'OverTime'];
 }

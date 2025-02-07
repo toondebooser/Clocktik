@@ -53,10 +53,8 @@ class TimesheetController extends Controller
             $date = $date;
         }
         $timesheetCheck = Timesheet::where('UserId', $id)
-            ->whereMonth('Month', $date)
-            ->whereDay('Month', $date)
-            ->whereYear('Month', $date)
-            ->exists();
+        ->whereDate('Month', $date)
+        ->exists();
         return $timesheetCheck;
     }
 
@@ -65,12 +63,14 @@ class TimesheetController extends Controller
         $newTimeSheet = new Timesheet;
         // $jsonsMission = new JsonController;
         $userRow = auth()->user()->timelogs;
+        dd($userRow);
         $timesheetCheck = $this->timesheetCheck(now('Europe/Brussels'), $id);
         if ($timesheetCheck && $timesheetCheck->type !== 'workday') {
             return redirect()->route('dashboard')->with('error', 'Vandaag kan jij geen werkuren ingeven, kijk je profiel na.');
         } elseif ($timesheetCheck && $timesheetCheck->type == 'workday') {
             //TODO: 
-            //- daytimelog of new timesheet += count of data retrieved
+            //- daytimelog of new timesheet += count of data retrieved'
+            dd(count($timesheetCheck));
             $newTimeSheet->DaytimeCount += count($timesheetCheck);
         }
 
@@ -78,16 +78,21 @@ class TimesheetController extends Controller
         // $json ? $newTimeSheet->AdditionalTimestamps = json_encode($json) : null;    
         $userRow->userNote !== null ? $newTimeSheet->userNote = $userRow->userNote : null;
 
-        $newTimeSheet->UserId = $id;
-        $newTimeSheet->ClockedIn = $userRow->StartWork;
-        $newTimeSheet->ClockedOut = $userRow->StopWork;
-        $newTimeSheet->BreakStart = $userRow->StartBreak;
-        $newTimeSheet->BreakStop = $userRow->EndBreak;
-        $breakHours = $userRow->BreakHours;
-        $workedHours = $userRow->RegularHours;
+        // $newTimeSheet->UserId = $id;
+        // $newTimeSheet->ClockedIn = $userRow->StartWork;
+        // $newTimeSheet->ClockedOut = $userRow->StopWork;
+        // $newTimeSheet->BreakStart = $userRow->StartBreak;
+        // $newTimeSheet->BreakStop = $userRow->EndBreak;
+        $newTimeSheet->fill([
+            'UserId' => $id,
+            'ClockedIn' => $userRow->StartWork,
+            'ClockedOut' => $userRow->StopWork,
+            'BreakStart' => $userRow->StartBreak,
+            'BreakStop' => $userRow->EndBreak,
+            'BreakHours' => $userRow->Breakhours,
+        ]);
 
-        $newTimeSheet->BreakHours = $breakHours;
-        $result = $this->calculateHourBalance($workedHours, $userRow->StartWork, $userRow->Weekend,  $newTimeSheet, 'new');
+        $result = $this->calculateHourBalance( $userRow->RegularHours , $userRow->StartWork, $userRow->Weekend,  $newTimeSheet, 'new');
 
         $total = $this->calculateUserTotal(now('Europe/Brussels'), $id);
         if ($result == true && $total == true) return redirect('/dashboard');

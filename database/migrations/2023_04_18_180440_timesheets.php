@@ -19,9 +19,10 @@ return new class extends Migration
             $table->timestamp('ClockedOut')->nullable();
             $table->timestamp('BreakStart')->nullable();
             $table->timestamp('BreakStop')->nullable();
-            $table->decimal('DaytimeCount')->default(1);
+            $table->integer('DaytimeCount')->default(1);
             $table->decimal('RegularHours', 5, 2)->default(0, 00);
-            $table->decimal('BreaksTaken')->default(0);
+            $table->decimal('accountableHours', 5, 2)->default(0, 00);
+            $table->integer('BreaksTaken')->default(0);
             $table->decimal('BreakHours', 5, 2)->default(0, 00);
             $table->decimal('OverTime', 5, 2)->default(0, 00);
             $table->string('type')->default('workday');
