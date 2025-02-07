@@ -54,7 +54,7 @@ class TimesheetController extends Controller
         }
         $timesheetCheck = Timesheet::where('UserId', $id)
         ->whereDate('Month', $date)
-        ->exists();
+        ->first();
         return $timesheetCheck;
     }
 
@@ -63,7 +63,7 @@ class TimesheetController extends Controller
         $newTimeSheet = new Timesheet;
         // $jsonsMission = new JsonController;
         $userRow = auth()->user()->timelogs;
-        dd($userRow);
+       
         $timesheetCheck = $this->timesheetCheck(now('Europe/Brussels'), $id);
         if ($timesheetCheck && $timesheetCheck->type !== 'workday') {
             return redirect()->route('dashboard')->with('error', 'Vandaag kan jij geen werkuren ingeven, kijk je profiel na.');
@@ -89,7 +89,7 @@ class TimesheetController extends Controller
             'ClockedOut' => $userRow->StopWork,
             'BreakStart' => $userRow->StartBreak,
             'BreakStop' => $userRow->EndBreak,
-            'BreakHours' => $userRow->Breakhours,
+            'BreakHours' => $userRow->BreakHours,
         ]);
 
         $result = $this->calculateHourBalance( $userRow->RegularHours , $userRow->StartWork, $userRow->Weekend,  $newTimeSheet, 'new');

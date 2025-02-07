@@ -20,7 +20,7 @@ class TimeclockController extends Controller
         $currentUser = auth()->user();
         // $timesheetController = new TimesheetController;
         // $jsonsMission = new JsonController;
-        $userRow = auth()->user()->timelog;
+        $userRow = auth()->user()->timelogs;
 
         $timestamp = now('Europe/Brussels');
         $day = date('d', strtotime($timestamp));
@@ -28,7 +28,6 @@ class TimeclockController extends Controller
         $year = date('Y', strtotime($timestamp));
 
         //TODO: rewrite start logic when a user has already logged this day
-        $userRow->userNote = null;
         $dayCheck = Timesheet::where('UserId', $currentUser->id)
         ->whereDay('Month', '=', $day)
         ->whereMonth('Month', '=', $month)
@@ -38,7 +37,8 @@ class TimeclockController extends Controller
             $userRow->fill([
                 'BreakHours' => 0,
                 'BreaksTaken' => 0,
-                'RegularHours' => 0
+                'RegularHours' => 0,
+                'userNote' => null
             ]);
         }
 
@@ -119,7 +119,7 @@ class TimeclockController extends Controller
     {
         $timeController = new TimesheetController();
         $timeStamp = now('Europe/Brussels');
-        $userRow = auth()->user()->timelog;
+        $userRow = auth()->user()->timelogs;
         $userRow->fill([
             'BreakStatus' => false,
             'EndBreak' => $timeStamp,
@@ -132,7 +132,7 @@ class TimeclockController extends Controller
 
     public function stop()
     {
-        $userRow = auth()->user()->timelog;
+        $userRow = auth()->user()->timelogs;
         $timesheetController = new TimesheetController;
         $timeStamp = now('Europe/Brussels');
         $userRow->ShiftStatus = false;
@@ -144,7 +144,6 @@ class TimeclockController extends Controller
                 'EndBreak' => $timeStamp,
                 'BreakHours' => $userRow->BreakHours + $timesheetController->calculateDecimal($start, $end)
             ]);
-            $userRow->save();
         }
         // if($userRow->EndBreak){
         //     $userRow->StartWork = $userRow->EndBreak;
