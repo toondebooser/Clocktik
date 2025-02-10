@@ -5,7 +5,7 @@
  {{session('success')}}
 </div> 
 @endif
-    <h1>Clocktik</h1>
+    <h1>Tiktrack</h1>
     <a href="{{ route('dashboard') }}" class="logoContainer">
             <img class="logo" src="{{ asset('images/Taxus logo perfect round.png') }}"
                 alt="hmm there should be a alogo here">

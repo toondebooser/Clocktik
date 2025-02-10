@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Timelog;
-use App\Http\Controllers\startTimeCalculator;
 use App\Models\Timesheet;
 use App\Models\Usertotal;
 use Carbon\Carbon;
@@ -53,36 +52,51 @@ class TimesheetController extends Controller
             $date = $date;
         }
         $timesheetCheck = Timesheet::where('UserId', $id)
-        ->whereDate('Month', $date)
-        ->first();
+            ->whereDate('Month', $date)
+            ->orderBy('ClockedIn', 'asc')
+            ->get();
         return $timesheetCheck;
     }
 
     public function makeTimesheet($id)
     {
         $newTimeSheet = new Timesheet;
-        // $jsonsMission = new JsonController;
         $userRow = auth()->user()->timelogs;
-       
+
         $timesheetCheck = $this->timesheetCheck(now('Europe/Brussels'), $id);
-        if ($timesheetCheck && $timesheetCheck->type !== 'workday') {
+        if ($timesheetCheck && $timesheetCheck->first()->type !== 'workday') {
             return redirect()->route('dashboard')->with('error', 'Vandaag kan jij geen werkuren ingeven, kijk je profiel na.');
-        } elseif ($timesheetCheck && $timesheetCheck->type == 'workday') {
+        } elseif ($timesheetCheck && $timesheetCheck->first()->type == 'workday') {
             //TODO: 
             //- daytimelog of new timesheet += count of data retrieved'
-            dd(count($timesheetCheck));
-            $newTimeSheet->DaytimeCount += count($timesheetCheck);
+            $count = count($timesheetCheck);
+            $newTimeSheet->fill([
+                'UserId' => $id,
+                'ClockedIn' => $userRow->StartWork,
+                'ClockedOut' => $userRow->StopWork,
+                'BreakStart' => $userRow->StartBreak,
+                'BreakStop' => $userRow->EndBreak,
+                'DaytimeCount' => ($newTimeSheet->DaytimeCount ?? 1) + $count,
+                'Month' => Carbon::parse($userRow->StartWork)->format('Y-m-d'),
+                'userNote' => $userRow->userNote ?? null,
+
+            ]);
+            $newTimeSheet->save();
+            $timesheetCheck->first()->fill([
+                'RegularHours' => $userRow->RegularHours > 7.6 ? 7.6 : $userRow->RegularHours,
+                'BreakHours' => $userRow->BreakHours,
+                'OverTime' => $userRow->RegularHours - 7.6,
+            ]);
+            $timesheetCheck->first()->save();
+            $total = $this->calculateUserTotal(now('Europe/Brussels'), $id);
+            // if ($result == true && $total == true) 
+            if ($total) {
+                return redirect('/dashboard');
+            }
         }
 
-        // $json = $jsonsMission->callJson($userRow);
-        // $json ? $newTimeSheet->AdditionalTimestamps = json_encode($json) : null;    
         $userRow->userNote !== null ? $newTimeSheet->userNote = $userRow->userNote : null;
 
-        // $newTimeSheet->UserId = $id;
-        // $newTimeSheet->ClockedIn = $userRow->StartWork;
-        // $newTimeSheet->ClockedOut = $userRow->StopWork;
-        // $newTimeSheet->BreakStart = $userRow->StartBreak;
-        // $newTimeSheet->BreakStop = $userRow->EndBreak;
         $newTimeSheet->fill([
             'UserId' => $id,
             'ClockedIn' => $userRow->StartWork,
@@ -90,12 +104,23 @@ class TimesheetController extends Controller
             'BreakStart' => $userRow->StartBreak,
             'BreakStop' => $userRow->EndBreak,
             'BreakHours' => $userRow->BreakHours,
-        ]);
+            'RegularHours' => $userRow->RegularHours > 7.6 ? 7.6 : $userRow->RegularHours,
+            'OverTime' => $userRow->RegularHours - 7.6,
+            'Weekend' => $userRow->Weekend,
+            'userNote' => $userRow->userNote ?? null,
+            'Month' => Carbon::parse($userRow->StartWork)->format('Y-m-d'),
+            'accountableHours' => $userRow->Weekend ? 0 : 7.6,
 
-        $result = $this->calculateHourBalance( $userRow->RegularHours , $userRow->StartWork, $userRow->Weekend,  $newTimeSheet, 'new');
+        ]);
+        $newTimeSheet->save();
+
+        // $result = $this->calculateHourBalance( $userRow->RegularHours , $userRow->StartWork, $userRow->Weekend,  $newTimeSheet, 'new');
 
         $total = $this->calculateUserTotal(now('Europe/Brussels'), $id);
-        if ($result == true && $total == true) return redirect('/dashboard');
+        // if ($result == true && $total == true) 
+        if ($total) {
+            return redirect('/dashboard');
+        }
     }
 
     public function addNewTimesheet(Request $request)
@@ -311,44 +336,44 @@ class TimesheetController extends Controller
 
 
 
-    public function calculateHourBalance($workedHours, $date, $weekend, $timesheet, $type)
-    {
+    // public function calculateHourBalance($workedHours, $date, $weekend, $timesheet, $type)
+    // {
 
-        switch (true) {
-            case ($workedHours > 7.60 && $weekend == false):
-                $difference = $workedHours - 7.60;
-                $timesheet->OverTime = $difference;
-                $timesheet->RegularHours = $workedHours - $difference;
-                $timesheet->accountableHours = 7.60;
-                $timesheet->Weekend = false;
+    //     switch (true) {
+    //         case ($workedHours > 7.60 && $weekend == false):
+    //             $difference = $workedHours - 7.60;
+    //             $timesheet->OverTime = $difference;
+    //             $timesheet->RegularHours = $workedHours - $difference;
+    //             $timesheet->accountableHours = 7.60;
+    //             $timesheet->Weekend = false;
 
-                break;
+    //             break;
 
-            case ($workedHours < 7.60 && $weekend == false):
-                $missingHours = 7.60 - $workedHours;
-                $timesheet->RegularHours = $workedHours;
-                $timesheet->accountableHours = 7.60;
-                $timesheet->OverTime = -$missingHours;
-                $timesheet->Weekend = false;
-                break;
+    //         case ($workedHours < 7.60 && $weekend == false):
+    //             $missingHours = 7.60 - $workedHours;
+    //             $timesheet->RegularHours = $workedHours;
+    //             $timesheet->accountableHours = 7.60;
+    //             $timesheet->OverTime = -$missingHours;
+    //             $timesheet->Weekend = false;
+    //             break;
 
-            case ($weekend == true):
-                $timesheet->Weekend = true;
-                $timesheet->RegularHours = $workedHours;
-                $timesheet->OverTime = $workedHours;
+    //         case ($weekend == true):
+    //             $timesheet->Weekend = true;
+    //             $timesheet->RegularHours = $workedHours;
+    //             $timesheet->OverTime = $workedHours;
 
-                break;
-            default:
-                $timesheet->RegularHours = 7.60;
-                $timesheet->accountableHours = 7.60;
-                $timesheet->OverTime = 0;
-                break;
-        }
-        if ($type == 'new') $timesheet->Month = $date;
+    //             break;
+    //         default:
+    //             $timesheet->RegularHours = 7.60;
+    //             $timesheet->accountableHours = 7.60;
+    //             $timesheet->OverTime = 0;
+    //             break;
+    //     }
+    //     if ($type == 'new') $timesheet->Month = $date;
 
 
-        return $timesheet->save();
-    }
+    //     return $timesheet->save();
+    // }
 
 
     public function calculateUserTotal($date, $id)

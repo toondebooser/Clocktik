@@ -18,10 +18,7 @@ class TimeclockController extends Controller
     public function startWorking(Request $request)
     {
         $currentUser = auth()->user();
-        // $timesheetController = new TimesheetController;
-        // $jsonsMission = new JsonController;
         $userRow = auth()->user()->timelogs;
-
         $timestamp = now('Europe/Brussels');
         $day = date('d', strtotime($timestamp));
         $month = date('m', strtotime($timestamp));
@@ -38,33 +35,10 @@ class TimeclockController extends Controller
                 'BreakHours' => 0,
                 'BreaksTaken' => 0,
                 'RegularHours' => 0,
-                'userNote' => null
             ]);
         }
 
-        // $json = $jsonsMission->callJson($dayCheck);
-        // $json ? $userRow->AdditionalTimestamps = json_encode($json) : $userRow->AdditionalTimestamps = null;
-
-        // if ($dayCheck !== null && $dayCheck->type == "workday") {
-
-        //     $json[] = [
-        //         'ClockedIn' => $dayCheck->ClockedIn,
-        //         'ClockedOut' => $dayCheck->ClockedOut,
-        //         'BreakIn' => $dayCheck->BreakStart,
-        //         'BreakOut' => $dayCheck->BreakStop
-        //     ];
-
-        // $userRow->AdditionalTimestamps = json_encode($json);
-        // $userRow->BreakHours += $dayCheck->BreakHours;
-        // $userRow->RegularHours += $dayCheck->RegularHours;
-        // $dayCheck->userNote !== null ? $userRow->userNote = $dayCheck->userNote : null;       
-        // $timesheetController->calculateUserTotal($timestamp, $currentUser->id);
-        // } elseif ($dayCheck !== null && $dayCheck !== "workday") {
-        //     return redirect()->route('dashboard')->with('error', "Vandaag is " . $dayCheck->type . " geregistreerd");
-        // }
-
-
-
+        //TODO: use in_array()to check if current day is present in defined weekenddays array from the weektypes table
         $weekDay = Carbon::parse($timestamp)->weekday();
         $weekDay == 0 || $weekDay == 6 ? $userRow->Weekend = true : $userRow->Weekend = false;
         //TODO: check if userRow exists
@@ -73,6 +47,7 @@ class TimeclockController extends Controller
             'StartBreak' => null,
             'EndBreak' => null,
             'StopWork' => null,
+            'userNote' => null,
             'ShiftStatus' => true
         ]);
         $userRow->save();
