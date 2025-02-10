@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Timesheet extends Model
 {
-    protected $fillable = ['UserId', 'ClockedIn', 'ClockedOut', 'BreakStart', 'BreakStop', 'DaytimeCount', 'RegularHours', 'accountableHours', 'BreaksTaken', 'BreakHours', 'OverTime', 'userNote', 'Weekend', 'NightShift'];
+    protected $fillable = ['UserId', 'ClockedIn', 'ClockedOut', 'BreakStart', 'BreakStop', 'DaytimeCount', 'RegularHours', 'accountableHours', 'BreaksTaken', 'BreakHours', 'OverTime', 'userNote', 'Weekend', 'NightShift','Month'];
 }

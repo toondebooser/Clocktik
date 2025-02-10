@@ -52,8 +52,10 @@ class UpdateTimesheetController extends Controller
         $type == null ? $type = $timesheet->type : null;
         $date = $timesheet->Month;
         if ($dayType == "onbetaald" && $type !== 'workday' ) {
-            $timesheet->accountableHours = 0;
-            $timesheet->type = $type;
+            $timesheet->fill([
+                'accountableHours' => 0,
+                'type' => $type,
+            ]);
             $save = $timesheet->save();
             $fetchTotal = $timesheetController->calculateUserTotal($date, $id);
             if ($save == true && $fetchTotal == true) {
@@ -70,8 +72,10 @@ class UpdateTimesheetController extends Controller
                 return redirect()->route('getData', $postData)->with('error', 'Er ging iets mis, kijk even na of de dag in het uurrooster is aangepast.');
             }
         } elseif ($type !== 'workday') {
-            $timesheet->accountableHours = 7.6;
-            $timesheet->type = $type;
+            $timesheet->fill([
+                'accountableHours' => 7.6,
+                'type' => $type,
+            ]);
             $save = $timesheet->save();
             $fetchTotal = $timesheetController->calculateUserTotal($date, $id);
             if ($save == true && $fetchTotal == true) { {
@@ -93,17 +97,21 @@ class UpdateTimesheetController extends Controller
             $stopWork = Carbon::parse($date . ' ' . $request->endTime, 'Europe/Brussels');
             $startBreak = Carbon::parse($date . ' ' . $request->startBreak, 'Europe/Brussels');
             $endBreak = Carbon::parse($date . ' ' . $request->endBreak, 'Europe/Brussels');
-            $clockedHours = $timesheetController->calculateDecimal($startWork, $stopWork);
             $breakHours = $timesheetController->calculateDecimal($startBreak, $endBreak);
-            $regularHours = $clockedHours - $breakHours;
-            $timesheet->ClockedIn = $startWork;
-            $timesheet->ClockedOut = $stopWork;
-            $timesheet->BreakStart = $startBreak;
-            $timesheet->BreakStop = $endBreak;
-            $timesheet->BreakHours = $breakHours;
-            $balanceResult = $timesheetController->calculateHourBalance($regularHours, $date, $timesheet->Weekend, $timesheet, 'update');
+            $regularHours = $timesheetController->calculateDecimal($startWork, $stopWork) - $breakHours;
+            $timesheet->fill([
+                'ClockedIn' => $startWork,
+                'ClockedOut' => $stopWork,
+                'BreakStart' => $startBreak,
+                'BreakStop' => $endBreak,
+                'BreakHours' => $breakHours,
+                'RegularHours' => $regularHours > 7.6 ? 7.6 : $regularHours,
+                'OverTime' => $regularHours - 7.6,
+                
+            ]);
+            $timesheet->save();
             $userTotal = $timesheetController->calculateUserTotal($date, $id);
-            if ($balanceResult && $userTotal == true) return redirect()->route('myWorkers');
+            if ( $userTotal == true) return redirect()->route('myWorkers');
         }
     }
 }

@@ -768,8 +768,8 @@ fieldset {
 } */
 .updateTimesheet{
     width: 90dvw;
-    /* display: grid;
-    grid-template-columns: 50% 50%; */
+    display: grid;
+    grid-template-columns: 50% 50%;
 }
 .gewerkt{
     grid-column: 1/2;
