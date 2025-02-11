@@ -20,15 +20,13 @@ class TimeclockController extends Controller
         $currentUser = auth()->user();
         $userRow = auth()->user()->timelogs;
         $timestamp = now('Europe/Brussels');
-        $day = date('d', strtotime($timestamp));
-        $month = date('m', strtotime($timestamp));
-        $year = date('Y', strtotime($timestamp));
+        // $day = date('d', strtotime($timestamp));
+        // $month = date('m', strtotime($timestamp));
+        // $year = date('Y', strtotime($timestamp));
 
         //TODO: rewrite start logic when a user has already logged this day
         $dayCheck = Timesheet::where('UserId', $currentUser->id)
-        ->whereDay('Month', '=', $day)
-        ->whereMonth('Month', '=', $month)
-        ->whereYear('Month', '=', $year)
+        ->where('Month', '=', $timestamp->format('Y-m-d'))
         ->exists();
         if(!$dayCheck) {
             $userRow->fill([
