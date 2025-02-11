@@ -10,9 +10,16 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Hamcrest\Type\IsString;
 use Illuminate\Http\Request;
+use App\Services\TimeloggingService;
 
 class TimesheetController extends Controller
 {
+    protected $timeloggingService;
+
+    public function __construct(TimeloggingService $timeloggingService)
+    {
+        $this->timeloggingService = $timeloggingService;
+    }
 
     public function fetchUserTotal($date, $id)
     {
@@ -60,68 +67,69 @@ class TimesheetController extends Controller
 
     public function makeTimesheet($id)
     {
-        $newTimeSheet = new Timesheet;
-
+        // $newTimeSheet = new Timesheet;
+        
         $userRow = auth()->user()->timelogs;
+        $buildTimesheet = $this->timeloggingService->logTimeEntry($userRow, $id, null );
 
-        $timesheetCheck = $this->timesheetCheck(now('Europe/Brussels'), $id);
-        if (!$timesheetCheck->isEmpty()) {
-            if ($timesheetCheck->first()->type !== 'workday') {
-                return redirect()->route('dashboard')->with('error', 'Vandaag kan jij geen werkuren ingeven, kijk je profiel na.');
-            } elseif ($timesheetCheck->first()->type == 'workday') {
-                //TODO: 
-                //- daytimelog of new timesheet += count of data retrieved'
-                $count = count($timesheetCheck);
-                $newTimeSheet->fill([
-                    'UserId' => $id,
-                    'ClockedIn' => $userRow->StartWork,
-                    'ClockedOut' => $userRow->StopWork,
-                    'BreakStart' => $userRow->StartBreak,
-                    'BreakStop' => $userRow->EndBreak,
-                    'DaytimeCount' => ($newTimeSheet->DaytimeCount ?? 1) + $count,
-                    'Month' => Carbon::parse($userRow->StartWork)->format('Y-m-d'),
-                    'userNote' => $userRow->userNote ?? null,
+        // $timesheetCheck = $this->timesheetCheck(now('Europe/Brussels'), $id);
+        // if (!$timesheetCheck->isEmpty()) {
+        //     if ($timesheetCheck->first()->type !== 'workday') {
+        //         return redirect()->route('dashboard')->with('error', 'Vandaag kan jij geen werkuren ingeven, kijk je profiel na.');
+        //     } elseif ($timesheetCheck->first()->type == 'workday') {
+        //         //TODO: 
+        //         //- daytimelog of new timesheet += count of data retrieved'
+        //         $count = count($timesheetCheck);
+        //         $newTimeSheet->fill([
+        //             'UserId' => $id,
+        //             'ClockedIn' => $userRow->StartWork,
+        //             'ClockedOut' => $userRow->StopWork,
+        //             'BreakStart' => $userRow->StartBreak,
+        //             'BreakStop' => $userRow->EndBreak,
+        //             'DaytimeCount' => ($newTimeSheet->DaytimeCount ?? 1) + $count,
+        //             'Month' => Carbon::parse($userRow->StartWork)->format('Y-m-d'),
+        //             'userNote' => $userRow->userNote ?? null,
 
-                ]);
-                $newTimeSheet->save();
-                $timesheetCheck->first()->fill([
-                    'RegularHours' => $userRow->RegularHours > 7.6 ? 7.6 : $userRow->RegularHours,
-                    'BreakHours' => $userRow->BreakHours,
-                    'OverTime' => $userRow->RegularHours - 7.6,
-                ]);
-                $timesheetCheck->first()->save();
-                $total = $this->calculateUserTotal(now('Europe/Brussels'), $id);
-                // if ($result == true && $total == true) 
-                if ($total) {
-                    return redirect('/dashboard');
-                }
-            }
+        //         ]);
+        //         $newTimeSheet->save();
+        //         $timesheetCheck->first()->fill([
+        //             'RegularHours' => $userRow->RegularHours > 7.6 ? 7.6 : $userRow->RegularHours,
+        //             'BreakHours' => $userRow->BreakHours,
+        //             'OverTime' => $userRow->RegularHours - 7.6,
+        //         ]);
+        // //         $timesheetCheck->first()->save();
+        //         $total = $this->calculateUserTotal(now('Europe/Brussels'), $id);
+        //         // if ($result == true && $total == true) 
+        //         if ($total) {
+        //             return redirect('/dashboard');
+        //         }
+        //     }
 
-            $userRow->userNote !== null ? $newTimeSheet->userNote = $userRow->userNote : null;
+        //     $userRow->userNote !== null ? $newTimeSheet->userNote = $userRow->userNote : null;
 
-            $newTimeSheet->fill([
-                'UserId' => $id,
-                'ClockedIn' => $userRow->StartWork,
-                'ClockedOut' => $userRow->StopWork,
-                'BreakStart' => $userRow->StartBreak,
-                'BreakStop' => $userRow->EndBreak,
-                'BreakHours' => $userRow->BreakHours,
-                'RegularHours' => $userRow->RegularHours > 7.6 ? 7.6 : $userRow->RegularHours,
-                'OverTime' => $userRow->RegularHours - 7.6,
-                'Weekend' => $userRow->Weekend,
-                'userNote' => $userRow->userNote ?? null,
-                'Month' => $userRow->StartWork,
-                'accountableHours' => $userRow->Weekend ? 0 : 7.6,
+        //     $newTimeSheet->fill([
+        //         'UserId' => $id,
+        //         'ClockedIn' => $userRow->StartWork,
+        //         'ClockedOut' => $userRow->StopWork,
+        //         'BreakStart' => $userRow->StartBreak,
+        //         'BreakStop' => $userRow->EndBreak,
+        //         'BreakHours' => $userRow->BreakHours,
+        //         'RegularHours' => $userRow->RegularHours > 7.6 ? 7.6 : $userRow->RegularHours,
+        //         'OverTime' => $userRow->RegularHours - 7.6,
+        //         'Weekend' => $userRow->Weekend,
+        //         'userNote' => $userRow->userNote ?? null,
+        //         'Month' => $userRow->StartWork,
+        //         'accountableHours' => $userRow->Weekend ? 0 : 7.6,
 
-            ]);
-            $newTimeSheet->save();
+        //     ]);
+        //     $newTimeSheet->save();
 
 
             $total = $this->calculateUserTotal(now('Europe/Brussels'), $id);
-            if ($total) {
+            if ($total && $buildTimesheet) {
                 return redirect('/dashboard');
             }
-        }
+        // }
     }
     public function addNewTimesheet(Request $request)
     {

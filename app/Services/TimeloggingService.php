@@ -4,30 +4,42 @@ namespace App\Services;
 
 use App\Http\Controllers\TimesheetController;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Collection;
 use App\Models\Timesheet;
+use Dotenv\Parser\Entry;
 
 class TimeloggingService
 {
-     
-    public function logTimeEntry($userRow, $id, $timesheet)
+    public function calculateDecimal($start, $end)
+    {
+        $start = $start ? Carbon::parse($start, 'Europe/Brussels') : null;
+        $end = $end ? Carbon::parse($end, 'Europe/Brussels') : null;
+        if ($start === null) {
+            return 0;
+        }
+
+
+        $diffInMin = $end->diffInMinutes($start);
+        $decimalTime = round($diffInMin / 60, 2);
+
+        return $decimalTime;
+    }
+    public function logTimeEntry($userRow, $userId, $timesheet)
     {
 
-        $newEntry = $this->createTimeEntry($userRow, $id);
+        $newEntry = $this->createTimeEntry($userRow, $userId);
         return $this->updateOrInsertTimesheet($newEntry, $timesheet);
     }
 
     /**
      * Create a new time entry without summary fields
      */
-    private function createTimeEntry($userRow, $id)
+    private function createTimeEntry($userRow, $userId)
     {
         $date = Carbon::parse($userRow->StartWork)->format('Y-m-d');
 
         return [
-            'UserId' => $id,
-            'CLockedIn' => $userRow->StartWork,
+            'UserId' => $userId,
+            'ClockedIn' => $userRow->StartWork,
             'ClockedOut' => $userRow->StopWork,
             'BreakStart' => $userRow->StartBreak,
             'BreakStop' => $userRow->EndBreak,
@@ -67,30 +79,34 @@ class TimeloggingService
     /**
      * Update summary fields for an existing day's timesheet
      */
-    private function updateSummaryFields(Timesheet $existing, array $newEntry)
+    private function updateSummaryFields(Timesheet $existing, array $newEntry, $oldTimesheet)
     {
-        $timesheetController = new TimesheetController;
-        $newBreakHours =  $timesheetController->calculateDecimal($newEntry['BreakStart'], $newEntry['BreakStop']);
-        $breakHours = $existing->BreakHours + $newBreakHours;
-        $newRegularHours = $timesheetController->calculateDecimal($newEntry['ClockedIn'], $newEntry['ClockedOut']) - $newBreakHours;
-
+        $breakHours =  $this->calculateDecimal($newEntry['BreakStart'], $newEntry['BreakStop']);
+        $newBreakHours = ($existing->BreakHours - $oldTimesheet ? $oldTimesheet->BreakHours : 0) + $breakHours;
+        $regularHours = $this->calculateDecimal($newEntry['ClockedIn'], $newEntry['ClockedOut']) - $newBreakHours;
+        $newRegularHours = ($existing->RegularHours - $oldTimesheet ? $oldTimesheet->RegularHours : 0) + $regularHours;
         return [
-            'BreakHours' => $breakHours,
-            'RegularHours' => $existing->RegularHours + $newRegularHours,
-            'DaytimeCount' => $existing->DaytimeCount + $newEntry('DaytimeCount'),
-            'OverTime' => 
+            'BreakHours' => $newBreakHours,
+            'RegularHours' => $newRegularHours,
+            'DaytimeCount' => $oldTimesheet ? $oldTimesheet->DaytimeCount : $existing->DaytimeCount + 1,
+            'OverTime' => $newRegularHours - 7.6
         ];
     }
-
+    
     /**
      * Calculate summary for a new day's first entry
      */
     private function calculateSummaryForNew(array $entries)
     {
-        $timesheetController = new TimesheetController;
+        
+       $entry = $entries[0];
+        $breakHours = $this->calculateDecimal($entry['BreakStart'], $entry['BreakStop']);
+        $regularHours =$this->calculateDecimal($entry['ClockedIn'], $entry['ClockedOut']);
         return [
-            'BreakHours'=> $timesheetController->calculateDecimal($entries['BreakStart'], $entries['BreakStop']),
-            'RegularHours'=>
+            'BreakHours'=> $breakHours,
+            'RegularHours'=> $regularHours,
+            'accountableHours' => 7.6,
+            'OverTime' => $regularHours - 7.6,
         ];
     }
 }

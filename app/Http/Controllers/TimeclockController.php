@@ -14,7 +14,20 @@ use Illuminate\Support\Facades\Redirect;
 class TimeclockController extends Controller
 {
 
+    public function calculateDecimal($start, $end)
+    {
+        $start = $start ? Carbon::parse($start, 'Europe/Brussels') : null;
+        $end = $end ? Carbon::parse($end, 'Europe/Brussels') : null;
+        if ($start === null) {
+            return 0;
+        }
 
+
+        $diffInMin = $end->diffInMinutes($start);
+        $decimalTime = round($diffInMin / 60, 2);
+
+        return $decimalTime;
+    }
     public function startWorking(Request $request)
     {
         $currentUser = auth()->user();
@@ -57,18 +70,18 @@ class TimeclockController extends Controller
 
     public function break()
     {
-        $timeController = new TimesheetController();
+        // $timeController = new TimesheetController();
         // $jsonsMission = new JsonController;
         $timeStamp = now('Europe/Brussels');
         $userRow = auth()->user()->timelogs;
-        $userRow->RegularHours += $timeController->calculateDecimal($userRow->EndBreak ? $userRow->EndBreak : $userRow->StartWork, $timeStamp);
+        $userRow->RegularHours += $this->calculateDecimal($userRow->EndBreak ? $userRow->EndBreak : $userRow->StartWork, $timeStamp);
         $userRow->BreakStatus = true;
         if ($userRow->BreaksTaken >= 1) {
             $startBreakDate = date('Y-m-d', strtotime($userRow->StartBreak));
             $today = date('Y-m-d');
             if ($startBreakDate == $today) {
                 //TODO: increment the number of brakes in timelog today
-                $userRow->BreakHours += $timeController->calculateDecimal($userRow->StartBreak, $userRow->EndBreak);
+                $userRow->BreakHours += $this->calculateDecimal($userRow->StartBreak, $userRow->EndBreak);
             }
         }
         //     $json = $jsonsMission->callJson($userRow);
@@ -90,13 +103,13 @@ class TimeclockController extends Controller
 
     public function stopBreak()
     {
-        $timeController = new TimesheetController();
+        // $timesheetController = new TimesheetController();
         $timeStamp = now('Europe/Brussels');
         $userRow = auth()->user()->timelogs;
         $userRow->fill([
             'BreakStatus' => false,
             'EndBreak' => $timeStamp,
-            'BreakHours' => $userRow->BreakHours + $timeController->calculateDecimal($userRow->StartBreak, $timeStamp)
+            'BreakHours' => $userRow->BreakHours + $this->calculateDecimal($userRow->StartBreak, $timeStamp)
         ]);
         // $userRow->StartWork = $timeStamp;!!!
         $userRow->save();
@@ -106,7 +119,7 @@ class TimeclockController extends Controller
     public function stop()
     {
         $userRow = auth()->user()->timelogs;
-        $timesheetController = new TimesheetController;
+        // $timesheetController = new TimesheetController;
         $timeStamp = now('Europe/Brussels');
         $userRow->ShiftStatus = false;
         if ($userRow->BreakStatus == true) {
@@ -115,7 +128,7 @@ class TimeclockController extends Controller
             $userRow->fill([
                 'BreakStatus' => false,
                 'EndBreak' => $timeStamp,
-                'BreakHours' => $userRow->BreakHours + $timesheetController->calculateDecimal($start, $end)
+                'BreakHours' => $userRow->BreakHours + $this->calculateDecimal($start, $end)
             ]);
         }
         // if($userRow->EndBreak){
@@ -125,7 +138,7 @@ class TimeclockController extends Controller
 
         $userRow->fill([
             'StopWork' => $timeStamp,
-            'RegularHours' => $userRow->RegularHours + $timesheetController->calculateDecimal(
+            'RegularHours' => $userRow->RegularHours + $this->calculateDecimal(
                 $userRow->EndBreak ?: $userRow->StartWork, 
                 $timeStamp
             )
