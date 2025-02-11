@@ -66,11 +66,10 @@ class TimesheetController extends Controller
 
         $timesheetCheck = $this->timesheetCheck(now('Europe/Brussels'), $id);
         if (!$timesheetCheck->isEmpty()) {
-            if($timesheetCheck->first()->type !== 'workday'){
+            if ($timesheetCheck->first()->type !== 'workday') {
                 return redirect()->route('dashboard')->with('error', 'Vandaag kan jij geen werkuren ingeven, kijk je profiel na.');
+            } elseif ($timesheetCheck->first()->type == 'workday') {
             }
-            elseif ($timesheetCheck->first()->type == 'workday') {
-        } 
             //TODO: 
             //- daytimelog of new timesheet += count of data retrieved'
             $count = count($timesheetCheck);
@@ -136,7 +135,7 @@ class TimesheetController extends Controller
         $timesheetCheck = $this->timesheetCheck($date, $id);
 
         if (!$timesheetCheck->isEmpty()) {
-            return redirect()->route('timesheetForm', ['worker' => $id])->with('error', 'Datum al in gebruik');
+            return redirect()->route('timesheetForm', ['worker' => $id])->with('error', 'Datum al in gebruik: ' . $date);
         }
         if (Carbon::parse($date, 'Europe/Brussels')->isWeekend()) $weekend = true;
 
@@ -169,22 +168,26 @@ class TimesheetController extends Controller
         $timesheetCheck = $this->timesheetCheck($singleDay, $worker);
 
         if (!$timesheetCheck->isEmpty()) {
-            $newSpecialTimesheet->type = $dayLabel;
-            $newSpecialTimesheet->ClockedIn = $singleDay;
-            $newSpecialTimesheet->Month = $singleDay;
-            $newSpecialTimesheet->UserId = $worker;
-            if ($dayType == "onbetaald") {
-                $newSpecialTimesheet->save();
-                $userTotal = $this->fetchUserTotal($singleDay, $worker);
-                $this->calculateUserTotal($singleDay, $worker);
-                $userTotal->save();
-                return true;
-            }
+            //TODO:"simplify
+            $newSpecialTimesheet->fill([
+                'type' => $dayLabel,
+                'ClockedIn' => $singleDay,
+                'Month' => $singleDay,
+                'UserId' => $worker,
+                'accountableHours' => $dayType =='onbetaald' ? 0 : 7.6,
+            ]);
+            // if ($dayType == "onbetaald") {
+            //     $newSpecialTimesheet->save();
+            //     $userTotal = $this->fetchUserTotal($singleDay, $worker);
+            //     $this->calculateUserTotal($singleDay, $worker);
+            //     $userTotal->save();
+            //     return true;
+            // }
             $newSpecialTimesheet->accountableHours = 7.6;
             $newSpecialTimesheet->save();
             $userTotal = $this->fetchUserTotal($singleDay, $worker);
-            $userTotal->save();
             $this->calculateUserTotal($singleDay, $worker);
+            $userTotal->save();
             return true;
         } else {
             return  'Datum al in gebruik: ' . $singleDay->toDateString();
@@ -223,7 +226,7 @@ class TimesheetController extends Controller
         $submitType = $request->input('submitType');
         $workerArray = json_decode($worker, true);
         $results = [];
-    
+
         if ($submitType ==  'Periode Toevoegen') {
             $validator = Validator::make(
                 $request->all(),
