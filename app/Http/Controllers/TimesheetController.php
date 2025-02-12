@@ -68,15 +68,14 @@ class TimesheetController extends Controller
     public function makeTimesheet($id)
     {
         // $newTimeSheet = new Timesheet;
-        
-        $userRow = auth()->user()->timelogs;
-        $buildTimesheet = $this->timeloggingService->logTimeEntry($userRow, $id, null );
 
-        // $timesheetCheck = $this->timesheetCheck(now('Europe/Brussels'), $id);
-        // if (!$timesheetCheck->isEmpty()) {
-        //     if ($timesheetCheck->first()->type !== 'workday') {
-        //         return redirect()->route('dashboard')->with('error', 'Vandaag kan jij geen werkuren ingeven, kijk je profiel na.');
-        //     } elseif ($timesheetCheck->first()->type == 'workday') {
+        $userRow = auth()->user()->timelogs;
+
+        $timesheetCheck = $this->timesheetCheck(now('Europe/Brussels'), $id);
+        if (!$timesheetCheck->isEmpty() && $timesheetCheck->first()->type !== 'workday') {
+            return redirect()->route('dashboard')->with('error', 'Vandaag kan jij geen werkuren ingeven, kijk je profiel na.');
+        }
+        $buildTimesheet = $this->timeloggingService->logTimeEntry($userRow, $id, null);
         //         //TODO: 
         //         //- daytimelog of new timesheet += count of data retrieved'
         //         $count = count($timesheetCheck);
@@ -125,10 +124,10 @@ class TimesheetController extends Controller
         //     $newTimeSheet->save();
 
 
-            $total = $this->calculateUserTotal(now('Europe/Brussels'), $id);
-            if ($total && $buildTimesheet) {
-                return redirect('/dashboard');
-            }
+        $total = $this->calculateUserTotal(now('Europe/Brussels'), $id);
+        if ($total && $buildTimesheet) {
+            return redirect('/dashboard');
+        }
         // }
     }
     public function addNewTimesheet(Request $request)

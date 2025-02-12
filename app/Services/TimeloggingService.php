@@ -5,24 +5,12 @@ namespace App\Services;
 use App\Http\Controllers\TimesheetController;
 use Carbon\Carbon;
 use App\Models\Timesheet;
+use App\Utilities\CalculateUtility;
 use Dotenv\Parser\Entry;
 
 class TimeloggingService
 {
-    public function calculateDecimal($start, $end)
-    {
-        $start = $start ? Carbon::parse($start, 'Europe/Brussels') : null;
-        $end = $end ? Carbon::parse($end, 'Europe/Brussels') : null;
-        if ($start === null) {
-            return 0;
-        }
-
-
-        $diffInMin = $end->diffInMinutes($start);
-        $decimalTime = round($diffInMin / 60, 2);
-
-        return $decimalTime;
-    }
+  
     public function logTimeEntry($userRow, $userId, $timesheet)
     {
 
@@ -55,19 +43,26 @@ class TimeloggingService
     private function updateOrInsertTimesheet(array $newEntry, $timesheet)
     {
         
-        // Fetch existing timesheet for the day or prepare for a new one
         $existingTimesheet = Timesheet::where('UserId', $newEntry['UserId'])
-                                      ->where('Month', $newEntry['Month'])
-                                      ->orderBy('ClockedIn', 'asc')
-                                      ->first();
-        if ($timesheet !== null) $oldTimesheet = Timesheet::find($timesheet);
-        if ($existingTimesheet ) {
-            // Update existing timesheet
+        ->where('Month', $newEntry['Month'])
+        ->orderBy('ClockedIn', 'asc')
+        ->first();
+        if ($timesheet !== null) $oldTimesheet = $timesheet;
+        if ($existingTimesheet) {
             $updatedSummary = $this->updateSummaryFields($existingTimesheet, $newEntry, $oldTimesheet ?? null);
-            // $newEntry['id'] = $existingTimesheet->id; // For update operation
-            
-            return Timesheet::updateOrCreate(['id' => $existingTimesheet->id], array_merge($newEntry, $updatedSummary));
-        } elseif(!$existingTimesheet ) {
+            if($existingTimesheet->Month == $newEntry['Month']){  
+                
+                $update = Timesheet::where('id', $existingTimesheet->id)->update($updatedSummary);  
+                 $create = Timesheet::create($newEntry);
+                 return $update && $create ? true : false ;
+
+            }else{
+                $updateOrCreate = Timesheet::updateOrCreate(['id' => $existingTimesheet->id], array_merge($newEntry, $updatedSummary));
+                return $updateOrCreate;
+            }
+
+        } 
+        elseif(!$existingTimesheet ) {
 
             $summaryForNew = $this->calculateSummaryForNew([$newEntry]);
             $timesheet = new Timesheet(array_merge($newEntry, $summaryForNew));
@@ -81,14 +76,19 @@ class TimeloggingService
      */
     private function updateSummaryFields(Timesheet $existing, array $newEntry, $oldTimesheet)
     {
-        $breakHours =  $this->calculateDecimal($newEntry['BreakStart'], $newEntry['BreakStop']);
-        $newBreakHours = ($existing->BreakHours - $oldTimesheet ? $oldTimesheet->BreakHours : 0) + $breakHours;
-        $regularHours = $this->calculateDecimal($newEntry['ClockedIn'], $newEntry['ClockedOut']) - $newBreakHours;
-        $newRegularHours = ($existing->RegularHours - $oldTimesheet ? $oldTimesheet->RegularHours : 0) + $regularHours;
+        $breakHours =  CalculateUtility::calculateDecimal($newEntry['BreakStart'], $newEntry['BreakStop']);
+        $regularHours = CalculateUtility::calculateDecimal($newEntry['ClockedIn'], $newEntry['ClockedOut']);
+        
+        $existingBreakHours = $existing->BreakHours ?? 0;
+        $oldBreakHours = $oldTimesheet ? ($oldTimesheet->BreakHours ?? 0) : 0;
+        $oldRegularHours = $oldTimesheet->RegularHours ?? 0;
+        $newBreakHours = max(0, $existingBreakHours - $oldBreakHours + $breakHours);
+        $newRegularHours = $existing->RegularHours -  $oldRegularHours  + $regularHours;
+
         return [
             'BreakHours' => $newBreakHours,
             'RegularHours' => $newRegularHours,
-            'DaytimeCount' => $oldTimesheet ? $oldTimesheet->DaytimeCount : $existing->DaytimeCount + 1,
+            'DaytimeCount' => $oldTimesheet !== null ? $oldTimesheet->DaytimeCount : $existing->DaytimeCount + 1,
             'OverTime' => $newRegularHours - 7.6
         ];
     }
@@ -100,8 +100,8 @@ class TimeloggingService
     {
         
        $entry = $entries[0];
-        $breakHours = $this->calculateDecimal($entry['BreakStart'], $entry['BreakStop']);
-        $regularHours =$this->calculateDecimal($entry['ClockedIn'], $entry['ClockedOut']);
+        $breakHours = CalculateUtility::calculateDecimal($entry['BreakStart'], $entry['BreakStop']);
+        $regularHours = CalculateUtility::calculateDecimal($entry['ClockedIn'], $entry['ClockedOut']);
         return [
             'BreakHours'=> $breakHours,
             'RegularHours'=> $regularHours,

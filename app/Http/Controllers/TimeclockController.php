@@ -139,7 +139,7 @@ class TimeclockController extends Controller
         $userRow->fill([
             'StopWork' => $timeStamp,
             'RegularHours' => $userRow->RegularHours + $this->calculateDecimal(
-                $userRow->EndBreak ?: $userRow->StartWork, 
+                $userRow->EndBreak ?? $userRow->StartWork, 
                 $timeStamp
             )
         ]);
