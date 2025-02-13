@@ -3,23 +3,22 @@
 namespace App\Utilities;
 
 use App\Models\Timesheet;
-use App\Models\Usertotal;
+use App\Utilities\CalculateUtility;
 use Carbon\Carbon;
 
 class TimeloggingUtility
 {
-    public function logTimeEntry($userRow, $userId, $timesheet)
+   
+    public function logTimeEntry($userRow, $userId, $oldLog = null)
     {
-
         $newEntry = $this->createTimeEntry($userRow, $userId);
-        return $this->updateOrInsertTimesheet($newEntry, $timesheet);
+        return $this->updateOrInsertTimesheet($newEntry, $oldLog);
     }
 
-    
+  
     private function createTimeEntry($userRow, $userId)
     {
         $date = Carbon::parse($userRow->StartWork)->format('Y-m-d');
-
         return [
             'UserId' => $userId,
             'ClockedIn' => $userRow->StartWork,
@@ -32,67 +31,80 @@ class TimeloggingUtility
         ];
     }
 
-    
-    private function updateOrInsertTimesheet(array $newEntry, $timesheet)
+ 
+    private function updateOrInsertTimesheet(array $newEntry, $oldLog = null)
     {
-        $existingTimesheet = Timesheet::where('UserId', $newEntry['UserId'])
-        ->where('Month', $newEntry['Month'])
-        ->orderBy('ClockedIn', 'asc')
-        ->first();
-        
-        if ($timesheet !== null) $oldTimesheet = $timesheet;
-        if ($existingTimesheet) {
-            $updatedSummary = $this->CalculateAndUpdateSummaryFields($existingTimesheet, $newEntry, $oldTimesheet ?? null);
-            if($existingTimesheet->Month == $newEntry['Month']){  
-                
-                 Timesheet::where('id', $existingTimesheet->id)->update($updatedSummary);  
-                $oldTimesheet ? Timesheet::where('id', $oldTimesheet->id)->update($newEntry) : Timesheet::create($newEntry);
+        if ($oldLog) {
+            // Update an existing timesheet
+            $oldLog->update($newEntry);
+        } else {
+            // Create a new timesheet
+            Timesheet::create($newEntry);
+        }
 
-            }else{
-                 Timesheet::updateOrCreate(['id' => $existingTimesheet->id], array_merge($newEntry, $updatedSummary));
+        $this->updateMonthlySummary($newEntry['UserId'], $newEntry['Month']);
+        
+        return CalculateUtility::calculateUserTotal($newEntry['Month'], $newEntry['UserId']);
+    }
+
+    /**
+     * Updates the summary fields for the first timesheet entry of the month.
+     *
+     * @param int $userId
+     * @param string $month
+     */
+    private function updateMonthlySummary($userId, $month)
+    {
+        $timesheets = Timesheet::where('UserId', $userId)
+            ->where('Month', $month)
+            ->get();
+
+        if ($timesheets->count() > 0) {
+            $summary = $this->calculateSummaryForMonth($timesheets);
+            $firstTimesheet = $timesheets->first();
+            $firstTimesheet->update($summary);
+        }
+    }
+
+
+    private function calculateSummaryForMonth($timesheets)
+    {
+        $summary = [
+            'BreakHours' => 0,
+            'RegularHours' => 0,
+            'DaytimeCount' => $timesheets->count(), // Count of timesheets/logins for the month
+            'OverTime' => 0,
+            'accountableHours' => 7.6 * count(array_unique($timesheets->pluck('ClockedIn')->map(function($date) {
+                return Carbon::parse($date)->format('Y-m-d');
+            })->toArray())), // Only count unique days
+        ];
+
+        $dailyHours = [];
+
+        foreach ($timesheets as $timesheet) {
+            $date = Carbon::parse($timesheet->ClockedIn)->format('Y-m-d');
+            $workHours = CalculateUtility::calculateDecimal($timesheet->ClockedIn, $timesheet->ClockedOut);
+            $breakHours = CalculateUtility::calculateDecimal($timesheet->BreakStart, $timesheet->BreakStop);
+            $netWorkHours = $workHours - $breakHours;
+
+            if (!isset($dailyHours[$date])) {
+                $dailyHours[$date] = 0;
             }
-        } 
-        elseif(!$existingTimesheet ) {
-            
-            $summaryForNew = $this->calculateSummaryForNew([$newEntry]);
-            $timesheet = new Timesheet(array_merge($newEntry, $summaryForNew));
-            $timesheet->save();
-        } 
-        return CalculateUtility::calculateUserTotal($newEntry['Month'],$newEntry['UserId']);
-    }
-    
-  
-    private function CalculateAndUpdateSummaryFields(Timesheet $existing, array $newEntry, $oldTimesheet)
-    {
-        $breakHours =  CalculateUtility::calculateDecimal($newEntry['BreakStart'], $newEntry['BreakStop']);
-        $regularHours = CalculateUtility::calculateDecimal($newEntry['ClockedIn'], $newEntry['ClockedOut']);
-        
-        $existingBreakHours = $existing->BreakHours ?? 0;
-        $oldBreakHours = $oldTimesheet ? ($oldTimesheet->BreakHours ?? 0) : 0;
-        $oldRegularHours = $oldTimesheet->RegularHours ?? 0;
-        $newBreakHours = max(0, $existingBreakHours - $oldBreakHours + $breakHours);
-        $newRegularHours = $existing->RegularHours -  $oldRegularHours  + $regularHours;
 
-        return [
-            'BreakHours' => $newBreakHours,
-            'RegularHours' => $newRegularHours,
-            'DaytimeCount' => $oldTimesheet !== null ? $oldTimesheet->DaytimeCount : $existing->DaytimeCount + 1,
-            'OverTime' => $newRegularHours - 7.6
-        ];
-    }
-    
-   
-    private function calculateSummaryForNew(array $entries)
-    {
-        
-       $entry = $entries[0];
-        $breakHours = CalculateUtility::calculateDecimal($entry['BreakStart'], $entry['BreakStop']);
-        $regularHours = CalculateUtility::calculateDecimal($entry['ClockedIn'], $entry['ClockedOut']);
-        return [
-            'BreakHours'=> $breakHours,
-            'RegularHours'=> $regularHours,
-            'accountableHours' => 7.6,
-            'OverTime' => $regularHours - 7.6,
-        ];
+            $dailyHours[$date] += $netWorkHours;
+
+            // Update summary
+            $summary['BreakHours'] += $breakHours;
+            $summary['RegularHours'] += $netWorkHours;
+        }
+
+        // Calculate overtime for each day
+        foreach ($dailyHours as $date => $hours) {
+            if ($hours > 7.6) {
+                $summary['OverTime'] += $hours - 7.6;
+            }
+        }
+
+        return $summary;
     }
 }

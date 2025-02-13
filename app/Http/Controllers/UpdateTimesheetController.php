@@ -105,12 +105,13 @@ class UpdateTimesheetController extends Controller
             //     'OverTime' => $regularHours - 7.6,
                 
             // ]);
+
             $userRow = (object) [
                 'UserId' => $id,
                 'StartWork' => Carbon::parse($date . ' ' . $request->input('startTime'), 'Europe/Brussels'),
                 'StopWork' => Carbon::parse($date . ' ' . $request->input('endTime'), 'Europe/Brussels'),
-                'StartBreak' => Carbon::parse($date . ' ' . $request->input('endTime'), 'Europe/Brussels')->subMinutes(30),
-                'EndBreak' => Carbon::parse($date . ' ' . $request->input('endTime'), 'Europe/Brussels'),
+                'StartBreak' => Carbon::parse($date . ' ' . $request->input('startBreak'), 'Europe/Brussels'),
+                'EndBreak' => Carbon::parse($date . ' ' . $request->input('endBreak'), 'Europe/Brussels'),
                 'Weekend' => $weekend ?? false,
                 'userNote' => $userNote ?? null,
             ];
