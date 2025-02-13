@@ -9,6 +9,7 @@ use App\Http\Controllers\TimesheetController;
 use Illuminate\Support\Carbon;
 use App\Models\Usertotal;
 use App\Utilities\CalculateUtility;
+use App\Utilities\TimeloggingUtility;
 use App\Utilities\UserUtility;
 
 class UpdateTimesheetController extends Controller
@@ -40,7 +41,7 @@ class UpdateTimesheetController extends Controller
     {
         $dayType = $request->input('dayType');
         $id = $request->id;
-        $worker = User::find($id);
+        // $worker = User::find($id);
         $timesheet = Timesheet::find($request->timesheet);
      
         $type = $request->updateSpecial;
@@ -88,25 +89,39 @@ class UpdateTimesheetController extends Controller
                 return redirect()->route('getData', $postData)->with('error', 'Er ging iets mis, kijk even na of de dag in het uurrooster is aangepast.');
             }
         } else {
-            $startWork = Carbon::parse($date . ' ' . $request->startTime, 'Europe/Brussels');
-            $stopWork = Carbon::parse($date . ' ' . $request->endTime, 'Europe/Brussels');
-            $startBreak = Carbon::parse($date . ' ' . $request->startBreak, 'Europe/Brussels');
-            $endBreak = Carbon::parse($date . ' ' . $request->endBreak, 'Europe/Brussels');
-            $breakHours = CalculateUtility::calculateDecimal($startBreak, $endBreak);
-            $regularHours = CalculateUtility::calculateDecimal($startWork, $stopWork) - $breakHours;
-            $timesheet->fill([
-                'ClockedIn' => $startWork,
-                'ClockedOut' => $stopWork,
-                'BreakStart' => $startBreak,
-                'BreakStop' => $endBreak,
-                'BreakHours' => $breakHours,
-                'RegularHours' => $regularHours > 7.6 ? 7.6 : $regularHours,
-                'OverTime' => $regularHours - 7.6,
+            // $startWork = Carbon::parse($date . ' ' . $request->startTime, 'Europe/Brussels');
+            // $stopWork = Carbon::parse($date . ' ' . $request->endTime, 'Europe/Brussels');
+            // $startBreak = Carbon::parse($date . ' ' . $request->startBreak, 'Europe/Brussels');
+            // $endBreak = Carbon::parse($date . ' ' . $request->endBreak, 'Europe/Brussels');
+            // $breakHours = CalculateUtility::calculateDecimal($startBreak, $endBreak);
+            // $regularHours = CalculateUtility::calculateDecimal($startWork, $stopWork) - $breakHours;
+            // $timesheet->fill([
+            //     'ClockedIn' => $startWork,
+            //     'ClockedOut' => $stopWork,
+            //     'BreakStart' => $startBreak,
+            //     'BreakStop' => $endBreak,
+            //     'BreakHours' => $breakHours,
+            //     'RegularHours' => $regularHours > 7.6 ? 7.6 : $regularHours,
+            //     'OverTime' => $regularHours - 7.6,
                 
-            ]);
-            $timesheet->save();
-            $userTotal = CalculateUtility::calculateUserTotal($date, $id);
-            if ( $userTotal == true) return redirect()->route('myWorkers');
+            // ]);
+            $userRow = (object) [
+                'UserId' => $id,
+                'StartWork' => Carbon::parse($date . ' ' . $request->input('startTime'), 'Europe/Brussels'),
+                'StopWork' => Carbon::parse($date . ' ' . $request->input('endTime'), 'Europe/Brussels'),
+                'StartBreak' => Carbon::parse($date . ' ' . $request->input('endTime'), 'Europe/Brussels')->subMinutes(30),
+                'EndBreak' => Carbon::parse($date . ' ' . $request->input('endTime'), 'Europe/Brussels'),
+                'Weekend' => $weekend ?? false,
+                'userNote' => $userNote ?? null,
+            ];
+            $timeloggingUtility = new TimeloggingUtility;
+            $addTimesheet = $timeloggingUtility->logTimeEntry($userRow, $id, $timesheet);
+           
+            if ($addTimesheet) return redirect()->route('myWorkers');
+        
+            // $timesheet->save();
+            // $userTotal = CalculateUtility::calculateUserTotal($date, $id);
+            // if ( $userTotal == true) return redirect()->route('myWorkers');
         }
     }
 }

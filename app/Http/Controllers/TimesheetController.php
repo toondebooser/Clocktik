@@ -36,8 +36,8 @@ class TimesheetController extends Controller
         $buildTimesheet = new TimeloggingUtility;
         $buildTimesheet->logTimeEntry($userRow, $id, null);
 
-        $total = CalculateUtility::calculateUserTotal(now('Europe/Brussels'), $id);
-        if ($total && $buildTimesheet) {
+        // $total = CalculateUtility::calculateUserTotal(now('Europe/Brussels'), $id);
+        if ($buildTimesheet) {
             return redirect('/dashboard');
         }
     }
@@ -120,6 +120,7 @@ class TimesheetController extends Controller
             if (!$currentDate->isWeekend()) {
                 $addDay =  $this->setDay($dayLabel, $newSpecialTimesheet, $dayType, $worker, $currentDate);
                 if ($addDay !== true) {
+                    //TODO: push $addDay directly in error?
                     array_push($errors, 'Datum al in gebruik: ' . $currentDate->toDateString());
                 }
             }

@@ -35,7 +35,6 @@ class TimeloggingUtility
     
     private function updateOrInsertTimesheet(array $newEntry, $timesheet)
     {
-        
         $existingTimesheet = Timesheet::where('UserId', $newEntry['UserId'])
         ->where('Month', $newEntry['Month'])
         ->orderBy('ClockedIn', 'asc')
@@ -47,7 +46,7 @@ class TimeloggingUtility
             if($existingTimesheet->Month == $newEntry['Month']){  
                 
                  Timesheet::where('id', $existingTimesheet->id)->update($updatedSummary);  
-                 Timesheet::create($newEntry);
+                $oldTimesheet ? Timesheet::where('id', $oldTimesheet->id)->update($newEntry) : Timesheet::create($newEntry);
 
             }else{
                  Timesheet::updateOrCreate(['id' => $existingTimesheet->id], array_merge($newEntry, $updatedSummary));

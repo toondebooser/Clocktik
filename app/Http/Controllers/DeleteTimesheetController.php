@@ -13,10 +13,10 @@ class DeleteTimesheetController extends Controller
         $date = $request->date;
         $id = $request->workerId;
         $delete = $timesheet->delete();
-        if($delete == true) $total = CalculateUtility::calculateUserTotal($date, $id);      
-        if($total == true)
+        if($delete == true)
         {
             
+            CalculateUtility::calculateUserTotal($date, $id);      
             return redirect('/my-workers');
             
         }
