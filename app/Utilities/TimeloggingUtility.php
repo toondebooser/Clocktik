@@ -46,25 +46,22 @@ class TimeloggingUtility
             $updatedSummary = $this->CalculateAndUpdateSummaryFields($existingTimesheet, $newEntry, $oldTimesheet ?? null);
             if($existingTimesheet->Month == $newEntry['Month']){  
                 
-                $update = Timesheet::where('id', $existingTimesheet->id)->update($updatedSummary);  
-                 $create = Timesheet::create($newEntry);
-                 return $update && $create ? true : false ;
+                 Timesheet::where('id', $existingTimesheet->id)->update($updatedSummary);  
+                 Timesheet::create($newEntry);
 
             }else{
-                $updateOrCreate = Timesheet::updateOrCreate(['id' => $existingTimesheet->id], array_merge($newEntry, $updatedSummary));
-                return $updateOrCreate;
+                 Timesheet::updateOrCreate(['id' => $existingTimesheet->id], array_merge($newEntry, $updatedSummary));
             }
-
         } 
         elseif(!$existingTimesheet ) {
-
+            
             $summaryForNew = $this->calculateSummaryForNew([$newEntry]);
             $timesheet = new Timesheet(array_merge($newEntry, $summaryForNew));
             $timesheet->save();
-            return $timesheet;
         } 
+        return CalculateUtility::calculateUserTotal($newEntry['Month'],$newEntry['UserId']);
     }
-
+    
   
     private function CalculateAndUpdateSummaryFields(Timesheet $existing, array $newEntry, $oldTimesheet)
     {

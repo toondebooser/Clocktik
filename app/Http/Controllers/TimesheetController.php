@@ -36,7 +36,7 @@ class TimesheetController extends Controller
         $buildTimesheet = new TimeloggingUtility;
         $buildTimesheet->logTimeEntry($userRow, $id, null);
 
-        $total = $this->calculateUserTotal(now('Europe/Brussels'), $id);
+        $total = CalculateUtility::calculateUserTotal(now('Europe/Brussels'), $id);
         if ($total && $buildTimesheet) {
             return redirect('/dashboard');
         }
