@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Timelog;
 use App\Models\Timesheet;
-use App\Models\Usertotal;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Log;
-use Hamcrest\Type\IsString;
 use Illuminate\Http\Request;
 use App\Services\TimeloggingService;
+use App\Utilities\CalculateUtility;
+use App\Utilities\TimeloggingUtility;
+use App\Utilities\UserUtility;
 
 class TimesheetController extends Controller
 {
@@ -23,84 +22,25 @@ class TimesheetController extends Controller
 
    
 
-    public function timesheetCheck($date, $id)
-    {
-        if (is_string($date)) {
-            $date = Carbon::parse($date);
-        } else {
-            $date = $date;
-        }
-        $timesheetCheck = Timesheet::where('UserId', $id)
-            ->whereDate('Month', $date)
-            ->orderBy('ClockedIn', 'asc')
-            ->get();
-        return $timesheetCheck;
-    }
+  
 
     public function makeTimesheet($id)
     {
-        // $newTimeSheet = new Timesheet;
 
         $userRow = auth()->user()->timelogs;
 
-        $timesheetCheck = $this->timesheetCheck(now('Europe/Brussels'), $id);
+        $timesheetCheck = UserUtility::userTimesheetCheck(now('Europe/Brussels'), $id);
         if (!$timesheetCheck->isEmpty() && $timesheetCheck->first()->type !== 'workday') {
             return redirect()->route('dashboard')->with('error', 'Vandaag kan jij geen werkuren ingeven, kijk je profiel na.');
         }
-        $buildTimesheet = $this->timeloggingService->logTimeEntry($userRow, $id, null);
-        //         //TODO: 
-        //         //- daytimelog of new timesheet += count of data retrieved'
-        //         $count = count($timesheetCheck);
-        //         $newTimeSheet->fill([
-        //             'UserId' => $id,
-        //             'ClockedIn' => $userRow->StartWork,
-        //             'ClockedOut' => $userRow->StopWork,
-        //             'BreakStart' => $userRow->StartBreak,
-        //             'BreakStop' => $userRow->EndBreak,
-        //             'DaytimeCount' => ($newTimeSheet->DaytimeCount ?? 1) + $count,
-        //             'Month' => Carbon::parse($userRow->StartWork)->format('Y-m-d'),
-        //             'userNote' => $userRow->userNote ?? null,
-
-        //         ]);
-        //         $newTimeSheet->save();
-        //         $timesheetCheck->first()->fill([
-        //             'RegularHours' => $userRow->RegularHours > 7.6 ? 7.6 : $userRow->RegularHours,
-        //             'BreakHours' => $userRow->BreakHours,
-        //             'OverTime' => $userRow->RegularHours - 7.6,
-        //         ]);
-        // //         $timesheetCheck->first()->save();
-        //         $total = $this->calculateUserTotal(now('Europe/Brussels'), $id);
-        //         // if ($result == true && $total == true) 
-        //         if ($total) {
-        //             return redirect('/dashboard');
-        //         }
-        //     }
-
-        //     $userRow->userNote !== null ? $newTimeSheet->userNote = $userRow->userNote : null;
-
-        //     $newTimeSheet->fill([
-        //         'UserId' => $id,
-        //         'ClockedIn' => $userRow->StartWork,
-        //         'ClockedOut' => $userRow->StopWork,
-        //         'BreakStart' => $userRow->StartBreak,
-        //         'BreakStop' => $userRow->EndBreak,
-        //         'BreakHours' => $userRow->BreakHours,
-        //         'RegularHours' => $userRow->RegularHours > 7.6 ? 7.6 : $userRow->RegularHours,
-        //         'OverTime' => $userRow->RegularHours - 7.6,
-        //         'Weekend' => $userRow->Weekend,
-        //         'userNote' => $userRow->userNote ?? null,
-        //         'Month' => $userRow->StartWork,
-        //         'accountableHours' => $userRow->Weekend ? 0 : 7.6,
-
-        //     ]);
-        //     $newTimeSheet->save();
-
+        $buildTimesheet = new TimeloggingUtility;
+        $buildTimesheet->logTimeEntry($userRow, $id, null);
 
         $total = $this->calculateUserTotal(now('Europe/Brussels'), $id);
         if ($total && $buildTimesheet) {
             return redirect('/dashboard');
         }
-        // }
+       
     }
     public function addNewTimesheet(Request $request)
     {
@@ -109,8 +49,7 @@ class TimesheetController extends Controller
         $date = $request->input('newTimesheetDate');
         $id = $request->input('workerId');
 
-        // $carbonDate = Carbon::parse($date, 'Europe/Brussels');
-        $timesheetCheck = $this->timesheetCheck($date, $id);
+        $timesheetCheck = UserUtility::userTimesheetCheck($date, $id);
 
         if (!$timesheetCheck->isEmpty()) {
             return redirect()->route('timesheetForm', ['worker' => $id])->with('error', 'Datum al in gebruik: ' . $date);
@@ -121,8 +60,8 @@ class TimesheetController extends Controller
         $stopWork = Carbon::parse($date . ' ' . $request->input('endTime'), 'Europe/Brussels');
         $stopWorkClone = clone $stopWork;
         $startBreak = $stopWorkClone->subMinutes(30);
-        $break = $this->calculateDecimal($startBreak, $stopWork);
-        $regularHours = $this->calculateDecimal($startWork, $stopWork) - $break;
+        $break = CalculateUtility::calculateDecimal($startBreak, $stopWork);
+        $regularHours = CalculateUtility::calculateDecimal($startWork, $stopWork) - $break;
         $newTimesheet->fill([
             'UserId' => $id,
             'ClockedIn' => $startWork,
@@ -137,16 +76,15 @@ class TimesheetController extends Controller
 
         ]);
         $newTimesheet->save();
-        $total = $this->calculateUserTotal($date, $id);
+        $total = CalculateUtility::calculateUserTotal($date, $id);
         if ($total == true) return redirect('/my-workers');
     }
 
     public function setDay($dayLabel, $newSpecialTimesheet, $dayType, $worker, $singleDay)
     {
-        $timesheetCheck = $this->timesheetCheck($singleDay, $worker);
+        $timesheetCheck = UserUtility::userTimesheetCheck($singleDay, $worker);
 
         if (!$timesheetCheck->isEmpty()) {
-            //TODO:"simplify
             $newSpecialTimesheet->fill([
                 'type' => $dayLabel,
                 'ClockedIn' => $singleDay,
@@ -154,17 +92,11 @@ class TimesheetController extends Controller
                 'UserId' => $worker,
                 'accountableHours' => $dayType == 'onbetaald' ? 0 : 7.6,
             ]);
-            // if ($dayType == "onbetaald") {
-            //     $newSpecialTimesheet->save();
-            //     $userTotal = $this->fetchUserTotal($singleDay, $worker);
-            //     $this->calculateUserTotal($singleDay, $worker);
-            //     $userTotal->save();
-            //     return true;
-            // }
+          
             $newSpecialTimesheet->accountableHours = 7.6;
             $newSpecialTimesheet->save();
-            $userTotal = $this->fetchUserTotal($singleDay, $worker);
-            $this->calculateUserTotal($singleDay, $worker);
+            $userTotal = UserUtility::fetchUserTotal($singleDay, $worker);
+            CalculateUtility::calculateUserTotal($singleDay, $worker);
             $userTotal->save();
             return true;
         } else {

@@ -17,7 +17,6 @@ class SpecialsController extends Controller
     public function specials(Request $request)
     {   
         $workerInput = $request->input('worker');
-        // if($workerInput == null) $workerInput = $request->old('worker');
         $workersArray = json_decode($workerInput, true);
              
         if (is_array($workersArray) && count($workersArray) > 1) {

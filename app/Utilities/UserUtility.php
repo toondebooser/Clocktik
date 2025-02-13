@@ -31,6 +31,18 @@ class UserUtility
         return $userTotal;
     }
    
-   
+    public static function userTimesheetCheck($date, $id)
+    {
+        if (is_string($date)) {
+            $date = Carbon::parse($date);
+        } else {
+            $date = $date;
+        }
+        $timesheetCheck = Timesheet::where('UserId', $id)
+            ->whereDate('Month', $date)
+            ->orderBy('ClockedIn', 'asc')
+            ->get();
+        return $timesheetCheck;
+    }
 
 }
