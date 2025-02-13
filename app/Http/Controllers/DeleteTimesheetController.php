@@ -3,17 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Timesheet;
+use App\Utilities\CalculateUtility;
 use Illuminate\Http\Request;
 
 class DeleteTimesheetController extends Controller
 {
     public function deleteTimesheet (Request $request){
-        $timesheetController = new TimesheetController;
         $timesheet = Timesheet::find($request->deleteSheet);
         $date = $request->date;
         $id = $request->workerId;
         $delete = $timesheet->delete();
-        if($delete == true) $total = $timesheetController->calculateUserTotal($date, $id);      
+        if($delete == true) $total = CalculateUtility::calculateUserTotal($date, $id);      
         if($total == true)
         {
             

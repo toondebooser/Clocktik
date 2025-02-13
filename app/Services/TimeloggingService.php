@@ -18,9 +18,7 @@ class TimeloggingService
         return $this->updateOrInsertTimesheet($newEntry, $timesheet);
     }
 
-    /**
-     * Create a new time entry without summary fields
-     */
+    
     private function createTimeEntry($userRow, $userId)
     {
         $date = Carbon::parse($userRow->StartWork)->format('Y-m-d');
@@ -37,9 +35,7 @@ class TimeloggingService
         ];
     }
 
-    /**
-     * Update or insert a timesheet entry, including updating summary fields
-     */
+    
     private function updateOrInsertTimesheet(array $newEntry, $timesheet)
     {
         
@@ -47,9 +43,10 @@ class TimeloggingService
         ->where('Month', $newEntry['Month'])
         ->orderBy('ClockedIn', 'asc')
         ->first();
+        
         if ($timesheet !== null) $oldTimesheet = $timesheet;
         if ($existingTimesheet) {
-            $updatedSummary = $this->updateSummaryFields($existingTimesheet, $newEntry, $oldTimesheet ?? null);
+            $updatedSummary = $this->CalculateAndUpdateSummaryFields($existingTimesheet, $newEntry, $oldTimesheet ?? null);
             if($existingTimesheet->Month == $newEntry['Month']){  
                 
                 $update = Timesheet::where('id', $existingTimesheet->id)->update($updatedSummary);  
@@ -71,10 +68,8 @@ class TimeloggingService
         } 
     }
 
-    /**
-     * Update summary fields for an existing day's timesheet
-     */
-    private function updateSummaryFields(Timesheet $existing, array $newEntry, $oldTimesheet)
+  
+    private function CalculateAndUpdateSummaryFields(Timesheet $existing, array $newEntry, $oldTimesheet)
     {
         $breakHours =  CalculateUtility::calculateDecimal($newEntry['BreakStart'], $newEntry['BreakStop']);
         $regularHours = CalculateUtility::calculateDecimal($newEntry['ClockedIn'], $newEntry['ClockedOut']);
@@ -93,9 +88,7 @@ class TimeloggingService
         ];
     }
     
-    /**
-     * Calculate summary for a new day's first entry
-     */
+   
     private function calculateSummaryForNew(array $entries)
     {
         
