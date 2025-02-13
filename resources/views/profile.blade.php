@@ -103,7 +103,7 @@
                             @endif
                         </td>
                         <td class="displayRegular">
-                                @if ($item->RegularHours < 7.6 && $item->Weekend == false && $item->type == 'workday')
+                                @if ($item->RegularHours !== 7.6 && $item->Weekend == false && $item->type == 'workday')
                                     <s>{{ $item->RegularHours }}</s>
                                     => 7.60
                                 @elseif($item->Weekend == true && $item->type == 'workday')
