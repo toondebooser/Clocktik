@@ -1,12 +1,13 @@
 @extends('layout')
 @section('title')
-
-
     @php
         $userId = $user->id;
-        if(isset($timesheet[0]))$month = $timesheet[0]->Month;
-        
+        if (isset($timesheet[0])) {
+            $month = $timesheet[0]->Month;
+        }
+
     @endphp
+    
     <h2>
         {{ $user->name }}
     </h2>
@@ -26,7 +27,7 @@
                 @foreach ($clockedMonths as $allMonths)
                     @php
                         $currentMonth = \Carbon\Carbon::now()->month;
-                        
+
                     @endphp
                     <option value="{{ $allMonths->month }}" {{ $allMonths->month == $currentMonth ? 'selected' : '' }}>
                         @php
@@ -46,16 +47,14 @@
             <form class="dagenInstellen" action="{{ route('specials') }}" method="post">
                 @csrf
                 <input type="hidden" name="worker" value="{{ $user->id }}">
-                <input class="submit" type="image"
-                    src="{{ asset('/images/sunPic.png') }}"
-                    name="submitUserId" alt="Submit"
-                    >
+                <input class="submit" type="image" src="{{ asset('/images/sunPic.png') }}" name="submitUserId"
+                    alt="Submit">
             </form>
             <form class="timesheetToevoegen" action="{{ route('timesheetForm') }}" method="post">
                 @csrf
                 <input type="hidden" name="worker" value="{{ $user->id }}">
-                <input class="submit" type="image" src="{{ asset('/images/stopwatch.png') }}"
-                    name="submitUserId" alt="Submit">
+                <input class="submit" type="image" src="{{ asset('/images/stopwatch.png') }}" name="submitUserId"
+                    alt="Submit">
             </form>
         @endif
         <div class="timesheetHeader">
@@ -64,7 +63,7 @@
                 {{ date('F', strtotime($timesheet[0]->Month)) }}
             @endif
         </div>
-        <table  class="timesheetTable">
+        <table class="timesheetTable">
             <thead class="stikyHeader">
                 <tr>
                     <th>Date</th>
@@ -74,45 +73,57 @@
                 </tr>
             </thead>
             @if ($timesheet->count() > 0)
-                @if(auth()->user()->admin == true)
-                <a class="previewLink"
-                    href="{{ route('exportPdf', ['userId' => $userId, 'month' => $month, 'type' => 'preview']) }}"
-                    target="_blank">
-                    <img class="previewIcon" src="{{ asset('/images/preview.png') }}" alt="Preview">
-                </a>
-                <a class="downloadLink"
-                    href="{{ route('exportPdf', ['userId' => $userId, 'month' => $month, 'type' => 'download']) }}">
-                    <img class="downloadIcon" src="{{ asset('/images/download.png') }}" alt="Download">
-                </a>
+                @if (auth()->user()->admin == true)
+                    <a class="previewLink"
+                        href="{{ route('exportPdf', ['userId' => $userId, 'month' => $month, 'type' => 'preview']) }}"
+                        target="_blank">
+                        <img class="previewIcon" src="{{ asset('/images/preview.png') }}" alt="Preview">
+                    </a>
+                    <a class="downloadLink"
+                        href="{{ route('exportPdf', ['userId' => $userId, 'month' => $month, 'type' => 'download']) }}">
+                        <img class="downloadIcon" src="{{ asset('/images/download.png') }}" alt="Download">
+                    </a>
                 @endif
+                    @php
+                       $lastDate = null;
+                    @endphp
                 @foreach ($timesheet as $item)
+                    @php 
+                    if($item->Month !== $lastDate){
+                        $lastDate = $item->Month;
+                        $isFirstOfDay = true;
+                    }else{
+                        $isFirstOfDay = false;
+                    }
+                    @endphp
+                    @if($isFirstOfDay)
                     <tr class="timesheetRow">
                         <td class="date" id="{{ $item->id }}">
                             <a class='displayDay'href="{{ route('update', ['id' => $user->id, 'timesheet' => $item]) }}">
-                                <?php
+                               @php
                                 $toTime = strtotime($item->ClockedIn);
                                 $days = ['Mon' => 'Ma', 'Tue' => 'Di', 'Wed' => 'Wo', 'Thu' => 'Do', 'Fri' => 'Vr', 'Sat' => 'Za', 'Sun' => 'Zo'];
                                 $englishDay = date('D', $toTime);
                                 $dutchDay = $days[$englishDay];
                                 $dayOfMonth = date('d', $toTime);
                                 echo $dutchDay . ' ' . $dayOfMonth;
-                                ?>
-                        </a>
+                                @endphp
+                            </a>
                             @if ($item->userNote !== null)
-                            <img class="noteIcon"src="{{ asset('/images/148883.png') }}" alt="Icon">
+                                <img class="noteIcon"src="{{ asset('/images/148883.png') }}" alt="Icon">
                             @endif
                         </td>
                         <td class="displayRegular">
-                                @if ($item->RegularHours !== 7.6 && $item->Weekend == false && $item->type == 'workday')
-                                    <s>{{ $item->RegularHours }}</s>
-                                    => 7.60
-                                @elseif($item->Weekend == true && $item->type == 'workday')
-                                    Weekend
-                                @elseif ($item->Weekend == false && $item->type !== 'workday')
-                                    {{ $item->type }}
-                                @else
-                                    {{ $item->RegularHours }}
-                                @endif
+                            @if ($item->RegularHours !== 7.6 && $item->Weekend == false && $item->type == 'workday')
+                                <s>{{ $item->RegularHours }}</s>
+                                => 7.60
+                            @elseif($item->Weekend == true && $item->type == 'workday')
+                                Weekend
+                            @elseif ($item->Weekend == false && $item->type !== 'workday')
+                                {{ $item->type }}
+                            @else
+                                {{ $item->RegularHours }}
+                            @endif
 
 
                         </td>
@@ -127,6 +138,26 @@
                             </div>
                         </td>
                     </tr>
+                    @else
+                    <tr class="content-row">
+                        <td>Update</td><td class="displayRegular">  @if ($item->RegularHours !== 7.6 && $item->Weekend == false && $item->type == 'workday')
+                            <s>{{ $item->RegularHours }}</s>
+                            => 7.60
+                        @elseif($item->Weekend == true && $item->type == 'workday')
+                            Weekend
+                        @elseif ($item->Weekend == false && $item->type !== 'workday')
+                            {{ $item->type }}
+                        @else
+                            {{ $item->RegularHours }}
+                        @endif</td><td></td><td></td>
+                    </tr>
+                    <tr class="toggle-row">
+                        <td class="arrow">
+                            <img class="dropdownArrow" src="{{ asset('images/download.png') }}" alt="">
+                        </td>
+                    </tr>
+                    @endif
+                    
                 @endforeach
             @else
                 <p class="text-danger">No data</p>
@@ -136,17 +167,32 @@
     </div>
     @if (isset($monthlyTotal))
         @foreach ($monthlyTotal as $item)
-        <div class="displayTotalRegular">
-            Regular {{ $item->RegularHours }}
-        </div>
-        <div class="displayTotalBreak">
-            Break {{ $item->BreakHours }}
-        </div>
-        <div class="displayTotalOverTime">
-            Overtime {{ $item->OverTime }}
-        </div>
+            <div class="displayTotalRegular">
+                Regular {{ $item->RegularHours }}
+            </div>
+            <div class="displayTotalBreak">
+                Break {{ $item->BreakHours }}
+            </div>
+            <div class="displayTotalOverTime">
+                Overtime {{ $item->OverTime }}
+            </div>
         @endforeach
     @else
         <div class="text-danger">Something went wrong.</div>
     @endif
 @endsection
+<script>
+   document.addEventListener('DOMContentLoaded', function() {
+    document.querySelector('.arrow').addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const contentRow = this.closest('tr').previousElementSibling;
+
+        // Toggle the 'active' class to change display
+        contentRow.classList.toggle('active');
+        
+        // Optionally, you might want to toggle the arrow direction here
+        // For simplicity, I'll omit this part
+    });
+});
+</script>

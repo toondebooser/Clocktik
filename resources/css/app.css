@@ -26,7 +26,35 @@ table {
     font-family:"Noto Sans", sans-serif;
     width: 100%;
 }
+.content-row {
+    transition: all 0.3s ease;
+}
 
+.content-row.active td {
+    display: table-cell;
+}
+
+.content-row td {
+    /* Default behavior, keeping cells as table cells */
+    display: none;
+}
+
+.arrow {
+    padding: 0px;
+    cursor: pointer;
+    text-align: center; /* Center the arrow if needed */
+}
+
+/* Optional: Adjust padding or margin for better appearance when stacked */
+.content-row.active td {
+    padding: 5px 0; /* Adds some space above and below each cell when stacked */
+}
+
+/* For the toggle icon, you might want to adjust its size or appearance */
+.dropdownArrow {
+    width: 20px; /* Example size */
+    height: 20px; /* Example size */
+}
 th,
 td {
     border: 1px solid black;
@@ -771,6 +799,7 @@ fieldset {
     display: grid;
     grid-template-columns: 50% 50%;
 }
+
 .gewerkt{
     grid-column: 1/2;
 }
