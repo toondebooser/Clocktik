@@ -35,75 +35,59 @@ class TimeloggingUtility
     private function updateOrInsertTimesheet(array $newEntry, $oldLog = null)
     {
         if ($oldLog) {
-            // Update an existing timesheet
             $oldLog->update($newEntry);
         } else {
-            // Create a new timesheet
             Timesheet::create($newEntry);
         }
 
-        $this->updateMonthlySummary($newEntry['UserId'], $newEntry['Month']);
+        $this->updateDailySummery($newEntry['UserId'], $newEntry['Month']);
         
         return CalculateUtility::calculateUserTotal($newEntry['Month'], $newEntry['UserId']);
     }
 
-    /**
-     * Updates the summary fields for the first timesheet entry of the month.
-     *
-     * @param int $userId
-     * @param string $month
-     */
-    private function updateMonthlySummary($userId, $month)
+    private function updateDailySummery($userId, $day)
     {
         $timesheets = Timesheet::where('UserId', $userId)
-            ->where('Month', $month)
+            ->where('Month', $day)
             ->get();
 
         if ($timesheets->count() > 0) {
-            $summary = $this->calculateSummaryForMonth($timesheets);
+            $summary = $this->calculateSummaryForDay($timesheets);
             $firstTimesheet = $timesheets->first();
             $firstTimesheet->update($summary);
         }
     }
 
 
-    private function calculateSummaryForMonth($timesheets)
+    private function calculateSummaryForDay($timesheets)
     {
         $summary = [
             'BreakHours' => 0,
             'RegularHours' => 0,
             'DaytimeCount' => $timesheets->count(), // Count of timesheets/logins for the month
             'OverTime' => 0,
-            'accountableHours' => 7.6 * count(array_unique($timesheets->pluck('ClockedIn')->map(function($date) {
-                return Carbon::parse($date)->format('Y-m-d');
-            })->toArray())), // Only count unique days
+            'accountableHours' => 7.6
         ];
 
-        $dailyHours = [];
+        $dailyHours = 0;
 
         foreach ($timesheets as $timesheet) {
-            $date = Carbon::parse($timesheet->ClockedIn)->format('Y-m-d');
             $workHours = CalculateUtility::calculateDecimal($timesheet->ClockedIn, $timesheet->ClockedOut);
             $breakHours = CalculateUtility::calculateDecimal($timesheet->BreakStart, $timesheet->BreakStop);
             $netWorkHours = $workHours - $breakHours;
 
-            if (!isset($dailyHours[$date])) {
-                $dailyHours[$date] = 0;
-            }
+           
 
-            $dailyHours[$date] += $netWorkHours;
+            $dailyHours += $netWorkHours;
 
             // Update summary
             $summary['BreakHours'] += $breakHours;
             $summary['RegularHours'] += $netWorkHours;
         }
 
-        // Calculate overtime for each day
-        foreach ($dailyHours as $date => $hours) {
-            if ($hours > 7.6) {
-                $summary['OverTime'] += $hours - 7.6;
-            }
-        }
+        $summary['OverTime'] += $dailyHours - 7.6;
+        // foreach ($dailyHours as $date => $hours) {
+        // }
 
         return $summary;
     }
