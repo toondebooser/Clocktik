@@ -16,7 +16,7 @@ class TimeloggingUtility
     }
 
   
-    private function createTimeEntry($userRow, $userId)
+    private  function createTimeEntry($userRow, $userId)
     {
         $date = Carbon::parse($userRow->StartWork)->format('Y-m-d');
         return [
@@ -32,7 +32,7 @@ class TimeloggingUtility
     }
 
  
-    private function updateOrInsertTimesheet(array $newEntry, $oldLog = null)
+    private  function updateOrInsertTimesheet(array $newEntry, $oldLog = null)
     {
         if ($oldLog) {
             $oldLog->update($newEntry);
@@ -45,7 +45,7 @@ class TimeloggingUtility
         return CalculateUtility::calculateUserTotal($newEntry['Month'], $newEntry['UserId']);
     }
 
-    private function updateDailySummery($userId, $day)
+    public function updateDailySummery($userId, $day)
     {
         $timesheets = Timesheet::where('UserId', $userId)
             ->where('Month', $day)
