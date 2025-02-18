@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('companies', function (Blueprint $table) {
-            $table->string('CompanyCode',10);
-            $table->integer('weekend_days')->array()->default(array(0, 6));
+        Schema::create('weektypes', function (Blueprint $table) {
+            $table->id();
+            $table->json('weekend_days')->default(json_encode([0, 6]));            
             $table->string('CompanyCode', 10);
             $table->index('CompanyCode');
         });

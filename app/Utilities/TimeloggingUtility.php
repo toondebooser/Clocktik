@@ -34,6 +34,7 @@ class TimeloggingUtility
  
     private  function updateOrInsertTimesheet(array $newEntry, $oldLog = null)
     {
+        //TODO updateorcreate auth()->daytotal->where('Month, $newEntry->Month)
         if ($oldLog) {
             $oldLog->update($newEntry);
         } else {
@@ -47,6 +48,7 @@ class TimeloggingUtility
 
     public function updateDailySummery($userId, $day)
     {
+        //TODO find daytotal 
         $timesheets = Timesheet::where('UserId', $userId)
             ->where('Month', $day)
             ->get();

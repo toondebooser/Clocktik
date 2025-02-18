@@ -11,15 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('timesheets', function (Blueprint $table) {
+        Schema::create('daytotals', function (Blueprint $table) {
             $table->id();
-            $table->integer('day_id');
             $table->integer('UserId');
             $table->index('UserId');
-            $table->timestamp('ClockedIn')->nullable();
-            $table->timestamp('ClockedOut')->nullable();
-            $table->timestamp('BreakStart')->nullable();
-            $table->timestamp('BreakStop')->nullable();
+            $table->string('company_code',10);
+            $table->index('company_code');
             $table->integer('DaytimeCount')->default(1);
             $table->decimal('RegularHours', 5, 2)->default(0, 00);
             $table->decimal('accountableHours', 5, 2)->default(0, 00);
@@ -32,7 +29,7 @@ return new class extends Migration
             $table->index('Month');
             $table->boolean('Weekend')->default(false);
             $table->boolean('NightShift')->default(false);
-            $table->timestamps();
+
         });
     }
 
@@ -41,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('timesheets');
+        Schema::dropIfExists('daytotals');
     }
 };

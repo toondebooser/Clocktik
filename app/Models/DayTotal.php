@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Company extends Model
+class DayTotal extends Model
 {
     use HasFactory;
-    public function dayTotals()
+    public function timesheets()
     {
-        return $this->hasMany(DayTotal::class, 'company_code');
+        return $this->hasMany(Timesheet::class, 'day_id');
     }
 }
