@@ -90,8 +90,7 @@ class TimesheetController extends Controller
     public function setDay($dayLabel, $newSpecialTimesheet, $dayType, $worker, $singleDay)
     {
         $timesheetCheck = UserUtility::userTimesheetCheck($singleDay, $worker);
-
-        if (!$timesheetCheck->isEmpty()) {
+        if ($timesheetCheck->isEmpty()) {
             $newSpecialTimesheet->fill([
                 'type' => $dayLabel,
                 'ClockedIn' => $singleDay,
@@ -99,8 +98,6 @@ class TimesheetController extends Controller
                 'UserId' => $worker,
                 'accountableHours' => $dayType == 'onbetaald' ? 0 : 7.6,
             ]);
-
-            $newSpecialTimesheet->accountableHours = 7.6;
             $newSpecialTimesheet->save();
             $userTotal = UserUtility::fetchUserTotal($singleDay, $worker);
             CalculateUtility::calculateUserTotal($singleDay, $worker);
@@ -154,7 +151,7 @@ class TimesheetController extends Controller
                 ]
             );
 
-
+            //TODO REFACTOR THIS MESS!!!
             if ($validator->fails()) {
                 if (is_array($workerArray) && count($workerArray) > 1) {
                     return redirect()

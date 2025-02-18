@@ -76,12 +76,12 @@ class TimeloggingUtility
             $breakHours = CalculateUtility::calculateDecimal($timesheet->BreakStart, $timesheet->BreakStop);
             $netWorkHours = $workHours - $breakHours;
             //TODO TEST before proceeding
-            $timesheet->update([
-                'BreakHours' => $breakHours,
-                'RegularHours' => $netWorkHours,
-                'OverTime' => $netWorkHours - 7.6
+            // $timesheet->update([
+            //     'BreakHours' => $breakHours,
+            //     'RegularHours' => $netWorkHours,
+            //     'OverTime' => $netWorkHours - 7.6
 
-            ]);
+            // ]);
 
            
 
