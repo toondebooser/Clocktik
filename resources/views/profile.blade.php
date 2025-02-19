@@ -85,15 +85,15 @@
                     </a>
                 @endif
               
-                @foreach ($days as $item)
+                @foreach ($days as $day)
                
-                    <tr class="timesheetRow">
-                        <td class="date" id="{{ $item->id }}">
-                            @if($item->type !== 'workday')
-                            <a class='displayDay' href="{{ route('update', ['id' => $user->id, 'timesheet' => $item]) }}">
+                    <tr onclick="toggleTimesheets(this)" class="timesheetRow" data-dayType="{{$day->type}}" data-day="{{$day->id}}">
+                        <td class="date" id="{{ $day->id }}">
+                            @if($day->type !== 'workday')
+                            <a class='displayDay' href="{{ route('update', ['id' => $user->id, 'timesheet' => $day]) }}">
                             @endif
                             @php
-                                $toTime = strtotime($item->Month);
+                                $toTime = strtotime($day->Month);
                                 $days = [
                                     'Mon' => 'Ma',
                                     'Tue' => 'Di',
@@ -109,39 +109,39 @@
                                 echo $dutchDay . ' ' . $dayOfMonth;
                             @endphp
                             </a>
-                            @if ($item->userNote !== null)
+                            @if ($day->userNote !== null)
                                 <img class="noteIcon"src="{{ asset('/images/148883.png') }}" alt="Icon">
                             @endif
                         </td>
                         <td class="displayRegular">
-                            @if ($item->RegularHours !== 7.6 && $item->Weekend == false && $item->type == 'workday')
-                                <s>{{ $item->RegularHours }}</s>
+                            @if ($day->RegularHours !== 7.6 && $day->Weekend == false && $day->type == 'workday')
+                                <s>{{ $day->RegularHours }}</s>
                                 => 7.60
-                            @elseif($item->Weekend == true && $item->type == 'workday')
+                            @elseif($day->Weekend == true && $day->type == 'workday')
                                 Weekend
-                            @elseif ($item->Weekend == false && $item->type !== 'workday')
-                                {{ $item->type }}
+                            @elseif ($day->Weekend == false && $day->type !== 'workday')
+                                {{ $day->type }}
                             @else
-                                {{ $item->RegularHours }}
+                                {{ $day->RegularHours }}
                             @endif
 
 
                         </td>
-                        <td>
-                            <div class="displayBreak">
-                                {{ $item->BreakHours }}
-                            </div>
+                        <td class="displayBreak">
+                            {{-- <div class="displayBreak"> --}}
+                                {{ $day->BreakHours }}
+                            {{-- </div> --}}
                         </td>
-                        <td>
-                            <div class="displayOvertTime">
-                                {{ $item->OverTime }}
-                            </div>
+                        <td class="displayOvertTime">
+                            {{-- <div class="displayOvertTime"> --}}
+                                {{ $day->OverTime }}
+                            {{-- </div> --}}
                         </td>
                     </tr>
-                    <tr class = " timesheetRow">
-                        @foreach ($item->timesheets as $timesheet)
-                    <tr>
-                        <td>
+                    {{-- <tr class = "timesheetRow"> --}}
+                        @foreach ($day->timesheets as $timesheet)
+                    <tr class='hidden timesheetRow' data-timesheet="{{$day->id}}">
+                        <td class="date">
                             <a href="{{ route('update', ['id' => $user->id, 'timesheet' => $timesheet, 'type' => 'timesheet']) }}">Update</a>
                         </td>
                         {{-- <td class="date" id="{{ $timesheet->id }}">
@@ -169,7 +169,7 @@
                             @endif
                         </td> --}}
 
-                        <td>
+                        <td >
                             In: {{ \Carbon\Carbon::parse($timesheet->ClockedIn)->format('H:i:s') }} <br>
                             Uit: {{ \Carbon\Carbon::parse($timesheet->ClockedOut)->format('H:i:s') }}
                         </td>
@@ -177,26 +177,7 @@
                             Uit: {{ \Carbon\Carbon::parse($timesheet->BreakStop)->format('H:i:s') }}</td>
                     </tr>
                 @endforeach
-                </tr>
-                {{-- @else
-                    <tr class="content-row">
-                        <td>Update</td><td class="displayRegular">  @if ($item->RegularHours !== 7.6 && $item->Weekend == false && $item->type == 'workday')
-                            <s>{{ $item->RegularHours }}</s>
-                            => 7.60
-                        @elseif($item->Weekend == true && $item->type == 'workday')
-                            Weekend
-                        @elseif ($item->Weekend == false && $item->type !== 'workday')
-                            {{ $item->type }}
-                        @else
-                            {{ $item->RegularHours }}
-                        @endif</td><td></td><td></td>
-                    </tr>
-                    <tr class="toggle-row">
-                        <td class="arrow">
-                            <img class="dropdownArrow" src="{{ asset('images/download.png') }}" alt="">
-                        </td>
-                    </tr>
-                    @endif --}}
+          
             @endforeach
         @else
             <p class="text-danger">No data</p>
@@ -205,33 +186,30 @@
         </table>
     </div>
     @if (isset($monthlyTotal))
-        @foreach ($monthlyTotal as $item)
+        @foreach ($monthlyTotal as $day)
             <div class="displayTotalRegular">
-                Regular {{ $item->RegularHours }}
+                Regular {{ $day->RegularHours }}
             </div>
             <div class="displayTotalBreak">
-                Break {{ $item->BreakHours }}
+                Break {{ $day->BreakHours }}
             </div>
             <div class="displayTotalOverTime">
-                Overtime {{ $item->OverTime }}
+                Overtime {{ $day->OverTime }}
             </div>
         @endforeach
     @else
         <div class="text-danger">Something went wrong.</div>
     @endif
 @endsection
-{{-- <script>
-   document.addEventListener('DOMContentLoaded', function() {
-    document.querySelector('.arrow').addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        const contentRow = this.closest('tr').previousElementSibling;
-
-        // Toggle the 'active' class to change display
-        contentRow.classList.toggle('active');
-        
-        // Optionally, you might want to toggle the arrow direction here
-        // For simplicity, I'll omit this part
-    });
-});
-</script> --}}
+<script>
+ const toggleTimesheets = (element)=>{
+    if(element.getAttribute('data-dayType') !== 'workday') return;
+    const dayId = element.getAttribute('data-day');
+    element.classList.toggle('belongTogether')
+    const timesheets = document.querySelectorAll(`tr[data-timesheet="${dayId}"]`);
+    timesheets.forEach(row=>{
+        row.classList.toggle('hidden');
+         row.classList.toggle('belongTogether');
+    })
+ }
+</script>
