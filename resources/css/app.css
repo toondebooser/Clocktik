@@ -18,6 +18,9 @@ body {
     border: none;
     border-radius: 5px;
 }
+.hidden{
+    display: none;
+}
 table {
     grid-column: 1/13;
     justify-self: center;

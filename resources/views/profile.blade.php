@@ -7,7 +7,7 @@
         }
 
     @endphp
-    
+
     <h2>
         {{ $user->name }}
     </h2>
@@ -84,31 +84,36 @@
                         <img class="downloadIcon" src="{{ asset('/images/download.png') }}" alt="Download">
                     </a>
                 @endif
-                    @php
+                {{-- @php
                        $lastDate = null;
-                    @endphp
-                @foreach ($timesheet as $item)
-                    @php 
+                    @endphp --}}
+                @foreach ($days as $item)
+                    {{-- @php 
                     if($item->Month !== $lastDate){
                         $lastDate = $item->Month;
                         $isFirstOfDay = true;
                     }else{
                         $isFirstOfDay = false;
                     }
-                    @endphp
-                    @if($isFirstOfDay)
+                    @endphp --}}
                     <tr class="timesheetRow">
                         <td class="date" id="{{ $item->id }}">
-                            <a class='displayDay'href="{{ route('update', ['id' => $user->id, 'timesheet' => $item]) }}">
-                               @php
-                                $toTime = strtotime($item->ClockedIn);
-                                $days = ['Mon' => 'Ma', 'Tue' => 'Di', 'Wed' => 'Wo', 'Thu' => 'Do', 'Fri' => 'Vr', 'Sat' => 'Za', 'Sun' => 'Zo'];
+                            @php
+                                $toTime = strtotime($item->Month);
+                                $days = [
+                                    'Mon' => 'Ma',
+                                    'Tue' => 'Di',
+                                    'Wed' => 'Wo',
+                                    'Thu' => 'Do',
+                                    'Fri' => 'Vr',
+                                    'Sat' => 'Za',
+                                    'Sun' => 'Zo',
+                                ];
                                 $englishDay = date('D', $toTime);
                                 $dutchDay = $days[$englishDay];
                                 $dayOfMonth = date('d', $toTime);
                                 echo $dutchDay . ' ' . $dayOfMonth;
-                                @endphp
-                            </a>
+                            @endphp
                             @if ($item->userNote !== null)
                                 <img class="noteIcon"src="{{ asset('/images/148883.png') }}" alt="Icon">
                             @endif
@@ -138,7 +143,45 @@
                             </div>
                         </td>
                     </tr>
-                    @else
+                    <tr class = " timesheetRow">
+                        @foreach ($item->timesheets as $timesheet)
+                    <tr>
+                        <td></td>
+                        {{-- <td class="date" id="{{ $timesheet->id }}">
+                            <a
+                                class='displayDay'href="{{ route('update', ['id' => $user->id, 'timesheet' => $timesheet]) }}">
+                                @php
+                                    $toTime = strtotime($timesheet->Month);
+                                    $days = [
+                                        'Mon' => 'Ma',
+                                        'Tue' => 'Di',
+                                        'Wed' => 'Wo',
+                                        'Thu' => 'Do',
+                                        'Fri' => 'Vr',
+                                        'Sat' => 'Za',
+                                        'Sun' => 'Zo',
+                                    ];
+                                    $englishDay = date('D', $toTime);
+                                    $dutchDay = $days[$englishDay];
+                                    $dayOfMonth = date('d', $toTime);
+                                    echo $dutchDay . ' ' . $dayOfMonth;
+                                @endphp
+                            </a>
+                            @if ($timesheet->userNote !== null)
+                                <img class="noteIcon"src="{{ asset('/images/148883.png') }}" alt="Icon">
+                            @endif
+                        </td> --}}
+
+                        <td>
+                            In: {{ \Carbon\Carbon::parse($timesheet->ClockedIn)->format('H:i:s') }} <br>
+                            Uit: {{ \Carbon\Carbon::parse($timesheet->ClockedOut)->format('H:i:s') }}
+                        </td>
+                        <td> In: {{ \Carbon\Carbon::parse($timesheet->BreakStart)->format('H:i:s') }} <br>
+                            Uit: {{ \Carbon\Carbon::parse($timesheet->BreakStop)->format('H:i:s') }}</td>
+                    </tr>
+                @endforeach
+                </tr>
+                {{-- @else
                     <tr class="content-row">
                         <td>Update</td><td class="displayRegular">  @if ($item->RegularHours !== 7.6 && $item->Weekend == false && $item->type == 'workday')
                             <s>{{ $item->RegularHours }}</s>
@@ -156,11 +199,10 @@
                             <img class="dropdownArrow" src="{{ asset('images/download.png') }}" alt="">
                         </td>
                     </tr>
-                    @endif
-                    
-                @endforeach
-            @else
-                <p class="text-danger">No data</p>
+                    @endif --}}
+            @endforeach
+        @else
+            <p class="text-danger">No data</p>
             @endif
 
         </table>
@@ -181,7 +223,7 @@
         <div class="text-danger">Something went wrong.</div>
     @endif
 @endsection
-<script>
+{{-- <script>
    document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('.arrow').addEventListener('click', function(e) {
         e.preventDefault();
@@ -195,4 +237,4 @@
         // For simplicity, I'll omit this part
     });
 });
-</script>
+</script> --}}

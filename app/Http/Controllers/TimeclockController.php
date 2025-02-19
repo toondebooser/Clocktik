@@ -47,6 +47,10 @@ class TimeclockController extends Controller
             'userNote' => null,
             'ShiftStatus' => true
         ]);
+
+
+
+        
         $userRow->save();
 
         return redirect('/dashboard');
@@ -60,17 +64,7 @@ class TimeclockController extends Controller
         $userRow = auth()->user()->timelogs;
         $userRow->RegularHours += CalculateUtility::calculateDecimal($userRow->EndBreak ? $userRow->EndBreak : $userRow->StartWork, $timeStamp);
         $userRow->BreakStatus = true;
-        // if($userRow->BreaksTaken > 0){
-        // return redirect()->route('dashboard')->with('error', 'Je hebt al pauze gepak');
-        // }
-        // if ($userRow->BreaksTaken >= 1) {
-        //     $startBreakDate = date('Y-m-d', strtotime($userRow->StartBreak));
-        //     $today = date('Y-m-d');
-        //     if ($startBreakDate == $today) {
-        //         //TODO: increment the number of brakes in timelog today
-        //         $userRow->BreakHours += CalculateUtility::calculateDecimal($userRow->StartBreak, $userRow->EndBreak);
-        //     }
-        // }
+  
   
         $userRow->fill([
             'StartBreak' => $timeStamp,

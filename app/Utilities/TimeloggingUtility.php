@@ -43,17 +43,16 @@ class TimeloggingUtility
  
     private  function updateOrInsertTimesheet(array $newEntry, $oldLog = null)
     {
-        //TODO updateorcreate auth()->daytotal->where('Month, $newEntry->Month)
-        // if ($oldLog) {
-        //     $oldLog->update($newEntry);
-        // } else {
-        //     Timesheet::create($newEntry);
-        // }
+        if ($oldLog) {
+            $oldLog->update($newEntry);
+        } else {
+            Timesheet::create($newEntry);
+        }
         
-        Timesheet::updateOrCreate(
-            ['Month' => $newEntry['Month'], 'UserId' => $newEntry['UserId']],
-            $newEntry
-        );
+        // Timesheet::updateOrCreate(
+        //     ['Month' => $newEntry['Month'], 'UserId' => $newEntry['UserId']],
+        //     $newEntry
+        // );
 
         $this->updateDailySummery($newEntry['UserId'], $newEntry['Month']);
         

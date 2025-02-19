@@ -15,7 +15,7 @@ class UsersheetsController extends Controller
     public function myProfile(Request $request)
     {
 
-        $userTimesheet = new Timesheet;
+        // $userTimesheet = new Timesheet;
         $userTotal = new Usertotal;
         $currentUser = auth()->user();
         $now = now('Europe/Brussels');
@@ -32,11 +32,11 @@ class UsersheetsController extends Controller
 
         $threeMonthsAgo = Carbon::now()->startOfMonth()->subMonths(3);
 
-        $userTimesheet->where('UserId', '=', $currentUser->id)
+         Timesheet::where('UserId', '=', $currentUser->id)
             ->where('Month', '<=', $threeMonthsAgo)
             ->delete();
 
-        $userTotal->where('UserId', '=', $currentUser->id)
+        Usertotal::where('UserId', '=', $currentUser->id)
             ->where('Month', '<', $threeMonthsAgo)
             ->delete();
 
@@ -45,18 +45,16 @@ class UsersheetsController extends Controller
             ->orderBy('Month', 'asc')
             ->get();
 
-        $monthlyTotal = $userTotal
-            ->where('UserId', '=', $currentUser->id)
+        $days = $currentUser->dayTotals;
+        
+        $monthlyTotal = $currentUser->userTotal()->where('UserId', '=', $currentUser->id)
             ->whereMonth('Month', '=', $month)
-            // ->whereYear('Month', '=', $year)
             ->get();
-
         $clockedMonths = $userTotal->select($userTotal->raw('DISTINCT MONTH(Month) AS month'))
             ->where('UserId', '=', $currentUser->id)
             ->orderBy('Month', 'desc')
-            // ->whereyear('Month', '=', $year)
             ->get();
 
-        return view('profile', ['user' => $currentUser, 'clockedMonths' => $clockedMonths, 'timesheet' => $timesheet, 'monthlyTotal' => $monthlyTotal]);
+        return view('profile', ['user' => $currentUser, 'days' => $days,'clockedMonths' => $clockedMonths, 'timesheet' => $timesheet, 'monthlyTotal' => $monthlyTotal]);
     }
 }
