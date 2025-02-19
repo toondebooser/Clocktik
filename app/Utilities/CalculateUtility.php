@@ -2,6 +2,7 @@
 
 namespace App\Utilities;
 
+use App\Models\Daytotal;
 use App\Models\Timesheet;
 use App\Models\Usertotal;
 use Carbon\Carbon;
@@ -26,9 +27,9 @@ class CalculateUtility
         is_string($date) ? $date = Carbon::parse($date) : null;
         $userId = $id;
         if ($userTotal != null) {
-            $userTotal->RegularHours = Timesheet::where('UserId', $userId)->whereMonth('Month', '=', $date)->whereYear('Month', '=', $date)->sum('accountableHours');
-            $userTotal->BreakHours = Timesheet::where('UserId', $userId)->whereMonth('Month', '=', $date)->whereYear('Month', '=', $date)->sum('BreakHours');
-            $userTotal->OverTime = Timesheet::where('UserId', $userId)->whereMonth('Month', '=', $date)->whereYear('Month', '=', $date)->sum('OverTime');
+            $userTotal->RegularHours = Daytotal::where('UserId', $userId)->whereMonth('Month', '=', $date)->whereYear('Month', '=', $date)->sum('accountableHours');
+            $userTotal->BreakHours = Daytotal::where('UserId', $userId)->whereMonth('Month', '=', $date)->whereYear('Month', '=', $date)->sum('BreakHours');
+            $userTotal->OverTime = Daytotal::where('UserId', $userId)->whereMonth('Month', '=', $date)->whereYear('Month', '=', $date)->sum('OverTime');
         }
 
         return $userTotal->save();

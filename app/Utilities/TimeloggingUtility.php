@@ -23,9 +23,9 @@ class TimeloggingUtility
 
         $date = Carbon::parse($userRow->StartWork)->format('Y-m-d');
         $dayTotal = Daytotal::firstOrCreate(['Month'=>$date, 'UserId'=>$userId],[
-            'UserId' => $userId,
             'company_code' => '1234567890',
-            'Month' => $date
+            'UserId' => $userId,
+            'Month' => $date,
         ]);
         return [
             'UserId' => $userId,
@@ -49,9 +49,11 @@ class TimeloggingUtility
         // } else {
         //     Timesheet::create($newEntry);
         // }
-        Timesheet::updateOrCreate(['Month'=>$newEntry['Month'], 'Userid' => $newEntry['UserId']],[
+        
+        Timesheet::updateOrCreate(
+            ['Month' => $newEntry['Month'], 'UserId' => $newEntry['UserId']],
             $newEntry
-        ]);
+        );
 
         $this->updateDailySummery($newEntry['UserId'], $newEntry['Month']);
         
@@ -60,17 +62,15 @@ class TimeloggingUtility
 
     public function updateDailySummery($userId, $day)
     {
-        //TODO find daytotal 
         $timesheets = Timesheet::where('UserId', $userId)
             ->where('Month', $day)
             ->get();
 
         $dayTotal = Daytotal::where('UserId', $userId)
         ->where('Month', $day)
-        ->get();
-
+        ->first();
         if ($timesheets->count() > 0) {
-            $summary = $this->calculateSummaryForDay($timesheets);         
+            $summary = $this->calculateSummaryForDay($timesheets); 
             $dayTotal->update($summary);
         }
     }
