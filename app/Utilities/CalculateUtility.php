@@ -27,12 +27,17 @@ class CalculateUtility
         is_string($date) ? $date = Carbon::parse($date) : null;
         $userId = $id;
         if ($userTotal != null) {
-            $userTotal->RegularHours = Daytotal::where('UserId', $userId)->whereMonth('Month', '=', $date)->whereYear('Month', '=', $date)->sum('accountableHours');
-            $userTotal->BreakHours = Daytotal::where('UserId', $userId)->whereMonth('Month', '=', $date)->whereYear('Month', '=', $date)->sum('BreakHours');
-            $userTotal->OverTime = Daytotal::where('UserId', $userId)->whereMonth('Month', '=', $date)->whereYear('Month', '=', $date)->sum('OverTime');
+            $dayTotal = Daytotal::where('UserId', $userId)
+            ->whereMonth('Month', $date)
+            ->whereYear('Month', $date);
+        $userTotal->update([
+            'RegularHours' => $dayTotal->sum('accountableHours'),
+            'BreakHours' => $dayTotal->sum('BreakHours'),
+            'OverTime' => $dayTotal->sum('OverTime')
+        ]);
         }
 
-        return $userTotal->save();
+        return $userTotal;
     }
    
 
