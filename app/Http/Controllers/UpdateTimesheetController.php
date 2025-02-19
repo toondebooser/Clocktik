@@ -6,6 +6,7 @@ use App\Models\Timesheet;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\TimesheetController;
+use App\Models\Daytotal;
 use Illuminate\Support\Carbon;
 use App\Models\Usertotal;
 use App\Utilities\CalculateUtility;
@@ -15,12 +16,12 @@ use App\Utilities\UserUtility;
 class UpdateTimesheetController extends Controller
 {
    
-    public function updateForm($id, $timesheet)
+    public function updateForm($id, $timesheet, $type = null)
     {
 
         $worker = User::find($id);
-        $timesheet = Timesheet::find($timesheet);
-       
+        
+        $timesheet = $type == 'timesheet' ? Timesheet::find($timesheet) : Daytotal::find($timesheet);
         if ($timesheet === null) {
             $postData = [
                 'worker' => $id,
@@ -42,7 +43,7 @@ class UpdateTimesheetController extends Controller
         $dayType = $request->input('dayType');
         $id = $request->id;
         // $worker = User::find($id);
-        $timesheet = Timesheet::find($request->timesheet);
+        $timesheet = $request->type == 'workday' ? Timesheet::find($request->timesheet) : Daytotal::find($request->timesheet);
      
         $type = $request->updateSpecial;
         $type == null ? $type = $timesheet->type : null;

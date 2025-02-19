@@ -30,11 +30,11 @@ class CalculateUtility
             $dayTotal = Daytotal::where('UserId', $userId)
             ->whereMonth('Month', $date)
             ->whereYear('Month', $date);
-        $userTotal->update([
-            'RegularHours' => $dayTotal->sum('accountableHours'),
-            'BreakHours' => $dayTotal->sum('BreakHours'),
-            'OverTime' => $dayTotal->sum('OverTime')
-        ]);
+            $userTotal->update([
+                'RegularHours' => $dayTotal->sum('accountableHours'),
+                'BreakHours' => $dayTotal->sum('BreakHours'),
+                'OverTime' => $dayTotal->sum('OverTime')
+            ]);
         }
 
         return $userTotal;

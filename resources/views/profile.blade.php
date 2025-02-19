@@ -72,23 +72,24 @@
                     <th>Overtime</th>
                 </tr>
             </thead>
-            @if ($timesheet->count() > 0)
+            @if ($days->count() > 0)
                 @if (auth()->user()->admin == true)
                     <a class="previewLink"
-                        href="{{ route('exportPdf', ['userId' => $userId, 'month' => $month, 'type' => 'preview']) }}"
+                        href="{{ route('exportPdf', ['userId' => $userId, 'month' => $days[0]->Month, 'type' => 'preview']) }}"
                         target="_blank">
                         <img class="previewIcon" src="{{ asset('/images/preview.png') }}" alt="Preview">
                     </a>
                     <a class="downloadLink"
-                        href="{{ route('exportPdf', ['userId' => $userId, 'month' => $month, 'type' => 'download']) }}">
+                        href="{{ route('exportPdf', ['userId' => $userId, 'month' => $days[0]->Month    , 'type' => 'download']) }}">
                         <img class="downloadIcon" src="{{ asset('/images/download.png') }}" alt="Download">
                     </a>
                 @endif
               
                 @foreach ($days as $item)
-                  
+               
                     <tr class="timesheetRow">
                         <td class="date" id="{{ $item->id }}">
+                            <a class='displayDay' href="{{ route('update', ['id' => $user->id, 'timesheet' => $item]) }}">
                             @php
                                 $toTime = strtotime($item->Month);
                                 $days = [
@@ -105,6 +106,7 @@
                                 $dayOfMonth = date('d', $toTime);
                                 echo $dutchDay . ' ' . $dayOfMonth;
                             @endphp
+                            </a>
                             @if ($item->userNote !== null)
                                 <img class="noteIcon"src="{{ asset('/images/148883.png') }}" alt="Icon">
                             @endif
@@ -137,7 +139,7 @@
                     <tr class = " timesheetRow">
                         @foreach ($item->timesheets as $timesheet)
                     <tr>
-                        <td><a href="{{ route('update', ['id' => $user->id, 'timesheet' => $timesheet]) }}">Update</a></td>
+                        <td><a href="{{ route('update', ['id' => $user->id, 'timesheet' => $timesheet, 'type' => 'timesheet']) }}">Update</a></td>
                         {{-- <td class="date" id="{{ $timesheet->id }}">
                             <a
                                 class='displayDay'href="{{ route('update', ['id' => $user->id, 'timesheet' => $timesheet]) }}">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Daytotal;
 use App\Models\Timesheet;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
@@ -70,20 +71,30 @@ class TimesheetController extends Controller
 
     public function setDay($dayLabel, $newSpecialTimesheet, $dayType, $worker, $singleDay)
     {
-        $timesheetCheck = UserUtility::userTimesheetCheck($singleDay, $worker);
-        if ($timesheetCheck->isEmpty()) {
-            $newSpecialTimesheet->fill([
-                'type' => $dayLabel,
-                'ClockedIn' => $singleDay,
-                'Month' => $singleDay,
-                'UserId' => $worker,
-                'accountableHours' => $dayType == 'onbetaald' ? 0 : 7.6,
-            ]);
-            $newSpecialTimesheet->save();
-            $userTotal = UserUtility::fetchUserTotal($singleDay, $worker);
-            CalculateUtility::calculateUserTotal($singleDay, $worker);
-            $userTotal->save();
-            return true;
+        $dayTotal = Daytotal::firstOrCreate([
+            'UserId'=>$worker,
+            'Month' => $singleDay
+        ],[
+            'type' => $dayLabel,
+            'company_code' => '1234567890',
+            'ClockedIn' => $singleDay,
+            'Month' => $singleDay,
+            'UserId' => $worker,
+            'accountableHours' => $dayType == 'onbetaald' ? 0 : 7.6,
+        ]);
+        if ($dayTotal->wasRecentlyCreated) {
+            // $newSpecialTimesheet->fill([
+            //     'type' => $dayLabel,
+            //     'ClockedIn' => $singleDay,
+            //     'Month' => $singleDay,
+            //     'UserId' => $worker,
+            //     'accountableHours' => $dayType == 'onbetaald' ? 0 : 7.6,
+            // ]);
+            // $newSpecialTimesheet->save();
+            // $userTotal = UserUtility::fetchUserTotal($singleDay, $worker);
+           $calculateUserTotal =  CalculateUtility::calculateUserTotal($singleDay, $worker);
+            // $userTotal->save();
+           if ($calculateUserTotal) return true;
         } else {
             return  'Datum al in gebruik: ' . $singleDay->toDateString();
         }
