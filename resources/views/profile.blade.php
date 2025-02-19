@@ -84,18 +84,9 @@
                         <img class="downloadIcon" src="{{ asset('/images/download.png') }}" alt="Download">
                     </a>
                 @endif
-                {{-- @php
-                       $lastDate = null;
-                    @endphp --}}
+              
                 @foreach ($days as $item)
-                    {{-- @php 
-                    if($item->Month !== $lastDate){
-                        $lastDate = $item->Month;
-                        $isFirstOfDay = true;
-                    }else{
-                        $isFirstOfDay = false;
-                    }
-                    @endphp --}}
+                  
                     <tr class="timesheetRow">
                         <td class="date" id="{{ $item->id }}">
                             @php
@@ -146,7 +137,7 @@
                     <tr class = " timesheetRow">
                         @foreach ($item->timesheets as $timesheet)
                     <tr>
-                        <td></td>
+                        <td><a href="{{ route('update', ['id' => $user->id, 'timesheet' => $timesheet]) }}">Update</a></td>
                         {{-- <td class="date" id="{{ $timesheet->id }}">
                             <a
                                 class='displayDay'href="{{ route('update', ['id' => $user->id, 'timesheet' => $timesheet]) }}">

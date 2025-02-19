@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Daytotal;
 use App\Models\Timesheet;
 use App\Utilities\CalculateUtility;
 use App\Utilities\TimeloggingUtility;
@@ -17,9 +18,15 @@ class DeleteTimesheetController extends Controller
         $delete = $timesheet->delete();
         if($delete == true)
         {
+            $dayTotal = DayTotal::where('Month', $date)->first();
+            if(count($dayTotal->timesheets) == 0)  {
+                $dayTotal->delete();
+                CalculateUtility::calculateUserTotal($date, $id);
+                return redirect('/my-workers');
+            };
+            $timeloggingUtility->updateDailySummery($id, $date);
             CalculateUtility::calculateUserTotal($date, $id);
-            $timeloggingUtility->updateDailySummery($id, $date);    
-          
+            
             return redirect('/my-workers');
             
         }

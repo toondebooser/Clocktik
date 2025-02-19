@@ -10,19 +10,19 @@ use Carbon\Carbon;
 
 class TimeloggingUtility
 {
-   
+
     public function logTimeEntry($userRow, $userId, $oldLog = null)
     {
         $newEntry = $this->createTimeEntry($userRow, $userId);
         return $this->updateOrInsertTimesheet($newEntry, $oldLog);
     }
 
-  
+
     private  function createTimeEntry($userRow, $userId)
     {
 
         $date = Carbon::parse($userRow->StartWork)->format('Y-m-d');
-        $dayTotal = Daytotal::firstOrCreate(['Month'=>$date, 'UserId'=>$userId],[
+        $dayTotal = Daytotal::firstOrCreate(['Month' => $date, 'UserId' => $userId], [
             'company_code' => '1234567890',
             'UserId' => $userId,
             'Month' => $date,
@@ -40,7 +40,7 @@ class TimeloggingUtility
         ];
     }
 
- 
+
     private  function updateOrInsertTimesheet(array $newEntry, $oldLog = null)
     {
         if ($oldLog) {
@@ -48,14 +48,8 @@ class TimeloggingUtility
         } else {
             Timesheet::create($newEntry);
         }
-        
-        // Timesheet::updateOrCreate(
-        //     ['Month' => $newEntry['Month'], 'UserId' => $newEntry['UserId']],
-        //     $newEntry
-        // );
-
         $this->updateDailySummery($newEntry['UserId'], $newEntry['Month']);
-        
+
         return CalculateUtility::calculateUserTotal($newEntry['Month'], $newEntry['UserId']);
     }
 
@@ -66,12 +60,10 @@ class TimeloggingUtility
             ->get();
 
         $dayTotal = Daytotal::where('UserId', $userId)
-        ->where('Month', $day)
-        ->first();
-        if ($timesheets->count() > 0) {
-            $summary = $this->calculateSummaryForDay($timesheets); 
-            $dayTotal->update($summary);
-        }
+            ->where('Month', $day)
+            ->first();
+        $summary = $this->calculateSummaryForDay($timesheets);
+        $dayTotal->update($summary);
     }
 
 
@@ -80,7 +72,7 @@ class TimeloggingUtility
         $summary = [
             'BreakHours' => 0,
             'RegularHours' => 0,
-            'DaytimeCount' => $timesheets->count(), // Count of timesheets/logins for the month
+            'DaytimeCount' => $timesheets->count(),
             'OverTime' => 0,
             'accountableHours' => 7.6
         ];
@@ -91,26 +83,17 @@ class TimeloggingUtility
             $workHours = CalculateUtility::calculateDecimal($timesheet->ClockedIn, $timesheet->ClockedOut);
             $breakHours = CalculateUtility::calculateDecimal($timesheet->BreakStart, $timesheet->BreakStop);
             $netWorkHours = $workHours - $breakHours;
-            //TODO TEST before proceeding
-            // $timesheet->update([
-            //     'BreakHours' => $breakHours,
-            //     'RegularHours' => $netWorkHours,
-            //     'OverTime' => $netWorkHours - 7.6
 
-            // ]);
 
-           
+
 
             $dailyHours += $netWorkHours;
 
-            // Update summary
             $summary['BreakHours'] += $breakHours;
             $summary['RegularHours'] += $netWorkHours;
         }
 
         $summary['OverTime'] += $dailyHours - 7.6;
-        // foreach ($dailyHours as $date => $hours) {
-        // }
 
         return $summary;
     }
