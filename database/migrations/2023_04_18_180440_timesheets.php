@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('timesheets', function (Blueprint $table) {
             $table->id();
-            $table->integer('day_id');
+            $table->integer('daytotal_id');
+            $table->index('daytotal_id');
             $table->integer('UserId');
             $table->index('UserId');
             $table->timestamp('ClockedIn')->nullable();

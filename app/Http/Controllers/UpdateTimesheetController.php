@@ -89,23 +89,6 @@ class UpdateTimesheetController extends Controller
                 return redirect()->route('getData', $postData)->with('error', 'Er ging iets mis, kijk even na of de dag in het uurrooster is aangepast.');
             }
         } else {
-            // $startWork = Carbon::parse($date . ' ' . $request->startTime, 'Europe/Brussels');
-            // $stopWork = Carbon::parse($date . ' ' . $request->endTime, 'Europe/Brussels');
-            // $startBreak = Carbon::parse($date . ' ' . $request->startBreak, 'Europe/Brussels');
-            // $endBreak = Carbon::parse($date . ' ' . $request->endBreak, 'Europe/Brussels');
-            // $breakHours = CalculateUtility::calculateDecimal($startBreak, $endBreak);
-            // $regularHours = CalculateUtility::calculateDecimal($startWork, $stopWork) - $breakHours;
-            // $timesheet->fill([
-            //     'ClockedIn' => $startWork,
-            //     'ClockedOut' => $stopWork,
-            //     'BreakStart' => $startBreak,
-            //     'BreakStop' => $endBreak,
-            //     'BreakHours' => $breakHours,
-            //     'RegularHours' => $regularHours > 7.6 ? 7.6 : $regularHours,
-            //     'OverTime' => $regularHours - 7.6,
-                
-            // ]);
-
             $userRow = (object) [
                 'UserId' => $id,
                 'StartWork' => Carbon::parse($date . ' ' . $request->input('startTime'), 'Europe/Brussels'),
