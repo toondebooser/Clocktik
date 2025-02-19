@@ -38,7 +38,7 @@ Route::match(['get', 'post'], '/new-timesheet-form', [AddCustomTimesheetControll
 Route::match(['get', 'post'], '/add-new-timesheet', [TimesheetController::class, 'addNewTimesheet'])->name('newTimesheet')->middleware('admin', 'auth');
 Route::get('/my-workers', [MyWorkersController::class, 'fetchWorkers'])->name('myWorkers')->middleware('admin', 'auth');
 Route::get('/forWorker', [SpecialsController::class, 'forWorker'])->name('forWorker')->middleware('admin', 'auth');
-Route::match(['get', 'post'], '/update-timesheet/{id}/{timesheet}', [UpdateTimesheetController::class, 'updateForm'])->name('update')->middleware('admin', 'auth');
+Route::match(['get', 'post'], '/update-timesheet/{id}/{timesheet}/{type?}', [UpdateTimesheetController::class, 'updateForm'])->name('update')->middleware('admin', 'auth');
 Route::post('/update-worker-timesheet', [UpdateTimesheetController::class, 'updateTimesheet'])->name('updateTimesheet')->middleware('admin', 'auth');
 Route::match(['get', 'post'], '/specials', [SpecialsController::class, 'specials'])->name('specials')->middleware('admin', 'auth');
 Route::post('/setSpecial', [TimesheetController::class, 'setSpecial'])->name('setSpecial')->middleware('admin', 'auth');

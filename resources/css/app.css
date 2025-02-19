@@ -157,6 +157,9 @@ th {
     justify-self: center;
     align-self: center;
 }
+.specialUpdateContainer{
+    grid-column: 1/3;
+}
 .updateStartTime,
 .updateEndTime,
 .updateStartBreak,

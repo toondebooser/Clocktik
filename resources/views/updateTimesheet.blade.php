@@ -44,24 +44,26 @@
                     </div>
                 </fieldset>
             @else
-                <input class="updateSpecialInput" type="text" name="updateSpecial" value="{{ $timesheet->type }}">
-                <br>
-                <span class="radioInput">
-                    <label for="betaaldInput" class="checkboxContainer">
-                        <input @if ($timesheet->accountableHours == 7.6) {{ 'checked' }} @endif type="radio" class="radioBox"
-                            id="betaaldInput" name="dayType" value="betaald">
-                        <span class="labelAndere">Betaald</span>
-                        <br>
-                        <span class="checkMark"></span>
-                    </label>
-                    <label for="onbetaaldInput" class="checkboxContainer" id="onbetaald">
-                        <input @if ($timesheet->accountableHours == 0) {{ 'checked' }} @endif type="radio" class="radioBox"
-                            id="onbetaaldInput" name="dayType" value="onbetaald">
-                        <span class="labelAndere">Onbetaald</span>
-                        <br>
-                        <span class="checkMark"></span>
-                    </label>
-                </span>
+                <div class="specialUpdateContainer">
+                    <input class="updateSpecialInput" type="text" name="updateSpecial" value="{{ $timesheet->type }}">
+                    <br>
+                    <span class="radioInput">
+                        <label for="betaaldInput" class="checkboxContainer">
+                            <input @if ($timesheet->accountableHours == 7.6) {{ 'checked' }} @endif type="radio" class="radioBox"
+                                id="betaaldInput" name="dayType" value="betaald">
+                            <span class="labelAndere">Betaald</span>
+                            <br>
+                            <span class="checkMark"></span>
+                        </label>
+                        <label for="onbetaaldInput" class="checkboxContainer" id="onbetaald">
+                            <input @if ($timesheet->accountableHours == 0) {{ 'checked' }} @endif type="radio" class="radioBox"
+                                id="onbetaaldInput" name="dayType" value="onbetaald">
+                            <span class="labelAndere">Onbetaald</span>
+                            <br>
+                            <span class="checkMark"></span>
+                        </label>
+                    </span>
+                </div>
             @endif
             <input class="updateTimesheetSubmit button" type="submit" value="update">
 

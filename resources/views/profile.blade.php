@@ -66,10 +66,10 @@
         <table class="timesheetTable">
             <thead class="stikyHeader">
                 <tr>
-                    <th>Date</th>
-                    <th>Regular hours</th>
-                    <th>Break hours</th>
-                    <th>Overtime</th>
+                    <th>Datum</th>
+                    <th>Gewerkt</th>
+                    <th>Gepauzeerd</th>
+                    <th>overuren</th>
                 </tr>
             </thead>
             @if ($days->count() > 0)
@@ -89,7 +89,9 @@
                
                     <tr class="timesheetRow">
                         <td class="date" id="{{ $item->id }}">
+                            @if($item->type !== 'workday')
                             <a class='displayDay' href="{{ route('update', ['id' => $user->id, 'timesheet' => $item]) }}">
+                            @endif
                             @php
                                 $toTime = strtotime($item->Month);
                                 $days = [
@@ -139,7 +141,9 @@
                     <tr class = " timesheetRow">
                         @foreach ($item->timesheets as $timesheet)
                     <tr>
-                        <td><a href="{{ route('update', ['id' => $user->id, 'timesheet' => $timesheet, 'type' => 'timesheet']) }}">Update</a></td>
+                        <td>
+                            <a href="{{ route('update', ['id' => $user->id, 'timesheet' => $timesheet, 'type' => 'timesheet']) }}">Update</a>
+                        </td>
                         {{-- <td class="date" id="{{ $timesheet->id }}">
                             <a
                                 class='displayDay'href="{{ route('update', ['id' => $user->id, 'timesheet' => $timesheet]) }}">

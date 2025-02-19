@@ -20,7 +20,6 @@ class UpdateTimesheetController extends Controller
     {
 
         $worker = User::find($id);
-        
         $timesheet = $type == 'timesheet' ? Timesheet::find($timesheet) : Daytotal::find($timesheet);
         if ($timesheet === null) {
             $postData = [
