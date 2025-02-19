@@ -2,6 +2,8 @@
 
 namespace App\Utilities;
 
+use App\Models\Daytotal;
+use App\Models\Daytotal as ModelsDaytotal;
 use App\Models\Timesheet;
 use App\Utilities\CalculateUtility;
 use Carbon\Carbon;
@@ -18,9 +20,16 @@ class TimeloggingUtility
   
     private  function createTimeEntry($userRow, $userId)
     {
+
         $date = Carbon::parse($userRow->StartWork)->format('Y-m-d');
+        $dayTotal = Daytotal::firstOrCreate(['Month'=>$date, 'UserId'=>$userId],[
+            'UserId' => $userId,
+            'company_code' => '1234567890',
+            'Month' => $date
+        ]);
         return [
             'UserId' => $userId,
+            'daytotal_id' => $dayTotal->id,
             'ClockedIn' => $userRow->StartWork,
             'ClockedOut' => $userRow->StopWork,
             'BreakStart' => $userRow->StartBreak,
@@ -35,11 +44,14 @@ class TimeloggingUtility
     private  function updateOrInsertTimesheet(array $newEntry, $oldLog = null)
     {
         //TODO updateorcreate auth()->daytotal->where('Month, $newEntry->Month)
-        if ($oldLog) {
-            $oldLog->update($newEntry);
-        } else {
-            Timesheet::create($newEntry);
-        }
+        // if ($oldLog) {
+        //     $oldLog->update($newEntry);
+        // } else {
+        //     Timesheet::create($newEntry);
+        // }
+        Timesheet::updateOrCreate(['Month'=>$newEntry['Month'], 'Userid' => $newEntry['UserId']],[
+            $newEntry
+        ]);
 
         $this->updateDailySummery($newEntry['UserId'], $newEntry['Month']);
         
@@ -53,10 +65,13 @@ class TimeloggingUtility
             ->where('Month', $day)
             ->get();
 
+        $dayTotal = Daytotal::where('UserId', $userId)
+        ->where('Month', $day)
+        ->get();
+
         if ($timesheets->count() > 0) {
-            $summary = $this->calculateSummaryForDay($timesheets);
-            $firstTimesheet = $timesheets->first();
-            $firstTimesheet->update($summary);
+            $summary = $this->calculateSummaryForDay($timesheets);         
+            $dayTotal->update($summary);
         }
     }
 

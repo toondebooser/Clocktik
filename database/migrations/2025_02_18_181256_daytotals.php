@@ -29,6 +29,8 @@ return new class extends Migration
             $table->index('Month');
             $table->boolean('Weekend')->default(false);
             $table->boolean('NightShift')->default(false);
+            $table->timestamps();
+
 
         });
     }

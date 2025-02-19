@@ -6,9 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class DayTotal extends Model
+class Daytotal extends Model
 {
     use HasFactory;
+    protected $fillable = ['Month','copany_code','UserId'];
     public function timesheets()
     {
         return $this->hasMany(Timesheet::class, 'daytotal_id');

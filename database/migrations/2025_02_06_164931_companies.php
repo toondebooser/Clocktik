@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('color')->nullable();
             $table->string('company_code',10);
             $table->index('company_code');
+            $table->timestamps();
+
         });
     }
 

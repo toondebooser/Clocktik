@@ -16,6 +16,8 @@ return new class extends Migration
             $table->json('weekend_days')->default(json_encode([0, 6]));            
             $table->string('CompanyCode', 10);
             $table->index('CompanyCode');
+            $table->timestamps();
+
         });
     }
 

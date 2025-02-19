@@ -12,6 +12,6 @@ class Timesheet extends Model
 
     public function daytotal(): BelongsTo
     {
-        return $this->belongsTo(DayTotal::class, 'id', 'daytotal_id');
+        return $this->belongsTo(Daytotal::class, 'id', 'daytotal_id');
     }
 }

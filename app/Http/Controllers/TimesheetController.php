@@ -52,26 +52,7 @@ class TimesheetController extends Controller
             return redirect()->route('timesheetForm', ['worker' => $id])->with('error', 'Datum al in gebruik: ' . $date);
         }
         if (Carbon::parse($date, 'Europe/Brussels')->isWeekend()) $weekend = true;
-
-        // $startWork = Carbon::parse($date . ' ' . $request->input('startTime'), 'Europe/Brussels');
-        // $stopWork = Carbon::parse($date . ' ' . $request->input('endTime'), 'Europe/Brussels');
-        // $stopWorkClone = clone $stopWork;
-        // $startBreak = $stopWorkClone->subMinutes(30);
-        // $break = CalculateUtility::calculateDecimal($startBreak, $stopWork);
-        // $regularHours = CalculateUtility::calculateDecimal($startWork, $stopWork) - $break;
-        // $newTimesheet->fill([
-        //     'UserId' => $id,
-        //     'ClockedIn' => $startWork,
-        //     'ClockedOut' => $stopWork,
-        //     'BreakStart' => $startBreak,
-        //     'BreakStop' => $stopWork,
-        //     'BreakHours' => $break,
-        //     'RegularHours' => $regularHours > 7.6 ? 7.6 : $regularHours,
-        //     'OverTime' => $regularHours - 7.6,
-        //     'accountableHours' => 7.6,
-        //     'Month' => $startWork,
-
-        // ]);
+        
         $userRow = (object) [
             'UserId' => $id,
             'StartWork' => Carbon::parse($date . ' ' . $request->input('startTime'), 'Europe/Brussels'),

@@ -62,6 +62,6 @@ class User extends Authenticatable implements MustVerifyEmail
     }
     public function dayTotals()
     {
-        return $this->hasMany(DayTotal::class, 'UserId');
+        return $this->hasMany(Daytotal::class, 'UserId');
     }
 }
