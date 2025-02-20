@@ -86,7 +86,7 @@
                 @endif
 
                 @foreach ($days as $day)
-                <tr onclick="{{ $day->type == 'workday' ? toggleTimesheets(this) : 'window.location.href=\'' . route('update', ['id' => $user->id, 'timesheet' => $day]) . '\'' }}" class="{{ $day->type == 'workday' ? 'timesheetRow' : '' }}" data-dayType="{{ $day->type }}" data-day="{{ $day->id }}">
+                <tr onclick="{{ $day->type == 'workday' ? 'toggleTimesheets(this)' : 'window.location.href=\'' . route('update', ['id' => $user->id, 'timesheet' => $day]) . '\'' }}" class="{{ $day->type == 'workday' ? 'timesheetRow' : '' }}" data-dayType="{{ $day->type }}" data-day="{{ $day->id }}">
                         <td class="date update" id="{{ $day->id }}">
                             @if ($day->type !== 'workday')
                                 <a class='displayDay'
@@ -152,6 +152,12 @@
                             </td>
                             <td class="timesheetStyle"> In: {{ \Carbon\Carbon::parse($timesheet->BreakStart)->format('H:i') }} <br>
                                 Uit: {{ \Carbon\Carbon::parse($timesheet->BreakStop)->format('H:i') }}</td>
+                                <td>
+                                    <a href="{{route('delete', ['workerId' => $userId, 'deleteSheet' => $timesheet->id, 'date' => $timesheet->Month])}}" onclick="return confirm('Zedde zeker?')">
+
+                                        <img class="trashIcon" src="{{asset("/images/1843344.png")}}" alt="Delete">
+                                    </a>
+                                </td>
                         </tr>
                     @endforeach
                 @endforeach

@@ -28,7 +28,7 @@ body {
     display: none;
 }
 .belongTogether{
-    background-color:lightcyan;
+    background-color:lightcyan
 }
 
 
@@ -73,7 +73,6 @@ th,
 td {
     border: 1px solid black;
     padding: 8px;
-    width: 25%;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -398,7 +397,9 @@ img {
 .displayDay {
     color: black;
 }
-
+.trashIcon{
+    height: 25px;
+}
 .noteIcon {
     height: 10px;
     position: absolute;

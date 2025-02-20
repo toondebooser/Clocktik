@@ -2,6 +2,7 @@
 
 namespace App\Utilities;
 
+use App\Models\Daytotal;
 use App\Models\Timesheet;
 use App\Models\Usertotal;
 use Carbon\Carbon;
@@ -50,10 +51,11 @@ class UserUtility
         } else {
             $date = $date;
         }
-        $timesheetCheck = Timesheet::where('UserId', $id)
+        $timesheetCheck = Daytotal::where('UserId', $id)
             ->whereDate('Month', $date)
-            ->orderBy('ClockedIn', 'asc')
+            ->orderBy('created_at', 'asc')
             ->get();
+        // $dayTotalCheck = Daytotal::where
         return $timesheetCheck;
     }
 }
