@@ -23,7 +23,7 @@
 @endsection
 @section('login')
    
-        <form class="loginForm" action="" method="post">
+        <form class="loginForm" action="{{route('password.request')}}" method="post">
             @csrf
             <label class="userNameLabel" for="email">Email adress</label>
             <input class="userName" type="email" id='email' name="email" >

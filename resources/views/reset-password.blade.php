@@ -8,7 +8,9 @@
         <p class="emailExists">{{$exists}}</p>
     @endif
 @endsection
-
+@if (session('status'))
+<div class="success">{{session('status')}}</div>
+@endif
 @section('error')
 <div class="loginError">
     @error('name')
@@ -26,11 +28,11 @@
 @endsection
 @section('newUser')
 
-    <form class="newUserForm" name="newUserForm" action="" method="post" onsubmit="showLoader()">
+    <form class="newUserForm" name="newUserForm" action="{{route('password.update')}}" method="post" onsubmit="showLoader()">
 
         @csrf
         <input type="hidden" name="token" value="{{$token}}">
-        
+
         <label class="emailLabel" for="email">Email</label>
         <input id="email_adress" class="email" type="email" name="email">
 

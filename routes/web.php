@@ -82,7 +82,7 @@ Route::view('/forgot-password', 'forgot-password')->middleware('guest')->name('p
  
 Route::post('/forgot-password', [ForgotPasswordController::class, 'forgotPassword'])->middleware('guest')->name('password.email');
 
-Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'resetPasword'])->middleware('guest')->name('password.reset');
+Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'resetPassword'])->middleware('guest')->name('password.reset');
 
 
  
