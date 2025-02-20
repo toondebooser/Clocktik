@@ -86,8 +86,7 @@
                 @endif
 
                 @foreach ($days as $day)
-                    <tr onclick="toggleTimesheets(this)" class="{{$day->type == 'workday' ? 'timesheetRow' : ''}}" data-dayType="{{ $day->type }}"
-                        data-day="{{ $day->id }}">
+                <tr onclick="{{ $day->type == 'workday' ? toggleTimesheets(this) : 'window.location.href=\'' . route('update', ['id' => $user->id, 'timesheet' => $day]) . '\'' }}" class="{{ $day->type == 'workday' ? 'timesheetRow' : '' }}" data-dayType="{{ $day->type }}" data-day="{{ $day->id }}">
                         <td class="date update" id="{{ $day->id }}">
                             @if ($day->type !== 'workday')
                                 <a class='displayDay'
