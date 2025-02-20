@@ -80,17 +80,18 @@
                         <img class="previewIcon" src="{{ asset('/images/preview.png') }}" alt="Preview">
                     </a>
                     <a class="downloadLink"
-                        href="{{ route('exportPdf', ['userId' => $userId, 'month' => $days[0]->Month    , 'type' => 'download']) }}">
+                        href="{{ route('exportPdf', ['userId' => $userId, 'month' => $days[0]->Month, 'type' => 'download']) }}">
                         <img class="downloadIcon" src="{{ asset('/images/download.png') }}" alt="Download">
                     </a>
                 @endif
-              
+
                 @foreach ($days as $day)
-               
-                    <tr onclick="toggleTimesheets(this)" class="timesheetRow" data-dayType="{{$day->type}}" data-day="{{$day->id}}">
-                        <td class="date" id="{{ $day->id }}">
-                            @if($day->type !== 'workday')
-                            <a class='displayDay' href="{{ route('update', ['id' => $user->id, 'timesheet' => $day]) }}">
+                    <tr onclick="toggleTimesheets(this)" class="{{$day->type == 'workday' ? 'timesheetRow' : ''}}" data-dayType="{{ $day->type }}"
+                        data-day="{{ $day->id }}">
+                        <td class="date update" id="{{ $day->id }}">
+                            @if ($day->type !== 'workday')
+                                <a class='displayDay'
+                                    href="{{ route('update', ['id' => $user->id, 'timesheet' => $day]) }}">
                             @endif
                             @php
                                 $toTime = strtotime($day->Month);
@@ -129,58 +130,34 @@
                         </td>
                         <td class="displayBreak">
                             {{-- <div class="displayBreak"> --}}
-                                {{ $day->BreakHours }}
+                            {{ $day->BreakHours }}
                             {{-- </div> --}}
                         </td>
                         <td class="displayOvertTime">
                             {{-- <div class="displayOvertTime"> --}}
-                                {{ $day->OverTime }}
+                            {{ $day->OverTime }}
                             {{-- </div> --}}
                         </td>
                     </tr>
-                    {{-- <tr class = "timesheetRow"> --}}
-                        @foreach ($day->timesheets as $timesheet)
-                    <tr class='hidden timesheetRow' data-timesheet="{{$day->id}}">
-                        <td class="date">
-                            <a href="{{ route('update', ['id' => $user->id, 'timesheet' => $timesheet, 'type' => 'timesheet']) }}">Update</a>
-                        </td>
-                        {{-- <td class="date" id="{{ $timesheet->id }}">
-                            <a
-                                class='displayDay'href="{{ route('update', ['id' => $user->id, 'timesheet' => $timesheet]) }}">
-                                @php
-                                    $toTime = strtotime($timesheet->Month);
-                                    $days = [
-                                        'Mon' => 'Ma',
-                                        'Tue' => 'Di',
-                                        'Wed' => 'Wo',
-                                        'Thu' => 'Do',
-                                        'Fri' => 'Vr',
-                                        'Sat' => 'Za',
-                                        'Sun' => 'Zo',
-                                    ];
-                                    $englishDay = date('D', $toTime);
-                                    $dutchDay = $days[$englishDay];
-                                    $dayOfMonth = date('d', $toTime);
-                                    echo $dutchDay . ' ' . $dayOfMonth;
-                                @endphp
-                            </a>
-                            @if ($timesheet->userNote !== null)
-                                <img class="noteIcon"src="{{ asset('/images/148883.png') }}" alt="Icon">
-                            @endif
-                        </td> --}}
+                    @foreach ($day->timesheets as $timesheet)
+                        <tr class='hidden timesheetStyle ' data-timesheet="{{ $day->id }}">
+                            <td class="date">
+                                <a
+                                    href="{{ route('update', ['id' => $user->id, 'timesheet' => $timesheet, 'type' => 'timesheet']) }}">update</a>
+                            </td>
+                      
 
-                        <td >
-                            In: {{ \Carbon\Carbon::parse($timesheet->ClockedIn)->format('H:i:s') }} <br>
-                            Uit: {{ \Carbon\Carbon::parse($timesheet->ClockedOut)->format('H:i:s') }}
-                        </td>
-                        <td> In: {{ \Carbon\Carbon::parse($timesheet->BreakStart)->format('H:i:s') }} <br>
-                            Uit: {{ \Carbon\Carbon::parse($timesheet->BreakStop)->format('H:i:s') }}</td>
-                    </tr>
+                            <td class="timesheetStyle">
+                                In: {{ \Carbon\Carbon::parse($timesheet->ClockedIn)->format('H:i') }} <br>
+                                Uit: {{ \Carbon\Carbon::parse($timesheet->ClockedOut)->format('H:i') }}
+                            </td>
+                            <td class="timesheetStyle"> In: {{ \Carbon\Carbon::parse($timesheet->BreakStart)->format('H:i') }} <br>
+                                Uit: {{ \Carbon\Carbon::parse($timesheet->BreakStop)->format('H:i') }}</td>
+                        </tr>
+                    @endforeach
                 @endforeach
-          
-            @endforeach
-        @else
-            <p class="text-danger">No data</p>
+            @else
+                <p class="text-danger">No data</p>
             @endif
 
         </table>
@@ -202,14 +179,14 @@
     @endif
 @endsection
 <script>
- const toggleTimesheets = (element)=>{
-    if(element.getAttribute('data-dayType') !== 'workday') return;
-    const dayId = element.getAttribute('data-day');
-    element.classList.toggle('belongTogether')
-    const timesheets = document.querySelectorAll(`tr[data-timesheet="${dayId}"]`);
-    timesheets.forEach(row=>{
-        row.classList.toggle('hidden');
-         row.classList.toggle('belongTogether');
-    })
- }
+    const toggleTimesheets = (element) => {
+        if (element.getAttribute('data-dayType') !== 'workday') return;
+        const dayId = element.getAttribute('data-day');
+        element.classList.toggle('belongTogether')
+        const timesheets = document.querySelectorAll(`tr[data-timesheet="${dayId}"]`);
+        timesheets.forEach(row => {
+            row.classList.toggle('hidden');
+            row.classList.toggle('belongTogether');
+        })
+    }
 </script>

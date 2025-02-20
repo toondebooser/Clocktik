@@ -18,12 +18,20 @@ body {
     border: none;
     border-radius: 5px;
 }
+:hover.timesheetRow{
+    cursor: pointer;
+}
+.timesheetStyle{
+    text-align: center;
+}
 .hidden{
     display: none;
 }
 .belongTogether{
     background-color:lightcyan;
 }
+
+
 table {
     grid-column: 1/13;
     justify-self: center;
@@ -65,7 +73,9 @@ th,
 td {
     border: 1px solid black;
     padding: 8px;
-    text-align: left;
+    width: 25%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 
