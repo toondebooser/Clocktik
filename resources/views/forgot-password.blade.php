@@ -21,8 +21,8 @@
 <div class="success">{{session('status')}}</div>
 @endif
 @endsection
-@section('login')
-   
+@section('content')
+
         <form class="loginForm" action="{{route('password.request')}}" method="post">
             @csrf
             <label class="userNameLabel" for="email">Email adress</label>

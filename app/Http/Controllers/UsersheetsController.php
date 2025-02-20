@@ -45,7 +45,7 @@ class UsersheetsController extends Controller
             ->orderBy('Month', 'asc')
             ->get();
 
-        $days = $currentUser->dayTotals;
+        $days = $currentUser->dayTotals()->orderBy('Month','asc')->get();
         
         $monthlyTotal = $currentUser->userTotal()->where('UserId', '=', $currentUser->id)
             ->whereMonth('Month', '=', $month)

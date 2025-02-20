@@ -35,8 +35,10 @@
         <p>Hallo {{ $user->name ?? 'User' }},</p>
         <p>We hebben een aanvraag ontvangen om jou wachtwoord te resetten klik onderaan op de knopo om naar de herstel pagina te gaan:</p>
         <p>
-            <a href="{{ $url }}" class="email-button">Reset Password</a>
+            <a href="{{ $url }}" class="email-button"><p class="buttonText">Reset Password</p></a>
         </p>
+        <p>Als de knop niet werkt kopieer onderstaande url in je browser:</p>
+        <p>{{$url}}</p>
         <p>Indien jij dit niet was gelieven ons zo snel mogelijk op de hoogte te brengen.</p>
         <p>Bedankt<br>ticktrack</p>
     </div>
