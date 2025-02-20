@@ -14,12 +14,10 @@ use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\UpdateTimesheetController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UsersheetsController;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Password;
 
 Auth::routes(['verify' => true]);
 
@@ -83,3 +81,9 @@ Route::post('/email/resend', function (Request $request) {
 Route::view('/forgot-password', 'forgot-password')->middleware('guest')->name('password.request');
  
 Route::post('/forgot-password', [ForgotPasswordController::class, 'forgotPassword'])->middleware('guest')->name('password.email');
+
+Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'resetPasword'])->middleware('guest')->name('password.reset');
+
+
+ 
+Route::post('/reset-password', [ForgotPasswordController::class, 'updatePassword'])->middleware('guest')->name('password.update');
