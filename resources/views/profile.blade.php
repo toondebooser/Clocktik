@@ -134,7 +134,7 @@
                         </td>
                         <td class="displayOvertTime">
                             {{-- <div class="displayOvertTime"> --}}
-                            {{ $day->OverTime }}
+                            {{ $day->OverTime }} 
                             {{-- </div> --}}
                         </td>
                     </tr>
