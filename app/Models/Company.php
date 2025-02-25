@@ -10,6 +10,7 @@ class Company extends Model
     use HasFactory;
     public function dayTotals()
     {
-        return $this->hasMany(DayTotal::class, 'company_code');
+        return $this->hasMany(DayTotal::class, 'company_code', 'company_code');
     }
+
 }

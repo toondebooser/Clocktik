@@ -2,6 +2,7 @@
 
 namespace App\Utilities;
 
+use App\Models\Company;
 use App\Models\Daytotal;
 use App\Models\Timesheet;
 use App\Models\Usertotal;
@@ -19,27 +20,14 @@ class UserUtility
             ->where('UserId', '=', $id)
             ->whereMonth('Month', '=', $date)
             ->whereYear('Month', '=', $date)
-            ->firstOrCreate([],[
+            ->firstOrCreate([], [
                 'UserId' => $id,
                 'Month' => $date,
                 'RegularHours' => 0,
                 'BreakHours' => 0,
                 'OverTime' => 0
             ]);
-        // if ($userTotal == null) {
-        //     $newUserTotal->create([
-        //         'UserId' => $id,
-        //         'Month' => $date,
-        //         'RegularHours' => 0,
-        //         'BreakHours' => 0,
-        //         'OverTime' => 0
-        //     ]);
-        //     $userTotal = $newUserTotal
-        //         ->where('UserId', '=', $id)
-        //         ->whereMonth('Month', '=', $date)
-        //         ->whereYear('Month', '=', $date)
-        //         ->first();
-        // }
+
         return $userTotal;
     }
 
@@ -55,7 +43,20 @@ class UserUtility
             ->whereDate('Month', $date)
             ->orderBy('created_at', 'asc')
             ->get();
-        // $dayTotalCheck = Daytotal::where
         return $timesheetCheck;
+    }
+
+
+
+    public static function companyNumberGenerator()
+    {
+
+        do {
+            $randomNumber = mt_rand(1000000000, 9999999999);
+            $companyCheck = Company::where('company_code', $randomNumber)->exists();
+        } while ($companyCheck);
+    
+        return $randomNumber;
+
     }
 }
