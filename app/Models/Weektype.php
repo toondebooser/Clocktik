@@ -5,8 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Usertotal extends Model
+class Weektype extends Model
 {
     use HasFactory;
-    protected $fillable = ['UserId','RegularHours','BreakHours', 'OverTime','Month'];
 }

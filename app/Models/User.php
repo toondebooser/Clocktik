@@ -4,20 +4,26 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Notifications\CustomPasswordResetEmail;
 use App\Notifications\CustomVerifyEmail;
+use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 {
     use HasApiTokens, HasFactory, Notifiable;
-    
+
     public function sendEmailVerificationNotification()
     {
         $this->notify(new CustomVerifyEmail);
+    }
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new CustomPasswordResetEmail($token));
     }
     /**
      * The attributes that are mass assignable.
@@ -50,7 +56,18 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
     public function timelogs()
     {
-        return $this->hasMany(Timelog::class, 'UserId');
+        return $this->hasOne(Timelog::class, 'UserId');
     }
-   
+    public function timesheets()
+    {
+        return $this->hasMany(Timesheet::class, 'UserId');
+    }
+    public function userTotal()
+    {
+        return $this->hasMany(Usertotal::class, 'UserId');
+    }
+    public function dayTotals()
+    {
+        return $this->hasMany(Daytotal::class, 'UserId');
+    }
 }

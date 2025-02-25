@@ -13,21 +13,27 @@ return new class extends Migration
     {
         Schema::create('timesheets', function (Blueprint $table) {
             $table->id();
+            $table->integer('daytotal_id');
+            $table->index('daytotal_id');
             $table->integer('UserId');
+            $table->index('UserId');
             $table->timestamp('ClockedIn')->nullable();
             $table->timestamp('ClockedOut')->nullable();
             $table->timestamp('BreakStart')->nullable();
             $table->timestamp('BreakStop')->nullable();
-            $table->decimal('RegularHours',5,2)->default(0,00);
-            $table->decimal('accountableHours')->default(0,00);
-            $table->decimal('BreakHours',5,2)->default(0,00);
-            $table->decimal('OverTime',5,2)->default(0,00);
+            $table->integer('DaytimeCount')->default(1);
+            $table->decimal('RegularHours', 5, 2)->default(0, 00);
+            $table->decimal('accountableHours', 5, 2)->default(0, 00);
+            $table->integer('BreaksTaken')->default(0);
+            $table->decimal('BreakHours', 5, 2)->default(0, 00);
+            $table->decimal('OverTime', 5, 2)->default(0, 00);
             $table->string('type')->default('workday');
             $table->text('userNote')->nullable();
             $table->date('Month');
-            $table->boolean('Weekend')->default(false);         
+            $table->index('Month');
+            $table->boolean('Weekend')->default(false);
+            $table->boolean('NightShift')->default(false);
             $table->timestamps();
-
         });
     }
 

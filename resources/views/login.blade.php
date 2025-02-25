@@ -17,6 +17,9 @@
     </ul>  
 </div>    
 @endif
+@if (session('status'))
+<div class="success">{{session('status')}}</div>
+@endif
 @if (session()->has('verified'))
 <div class="success">Thank you for verifying your email!</div>
 @endif
@@ -33,6 +36,7 @@
             <a class='registerLink'href="{{ route('registration-form') }}">Register</a>
             <label class="rememberLabel" for="remember">Remember me</label>
             <input id="remember" type="checkbox" name="remember" class="remeberCheckbox">
+            <a class="forgotPassword" href="{{route('password.request')}}">Wachtwoord vergeten?</a>
         </form>
     
 @endsection

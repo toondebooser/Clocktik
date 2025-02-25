@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('usertotals', function (Blueprint $table) {
+        Schema::create('companies', function (Blueprint $table) {
             $table->id();
-            $table->integer('UserId');
-            $table->index('UserId');
-            $table->decimal('RegularHours', 5, 2)->default(0, 00);
-            $table->decimal('BreakHours', 5, 2)->default(0, 00);
-            $table->decimal('OverTime', 5, 2)->default(0, 00);
-            $table->date('Month');
+            $table->string("company_name")->nullable();
+            $table->string('image')->nullable();
+            $table->string('color')->nullable();
+            $table->string('company_code',10);
+            $table->index('company_code');
             $table->timestamps();
+
         });
     }
 
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('Usertotals');
+        Schema::dropIfExists('companies');
     }
 };

@@ -16,7 +16,7 @@ class ConfirmMiddleware
     public function handle(Request $request, Closure $next)
     {
         if (!$request->session()->has('confirmed_action') ) {
-            return redirect()->route('dashboard')->with('error','oeps');
+            return redirect()->route('dashboard');
         }
 
         $response = $next($request);

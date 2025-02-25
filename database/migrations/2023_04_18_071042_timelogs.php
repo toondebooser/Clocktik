@@ -16,14 +16,17 @@ return new class extends Migration
             $table->boolean('BreakStatus');
             $table->boolean('ShiftStatus');
             $table->boolean('Weekend');
+            $table->boolean('NightShift')->default(false); 
             $table->timestamp('StartWork')->nullable();
             $table->timestamp('StartBreak')->nullable();
             $table->timestamp('EndBreak')->nullable();
+            $table->timestamp('StopWork')->nullable();
+            $table->integer('BreaksTaken')->default(0);
             $table->decimal('BreakHours', 5, 2)->default(0, 00);
             $table->decimal('RegularHours', 5, 2)->default(0, 00);
-            $table->timestamp('StopWork')->nullable();
             $table->text('userNote')->nullable();
             $table->integer('UserId');
+            $table->index('UserId');
             $table->timestamps();
         });
     }

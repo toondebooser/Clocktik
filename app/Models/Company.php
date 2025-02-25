@@ -5,8 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Usertotal extends Model
+class Company extends Model
 {
     use HasFactory;
-    protected $fillable = ['UserId','RegularHours','BreakHours', 'OverTime','Month'];
+    public function dayTotals()
+    {
+        return $this->hasMany(DayTotal::class, 'company_code');
+    }
 }

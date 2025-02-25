@@ -1,6 +1,7 @@
 @extends('layout')
 @section('title')
     <h2>Welcome {{ $user->name }}</h2>
+    <h3 style="height:fit-content;grid-row: 3/4; grid-column: 1/13; justify-self:center" id="clock"></h3>
 @endsection
 @section('userDashboard')
 
@@ -24,24 +25,28 @@
         @if ($shiftStatus == true && $breakStatus == true)
             <a href="#" onclick="openConfirmationModal('wil je terug aan het werk?', '{{ route('stopBreak') }}')"
                 class="breakButton">
-                <p class="buttonText">Back to work</p>
+                <p class="buttonText">Uit pauze</p>
             </a>
         @else
-            <a href="#" onclick="openConfirmationModal('Ben je zeler dat je wil pauzeren?', '{{ route('break') }}')"
+            <a href="#" onclick="openConfirmationModal('Ben je zeker dat je wil pauzeren?', '{{ route('break') }}')"
                 class="breakButton">
-                <p class="buttonText">Break</p>
+                <p class="buttonText">pauze</p>
             </a>
         @endif
         <a href="#" onclick="openConfirmationModal('Ga je naar huis?', '{{ route('stop') }}')" class="stopButton">
             <p class="buttonText">Stop</p>
         </a>
     @endif
-
+    {{-- <div class="dayStatus" style="grid-column: 1/13; grid-row: 3/4; justify-self: center; align-self: end; height:100px">
+        <div style="text-align: center"><span style="color: red">{{date('d-m-y', strToTime($lastWorkedDate))}}</span></div>
+        <div class="workedHours">Gelogde werkuren: {{ $workedHours }}</div>
+        <div class="pausedHours">Gelogde pauze: {{ $breakHours }}</div>
+    </div> --}}
     <div id="confirmationModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <p id="modalText"></p>
-            <button id="confirmButton" onclick="yes(this.dataset.url)" class="modal-button">Confirm</button>
+            <button id="confirmButton" class="modal-button">Confirm</button>
             <button class="modal-button cancel" onclick="closeModal()">Cancel</button>
         </div>
     </div>
@@ -125,14 +130,63 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const shiftStatus = {{ json_encode($shiftStatus) }};
+            const breakStatus = {{ json_encode($breakStatus) }};
 
-            function openConfirmationModal(message, actionUrl) {
+            const startBreak = new Date("{{ $startBreak }}").getTime();
+            const startShift = new Date("{{ $start }}").getTime();
+            
+            const clockElement = document.getElementById('clock');
+            const breakHours = parseFloat("{{ $breakHours }}"); 
+            const workedHours = parseFloat("{{$workedHours}}");
+            
+            const workedMilliseconds = workedHours * 60 * 60 * 1000;
+            const breakMilliseconds = breakHours * 60 * 60 * 1000;
+
+
+            function updateClock(type) {
+                
+                const now = new Date().getTime(); 
+                
+                let elapsed = null
+                if(type == "work"){
+                 elapsed = now - startShift   + workedMilliseconds    ;
+                 console.log(elapsed);
+                 
+                 
+                 
+                } else{
+                     elapsed = now - startBreak + breakMilliseconds;
+                }
+
+                const hours = Math.floor(elapsed / (1000 * 60 * 60));
+                const minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((elapsed % (1000 * 60)) / 1000);
+
+                // Display the result
+                clockElement.innerText =
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            setInterval(() => {
+                if (shiftStatus && !breakStatus) {
+                    updateClock("work");
+                } else if (shiftStatus && breakStatus) {
+                    updateClock("break")
+                } else {
+                    null
+                }
+
+            }, 1000);
+
+
+            const openConfirmationModal = (message, actionUrl) => {
                 document.getElementById('modalText').innerText = message;
                 document.getElementById('confirmButton').dataset.url = actionUrl;
                 document.getElementById('confirmationModal').style.display = "block";
             }
 
-            function closeModal() {
+            const closeModal = () => {
                 document.getElementById('confirmationModal').style.display = "none";
             }
 
@@ -152,6 +206,7 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
+                            console.log(data)
                             window.location.href = actionUrl;
                         } else {
                             alert('Failed to confirm action.');

@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('usertotals', function (Blueprint $table) {
+        Schema::create('weektypes', function (Blueprint $table) {
             $table->id();
-            $table->integer('UserId');
-            $table->index('UserId');
-            $table->decimal('RegularHours', 5, 2)->default(0, 00);
-            $table->decimal('BreakHours', 5, 2)->default(0, 00);
-            $table->decimal('OverTime', 5, 2)->default(0, 00);
-            $table->date('Month');
+            $table->json('weekend_days')->default(json_encode([0, 6]));            
+            $table->string('CompanyCode', 10);
+            $table->index('CompanyCode');
             $table->timestamps();
+
         });
     }
 
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('Usertotals');
+        Schema::dropIfExists('weektypes');
     }
 };
