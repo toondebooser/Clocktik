@@ -17,7 +17,7 @@ class DashboardController extends Controller
         $today = now('Europe/Brussels')->format('Y-m-d');
         // $displayWorkedHours = 0.00;
         // $displayBreakHours = 0.00;
-        $getLastWorkedDay = UserUtility::userTimesheetCheck($userRow->StartWork,auth()->user()->id)->first();
+        $getLastWorkedDay = UserUtility::userDayTotalCheck($userRow->StartWork,auth()->user()->id)->first();
         if($getLastWorkedDay && $getLastWorkedDay->Month == $today && !$userRow->ShiftStatus){
             $userRow->fill([
                 'BreakHours' => $getLastWorkedDay->BreakHours,

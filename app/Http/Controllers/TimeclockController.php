@@ -19,7 +19,7 @@ class TimeclockController extends Controller
     public function startWorking(Request $request)
     {
         $currentUser = auth()->user();
-        $userRow = auth()->user()->timelogs;
+        $userRow = $currentUser->timelogs;
         $timestamp = now('Europe/Brussels');
      
 

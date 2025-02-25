@@ -32,8 +32,8 @@
     <div class="bodyContent">
 
         @yield('error')
-        @yield('content')
         @yield('title')
+        @yield('content')
         
         <header>
             @yield('header')
@@ -45,13 +45,13 @@
             @else
             <a class="authLinks button" href = "{{route('myWorkers')}}">Personeel</a>
             @endif
-                <a class="authLinks button" href="{{ route('logout') }}">Logout</a>
+            <a class="authLinks button" href="{{ route('logout') }}">Logout</a>
             @endauth
             @guest
                 <a class="authLinks button" href="{{ route('login') }}">Login</a>
-            @endguest
+                @endguest
         </header>
-
+        
         @yield('login')
         @yield('userDashboard')
         @yield('newUser')

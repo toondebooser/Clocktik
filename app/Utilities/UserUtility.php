@@ -44,7 +44,7 @@ class UserUtility
     }
 
 
-    public static function userTimesheetCheck($date, $id)
+    public static function userDayTotalCheck($date, $id)
     {
         if (is_string($date)) {
             $date = Carbon::parse($date);

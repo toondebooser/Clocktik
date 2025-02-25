@@ -1,10 +1,17 @@
 @extends('layout')
 @section('content')
-    @if (isset($setForTimesheet) && $setForTimesheet == true)
-        <h2>Uurroosters</h2>
-    @else
-        <h2>Voor wie ?</h2>
-    @endif
+@section('content')
+@if (session('success'))
+<div class="success">
+    {{ session('success') }} <br>
+    <a class="removeError" href=""> ok </a>
+</div>
+@endif
+@if (isset($setForTimesheet) && $setForTimesheet == true)
+    <h2>Uurroosters</h2>
+@else
+    <h2>Voor wie ?</h2>
+@endif
 
     <div class="workersForm">
         @foreach ($workers as $worker)
