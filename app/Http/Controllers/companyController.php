@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class companyController extends Controller
+class CompanyController extends Controller
 {
     public function registrateCompany(Request $request){
-        
+
     }
 }

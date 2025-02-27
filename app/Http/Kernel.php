@@ -53,6 +53,7 @@ class Kernel extends HttpKernel
      * @var array<string, class-string|string>
      */
     protected $middlewareAliases = [
+        'god' => \App\Http\Middleware\godMode::class,
         'notSigned' => \App\Http\Middleware\notSignedIn::class,
         'confirm.action' => \App\Http\Middleware\ConfirmMiddleware::class,
         'admin' => \App\Http\Middleware\AdminMiddleware::class,

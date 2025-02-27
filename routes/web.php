@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AddCustomTimesheetController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ConfirmAction;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeleteTimesheetController;
@@ -36,7 +37,7 @@ Route::middleware('worker')->group(function () {
     });
 });
 Route::get('/', [HomeController::class, 'show'])->name('home');
-// Route::post('/add-company', )
+Route::post('/add-company',[CompanyController::class, 'registrateCompany'])->name('addCompany')->middleware('god');
 Route::get('/login', [HomeController::class, 'login'])->name('login')->middleware('notSigned');
 Route::get('/logout', [HomeController::class, 'logout'])->name('logout');
 Route::get('/registration-form', [UserController::class, 'registrationForm'])->name('registration-form');

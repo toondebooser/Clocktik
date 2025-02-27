@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class WorkerMiddleware
+class godMode
 {
     /**
      * Handle an incoming request.
@@ -15,10 +15,9 @@ class WorkerMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $user = auth()->user();
-        if (!$user || $user->admin) return redirect('/');
-        else {
-            return $next($request);
-        }
+        $god = auth()->user()->god;
+        if(!$god) return redirect('/');
+        else
+        return $next($request);
     }
 }
