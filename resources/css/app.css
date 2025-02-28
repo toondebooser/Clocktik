@@ -87,6 +87,12 @@ th {
     grid-template-rows: 10% 10% 55% 15% 10%;
     height: 100%;
 }
+.form{
+    grid-row: 3/4;
+    grid-column: 1/13;
+    align-self: center;
+    justify-self: center;
+}
 .displayRegular {
     white-space: normal;
     text-align: center;

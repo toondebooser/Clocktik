@@ -3,7 +3,7 @@
     $isLoading = false
 @endphp
 @section('title')
-    <h2>User Registration</h2>
+    <h2>Company Registration</h2>
     @if (isset($exists))
         <p class="emailExists">{{$exists}}</p>
     @endif
@@ -26,14 +26,14 @@
 @endsection
 @section('content')
 
-    <form class="newUserForm" name="newUserForm" action="{{ route('addCompany') }}" method="post" onsubmit="showLoader()">
+    <form class='form'name="newUserForm" action="{{ route('addCompany') }}" method="post" onsubmit="showLoader()">
 
         @csrf
-        <label class="nameLabel" for="companyName">Company name</label>
-        <input id="companyName" class="name" type="text" name="companyName">
+        <label class="nameLabel" for="companyName">Company name</label> <br>
+        <input id="companyName" class="name" type="text" name="companyName"> <br> 
 
-        <label for="adminName">Admin name</label>
-        <input type="text" name='adminName' id="adminName">
+        <label for="adminName">Admin name</label> <br>
+        <input type="text" name='adminName' id="adminName"> <br>
       
 
         <input class="registrationButton" type="submit" value="Registrate" >

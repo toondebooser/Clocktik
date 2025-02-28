@@ -36,7 +36,7 @@ Route::middleware('worker')->group(function () {
     });
 });
 Route::get('/', [HomeController::class, 'show'])->name('home');
-Route::post('/add-company',[CompanyController::class, 'registrateCompany'])->name('addCompany')->middleware('god');
+Route::get('/add-company',[CompanyController::class, function() {return view('addCompany'); }])->name('addCompany')->middleware('admin');
 Route::get('/login', [HomeController::class, 'login'])->name('login')->middleware('notSigned');
 Route::get('/logout', [HomeController::class, 'logout'])->name('logout');
 Route::get('/registration-form', [UserController::class, 'registrationForm'])->name('registration-form');
