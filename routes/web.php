@@ -28,7 +28,6 @@ Route::middleware('worker')->group(function () {
         Route::match(['get', 'post'], '/dashboard', [DashboardController::class, 'userDashboard'])->name('dashboard');
         Route::get('/my-profile', [UsersheetsController::class, 'myProfile'])->name('myProfile');
     });
-
     Route::middleware(['auth', 'confirm.action'])->group(function () {
         Route::get('/dashboard-start', [TimeclockController::class, 'startWorking'])->name('start');
         Route::get('/dashboard-break', [TimeclockController::class, 'break'])->name('break');
@@ -56,12 +55,9 @@ Route::post('/setSpecial', [TimesheetController::class, 'setSpecial'])->name('se
 Route::get('/export-pdf', [PdfExportController::class, 'exportPdf'])->name('exportPdf')->middleware('admin', 'auth');
 Route::match(['get', 'post'],'/delete-timesheet/{workerId?}/{deleteSheet?}/{date?}', [DeleteTimesheetController::class, 'deleteTimesheet'])->name('delete')->middleware('admin');
 Route::post('/confirm-action', [ConfirmAction::class, 'confirmAction']);
-
-
 Route::get('/email/verify', function () {
     return view('verify-email');
 })->middleware('auth')->name('verification.notice');
-
 Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
     $user = User::findOrFail($id);
 
@@ -74,18 +70,11 @@ Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) 
     }
     return redirect('/login')->with('verified', true);
 })->middleware(['signed'])->name('verification.verify');
-
 Route::post('/email/resend', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
     return back()->with('message', 'A new verification link has been sent to your email address.');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.resend');
-
 Route::view('/forgot-password', 'forgot-password')->middleware('guest')->name('password.request');
- 
 Route::post('/forgot-password', [ForgotPasswordController::class, 'forgotPassword'])->middleware('guest')->name('password.email');
-
 Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'resetPassword'])->middleware('guest')->name('password.reset');
-
-
- 
 Route::post('/reset-password', [ForgotPasswordController::class, 'updatePassword'])->middleware('guest')->name('password.update');

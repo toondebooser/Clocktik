@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 class CompanyController extends Controller
 {
+
+    
     public function registrateCompany(Request $request){
 
     }

@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Timesheet extends Model
 {
+    use HasFactory;
     protected $fillable = ['UserId','daytotal_id', 'ClockedIn', 'ClockedOut', 'BreakStart', 'BreakStop', 'DaytimeCount', 'RegularHours', 'accountableHours', 'BreaksTaken', 'BreakHours', 'OverTime', 'userNote', 'Weekend', 'NightShift', 'Month', 'type'];
 
     public function daytotal(): BelongsTo
     {
-        return $this->belongsTo(Daytotal::class, 'id', 'daytotal_id');
+        return $this->belongsTo(Daytotal::class, 'daytotal_id');
     }
 }

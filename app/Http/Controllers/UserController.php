@@ -81,13 +81,14 @@ class UserController extends Controller
 
         // return redirect('/dashboard');
     }
-    public function createUser($name, $email, $password)
+    public function createUser($name, $email, $password, $admin = false)
     {
         // Create the User with mass assignment
         $newUser = User::create([
             'name' => $name,
             'email' => $email,
             'password' => Hash::make($password),
+            'admin' => $admin,
         ]);
 
         $newUser->userRow()->create([

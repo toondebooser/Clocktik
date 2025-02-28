@@ -29,9 +29,11 @@
     <form class="newUserForm" name="newUserForm" action="{{ route('addCompany') }}" method="post" onsubmit="showLoader()">
 
         @csrf
-        <label class="nameLabel" for="name">Company name</label>
-        <input id="name" class="name" type="text" name="name">
+        <label class="nameLabel" for="companyName">Company name</label>
+        <input id="companyName" class="name" type="text" name="companyName">
 
+        <label for="adminName">Admin name</label>
+        <input type="text" name='adminName' id="adminName">
       
 
         <input class="registrationButton" type="submit" value="Registrate" >
