@@ -26,14 +26,18 @@
 @endsection
 @section('content')
 
-    <form class='form'name="newUserForm" action="{{ route('addCompany') }}" method="post" onsubmit="showLoader()">
+    <form class='form'name="newUserForm" action="{{ route('registrateCompany') }}" method="post" onsubmit="showLoader()">
 
         @csrf
         <label class="nameLabel" for="companyName">Company name</label> <br>
-        <input id="companyName" class="name" type="text" name="companyName"> <br> 
+        <input id="companyName" class="name" type="text" name="companyName"> <br> <br>
 
         <label for="adminName">Admin name</label> <br>
-        <input type="text" name='adminName' id="adminName"> <br>
+        <input type="text" name='adminName' id="adminName"> <br><br>
+
+        <label for="adminEmail">Admin email</label> <br>
+        <input type="email" name='adminEmail' id="adminEmail"> <br> <br>
+
       
 
         <input class="registrationButton" type="submit" value="Registrate" >
