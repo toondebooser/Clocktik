@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -37,10 +38,10 @@ class CustomVerifyEmail extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $verificationUrl = $this->verificationUrl($notifiable);
-
+        $company= Company::where('company_code', $this->companyCode)->first();
         return (new MailMessage)
         ->subject('Verify Your Email Address')
-        ->view('email', ['url' => $verificationUrl, 'companyCode' => $this->companyCode]);
+        ->view('email', ['url' => $verificationUrl,'company'=>$company, 'companyCode' => $this->companyCode, 'name' => $notifiable->name,]);
     }
     protected function verificationUrl($notifiable)
     {

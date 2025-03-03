@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <style>
         body {
@@ -7,6 +8,7 @@
             background-color: #f9f9f9;
             padding: 20px;
         }
+
         .email-container {
             max-width: 600px;
             margin: 0 auto;
@@ -15,9 +17,11 @@
             border: 1px solid #dddddd;
             border-radius: 5px;
         }
-        .buttonText{
+
+        .buttonText {
             color: white
         }
+
         .email-button {
             display: inline-block;
             margin-top: 20px;
@@ -29,14 +33,23 @@
         }
     </style>
 </head>
+
 <body>
     <div class="email-container">
-        <h2>Verify Your Email Address</h2>
-        <p>Hello,</p>
-        <p>Please click the button below to verify your email address:</p>
-        <a href="{{ $url }}" class="email-button"><p class="buttonText">Verify Email Address</p></a>
-        <p>If you did not create this account, no further action is required.</p>
-        <p>Thank you for using our application!</p>
+        <h2>Verifieer uw e-mailadres</h2>
+        <p>Hallo, {{ $name }}</p>
+        <p>Klik op de onderstaande knop om je e-mailadres te verifiëren:</p>
+        <a href="{{ $url }}" class="email-button">
+            <p class="buttonText">E-mailadres verifiëren</p>
+        </a>
+        @if (isset($companyCode))
+            <h2>Jouw bedrijfscode:</h2>
+            <p>Je hebt een nieuw bedrijf gestart en jouw account bezit administrator rechten over het aangemaakte
+                bedrijf: {{ $companyname}}</p>
+        @endif
+        <p>Als u dit account niet heeft aangemaakt, hoeft u geen verdere actie te ondernemen.</p>
+        <p>Bedankt voor het gebruik van onze applicatie!</p>
     </div>
 </body>
+
 </html>

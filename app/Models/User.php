@@ -19,7 +19,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 
     public function sendEmailVerificationNotification($companyCode = null)
     {
-        $this->notify(new CustomVerifyEmail($companyCode ?? $this->company_code));
+        $this->notify(new CustomVerifyEmail($companyCode));
     }
     public function sendPasswordResetNotification($token)
     {
