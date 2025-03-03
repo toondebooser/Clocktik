@@ -69,7 +69,7 @@ class TimesheetController extends Controller
         if ($addTimesheet) return redirect('/my-workers');
     }
 
-    public function setDay($dayLabel, $newSpecialTimesheet, $dayType, $worker, $singleDay)
+    public function setDay($dayLabel, $dayType, $worker, $singleDay)
     {
         $dayTotal = Daytotal::firstOrCreate([
             'UserId'=>$worker,
@@ -107,7 +107,7 @@ class TimesheetController extends Controller
         while ($currentDate <= $endDate) {
             $newSpecialTimesheet = new Timesheet;
             if (!$currentDate->isWeekend()) {
-                $addDay =  $this->setDay($dayLabel, $newSpecialTimesheet, $dayType, $worker, $currentDate);
+                $addDay =  $this->setDay($dayLabel, $dayType, $worker, $currentDate);
                 if ($addDay !== true) {
                     //TODO: push $addDay directly in error?
                     array_push($errors, $addDay);

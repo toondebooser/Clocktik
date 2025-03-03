@@ -26,15 +26,15 @@ class UserController extends Controller
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|max:255',
                 'password' => 'required|min:8|confirmed',
-                'companyCode' => 'required|min:10|exists:companies,company_code'
+                // 'companyCode' => 'required|min:10|exists:companies,company_code'
 
             ],
             [
                 'name.string' => "please enter your name!",
                 'email.email' => "your email adress seems to be none existing.",
                 'password.string' => "The provided password is not allowed.",
-                'companyCode.required' => "Please provide a company code.",
-                'companyCode.exists' => "The provided company code does not exist.",
+                // 'companyCode.required' => "Please provide a company code.",
+                // 'companyCode.exists' => "The provided company code does not exist.",
             ]
         );
 
@@ -92,13 +92,13 @@ class UserController extends Controller
             'email' => $email,
             'password' => Hash::make($password),
             'admin' => $admin,
-            'company_code' =>$companyCode
+            'company_code' => $companyCode
         ]);
 
-        $newUser->userRow()->create([
+        $newUser->timelogs()->create([
             'ShiftStatus' => false,
             'BreakStatus' => false,
-            'weekend' => false,
+            'Weekend' => false,
         ]);
 
         $newUser->userTotal()->create([

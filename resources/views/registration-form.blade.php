@@ -11,17 +11,15 @@
 
 @section('error')
 <div class="loginError">
-    @error('name')
-    <p id='errName' class="text-danger">{{ $message }}</p>
-    @enderror
-    
-    @error('email')
-    <p id='errEmail' class="text-danger">{{ $message }}</p>
-    @enderror
-    
-    @error('password')
-    <div class="text-danger">{{ $message }}</div>
-    @enderror
+    @if ($errors->any())
+    <div class="text-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
 </div>
 @endsection
 @section('newUser')

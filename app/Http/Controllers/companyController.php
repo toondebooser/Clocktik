@@ -10,19 +10,21 @@ use Illuminate\Support\Facades\Hash;
 class CompanyController extends Controller
 {
 
-    
-    public function registrateCompany(Request $request){
+
+    public function registrateCompany(Request $request)
+    {
 
         $userController = new UserController;
-        $companyName = request()->input('companyName');
+        $companyName = $request->companyName;
         $adminName = request()->input('adminName');
         $email = request()->input('adminEmail');
         $companyCode = UserUtility::companyNumberGenerator();
-        $userController->createUser($adminName,$email,Hash::make('tiktrackadmin'),true);
+        $newAdmin =  $userController->createUser($adminName, $email, Hash::make('tiktrackadmin'), $companyCode, true);
         $company = Company::create([
-            'company_name'=> $companyName,
+            'company_name' => $companyName,
             'company_code' => $companyCode,
         ]);
-
+         $newAdmin->sendEmailVerificationNotification($companyCode);
+        if ($company) return redirect('/')->with('success', 'Registration successful! Please verify your email');
     }
 }

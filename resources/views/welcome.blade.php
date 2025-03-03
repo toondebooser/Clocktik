@@ -3,6 +3,7 @@
 @if (session()->has('success'))
 <div class="success">
  {{session('success')}}
+ <a href="">ok</a>
 </div> 
 @endif
     <h1>Tiktrack</h1>
