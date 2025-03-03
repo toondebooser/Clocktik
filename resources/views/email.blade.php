@@ -45,7 +45,9 @@
         @if (isset($companyCode))
             <h2>Jouw bedrijfscode:</h2>
             <p>Je hebt een nieuw bedrijf gestart en jouw account bezit administrator rechten over het aangemaakte
-                bedrijf: {{ $companyname}}</p>
+                bedrijf:{{$company->company_name}}</p><br>
+                <p>De volgende code hebben jou werknemers nodig om zich te kunnen registreren:</p>
+                <h2><strong>{{$companyCode}}</strong></h2>
         @endif
         <p>Als u dit account niet heeft aangemaakt, hoeft u geen verdere actie te ondernemen.</p>
         <p>Bedankt voor het gebruik van onze applicatie!</p>
