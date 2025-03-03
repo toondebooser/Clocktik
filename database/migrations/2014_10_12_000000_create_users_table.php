@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->boolean('admin')->default(false);
             $table->boolean('god')->default(false);
+            $table->bigInteger('company_code',10)->unsigned();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

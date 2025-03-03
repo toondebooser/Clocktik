@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
+use App\Utilities\UserUtility;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class CompanyController extends Controller
 {
@@ -14,6 +17,12 @@ class CompanyController extends Controller
         $companyName = request()->input('companyName');
         $adminName = request()->input('adminName');
         $email = request()->input('adminEmail');
-        // $userController->createUser();
+        $companyCode = UserUtility::companyNumberGenerator();
+        $userController->createUser($adminName,$email,Hash::make('tiktrackadmin'),true);
+        $company = Company::create([
+            'company_name'=> $companyName,
+            'company_code' => $companyCode,
+        ]);
+
     }
 }

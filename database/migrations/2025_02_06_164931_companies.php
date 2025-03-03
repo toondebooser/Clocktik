@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string("company_name")->nullable();
             $table->string('image')->nullable();
             $table->string('color')->nullable();
-            $table->string('company_code',10);
+            $table->bigInteger('company_code',10)->unsigned();
             $table->index('company_code');
             $table->timestamps();
 

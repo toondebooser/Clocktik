@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('weektypes', function (Blueprint $table) {
             $table->id();
             $table->json('weekend_days')->default(json_encode([0, 6]));            
-            $table->string('CompanyCode', 10);
-            $table->index('CompanyCode');
+            $table->bigInteger('company_code',10)->unsigned();
+            $table->index('company_code');
             $table->timestamps();
 
         });

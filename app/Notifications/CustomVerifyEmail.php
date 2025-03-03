@@ -12,13 +12,13 @@ use Illuminate\Support\Facades\URL;
 class CustomVerifyEmail extends Notification
 {
     use Queueable;
-
+    protected $companyCode;
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct($companyCode)
     {
-        //
+        $this->companyCode = $companyCode;
     }
 
     /**
@@ -39,8 +39,8 @@ class CustomVerifyEmail extends Notification
         $verificationUrl = $this->verificationUrl($notifiable);
 
         return (new MailMessage)
-        ->view('email', ['url' => $verificationUrl])
-        ->subject('Verify Your Email Address');
+        ->subject('Verify Your Email Address')
+        ->view('email', ['url' => $verificationUrl, 'companyCode' => $this->companyCode]);
     }
     protected function verificationUrl($notifiable)
     {

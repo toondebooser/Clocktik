@@ -110,7 +110,7 @@ class TimesheetController extends Controller
                 $addDay =  $this->setDay($dayLabel, $newSpecialTimesheet, $dayType, $worker, $currentDate);
                 if ($addDay !== true) {
                     //TODO: push $addDay directly in error?
-                    array_push($errors, 'Datum al in gebruik: ' . $currentDate->toDateString());
+                    array_push($errors, $addDay);
                 }
             }
             $currentDate->addDay();
