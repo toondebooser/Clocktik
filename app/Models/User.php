@@ -72,4 +72,8 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     {
         return $this->hasMany(Daytotal::class, 'UserId');
     }
+    public function company()
+    {
+        return $this->hasOne(Company::class, 'company_code', 'company_code');
+    }
 }

@@ -3,7 +3,10 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,11 +15,70 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        // Create Admin user
+        User::create([
+            'name' => 'Admin',
+            'email' => 'toondebooser@gmail.com',
+            'password' => Hash::make('password123'),
+            'admin' => true,
+            'companyCode' => 1234567890,
+            'email_verified_at' => now(),
+            'god' => false,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+        User::create([
+            'name' => 'God',
+            'email' => 'taxus.work@gmail.com',
+            'password' => Hash::make('password123'),
+            'admin' => true,
+            'companyCode' => 1234567890,
+            'email_verified_at' => now(),
+            'god' => true,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        // Create regular users
+        $users = [
+            [
+                'name' => 'John Doe',
+                'email' => 'john@example.com',
+                'password' => Hash::make('password123'),
+                'admin' => false,
+                'companyCode' => 1234567890,
+                'email_verified_at' => now(),
+                'god' => false,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'name' => 'Jane Smith',
+                'email' => 'jane@example.com',
+                'password' => Hash::make('password123'),
+                'admin' => false,
+                'companyCode' => 1234567890,
+                'email_verified_at' => now(),
+                'god' => false,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'name' => 'Bob Johnson',
+                'email' => 'bob@example.com',
+                'password' => Hash::make('password123'),
+                'admin' => false,
+                'companyCode' => 1234567890,
+                'email_verified_at' => now(),
+                'god' => false,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]
+        ];
+
+        // Insert regular users
+        foreach ($users as $user) {
+            User::create($user);
+        }
     }
 }

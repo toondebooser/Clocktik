@@ -9,10 +9,10 @@ class Company extends Model
 {
     use HasFactory;
     protected $fillable = ['company_code','company_name'];
-    public function dayTotals()
+    public function users()
     {
 
-        return $this->hasMany(DayTotal::class, 'company_code', 'company_code');
+        return $this->hasMany(User::class, 'company_code', 'company_code');
     }
 
 }
