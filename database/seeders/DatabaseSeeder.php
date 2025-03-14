@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Company;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -15,7 +16,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create Admin user
+        Company::create([
+            'company_name'=> 'Beterams',
+            'image' => 'images/'
+        ]);
         User::create([
             'name' => 'Admin',
             'email' => 'toondebooser@gmail.com',
@@ -32,7 +36,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'taxus.work@gmail.com',
             'password' => Hash::make('password123'),
             'admin' => true,
-            'companyCode' => 1234567890,
+            'companyCode' => 0000000000,
             'email_verified_at' => now(),
             'god' => true,
             'created_at' => now(),

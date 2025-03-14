@@ -8,8 +8,8 @@
 @endif
     <h1>Tiktrack</h1>
     <a href="{{ route('dashboard') }}" class="logoContainer">
-            <img class="logo" src="{{ asset('images/Taxus logo perfect round.png') }}"
-                alt="hmm there should be a alogo here">
+            <img class="logo" src="{{ auth()->check() ? asset(auth()->user()->company->image) : asset('images/Taxus logo perfect round.png') }}"
+            alt="Company Logo">
     </a>
     <p style="grid-column: 1/13; justify-self:center; font-size:large">1.4.10</p>
 @endsection
