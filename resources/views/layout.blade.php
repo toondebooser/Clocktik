@@ -17,7 +17,11 @@
     <link rel="stylesheet" href="{{ asset('public/build/assets//app-721905ac.css ')}}">
     @endif
   
-    
+    <style>
+        :root {
+            --primary-color: {{ auth()->check() ? auth()->user()->company->color ?? 'black' : 'black' }};
+        }
+    </style>
     
     
     <title>Tiktrack</title>

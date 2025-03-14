@@ -11,5 +11,5 @@
             <img class="logo" src="{{ auth()->check() ? asset(auth()->user()->company->image) : asset('images/Taxus logo perfect round.png') }}"
             alt="Company Logo">
     </a>
-    <p style="grid-column: 1/13; justify-self:center; font-size:large">1.4.10</p>
+    <p style="grid-column: 1/13; justify-self:center; font-size:large">2.0.0</p>
 @endsection

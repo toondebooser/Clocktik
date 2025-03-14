@@ -16,27 +16,54 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Company::create([
-            'company_name'=> 'Beterams',
-            'image' => 'images/'
-        ]);
-        User::create([
-            'name' => 'Admin',
-            'email' => 'toondebooser@gmail.com',
-            'password' => Hash::make('password123'),
-            'admin' => true,
-            'companyCode' => 1234567890,
-            'email_verified_at' => now(),
-            'god' => false,
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);
+
+        $companies = [
+            [
+                'company_name' => 'Beterams',
+                'image' => 'images/95090418_1090903184610004_7235939885578715136_n.png',
+                'color' => "#019541",
+                'company_code' => 1234567890,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'company_name' => 'De Bever',
+                'image' => 'images/bever.png',
+                'color' => "black",
+                'company_code' => 1234567891,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]
+        ];
+       $admins =[[
+        'name' => 'Wim',
+        'email' => 'toondebooser@gmail.com',
+        'password' => Hash::make('password123'),
+        'admin' => true,
+        'company_code' => 1234567890,
+        'email_verified_at' => now(),
+        'god' => false,
+        'created_at' => now(),
+        'updated_at' => now()
+       ],
+    [
+        'name' => 'Sam',
+        'email' => 'sam@gmail.com',
+        'password' => Hash::make('password123'),
+        'admin' => true,
+        'company_code' => 1234567891,
+        'email_verified_at' => now(),
+        'god' => false,
+        'created_at' => now(),
+        'updated_at' => now()
+    ]];
+ 
         User::create([
             'name' => 'God',
             'email' => 'taxus.work@gmail.com',
             'password' => Hash::make('password123'),
             'admin' => true,
-            'companyCode' => 0000000000,
+            'company_code' => 0000000000,
             'email_verified_at' => now(),
             'god' => true,
             'created_at' => now(),
@@ -50,7 +77,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'john@example.com',
                 'password' => Hash::make('password123'),
                 'admin' => false,
-                'companyCode' => 1234567890,
+                'company_code' => 1234567890,
                 'email_verified_at' => now(),
                 'god' => false,
                 'created_at' => now(),
@@ -61,7 +88,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'jane@example.com',
                 'password' => Hash::make('password123'),
                 'admin' => false,
-                'companyCode' => 1234567890,
+                'company_code' => 1234567890,
                 'email_verified_at' => now(),
                 'god' => false,
                 'created_at' => now(),
@@ -72,7 +99,29 @@ class DatabaseSeeder extends Seeder
                 'email' => 'bob@example.com',
                 'password' => Hash::make('password123'),
                 'admin' => false,
-                'companyCode' => 1234567890,
+                'company_code' => 1234567890,
+                'email_verified_at' => now(),
+                'god' => false,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'name' => 'Sanne',
+                'email' => 'sanne@example.com',
+                'password' => Hash::make('password123'),
+                'admin' => false,
+                'company_code' => 1234567891,
+                'email_verified_at' => now(),
+                'god' => false,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'name' => 'kamiel',
+                'email' => 'kamiel@example.com',
+                'password' => Hash::make('password123'),
+                'admin' => false,
+                'company_code' => 1234567891,
                 'email_verified_at' => now(),
                 'god' => false,
                 'created_at' => now(),
@@ -82,7 +131,14 @@ class DatabaseSeeder extends Seeder
 
         // Insert regular users
         foreach ($users as $user) {
-            User::create($user);
-        }
+            User::create($user); 
+        };
+        foreach($admins as $admin){
+            User::create($admin);
+        };
+        foreach ($companies as $company){
+            Company::create($company);
+
+        };
     }
 }
