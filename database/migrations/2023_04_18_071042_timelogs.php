@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('timelogs', function (Blueprint $table) {
             $table->id();
-            $table->boolean('BreakStatus');
-            $table->boolean('ShiftStatus');
-            $table->boolean('Weekend');
+            $table->boolean('BreakStatus')->default(false);
+            $table->boolean('ShiftStatus')->default(false);
+            $table->boolean('Weekend')->default(false);
             $table->boolean('NightShift')->default(false); 
             $table->timestamp('StartWork')->nullable();
             $table->timestamp('StartBreak')->nullable();

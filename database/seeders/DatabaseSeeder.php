@@ -5,7 +5,9 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\Company;
+use App\Models\Timelog;
 use App\Models\User;
+use App\Models\Usertotal;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -35,29 +37,31 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now()
             ]
         ];
-       $admins =[[
-        'name' => 'Wim',
-        'email' => 'toondebooser@gmail.com',
-        'password' => Hash::make('password123'),
-        'admin' => true,
-        'company_code' => 1234567890,
-        'email_verified_at' => now(),
-        'god' => false,
-        'created_at' => now(),
-        'updated_at' => now()
-       ],
-    [
-        'name' => 'Sam',
-        'email' => 'sam@gmail.com',
-        'password' => Hash::make('password123'),
-        'admin' => true,
-        'company_code' => 1234567891,
-        'email_verified_at' => now(),
-        'god' => false,
-        'created_at' => now(),
-        'updated_at' => now()
-    ]];
- 
+        $admins = [
+            [
+                'name' => 'Wim',
+                'email' => 'toondebooser@gmail.com',
+                'password' => Hash::make('password123'),
+                'admin' => true,
+                'company_code' => 1234567890,
+                'email_verified_at' => now(),
+                'god' => false,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'name' => 'Sam',
+                'email' => 'sam@gmail.com',
+                'password' => Hash::make('password123'),
+                'admin' => true,
+                'company_code' => 1234567891,
+                'email_verified_at' => now(),
+                'god' => false,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]
+        ];
+
         User::create([
             'name' => 'God',
             'email' => 'taxus.work@gmail.com',
@@ -131,14 +135,35 @@ class DatabaseSeeder extends Seeder
 
         // Insert regular users
         foreach ($users as $user) {
-            User::create($user); 
+            $createdUser = User::create($user);
+            Timelog::create([
+                'UserId' => $createdUser->id,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+            Usertotal::create([
+                'UserId' => $createdUser->id,
+                'Month' => now(),
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
         };
-        foreach($admins as $admin){
-            User::create($admin);
+        foreach ($admins as $admin) {
+            $createdAdmin = User::create($admin);
+            Timelog::create([
+                'UserId' => $createdAdmin->id,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+            Usertotal::create([
+                'UserId' => $createdAdmin->id,
+                'Month' => now(),
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
         };
-        foreach ($companies as $company){
+        foreach ($companies as $company) {
             Company::create($company);
-
         };
     }
 }
