@@ -10,9 +10,8 @@ class MyListController extends Controller
 {
     public function fetchList($type, $company_code)
     {
-        dd($company_code);
-        $workers = User::with('timelogs')->get();
-        $setForTimesheet = true;
-        return view('my-list', ['workers' => $workers, 'setForTimesheet' => $setForTimesheet, 'type' => $type]);
+        $workers = User::where('company_code', $company_code)->with('timelogs')->get();
+        dd($workers);
+        return view('my-list', ['workers' => $workers, 'type' => $type]);
     }
 }
