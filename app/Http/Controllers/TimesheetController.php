@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Daytotal;
 use App\Models\Timesheet;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -66,7 +67,7 @@ class TimesheetController extends Controller
         $addTimesheet = $timeloggingUtility->logTimeEntry($userRow, $id, null);
         // $newTimesheet->save();
         // $total = CalculateUtility::calculateUserTotal($date, $id);
-        if ($addTimesheet) return redirect('/my-workers');
+        if ($addTimesheet) return redirect('/get-List/Personeel/'. User::find($id)->company_code);
     }
 
     public function setDay($dayLabel, $dayType, $worker, $singleDay)
@@ -115,43 +116,43 @@ class TimesheetController extends Controller
             }
             $currentDate->addDay();
         }
-
+        
         if (!empty($errors)) {
-
+            
             return $errors;
         } else {
             return true;
         }
     }
-
+    
     public function setSpecial(Request $request)
     {
-
+        
         $dayType = $request->input('dayType');
         $dayLabel = $request->input($dayType);
         $worker = $request->input('worker');
         $submitType = $request->input('submitType');
         $workerArray = json_decode($worker, true);
         $results = [];
-
+        
         if ($submitType ==  'Periode Toevoegen') {
             $validator = Validator::make(
                 $request->all(),
                 [
                     'startDate' => 'required|date',
                     'endDate' => 'required|date|after:startDate',
-                ]
-            );
+                    ]
+                );
 
-            //TODO REFACTOR THIS MESS!!!
-            if ($validator->fails()) {
+                //TODO REFACTOR THIS MESS!!!
+                if ($validator->fails()) {
                 if (is_array($workerArray) && count($workerArray) > 1) {
                     return redirect()
                         ->route('specials', ['worker' => $worker])
                         ->with('errors', ['result' => ['id' => 0, 'errorList' => ['Geen geldige datum doorgegeven.']]]);
                 }
                 return redirect()
-                    ->route('specials', ['worker' => $worker])
+                ->route('specials', ['worker' => $worker])
                     ->with('errors', ['result' => ['id' => $worker, 'errorList' => ['Geen geldige datum doorgegeven.']]]);
             }
         } else {
@@ -159,7 +160,7 @@ class TimesheetController extends Controller
                 $request->all(),
                 [
                     'singleDay' => 'required|date',
-                ]
+                    ]
             );
 
             if ($validator->fails()) {
@@ -167,8 +168,8 @@ class TimesheetController extends Controller
                     return redirect()
                         ->route('specials', ['worker' => $worker])
                         ->with('error', ['result' => ['id' => 0, 'errorList' => 'Geen geldige datum doorgegeven.']]);
-                }
-                return redirect()
+                    }
+                    return redirect()
                     ->route('specials', ['worker' => $worker])
                     ->with('error', ['result' => ['id' => $worker, 'errorList' => 'Geen geldige datum doorgegeven.']]);
             }
@@ -192,7 +193,7 @@ class TimesheetController extends Controller
                         return redirect()->route('specials', ['worker' => $worker])->with('error', $results);
                     }
                 } else {
-
+                    
                     $addDay = $this->setDay($dayLabel, $dayType, $worker, $singleDay);
                     if ($addDay !== true) {
                         array_push($results, ['id' => $worker, 'errorList' => $addDay]);
@@ -225,7 +226,7 @@ class TimesheetController extends Controller
                 }
             }
         }
-
-        return redirect('/my-workers');
+        
+        return redirect('/')->with('error', 'Something went wrong try again or call for support');
     }
 }

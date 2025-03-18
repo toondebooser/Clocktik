@@ -32,18 +32,19 @@
                         @endswitch
                     </button>
                 </form>
-            @elseif ($type == 'Bedrijven')
-                <form class='workerForm' action="{{ route('getData') }}" method="post">
+            @elseif($type == "Bedrijven")
+                <form class='workerForm' action="{{ route('myList', ['type' => 'Personeel', 'company_code' => $data->company_code]) }}" method="get">
                     @csrf
-                    <button class='workerButton' type="submit" name='worker' value="{{ $data->company_code }}">
+                    <button style="display: flex; align-items: center; justify-content: center" class='workerButton' type="submit" name='worker'>
                         {{ $data->company_name }}
+                        <img style="height: 30px; margin-left: 10px" src="{{asset($data->image)}}" alt="Company logo">
                     </button>
                 </form>
+                @if ($loop->last)
+                    <a class='specialsButton' href="{{ route('addCompany') }}">Bedrijf toevoegen</a>
+                @endif
             @endif
-            @if($loop->last)
-            <a class='specialsButton' href="{{ route('addCompany') }}">Bedrijf toevoegen</a>
-            @endif
-            @endforeach
+        @endforeach
         @if ($type == 'Voor wie?')
             <form class="workerForm" method="post" action="{{ route('specials') }}">
                 @csrf

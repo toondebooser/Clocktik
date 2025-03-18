@@ -5,6 +5,11 @@
  {{session('success')}}
  <a href="">ok</a>
 </div> 
+@elseif(session()->has('error'))
+<div class="error">
+    {{session('error')}}
+    <a href="">ok</a>
+   </div> 
 @endif
     <h1>Tiktrack</h1>
     <a href="{{ route('dashboard') }}" class="logoContainer">
