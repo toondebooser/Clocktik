@@ -43,9 +43,12 @@
             @yield('header')
             <a class="headerLinks" href="{{ route('home') }}">Home</a>
             @auth
-                @if ($currentUser->admin == false)
+                @if (!$currentUser->admin)
                     <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
                     <a class="authLinks button"href="{{ route('myProfile') }}">Mijn profiel</a>
+                @elseif($currentUser->god)
+                <a class="authLinks button"
+                        href = "{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
                 @else
                     <a class="authLinks button"
                         href = "{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
