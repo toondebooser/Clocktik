@@ -179,11 +179,11 @@ class TimesheetController extends Controller
             if (!$singleDay->isWeekend()) {
                 if (is_array($workerArray) && count($workerArray) > 1) {
                     foreach ($workerArray as $user) {
-                        $newSpecialTimesheetForEveryone = new Timesheet;
-                        if ($user['admin'] == true) {
-                            continue;
-                        }
-                        $result = $this->setday($dayLabel, $newSpecialTimesheetForEveryone, $dayType, $user['id'], $singleDay);
+                        // $newSpecialTimesheetForEveryone = new Timesheet;
+                        // if ($user['admin'] == true) {
+                        //     continue;
+                        // }
+                        $result = $this->setday($dayLabel, $dayType, $user['id'], $singleDay);
                         if ($result !== true) {
                             array_push($results, ['id' => $user['id'], 'errorList' => $result]);
                         }
@@ -193,7 +193,7 @@ class TimesheetController extends Controller
                     }
                 } else {
 
-                    $addDay = $this->setDay($dayLabel, $newSpecialTimesheet, $dayType, $worker, $singleDay);
+                    $addDay = $this->setDay($dayLabel, $dayType, $worker, $singleDay);
                     if ($addDay !== true) {
                         array_push($results, ['id' => $worker, 'errorList' => $addDay]);
                         return redirect()->route('specials', ['worker' => $worker])->with('error', $results);
