@@ -47,7 +47,7 @@
             <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
             <a class="authLinks button"href="{{route('myProfile')}}">Mijn profiel</a>
             @else
-            <a class="authLinks button" href = "{{route('myWorkers')}}">Personeel</a>
+            <a class="authLinks button" href = "{{route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code])}}">Personeel</a>
             @endif
             <a class="authLinks button" href="{{ route('logout') }}">Logout</a>
             @endauth

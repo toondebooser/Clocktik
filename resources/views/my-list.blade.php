@@ -51,6 +51,6 @@
         @endif
     </div>
     @if (isset($setForTimesheet) && $setForTimesheet == true)
-        <a href="{{ route('forWorker') }}" class='specialsButton'>Dagen instellen</a>
+        <a href="{{ route('myList'), ['type' => 'Voor wie?', 'company_code' => auth()->user()->company_code] }}" class='specialsButton'>Dagen instellen</a>
     @endif
 @endsection
