@@ -1,11 +1,6 @@
 @extends('layout')
 @section('title')
-@elseif(session()->has('error'))
-<div class="error">
-    {{session('error')}}
-    <a href="">ok</a>
-   </div> 
-@endif
+
     <h1>Tiktrack</h1>
     <a href="{{ route('dashboard') }}" class="logoContainer">
             <img class="logo" src="{{ auth()->check() && auth()->user()->company && auth()->user()->company->image ? asset(auth()->user()->company->image) : asset('images/Taxus logo perfect round.png') }}"

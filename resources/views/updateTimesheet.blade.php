@@ -15,7 +15,6 @@
             <input type="hidden" name="id" value="{{ $worker->id }}">
             <input type="hidden" name="timesheet" value="{{ $timesheet->id }}">
             <input type="hidden" name="type" value="{{ $timesheet->type }}">
-
             @if ($timesheet->type == 'workday')
             <fieldset class="gewerkt">
                 <legend>Gewerkt</legend>
@@ -71,9 +70,10 @@
         </form>
     </div>
     <br>
-    <form action="{{ route('delete') }}" class="delete" method="POST">
+    <form action="{{ route('delete')}}" class="delete" method="POST">
         @csrf
         <input type="hidden" name="workerId" value="{{ $worker->id }}">
+        <input type="hidden" name="type" value="{{$timesheet->type}}">
         <input type="hidden" name="deleteSheet" value="{{ $timesheet->id }}">
         <input type="hidden" name="date" value="{{ $timesheet->Month }}">
         <input onclick="return confirm('zedde zeker ?')" class="submit" type="image"

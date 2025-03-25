@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Daytotal;
 use App\Models\Timesheet;
+use App\Models\User;
 use App\Utilities\CalculateUtility;
 use App\Utilities\TimeloggingUtility;
 use Illuminate\Http\Request;
@@ -15,11 +16,13 @@ class DeleteTimesheetController extends Controller
 {
     public function deleteTimesheet(Request $request, $workerId = null, $deleteSheet = null, $date = null)
     {
+
         $workerId = $workerId ?? $request->workerId;
         $deleteSheet = $deleteSheet ?? $request->deleteSheet;
         $date = $date ?? $request->date;
-        $dayTotal = Daytotal::where('Month', $date)->first();
-
+        $user = User::find($workerId);
+        $dayTotal = $user->daytotals()->where('Month', $date)->first();
+        dd($dayTotal->id);
         if (empty($request->all())) {
             $request->merge([
                 'workerId' => $workerId,
@@ -27,38 +30,22 @@ class DeleteTimesheetController extends Controller
                 'date' => $date,
             ]);
         }
+        $day = Timesheet::find($deleteSheet) ?? Daytotal::find($deleteSheet);
         $request->validate([
             'workerId' => 'required|numeric',
-            'deleteSheet' => 'required|numeric|exists:timesheets,id',
+            'deleteSheet' => 'required|numeric',
             'date' => 'required|date',
         ]);
         
-        $timesheet = Timesheet::findOrFail($deleteSheet);
         dd($request->all());
 
 
-        !$timesheet ? $this->redirectError('Timesheet niet gevonden.', $workerId) : null;
+        !$day ? $this->redirectError('Dag niet gevonden.', $workerId) : null;
 
 
-        // $deleted = $timesheet->delete();
-        // if ($deleted) {
-        //     $timeloggingUtility = new TimeloggingUtility;
 
-        //     if ($dayTotal && $dayTotal->timesheets->isEmpty()) {
-        //         $dayTotal->delete();
-        //         CalculateUtility::calculateUserTotal($date, $workerId);
-        //         return redirect('/my-workers')->with('success', 'Timesheet succesvol verwijderd.');
-        //     }
-
-        //     $timeloggingUtility->updateDailySummery($workerId, $date);
-        //     CalculateUtility::calculateUserTotal($date, $workerId);
-
-        //     return redirect('/my-workers')->with('success', 'Timesheet succesvol verwijderd.');
-        // }
-
-
-        DB::transaction(function () use ($timesheet, $dayTotal, $date, $workerId) {
-            $timesheet->delete();
+        DB::transaction(function () use ($day, $dayTotal, $date, $workerId) {
+            $day->delete();
 
             if ($dayTotal) {
                 if ($dayTotal->type !== 'workday' || $dayTotal->timesheets->isEmpty()) {
@@ -75,7 +62,9 @@ class DeleteTimesheetController extends Controller
 
         return $this->redirectSuccess('Timesheet succesvol verwijderd.');
     }
+    public function deleteSpecialDay(Request $request, $workerId = null, $deleteSheet = null){
 
+    }
     private function redirectSuccess(string $message)
     {
         return redirect()->route('my-workers')->with('success', $message);
