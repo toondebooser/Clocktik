@@ -38,27 +38,43 @@
         @yield('error')
         @yield('title')
         @yield('content')
-
+        
+        @if (session('success'))
+            <div class="success">
+                {{ session('success') }} <br>
+                <a class="removeError" href="#">OK</a> <!-- "#" voorkomt page reload -->
+            </div>
+        @endif
+        @if ($errors->any())
+        <div class="error">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <a class="removeError" href="">ok</a>
+        </div>
+    @endif
         <header>
             @yield('header')
             <a class="headerLinks" href="{{ route('home') }}">Home</a>
             @auth
-                @if (!$currentUser->admin)
+            @if (!$currentUser->admin)
                     <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
                     <a class="authLinks button"href="{{ route('myProfile') }}">Mijn profiel</a>
-                @elseif($currentUser->god)
-                <a class="authLinks button"
-                        href = "{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
-                @else
+                    @elseif($currentUser->god)
                     <a class="authLinks button"
+                        href = "{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
+                        @else
+                        <a class="authLinks button"
                         href = "{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
-                @endif
-                <a class="authLinks button" href="{{ route('logout') }}">Logout</a>
-            @endauth
-            @guest
-                <a class="authLinks button" href="{{ route('login') }}">Login</a>
-            @endguest
-        </header>
+                        @endif
+                        <a class="authLinks button" href="{{ route('logout') }}">Logout</a>
+                        @endauth
+                        @guest
+                        <a class="authLinks button" href="{{ route('login') }}">Login</a>
+                        @endguest
+                    </header>
 
         @yield('login')
         @yield('userDashboard')

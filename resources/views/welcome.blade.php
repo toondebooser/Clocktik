@@ -1,10 +1,5 @@
 @extends('layout')
 @section('title')
-@if (session()->has('success'))
-<div class="success">
- {{session('success')}}
- <a href="">ok</a>
-</div> 
 @elseif(session()->has('error'))
 <div class="error">
     {{session('error')}}

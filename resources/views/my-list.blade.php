@@ -1,15 +1,9 @@
 @extends('layout')
 
 @section('content')
-    <!-- Success message -->
-    @if (session('success'))
-        <div class="success">
-            {{ session('success') }} <br>
-            <a class="removeError" href="#">OK</a> <!-- "#" voorkomt page reload -->
-        </div>
-    @endif
 
-    <h2>{{ $type }}</h2>
+
+    <h2>{{ $type == "Voor wie" ? $type."?" : $type }}</h2>
 
     <div class="workersForm">
         @foreach ($dataSet as $data)

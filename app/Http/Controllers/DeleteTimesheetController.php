@@ -32,10 +32,10 @@ class DeleteTimesheetController extends Controller
             'deleteSheet' => 'required|numeric|exists:timesheets,id',
             'date' => 'required|date',
         ]);
+        
+        $timesheet = Timesheet::findOrFail($deleteSheet);
         dd($request->all());
 
-
-        $timesheet = Timesheet::findOrFail($deleteSheet);
 
         !$timesheet ? $this->redirectError('Timesheet niet gevonden.', $workerId) : null;
 

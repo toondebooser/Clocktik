@@ -7,6 +7,7 @@
             exit();
         }
     @endphp
+    
     <div class="formContainer">
         <h3>{{ $monthString }}</h3>
         <form action="{{ route('updateTimesheet') }}" class="updateTimesheet" method="POST">
