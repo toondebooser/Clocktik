@@ -149,11 +149,11 @@ class TimesheetController extends Controller
                 if (is_array($workerArray) && count($workerArray) > 1) {
                     return redirect()
                         ->route('specials', ['worker' => $worker])
-                        ->with('errors', ['result' => ['id' => 0, 'errorList' => ['Geen geldige datum doorgegeven.']]]);
+                        ->with('errList', ['result' => ['id' => 0, 'errorList' => ['Geen geldige datum doorgegeven.']]]);
                 }
                 return redirect()
                 ->route('specials', ['worker' => $worker])
-                    ->with('errors', ['result' => ['id' => $worker, 'errorList' => ['Geen geldige datum doorgegeven.']]]);
+                    ->with('errList', ['result' => ['id' => $worker, 'errorList' => ['Geen geldige datum doorgegeven.']]]);
             }
         } else {
             $validator = Validator::make(
@@ -167,11 +167,11 @@ class TimesheetController extends Controller
                 if (is_array($workerArray) && count($workerArray) > 1) {
                     return redirect()
                         ->route('specials', ['worker' => $worker])
-                        ->with('error', ['result' => ['id' => 0, 'errorList' => 'Geen geldige datum doorgegeven.']]);
+                        ->with('err', ['result' => ['id' => 0, 'errorList' => 'Geen geldige datum doorgegeven.']]);
                     }
                     return redirect()
                     ->route('specials', ['worker' => $worker])
-                    ->with('error', ['result' => ['id' => $worker, 'errorList' => 'Geen geldige datum doorgegeven.']]);
+                    ->with('err', ['result' => ['id' => $worker, 'errorList' => 'Geen geldige datum doorgegeven.']]);
             }
         }
         if ($submitType == "Dag Toevoegen") {
@@ -190,14 +190,14 @@ class TimesheetController extends Controller
                         }
                     }
                     if (!empty($results)) {
-                        return redirect()->route('specials', ['worker' => $worker])->with('error', $results);
+                        return redirect()->route('specials', ['worker' => $worker])->with('err', $results);
                     }
                 } else {
                     
                     $addDay = $this->setDay($dayLabel, $dayType, $worker, $singleDay);
                     if ($addDay !== true) {
                         array_push($results, ['id' => $worker, 'errorList' => $addDay]);
-                        return redirect()->route('specials', ['worker' => $worker])->with('error', $results);
+                        return redirect()->route('specials', ['worker' => $worker])->with('err', $results);
                     }
                 }
             }
@@ -216,13 +216,13 @@ class TimesheetController extends Controller
                     }
                 }
                 if (!empty($results)) {
-                    return redirect()->route('specials', ['worker' => $worker])->with('errors', $results);
+                    return redirect()->route('specials', ['worker' => $worker])->with('errList', $results);
                 }
             } else {
                 $result = $this->setPeriod($dayLabel, $dayType, $worker, $startDate, $endDate);
                 if ($result !== true) {
                     array_push($results, ['id' => $worker, 'errorList' => $result]);
-                    return redirect()->route('specials', ['worker' => $worker])->with('errors',  $results);
+                    return redirect()->route('specials', ['worker' => $worker])->with('errList',  $results);
                 }
             }
         }

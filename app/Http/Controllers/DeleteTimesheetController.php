@@ -22,7 +22,6 @@ class DeleteTimesheetController extends Controller
         $date = $date ?? $request->date;
         $user = User::find($workerId);
         $dayTotal = $user->daytotals()->where('Month', $date)->first();
-        dd($dayTotal->id);
         if (empty($request->all())) {
             $request->merge([
                 'workerId' => $workerId,
@@ -37,12 +36,11 @@ class DeleteTimesheetController extends Controller
             'date' => 'required|date',
         ]);
         
-        dd($request->all());
 
 
-        !$day ? $this->redirectError('Dag niet gevonden.', $workerId) : null;
-
-
+        if ($day === null) {
+            return $this->redirectError('Dag niet gevonden.', $workerId);
+        }
 
         DB::transaction(function () use ($day, $dayTotal, $date, $workerId) {
             $day->delete();
@@ -62,12 +60,10 @@ class DeleteTimesheetController extends Controller
 
         return $this->redirectSuccess('Timesheet succesvol verwijderd.');
     }
-    public function deleteSpecialDay(Request $request, $workerId = null, $deleteSheet = null){
-
-    }
+   
     private function redirectSuccess(string $message)
     {
-        return redirect()->route('my-workers')->with('success', $message);
+        return redirect()->route('home')->with('success', $message);
     }
 
     private function redirectError(string $message, $workerId)

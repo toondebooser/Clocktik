@@ -3,7 +3,7 @@
 @section('content')
 
 
-    <h2>{{ $type == "Voor wie" ? $type."?" : $type }}</h2>
+    <h2>{{$type}}</h2>
 
     <div class="workersForm">
         @foreach ($dataSet as $data)
@@ -43,7 +43,7 @@
         @endforeach
 
         <!-- Voor iedereen knop -->
-        @if ($type === 'Voor wie')
+        @if ($type === 'Voor wie?')
             <form class="workerForm" method="post" action="{{ route('specials') }}">
                 @csrf
                 <button class="workerButton" type="submit" name="worker" value="{{ $dataSet }}">Voor

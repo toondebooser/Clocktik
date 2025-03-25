@@ -2,9 +2,9 @@
 @section('content')
     <h2 class='instellenVoor'>Instellen voor {{ $forWho }}</h2>
 
-    @if (session('error'))
+    @if (session('err'))
         <div class="error">
-            @foreach (session('error') as $userError)
+            @foreach (session('err') as $userError)
                 @php
                     $findUser = \App\Models\User::find($userError['id']);
                     $findUser? $user = $findUser->name: $user = 'iedereen'
@@ -14,9 +14,9 @@
             @endforeach
             <a class="removeError" href="">ok</a>
         </div>
-    @elseif (session('errors'))
+    @elseif (session('errList'))
         <div class="error">
-            @foreach (session('errors') as $userError)
+            @foreach (session('errList') as $userError)
                 @php
                     $findUser = \App\Models\User::find($userError['id']);
                     $findUser? $user = $findUser->name: $user = 'iedereen'

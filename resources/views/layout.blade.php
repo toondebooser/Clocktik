@@ -42,7 +42,7 @@
         @if (session('success'))
             <div class="success">
                 {{ session('success') }} <br>
-                <a class="removeError" href="#">OK</a> <!-- "#" voorkomt page reload -->
+                <a class="removeError" href="">OK</a> <!-- "#" voorkomt page reload -->
             </div>
         @endif
         @if ($errors->any())
@@ -82,6 +82,7 @@
 
         <footer> &copy Toon De Booser</footer>
     </div>
+    
 </body>
 
 </html>

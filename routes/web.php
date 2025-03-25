@@ -59,7 +59,6 @@ Route::middleware(['admin', 'auth'])->group(function () {
     Route::match(['get', 'post'], '/new-timesheet-form', [AddCustomTimesheetController::class, 'customTimesheetForm'])->name('timesheetForm');
     Route::match(['get', 'post'], '/add-new-timesheet', [TimesheetController::class, 'addNewTimesheet'])->name('newTimesheet');
     Route::get('/get-List/{type?}/{company_code?}', [MyListController::class, 'fetchList'])->name('myList');
-    // Route::get('/forWorker', [SpecialsController::class, 'forWorker'])->name('forWorker');
     Route::match(['get', 'post'], '/update-timesheet/{id}/{timesheet}/{type?}', [UpdateTimesheetController::class, 'updateForm'])->name('update');
     Route::post('/update-worker-timesheet', [UpdateTimesheetController::class, 'updateTimesheet'])->name('updateTimesheet');
     Route::match(['get', 'post'], '/specials', [SpecialsController::class, 'specials'])->name('specials');
