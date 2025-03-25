@@ -558,6 +558,9 @@ footer {
     align-self: end;
     margin-bottom: 10px;
 }
+.bedrijvenLijst{
+    display: flex;
+}
 .workersForm {
     grid-column: 2/12;
     grid-row: 3/4;

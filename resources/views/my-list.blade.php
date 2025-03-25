@@ -22,17 +22,19 @@
 
                 <!-- Bedrijven -->
             @elseif ($type === 'Bedrijven')
-                <form class="workerForm"
-                    action="{{ route('myList', ['type' => 'Personeel', 'company_code' => $data->company_code]) }}"
-                    method="get">
-                    @csrf
-                    <button class="workerButton" type="submit" name="worker"
-                        style="display: flex; align-items: center; justify-content: center;">
-                        {{ $data->company_name }}
-                        <img style="height: 30px; margin-left: 10px;" src="{{ asset($data->image) }}" alt="Company logo">
-                    </button>
-                </form>
-                @if ($loop->last)
+                <div class="bedrijvenLijst">
+                    <form class="workerForm"
+                        action="{{ route('myList', ['type' => 'Personeel', 'company_code' => $data->company_code]) }}"
+                        method="get">
+                        @csrf
+                        <button class="workerButton" type="submit" name="worker"
+                            style="display: flex; align-items: center; justify-content: center;">
+                            {{ $data->company_name }}
+                            <img style="height: 30px; margin-left: 10px;" src="{{ asset($data->image) }}" alt="Company logo">
+                        </button>
+                    </form>
+                    <img style="height: 50px" src="{{asset("images/2849830-gear-interface-multimedia-options-setting-settings_107986.png")}}" alt="">
+                </div> @if ($loop->last)
                     <a class="specialsButton" href="{{ route('addCompany') }}">Bedrijf toevoegen</a>
                 @endif
             @endif
