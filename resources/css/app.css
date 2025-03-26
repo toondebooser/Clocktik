@@ -10,6 +10,10 @@ body {
     --status-onBreak: rgb(18, 105, 244);
     --status-notWorking: rgb(252, 3, 3);
 }
+a{
+    text-decoration: none;
+    color: inherit;
+}
 .button {
     padding: 2px 5px;
     background-color: var(--primary-color);
