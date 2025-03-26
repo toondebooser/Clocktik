@@ -10,6 +10,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MyListController;
 use App\Http\Controllers\MyWorkersController;
 use App\Http\Controllers\PdfExportController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SpecialsController;
 use App\Http\Controllers\TimeclockController;
 use App\Http\Controllers\TimesheetController;
@@ -72,6 +73,7 @@ Route::middleware('god')->group( function () {
     Route::get('/add-company', [CompanyController::class, function() { return view('addCompany'); }])
         ->name('addCompany');
     Route::post('/registrate-company', [CompanyController::class, 'registrateCompany'])->name('registrateCompany');
+    Route::match(['get', 'post'], '/god-settings/{company_code?}', [ SettingsController::class, 'settingsView'])->name('godSettings');
 });
 
 // Authenticated Routes

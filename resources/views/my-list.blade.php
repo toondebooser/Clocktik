@@ -33,7 +33,9 @@
                             <img style="height: 30px; margin-left: 10px;" src="{{ asset($data->image) }}" alt="Company logo">
                         </button>
                     </form>
-                    <img style="height: 50px" src="{{asset("images/2849830-gear-interface-multimedia-options-setting-settings_107986.png")}}" alt="">
+                    <a href="{{route('godSettings',['company_code' => $data->company_code])}}">
+                        <img  style="height: 50px" src="{{asset("images/2849830-gear-interface-multimedia-options-setting-settings_107986.png")}}" alt="settings">
+                    </a>
                 </div> @if ($loop->last)
                     <a class="specialsButton" href="{{ route('addCompany') }}">Bedrijf toevoegen</a>
                 @endif
