@@ -71,9 +71,10 @@ Route::middleware(['admin', 'auth'])->group(function () {
 // God Routes
 Route::middleware('god')->group( function () {
     Route::get('/add-company', [CompanyController::class, function() { return view('addCompany'); }])
-        ->name('addCompany');
+    ->name('addCompany');
     Route::post('/registrate-company', [CompanyController::class, 'registrateCompany'])->name('registrateCompany');
     Route::match(['get', 'post'], '/god-settings/{company_code}/{godMode}', [ SettingsController::class, 'settingsView'])->name('godSettings');
+    Route::post('update-admin-rights/{id}/{company_code}', [SettingsController::class, 'changeRights'])->name('changeAdminRights');
 });
 
 // Authenticated Routes

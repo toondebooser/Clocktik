@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class SettingsController extends Controller
 {
@@ -20,6 +21,17 @@ class SettingsController extends Controller
 
         return view('settings', ['data' =>  $data]);
 
+    }
+    public function changeRights($id, $company_code)
+    {
+        $user = User::find($id);
+        if ($user) {
+            $user->admin = $user->admin == true ? false : true;
+            
+            $user->save();
+            return response()->json(['message' => "Rights changed for user $id in company $company_code"]);
+        }
+        return response()->json(['message' => "User $id not found"], 404);
     }
 
 

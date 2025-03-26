@@ -1,60 +1,64 @@
 @extends('layout')
+
 @section('content')
-<style>
-    .container {
-        display: flex;
-        justify-content: space-around;
-        grid-column: 1/12;
-        grid-row: 3/4;
-        align-self: end;
-    }
-    .side {
-        width: 150px;
-        min-height: 150px ;
-        margin-right:5px;
-        height: fit-content;
-        border: 2px solid #333;
-        padding: 10px;
-        background: #f9f9f9;
-    }
-    .name {
-        padding: 10px;
-        margin: 5px;
-        background: #ddd;
-        cursor: move;
-    }
-    .side.dragover {
-        background: #e0e0e0;
-        border-color: #000;
-    }
-</style>
-</head>
-<body>
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            grid-column: 1/12;
+            grid-row: 3/4;
+            align-self: end;
+        }
 
+        .side {
+            width: 150px;
+            min-height: 150px;
+            margin-right: 5px;
+            height: fit-content;
+            border: 2px solid #333;
+            padding: 10px;
+            background: #f9f9f9;
+        }
 
-<div style="justify-content:center; align-content:center; display:flex; flex-direction:column; grid-row: 3/4; grid-column: 2/12" class="content">
+        .name {
+            padding: 10px;
+            margin: 5px;
+            background: #ddd;
+            cursor: move;
+        }
 
+        .side.dragover {
+            background: #e0e0e0;
+            border-color: #000;
+        }
+    </style>
+
+    <div style="justify-content:center; align-content:center; display:flex; flex-direction:column; grid-row: 3/4; grid-column: 2/12"
+        class="content">
         @foreach ($admins as $admin)
-        <a  href="">
-            {{$admin->name}}
-        </a>
-        @endforeach 
+            <a href="">{{ $admin->name }}</a>
+        @endforeach
 
-        <div  class="container">
+        <div class="container">
             <div class="side" id="left" ondrop="drop(event)" ondragover="allowDrop(event)">
                 <div>Admins</div>
                 @foreach ($admins as $admin)
-                    <div class="name" draggable="true" ondragstart="drag(event)" data-name="{{ $admin->name }}">{{ $admin->name }}</div>
+                    <div class="name" draggable="true" ondragstart="drag(event)" data-name="{{ $admin->name }}"
+                        data-id="{{ $admin->id }}" data-company_code="{{ $admin->company_code }}">{{ $admin->name }}
+                    </div>
                 @endforeach
             </div>
             <div class="side" id="right" ondrop="drop(event)" ondragover="allowDrop(event)">
                 <div>Workers</div>
                 @foreach ($workers as $worker)
-                    <div class="name" draggable="true" ondragstart="drag(event)" data-name="{{ $worker->name }}">{{ $worker->name }}</div>
+                    <div class="name" draggable="true" ondragstart="drag(event)" data-id="{{ $worker->id }}"
+                        data-company_code="{{ $worker->company_code }}" data-name="{{ $worker->name }}">{{ $worker->name }}
+                    </div>
                 @endforeach
             </div>
         </div>
     </div>
+
     <script>
         // Desktop Drag and Drop
         function allowDrop(event) {
@@ -78,9 +82,15 @@
 
         names.forEach(name => {
             name.addEventListener('dragstart', drag);
-            name.addEventListener('touchstart', touchStart, { passive: false });
-            name.addEventListener('touchmove', touchMove, { passive: false });
-            name.addEventListener('touchend', touchEnd, { passive: false });
+            name.addEventListener('touchstart', touchStart, {
+                passive: false
+            });
+            name.addEventListener('touchmove', touchMove, {
+                passive: false
+            });
+            name.addEventListener('touchend', touchEnd, {
+                passive: false
+            });
         });
 
         sides.forEach(side => {
@@ -146,25 +156,40 @@
             sides.forEach(side => side.classList.remove('dragover'));
         }
 
-        // Shared drop handler
-        function handleDrop(target, name) {
-            const draggedElement = document.querySelector(`[data-name="${name}"]`);
-            target.appendChild(draggedElement);
+function handleDrop(target, name) {
+    const draggedElement = document.querySelector(`[data-name="${name}"]`);
+    const userId = draggedElement.dataset.id;
+    const companyCode = draggedElement.dataset.company_code;
+    const sourceSide = draggedElement.closest('.side').id;
+    const targetSide = target.id;
 
-            // Activate the route
-            fetch(`/move-name/${name}`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-Type': 'application/json',
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data.message);
-                alert(data.message); // Optional feedback
-            })
-            .catch(error => console.error('Error:', error));
-        }
+    target.appendChild(draggedElement);
+    console.log('Dropping:', { name, userId, companyCode, sourceSide, targetSide });
+
+    if (draggedElement.dataset.processing) return;
+    draggedElement.dataset.processing = 'true';
+
+    fetch(`/update-admin-rights/${userId}/${companyCode}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => {
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        return response.json();
+    })
+    .then(data => {
+        console.log('Success:', data.message);
+        alert(data.message);
+        delete draggedElement.dataset.processing;
+    })
+    .catch(error => {
+        console.error('Fetch Error:', error);
+        document.getElementById(sourceSide).appendChild(draggedElement);
+        delete draggedElement.dataset.processing;
+    });
+}
     </script>
 @endsection
