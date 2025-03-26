@@ -1,3 +1,3 @@
 <div>
-    test
+   {{$data}}
 </div>
