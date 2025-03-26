@@ -4,11 +4,15 @@
     .container {
         display: flex;
         justify-content: space-around;
-        margin: 20px;
+        grid-column: 1/12;
+        grid-row: 3/4;
+        align-self: end;
     }
     .side {
-        width: 200px;
-        min-height: 200px;
+        width: 150px;
+        min-height: 150px ;
+        margin-right:5px;
+        height: fit-content;
         border: 2px solid #333;
         padding: 10px;
         background: #f9f9f9;
@@ -26,30 +30,30 @@
 </style>
 </head>
 <body>
-<div class="container">
-    <div class="side" id="left" ondrop="drop(event)" ondragover="allowDrop(event)">
-        <h3>Left Side</h3>
-        @foreach ($admins as $admin)
-            <div class="name" draggable="true" ondragstart="drag(event)" data-name="{{ $admin->name }}">{{ $admin->name }}</div>
-        @endforeach
-    </div>
-    <div class="side" id="right" ondrop="drop(event)" ondragover="allowDrop(event)">
-        <h3>Right Side</h3>
-        @foreach ($workers as $worker)
-            <div class="name" draggable="true" ondragstart="drag(event)" data-name="{{ $worker->name }}">{{ $worker->name }}</div>
-        @endforeach
-    </div>
-</div>
 
-    <div style="grid-row: 3/4; grid-column: 3/10" class="content">
+
+<div style="justify-content:center; align-content:center; display:flex; flex-direction:column; grid-row: 3/4; grid-column: 2/12" class="content">
 
         @foreach ($admins as $admin)
         <a  href="">
             {{$admin->name}}
         </a>
-        @endforeach <br>
+        @endforeach 
 
-
+        <div  class="container">
+            <div class="side" id="left" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <div>Admins</div>
+                @foreach ($admins as $admin)
+                    <div class="name" draggable="true" ondragstart="drag(event)" data-name="{{ $admin->name }}">{{ $admin->name }}</div>
+                @endforeach
+            </div>
+            <div class="side" id="right" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <div>Workers</div>
+                @foreach ($workers as $worker)
+                    <div class="name" draggable="true" ondragstart="drag(event)" data-name="{{ $worker->name }}">{{ $worker->name }}</div>
+                @endforeach
+            </div>
+        </div>
     </div>
     <script>
         // Desktop Drag and Drop
