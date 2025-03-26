@@ -67,7 +67,7 @@ Route::middleware(['admin', 'auth'])->group(function () {
     Route::match(['get', 'post'], '/delete-timesheet/{workerId?}/{deleteSheet?}/{date?}', [DeleteTimesheetController::class, 'deleteTimesheet'])->name('delete');
 });
 
-// Company Routes
+// God Routes
 Route::middleware('god')->group( function () {
     Route::get('/add-company', [CompanyController::class, function() { return view('addCompany'); }])
         ->name('addCompany');
