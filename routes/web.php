@@ -68,6 +68,7 @@ Route::middleware(['admin', 'auth'])->group(function () {
     Route::match(['get', 'post'], '/delete-timesheet/{workerId?}/{deleteSheet?}/{date?}', [DeleteTimesheetController::class, 'deleteTimesheet'])->name('delete');
     Route::get('/admin-settings/{company_code}', [ SettingsController::class, 'settingsView'])->name('adminSettings');
     Route::post('update-admin-rights/{id}/{company_code}', [SettingsController::class, 'changeRights'])->name('changeAdminRights');
+    Route::post('update-company-settings', [SettingsController::class, 'updateSettings'])->name('change-company-settings');
 });
 
 // God Routes

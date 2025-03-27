@@ -2,7 +2,7 @@
 
 @section('content')
     <style>
-        .container {
+        .container-drag-drop {
             display: flex;
             justify-content: center;
             grid-column: 1/12;
@@ -35,11 +35,13 @@
 
     <div style="justify-content:center; align-content:center; display:flex; flex-direction:column; grid-row: 3/4; grid-column: 2/12"
         class="content">
-        @foreach ($admins as $admin)
-            <a href="">{{ $admin->name }}</a>
-        @endforeach
+    <form action="{{route('change-company-settings')}}" method="post">
+        <input type="color" name="companyColor">
+        <input type="file" name="companyLogo">
+        
+    </form>
 
-        <div class="container">
+        <div class="container-drag-drop">
             <div class="side" id="left" ondrop="drop(event)" ondragover="allowDrop(event)">
                 <div>Admins</div>
                 @foreach ($admins as $admin)
@@ -157,37 +159,46 @@
         }
 
         function handleDrop(target, name) {
-    const draggedElement = document.querySelector(`[data-name="${name}"]`);
-    const userId = draggedElement.dataset.id;
-    const companyCode = draggedElement.dataset.company_code;
-    
-    // Capture sourceSide before moving the element
-    const sourceSideElement = draggedElement.closest('.side');
-    const sourceSide = sourceSideElement ? sourceSideElement.id : 'unknown'; // Fallback if null
-    const targetSide = target.id;
+            const draggedElement = document.querySelector(`[data-name="${name}"]`);
+            const userId = draggedElement.dataset.id;
+            const companyCode = draggedElement.dataset.company_code;
+            const sourceSide = draggedElement.closest('.side')?.id || 'unknown';
+            const targetSide = target.id;
 
-    // Move the element
-    target.appendChild(draggedElement);
-    console.log('Dropping:', { name, userId, companyCode, sourceSide, targetSide });
+            target.appendChild(draggedElement);
+            console.log('Dropping:', {
+                name,
+                userId,
+                companyCode,
+                sourceSide,
+                targetSide
+            });
 
-    // Construct the route URL and submit
-    const url = '{{ route("changeAdminRights", ["id" => ":id", "company_code" => ":company_code"]) }}'
+            const url = '{{ route('changeAdminRights', ['id' => ':id', 'company_code' => ':company_code']) }}'
                 .replace(':id', userId)
                 .replace(':company_code', companyCode);
 
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = url;
-    form.style.display = 'none';
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = url;
+            form.style.display = 'none';
 
-    const csrfInput = document.createElement('input');
-    csrfInput.type = 'hidden';
-    csrfInput.name = '_token';
-    csrfInput.value = '{{ csrf_token() }}';
-    form.appendChild(csrfInput);
+            // Add CSRF token
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = '_token';
+            csrfInput.value = '{{ csrf_token() }}';
+            form.appendChild(csrfInput);
 
-    document.body.appendChild(form);
-    form.submit();
-}
+            // Add targetSide
+            const targetSideInput = document.createElement('input');
+            targetSideInput.type = 'hidden';
+            targetSideInput.name = 'target_side';
+            targetSideInput.value = targetSide;
+            form.appendChild(targetSideInput);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
     </script>
 @endsection
