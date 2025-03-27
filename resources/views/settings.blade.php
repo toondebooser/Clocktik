@@ -156,40 +156,38 @@
             sides.forEach(side => side.classList.remove('dragover'));
         }
 
-function handleDrop(target, name) {
+        function handleDrop(target, name) {
     const draggedElement = document.querySelector(`[data-name="${name}"]`);
     const userId = draggedElement.dataset.id;
     const companyCode = draggedElement.dataset.company_code;
-    const sourceSide = draggedElement.closest('.side').id;
+    
+    // Capture sourceSide before moving the element
+    const sourceSideElement = draggedElement.closest('.side');
+    const sourceSide = sourceSideElement ? sourceSideElement.id : 'unknown'; // Fallback if null
     const targetSide = target.id;
 
+    // Move the element
     target.appendChild(draggedElement);
     console.log('Dropping:', { name, userId, companyCode, sourceSide, targetSide });
 
-    if (draggedElement.dataset.processing) return;
-    draggedElement.dataset.processing = 'true';
+    // Construct the route URL and submit
+    const url = '{{ route("changeAdminRights", ["id" => ":id", "company_code" => ":company_code"]) }}'
+                .replace(':id', userId)
+                .replace(':company_code', companyCode);
 
-    fetch(`/update-admin-rights/${userId}/${companyCode}`, {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Content-Type': 'application/json',
-        },
-    })
-    .then(response => {
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-        return response.json();
-    })
-    .then(data => {
-        console.log('Success:', data.message);
-        alert(data.message);
-        delete draggedElement.dataset.processing;
-    })
-    .catch(error => {
-        console.error('Fetch Error:', error);
-        document.getElementById(sourceSide).appendChild(draggedElement);
-        delete draggedElement.dataset.processing;
-    });
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = url;
+    form.style.display = 'none';
+
+    const csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = '_token';
+    csrfInput.value = '{{ csrf_token() }}';
+    form.appendChild(csrfInput);
+
+    document.body.appendChild(form);
+    form.submit();
 }
     </script>
 @endsection

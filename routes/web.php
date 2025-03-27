@@ -66,6 +66,8 @@ Route::middleware(['admin', 'auth'])->group(function () {
     Route::post('/setSpecial', [TimesheetController::class, 'setSpecial'])->name('setSpecial');
     Route::get('/export-pdf', [PdfExportController::class, 'exportPdf'])->name('exportPdf');
     Route::match(['get', 'post'], '/delete-timesheet/{workerId?}/{deleteSheet?}/{date?}', [DeleteTimesheetController::class, 'deleteTimesheet'])->name('delete');
+    Route::get('/admin-settings/{company_code}', [ SettingsController::class, 'settingsView'])->name('adminSettings');
+    Route::post('update-admin-rights/{id}/{company_code}', [SettingsController::class, 'changeRights'])->name('changeAdminRights');
 });
 
 // God Routes
@@ -73,8 +75,6 @@ Route::middleware('god')->group( function () {
     Route::get('/add-company', [CompanyController::class, function() { return view('addCompany'); }])
     ->name('addCompany');
     Route::post('/registrate-company', [CompanyController::class, 'registrateCompany'])->name('registrateCompany');
-    Route::match(['get', 'post'], '/god-settings/{company_code}/{godMode}', [ SettingsController::class, 'settingsView'])->name('godSettings');
-    Route::post('update-admin-rights/{id}/{company_code}', [SettingsController::class, 'changeRights'])->name('changeAdminRights');
 });
 
 // Authenticated Routes

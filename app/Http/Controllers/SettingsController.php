@@ -9,30 +9,28 @@ use Illuminate\Support\Facades\Log;
 
 class SettingsController extends Controller
 {
-    public function settingsView ($company_code, $godMode = false){
+    public function settingsView($company_code)
+    {
 
-        $data = Company::where('company_code',$company_code)->first();
-
-        if($godMode){
-            $admins = User::where ('company_code', $company_code)->where('admin', true)->get();
-            $workers = User::where('company_code', $company_code) ->where('admin', false)->get();
-            return view('settings', ['data' =>  $data, 'admins' => $admins, 'workers' => $workers]);
-        }
+        $data = Company::where('company_code', $company_code)->first();
+        $admins = User::where('company_code', $company_code)->where('admin', true)->get();
+        $workers = User::where('company_code', $company_code)->where('admin', false)->get();
+        return view('settings', ['data' =>  $data, 'admins' => $admins, 'workers' => $workers]);
 
         return view('settings', ['data' =>  $data]);
-
     }
     public function changeRights($id, $company_code)
     {
         $user = User::find($id);
+        $company = Company::where('company_code', $company_code)->first();
         if ($user) {
-            $user->admin = $user->admin == true ? false : true;
-            
-            $user->save();
-            return response()->json(['message' => "Rights changed for user $id in company $company_code"]);
+            $user->update([
+                'admin' => !$user->admin 
+            ]);
+            return redirect()->route('adminSettings', ['company_code' => $company_code, 'godMode' => true])
+                             ->with('success', "Rechten voor $user->name zijn aangepast in bedrijf: $company->company_name");
         }
-        return response()->json(['message' => "User $id not found"], 404);
+        return redirect()->route('adminSettings', ['company_code' => $company_code, 'godMode' => true])
+                         ->with('error', "User $id not found");
     }
-
-
 }
