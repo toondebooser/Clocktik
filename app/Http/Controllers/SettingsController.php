@@ -17,7 +17,6 @@ class SettingsController extends Controller
         $workers = User::where('company_code', $company_code)->where('admin', false)->get();
         return view('settings', ['data' =>  $data, 'admins' => $admins, 'workers' => $workers]);
 
-        return view('settings', ['data' =>  $data]);
     }
     public function changeRights(Request $request, $id, $company_code)
     {
@@ -45,5 +44,9 @@ class SettingsController extends Controller
         }
         return redirect()->route('adminSettings', ['company_code' => $company_code])
                          ->with('error', "User $id not found");
+    }
+    public function updateSettings (Request $request)
+    {
+        dd($request->all());
     }
 }

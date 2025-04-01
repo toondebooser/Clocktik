@@ -5,42 +5,56 @@
         .container-drag-drop {
             display: flex;
             justify-content: center;
+            height: 200px;
             grid-column: 1/12;
-            grid-row: 3/4;
+            grid-row: 5/6;
             align-self: end;
         }
 
         .side {
+            max-height: 200px;
+            border-radius: 20px;
+            overflow: auto;
             width: 150px;
-            min-height: 150px;
+            height: 100%;
             margin-right: 5px;
-            height: fit-content;
-            border: 2px solid #333;
             padding: 10px;
             background: #f9f9f9;
+            border: 2px solid {{$data->color}};
         }
 
         .name {
+            border-radius: 10px;
             padding: 10px;
             margin: 5px;
             background: #ddd;
             cursor: move;
         }
-
         .side.dragover {
             background: #e0e0e0;
             border-color: #000;
+            
         }
     </style>
-
-    <div style="justify-content:center; align-content:center; display:flex; flex-direction:column; grid-row: 3/4; grid-column: 2/12"
+    <h2>Instellingen</h2>
+    <div style=" height: 100%;justify-content:center; align-content:center; grid-row: 3/4; grid-column: 2/12"
         class="content">
-    <form action="{{route('change-company-settings')}}" method="post">
-        <input type="color" name="companyColor">
-        <input type="file" name="companyLogo">
-        
-    </form>
+        <form style=" margin: 10px 0px; grid-gap:10px; border-radius: 20px; padding: 10px;border: solid black 1px;display:grid; grid-template-rows:repeat(3, auto); grid-template-columns:repeat(2,auto); " action="{{route('change-company-settings')}}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <input style="display: none" id="color-selection" type="color" name="companyColor" value="{{$data->color}}">
+            <label for="color-selection">Kies een kleur
+                <div style=" width: 50px; height: 50px;background-color: {{$data->color}}"></div>
+            </label>
+            <input style="display: none" type="file" id="file-input" name="picture" id="pictureInput" accept="image/*">
+            <label for="file-input" class="logo-selectie" style="grid-column: 2/3; width: 100px">Kies je logo
+            
+            <img id="preview" for="file-input" src="{{asset($data->image)}}" alt="Logo preview" style="  grid-row: 2/3; grid-column: 2/3;justify-self: center;max-height: 50px; max-width: auto;">
+            </label>
 
+
+            <button class="button" type="submit" style="  grid-row: 3/4; grid-column: 1/3; justify-self: center; height: 30px">Update instellingen</button>
+        </form>
+<div style="text-align: center">  &#8592; Sleep &#8594; <br> om van rechten te veranderen.</div>
         <div class="container-drag-drop">
             <div class="side" id="left" ondrop="drop(event)" ondragover="allowDrop(event)">
                 <div>Admins</div>
@@ -51,7 +65,7 @@
                 @endforeach
             </div>
             <div class="side" id="right" ondrop="drop(event)" ondragover="allowDrop(event)">
-                <div>Workers</div>
+                <div>Arbeiders</div>
                 @foreach ($workers as $worker)
                     <div class="name" draggable="true" ondragstart="drag(event)" data-id="{{ $worker->id }}"
                         data-company_code="{{ $worker->company_code }}" data-name="{{ $worker->name }}">{{ $worker->name }}
@@ -200,5 +214,24 @@
             document.body.appendChild(form);
             form.submit();
         }
+         // Get the input and img elements
+        const input = document.getElementById('pictureInput');
+        const preview = document.getElementById('preview');
+
+        // Listen for file selection
+        input.addEventListener('change', function() {
+            const file = this.files[0]; // Get the first selected file
+
+            if (file) {
+                if (file.type.startsWith('image/')) {
+                    const imageUrl = URL.createObjectURL(file);
+                    preview.src = imageUrl;
+                } else {
+                    alert('Please select an image file.');
+                    preview.src = '';
+                    preview.style.display = 'none';
+                }
+            }
+        });
     </script>
 @endsection
