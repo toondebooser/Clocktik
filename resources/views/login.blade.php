@@ -1,7 +1,7 @@
 @extends('layout')
 <?php $currentUser = auth()->user();?>
 @section('title')
-    <h1>ClockTik</h1>
+    <h1>Tiktrack</h1>
  
 @endsection
 
