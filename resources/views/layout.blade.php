@@ -59,17 +59,20 @@
             @yield('header')
             <a class="headerLinks" href="{{ route('home') }}">Home</a>
             @auth
-            @if (!$currentUser->admin || ($currentUser->admin && $currentUser->company->Admin_timeclock))
-            <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
-            <a class="authLinks button" href="{{ route('myProfile') }}">Mijn profiel</a>
-            @if ($currentUser->admin && !$currentUser->god)
-                <a class="authLinks button" href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
-            @endif
-        @elseif ($currentUser->god)
-            <a class="authLinks button" href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
-        @else
-            <a class="authLinks button" href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
-        @endif
+                @if ($currentUser->god)
+                    <a class="authLinks button"
+                        href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
+                @elseif (!$currentUser->admin || ($currentUser->admin && $currentUser->company->Admin_timeclock))
+                    <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
+                    <a class="authLinks button" href="{{ route('myProfile') }}">Mijn profiel</a>
+                    @if ($currentUser->admin && !$currentUser->god)
+                        <a class="authLinks button"
+                            href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
+                    @endif
+                @else
+                    <a class="authLinks button"
+                        href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
+                @endif
                 <a class="authLinks button" href="{{ route('logout') }}">Logout</a>
             @endauth
             @guest

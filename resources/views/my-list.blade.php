@@ -12,7 +12,7 @@
                     method="post">
                     @csrf
                     <button class="workerButton" type="submit" name="worker" value="{{ $data->id }}">
-                        {{ $data->name }}
+                        {{ $data->name . ($data->admin ? "  (admin)" : "") }}
                         <div
                             class="{{ $data->timelogs->ShiftStatus ? ($data->timelogs->BreakStatus ? 'onBreak' : 'working') : 'notWorking' }}">
                         </div>
