@@ -55,7 +55,7 @@
         }
 
         .content {
-            overflow-x: scroll;
+            overflow-x: hidden; 
         }
     </style>
     <h2>Instellingen</h2>

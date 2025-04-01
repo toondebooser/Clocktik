@@ -39,7 +39,6 @@ Route::group([], function () {
 });
 
 // Worker Routes
-Route::middleware('worker')->group(function () {
     // Authenticated and Verified Routes
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::match(['get', 'post'], '/dashboard', [DashboardController::class, 'userDashboard'])->name('dashboard');
@@ -53,7 +52,6 @@ Route::middleware('worker')->group(function () {
         Route::get('/dashboard-stop-break', [TimeclockController::class, 'stopBreak'])->name('stopBreak');
         Route::get('/dashboard-stop', [TimeclockController::class, 'stop'])->name('stop');
     });
-});
 
 // Admin Routes
 Route::middleware(['admin', 'auth'])->group(function () {

@@ -7,8 +7,7 @@
 
     <div class="workersForm">
         @foreach ($dataSet as $data)
-            <!-- Personeel of Voor wie? -->
-            @if ($type !== 'Bedrijven' && !$data->admin)
+            @if ($type !== 'Bedrijven' && !$data->admin || ($data->admin && $data->company->Admin_timeclock))
                 <form class="workerForm" action="{{ $type === 'Personeel' ? route('getData') : route('specials') }}"
                     method="post">
                     @csrf
