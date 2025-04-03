@@ -65,7 +65,7 @@
     style=" margin: 10px 0px; grid-gap:10px; border-radius: 20px; padding: 10px;border: solid {{$data->color}} 2px;display:grid; grid-template-rows:repeat(5, auto); grid-template-columns:repeat(2,auto); "
     action="{{ route('change-company-settings') }}" method="POST" enctype="multipart/form-data">
     @csrf
-            <input style="display: none" id="colorInput" type="color" name="companyColor" value="{{ $data->color }}">
+            <input style="display: none" id="colorInput" type="color" name="companyColor" value="{{$data->color }}">
             <label class="flex" for="colorInput">
                 <div>Kies een kleur</div>
                 <div id="colorPreview"

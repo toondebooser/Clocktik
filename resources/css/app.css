@@ -574,7 +574,7 @@ footer {
     flex-direction: column;
     align-items: center;
 }
-.workerButton {
+.listButton {
     text-decoration: none;
     width: 250px;
     height: 45px;
@@ -587,7 +587,7 @@ footer {
     border: 1px solid grey;
     color: black;
 }
-.workerButton:hover {
+.listButton:hover {
     background-color: #ccc;
 }
 .specialDays {
