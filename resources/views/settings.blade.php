@@ -60,11 +60,11 @@
     </style>
     <h2>Instellingen</h2>
     <div style=" max-width: 400px; height: 100%;justify-content:center; align-content:center; grid-row: 3/5; grid-column: 2/12; justify-self:center;"
-        class="content">
-        <form
-            style=" margin: 10px 0px; grid-gap:10px; border-radius: 20px; padding: 10px;border: solid black 1px;display:grid; grid-template-rows:repeat(5, auto); grid-template-columns:repeat(2,auto); "
-            action="{{ route('change-company-settings') }}" method="POST" enctype="multipart/form-data">
-            @csrf
+    class="content">
+    <form
+    style=" margin: 10px 0px; grid-gap:10px; border-radius: 20px; padding: 10px;border: solid {{$data->color}} 2px;display:grid; grid-template-rows:repeat(5, auto); grid-template-columns:repeat(2,auto); "
+    action="{{ route('change-company-settings') }}" method="POST" enctype="multipart/form-data">
+    @csrf
             <input style="display: none" id="colorInput" type="color" name="companyColor" value="{{ $data->color }}">
             <label class="flex" for="colorInput">
                 <div>Kies een kleur</div>

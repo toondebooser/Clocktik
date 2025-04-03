@@ -19,7 +19,6 @@
                     </button>
                 </form>
 
-                <!-- Bedrijven -->
             @elseif ($type === 'Bedrijven')
                 <div class="bedrijvenLijst">
                     <form class="workerForm"
@@ -45,7 +44,6 @@
             @endif
         @endforeach
 
-        <!-- Voor iedereen knop -->
         @if ($type === 'Voor wie?')
             <form class="workerForm" method="post" action="{{ route('specials') }}">
                 @csrf

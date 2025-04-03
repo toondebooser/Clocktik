@@ -37,7 +37,23 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now()
             ]
         ];
-        $admins = [
+       
+
+      
+
+        // Create regular users
+        $users = [
+            [
+                'name' => 'God',
+                'email' => 'taxus.work@gmail.com',
+                'password' => Hash::make('password123'),
+                'admin' => true,
+                'company_code' => 0000000000,
+                'email_verified_at' => now(),
+                'god' => true,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
             [
                 'name' => 'Wim',
                 'email' => 'toondebooser@gmail.com',
@@ -59,23 +75,7 @@ class DatabaseSeeder extends Seeder
                 'god' => false,
                 'created_at' => now(),
                 'updated_at' => now()
-            ]
-        ];
-
-        User::create([
-            'name' => 'God',
-            'email' => 'taxus.work@gmail.com',
-            'password' => Hash::make('password123'),
-            'admin' => true,
-            'company_code' => 0000000000,
-            'email_verified_at' => now(),
-            'god' => true,
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);
-
-        // Create regular users
-        $users = [
+            ],
             [
                 'name' => 'John Doe',
                 'email' => 'john@example.com',
@@ -148,20 +148,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now()
             ]);
         };
-        foreach ($admins as $admin) {
-            $createdAdmin = User::create($admin);
-            Timelog::create([
-                'UserId' => $createdAdmin->id,
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
-            Usertotal::create([
-                'UserId' => $createdAdmin->id,
-                'Month' => now(),
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
-        };
+
         foreach ($companies as $company) {
             Company::create($company);
         };
