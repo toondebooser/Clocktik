@@ -53,6 +53,7 @@ class Kernel extends HttpKernel
      * @var array<string, class-string|string>
      */
     protected $middlewareAliases = [
+        'check.admin.timeclock' => \App\Http\Middleware\CheckAdminTimeclock::class,
         'god' => \App\Http\Middleware\godMode::class,
         'notSigned' => \App\Http\Middleware\notSignedIn::class,
         'confirm.action' => \App\Http\Middleware\ConfirmMiddleware::class,

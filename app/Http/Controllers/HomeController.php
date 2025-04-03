@@ -39,7 +39,13 @@ class HomeController extends Controller
             $request->filled('remember')
         )) {
 
-            return redirect('/dashboard');
+            if(!auth()->user()->admin){
+
+                return redirect('/dashboard');
+            }else{
+                return redirect('/')->with('success', "Welkom". auth()->user()->name);
+            }
+
         }
         return redirect()->back()->withErrors(['email' => 'email or password is incorrect']);
     }

@@ -39,19 +39,18 @@ Route::group([], function () {
 });
 
 // Worker Routes
-    // Authenticated and Verified Routes
-    Route::middleware(['auth', 'verified'])->group(function () {
-        Route::match(['get', 'post'], '/dashboard', [DashboardController::class, 'userDashboard'])->name('dashboard');
-        Route::get('/my-profile', [UsersheetsController::class, 'myProfile'])->name('myProfile');
-    });
-
-    // Timeclock Routes with Confirmation
-    Route::middleware(['auth', 'confirm.action'])->group(function () {
+Route::middleware(['auth', 'verified','check.admin.timeclock'])->group(function () {
+    Route::match(['get', 'post'], '/dashboard', [DashboardController::class, 'userDashboard'])->name('dashboard');
+    Route::get('/my-profile', [UsersheetsController::class, 'myProfile'])->name('myProfile');
+    
+    // Timeclock Routes with Confirmation and Admin Timeclock Check
+    Route::middleware(['confirm.action'])->group(function () {
         Route::get('/dashboard-start', [TimeclockController::class, 'startWorking'])->name('start');
         Route::get('/dashboard-break', [TimeclockController::class, 'break'])->name('break');
         Route::get('/dashboard-stop-break', [TimeclockController::class, 'stopBreak'])->name('stopBreak');
         Route::get('/dashboard-stop', [TimeclockController::class, 'stop'])->name('stop');
     });
+});
 
 // Admin Routes
 Route::middleware(['admin', 'auth'])->group(function () {
@@ -64,15 +63,15 @@ Route::middleware(['admin', 'auth'])->group(function () {
     Route::post('/setSpecial', [TimesheetController::class, 'setSpecial'])->name('setSpecial');
     Route::get('/export-pdf', [PdfExportController::class, 'exportPdf'])->name('exportPdf');
     Route::match(['get', 'post'], '/delete-timesheet/{workerId?}/{deleteSheet?}/{date?}', [DeleteTimesheetController::class, 'deleteTimesheet'])->name('delete');
-    Route::get('/admin-settings/{company_code}', [ SettingsController::class, 'settingsView'])->name('adminSettings');
+    Route::get('/admin-settings/{company_code}', [SettingsController::class, 'settingsView'])->name('adminSettings');
     Route::post('update-admin-rights/{id}/{company_code}', [SettingsController::class, 'changeRights'])->name('changeAdminRights');
     Route::post('update-company-settings', [SettingsController::class, 'updateSettings'])->name('change-company-settings');
 });
 
 // God Routes
-Route::middleware('god')->group( function () {
+Route::middleware('god')->group(function () {
     Route::get('/add-company', [CompanyController::class, function() { return view('addCompany'); }])
-    ->name('addCompany');
+        ->name('addCompany');
     Route::post('/registrate-company', [CompanyController::class, 'registrateCompany'])->name('registrateCompany');
 });
 
