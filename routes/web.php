@@ -38,7 +38,7 @@ Route::group([], function () {
     Route::post('/user-registration', [UserController::class, 'registrate'])->name('registrate');
 });
 
-// Worker Routes
+// Users with timeclock functionallity
 Route::middleware(['auth', 'verified','check.admin.timeclock'])->group(function () {
     Route::match(['get', 'post'], '/dashboard', [DashboardController::class, 'userDashboard'])->name('dashboard');
     Route::get('/my-profile', [UsersheetsController::class, 'myProfile'])->name('myProfile');
