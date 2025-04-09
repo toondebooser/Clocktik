@@ -59,11 +59,18 @@
         @endif
         @yield('header')
         <div id="slide-menu" class="side-menu">
+            <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
+                <img style="height: 40px" src="{{ asset('images/settings.png') }}" alt="settings">
+            </a>
+            <a class="authLinks button"
+                href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
+        
         </div>
         <header>
             @auth
                 <a class="headerLinks" href="{{ route('home') }}">Home</a>
                 @if ($currentUser->admin && $currentUser->company->admin_timeclock)
+                
                     <div class="headerLinks " onclick="toggle()">Hamburger</div>
                 @elseif ($currentUser->god)
                     <a class="authLinks button"
