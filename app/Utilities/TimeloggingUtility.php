@@ -5,6 +5,7 @@ namespace App\Utilities;
 use App\Models\Daytotal;
 use App\Models\Daytotal as ModelsDaytotal;
 use App\Models\Timesheet;
+use App\Models\User;
 use App\Utilities\CalculateUtility;
 use Carbon\Carbon;
 
@@ -55,11 +56,12 @@ class TimeloggingUtility
 
     public function updateDailySummery($userId, $day)
     {
-        $timesheets = Timesheet::where('UserId', $userId)
+        $user = User::find($userId);
+        $timesheets = $user->timesheet
             ->where('Month', $day)
             ->get();
 
-        $dayTotal = Daytotal::where('UserId', $userId)
+        $dayTotal = $user->dayTotal
             ->where('Month', $day)
             ->first();
         $summary = $this->calculateSummaryForDay($timesheets);
