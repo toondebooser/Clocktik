@@ -8,6 +8,7 @@
     <h2>{{ $type }}</h2>
     <div id="list" class="workersForm">
         <input type="text" id="searchInput" placeholder="Type a worker name..."> <br>
+        <div class="hidden" id="type" type="{{$type}}"></div>
         @foreach ($dataSet as $data)
             @if (($type !== 'Bedrijven' && !$data->admin) || ($data->admin && $data->company->Admin_timeclock))
                 <form class="workerForm" 
@@ -62,13 +63,14 @@
         // List filter
         const searchInput = document.getElementById('searchInput');
         const list = document.getElementById('list');
+        const type = document.getElementById('type').getAttribute('type');
         const workerForms = Array.from(list.getElementsByClassName('workerForm'));
         
         searchInput.addEventListener('input', function() {
             const filter = searchInput.value.toLowerCase();
             
             // Loop trhough forms
-            workerForms.forEach(form => {
+            workerForms.map(form => {
                 const companyCode = form.getAttribute('companyCode');
                 const button = form.querySelector('.listButton');
                 const settingsButton = companyCode ? document.getElementById(companyCode) : null;
@@ -78,9 +80,9 @@
                 // Show form if name matches the search, hide if it doesn't
                 if (name.startsWith(filter)) {
                     form.classList.remove('hidden');
-                    settingsButton.classList.remove('hidden');
+                    type == 'Bedrijven' ? settingsButton.classList.remove('hidden') : null;
                 } else {
-                    settingsButton.classList.add('hidden');
+                    type == 'Bedrijven' ? settingsButton.classList.add('hidden') : null;
                     form.classList.add('hidden');
                 }
             });
