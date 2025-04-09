@@ -10,9 +10,23 @@ body {
     --status-onBreak: rgb(18, 105, 244);
     --status-notWorking: rgb(252, 3, 3);
 }
+
 a{
     text-decoration: none;
     color: inherit;
+}
+.side-menu{
+    position: absolute; /* Required for positioning */
+    left: 0; /* Starting point */
+    transform: translateX(-100%); /* Initially off-screen to the left */
+    transition: transform 0.5s ease;
+    height: 100%;
+    width: 50%;
+    background-color: white;
+    opacity: 90%;
+}
+.side-menu.slide-in {
+    transform: translateX(0); /* Slides to visible position */
 }
 .button {
     padding: 2px 5px;
@@ -235,6 +249,16 @@ input:hover {
     grid-column: 1/13;
 }
 header {
+    /* display: flex;
+    align-items: flex-start; */
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,auto); 
+    grid-template-rows: 1fr;
+    justify-content: end; 
+    justify-items: end;
+    align-items: center;
+    grid-auto-flow: column;
     grid-column: 1/13;
     justify-self: end;
     margin-right: 50px;
