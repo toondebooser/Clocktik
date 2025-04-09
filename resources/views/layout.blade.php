@@ -69,9 +69,9 @@
                         <a class="authLinks button"
                             href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
                     @endif
-                @else
+                {{-- @else
                     <a class="authLinks button"
-                        href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
+                        href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a> --}}
                 @endif
                 <a class="authLinks button" href="{{ route('logout') }}">Logout</a>
             @endauth

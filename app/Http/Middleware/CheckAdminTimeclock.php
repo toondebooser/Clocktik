@@ -16,7 +16,7 @@ class CheckAdminTimeclock
         if ($user->admin) { 
             $company = $user->company;
             
-            if (!$company->Admin_timeclock) {
+            if (!$company->admin_timeclock) {
                 return redirect('/');
             }
         }
