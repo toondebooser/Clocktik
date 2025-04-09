@@ -5,7 +5,6 @@
         if (isset($timesheet[0])) {
             $month = $timesheet[0]->Month;
         }
-
     @endphp
 
     <h2>
@@ -114,9 +113,9 @@
                             @endif
                         </td>
                         <td class="displayRegular">
-                            @if ($day->RegularHours !== 7.6 && $day->Weekend == false && $day->type == 'workday')
+                            @if ($day->RegularHours !== $companyDayHours && $day->Weekend == false && $day->type == 'workday')
                                 <s>{{ $day->RegularHours }}</s>
-                                => 7.60
+                                => {{$companyDayHours}}
                             @elseif($day->Weekend == true && $day->type == 'workday')
                                 Weekend
                             @elseif ($day->Weekend == false && $day->type !== 'workday')

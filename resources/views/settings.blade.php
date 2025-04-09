@@ -100,7 +100,9 @@
             {{-- day_hours --}}
             <span style="grid-column: 1/3; grid-row:3/4; justify-self:center;">
                 <label for="day_hours">Daguren (decimaal)</label>
-                <input value="{{ $data->day_hours }}" style="width:60px;" type="number" name="day_hours" id="day_hours">
+                <input  step="0.1" 
+                min="0" 
+                max="24" value="{{ $data->day_hours }}" style="width:60px;" type="number" name="day_hours" id="day_hours">
             </span>
 
             {{-- set weekend days --}}

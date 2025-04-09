@@ -47,6 +47,7 @@ class UsersheetsController extends Controller
 
         $days = $currentUser->dayTotals()->orderBy('Month','asc')->get();
         
+        
         $monthlyTotal = $currentUser->userTotal()->where('UserId', '=', $currentUser->id)
             ->whereMonth('Month', '=', $month)
             ->get();
@@ -55,6 +56,6 @@ class UsersheetsController extends Controller
             ->orderBy('Month', 'desc')
             ->get();
 
-        return view('profile', ['user' => $currentUser, 'days' => $days,'clockedMonths' => $clockedMonths, 'timesheet' => $timesheet, 'monthlyTotal' => $monthlyTotal]);
+        return view('profile', ['user' => $currentUser, 'companyDayHours' => $currentUser->company->day_hours , 'days' => $days,'clockedMonths' => $clockedMonths, 'timesheet' => $timesheet, 'monthlyTotal' => $monthlyTotal]);
     }
 }

@@ -41,7 +41,7 @@ class UpdateTimesheetController extends Controller
     {
         $dayType = $request->input('dayType');
         $id = $request->id;
-        // $worker = User::find($id);
+        $companyDayHours = User::find($id)->company->day_hours;
         $timesheet = $request->type == 'workday' ? Timesheet::find($request->timesheet) : Daytotal::find($request->timesheet);
      
         $type = $request->updateSpecial;
@@ -69,7 +69,7 @@ class UpdateTimesheetController extends Controller
             }
         } elseif ($type !== 'workday') {
             $timesheet->fill([
-                'accountableHours' => 7.6,
+                'accountableHours' => $companyDayHours,
                 'type' => $type,
             ]);
             $save = $timesheet->save();
@@ -101,7 +101,7 @@ class UpdateTimesheetController extends Controller
             $timeloggingUtility = new TimeloggingUtility;
             $addTimesheet = $timeloggingUtility->logTimeEntry($userRow, $id, $timesheet);
            
-            if ($addTimesheet) return redirect()->route('myWorkers');
+            if ($addTimesheet) return redirect()->back()->with('success', 'Dag is aangepast');
         
             // $timesheet->save();
             // $userTotal = CalculateUtility::calculateUserTotal($date, $id);

@@ -57,26 +57,27 @@ class TimeloggingUtility
     public function updateDailySummery($userId, $day)
     {
         $user = User::find($userId);
-        $timesheets = $user->timesheet
+        $companyDayHours = $user->company->day_hours;
+        $timesheets = $user->timesheets()
             ->where('Month', $day)
             ->get();
 
-        $dayTotal = $user->dayTotal
+        $dayTotal = $user->dayTotals()
             ->where('Month', $day)
             ->first();
-        $summary = $this->calculateSummaryForDay($timesheets);
+        $summary = $this->calculateSummaryForDay($timesheets, $companyDayHours);
         $dayTotal->update($summary);
     }
 
 
-    private function calculateSummaryForDay($timesheets)
+    private function calculateSummaryForDay($timesheets, $companyDayHours)
     {
         $summary = [
             'BreakHours' => 0,
             'RegularHours' => 0,
             'DaytimeCount' => $timesheets->count(),
             'OverTime' => 0,
-            'accountableHours' => 7.6
+            'accountableHours' => $companyDayHours
         ];
 
         $dailyHours = 0;
@@ -95,7 +96,7 @@ class TimeloggingUtility
             $summary['RegularHours'] += $netWorkHours;
         }
 
-        $summary['OverTime'] += $dailyHours - 7.6;
+        $summary['OverTime'] += $dailyHours - $companyDayHours;
 
         return $summary;
     }

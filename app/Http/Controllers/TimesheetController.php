@@ -81,7 +81,7 @@ class TimesheetController extends Controller
             'ClockedIn' => $singleDay,
             'Month' => $singleDay,
             'UserId' => $worker,
-            'accountableHours' => $dayType == 'onbetaald' ? 0 : 7.6,
+            'accountableHours' => $dayType == 'onbetaald' ? 0 : User::find($worker)->company->day_hours,
         ]);
         if ($dayTotal->wasRecentlyCreated) {
             // $newSpecialTimesheet->fill([
