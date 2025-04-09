@@ -10,7 +10,7 @@
         <input type="text" id="searchInput" placeholder="Type a worker name..."> <br>
         <div class="hidden" id="type" type="{{$type}}"></div>
         @foreach ($dataSet as $data)
-            @if (($type !== 'Bedrijven' && !$data->admin) || ($data->admin && $data->company->Admin_timeclock))
+            @if (($type !== 'Bedrijven' && !$data->admin) || ($data->admin && $data->company->admin_timeclock))
                 <form class="workerForm" 
                     action="{{ $type === 'Personeel' ? route('getData') : route('specials') }}" method="post">
                     @csrf
@@ -30,7 +30,7 @@
                         <button class="listButton" type="submit" name="worker"
                             style="display: flex; align-items: center; justify-content: center;">
                             {{ $data->company_name }}
-                            <img style="height: 30px; margin-left: 10px;" src="{{ asset($data->image) }}"
+                            <img style="height: 30px; margin-left: 10px;" src="{{ asset($data->company_logo) }}"
                                 alt="Company logo">
                         </button>
                     </form>

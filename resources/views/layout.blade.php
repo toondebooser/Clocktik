@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="icon" href="{{ asset('images/Taxus logo perfect round.png') }}" sizes="192x192" type="image/png">
+    <link rel="icon" href="{{ auth()->check() && auth()->user()->company && auth()->user()->company->company_logo ? asset(auth()->user()->company->company_logo) : asset('images/TaxusLogo.png') }}" sizes="192x192" type="image/png">
     @if (env('APP_ENV') == 'local')
         @vite('resources/css/app.css', 'resources/js/app.js')
     @elseif (env('APP_ENV') == 'production')
@@ -19,7 +19,7 @@
 
     <style>
         :root {
-            --primary-color: {{ auth()->check() ? auth()->user()->company->color ?? 'black' : 'black' }};
+            --primary-color: {{ auth()->check() ? auth()->user()->company->company_color ?? 'black' : 'black' }};
         }
     </style>
 
@@ -62,7 +62,7 @@
                 @if ($currentUser->god)
                     <a class="authLinks button"
                         href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
-                @elseif (!$currentUser->admin || ($currentUser->admin && $currentUser->company->Admin_timeclock))
+                @elseif (!$currentUser->admin || ($currentUser->admin && $currentUser->company->admin_timeclock))
                     <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
                     <a class="authLinks button" href="{{ route('myProfile') }}">Mijn profiel</a>
                     @if ($currentUser->admin && !$currentUser->god)

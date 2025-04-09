@@ -40,6 +40,7 @@
             background: #f9f9f9;
             border: 2px solid {{ $data->color }};
         }
+
         .name {
             border-radius: 10px;
             padding: 10px;
@@ -55,62 +56,73 @@
         }
 
         .content {
-            overflow-x: hidden; 
+            overflow-x: hidden;
         }
     </style>
     <h2>Instellingen</h2>
     <div style=" max-width: 400px; height: 100%;justify-content:center; align-content:center; grid-row: 3/5; grid-column: 2/12; justify-self:center;"
-    class="content">
-    <form
-    style=" margin: 10px 0px; grid-gap:10px; border-radius: 20px; padding: 10px;border: solid {{$data->color}} 2px;display:grid; grid-template-rows:repeat(5, auto); grid-template-columns:repeat(2,auto); "
-    action="{{ route('change-company-settings') }}" method="POST" enctype="multipart/form-data">
-    @csrf
-            <input style="display: none" id="colorInput" type="color" name="companyColor" value="{{$data->color }}">
+        class="content">
+        <form
+            style=" margin: 10px 0px; grid-gap:10px; border-radius: 20px; padding: 10px;border: solid {{ $data->company_color }} 2px;display:grid; grid-template-rows:repeat(5, auto); grid-template-columns:repeat(2,auto); "
+            action="{{ route('change-company-settings') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <input type="hidden" name="company_code" value="{{ $data->company_code }}">
+            {{-- set color --}}
+            <input style="display: none" id="colorInput" type="color" name="company_color"
+                value="{{ $data->company_color }}">
             <label class="flex" for="colorInput">
                 <div>Kies een kleur</div>
                 <div id="colorPreview"
-                    style=" border-radius: 10px; width: 50px; height: 50px;background-color: {{ $data->color }}"></div>
+                    style=" border-radius: 10px; width: 50px; height: 50px;background-color: {{ $data->company_color }}">
+                </div>
             </label>
-            <input style="display: none" type="file" name="picture" id="pictureInput" accept="image/*">
+
+            {{-- upload logo --}}
+            <input style="display: none" type="file" name="company_logo" id="pictureInput" accept="image/*">
             <label for="pictureInput" class="logo-selectie flex"
                 style="grid-column: 2/3; width: 100px justify-self: center;">
                 <div>Kies je logo</div>
 
-                <img id="preview" for="file-input"
-                    src="{{ asset($data->image) ?? asset('images/Taxus logo perfect round.png') }}" alt="Logo preview"
+                <img id="preview" for="file-input" src="{{ asset($data->company_logo) ?? asset('images/TaxusLogo.png') }}"
+                    alt="Logo preview"
                     style="  grid-row: 2/3; grid-column: 2/3;justify-self: center;max-height: 50px; max-width: auto;">
             </label>
-
+            {{-- admin_timeclock --}}
             <span style="grid-row: 2/3; grid-column: 1/3; justify-self: center" class="radioInput">
                 <label for="betaaldInput" class="checkboxContainer">
-                    <input @if ($data->Admin_timeclock == 1) {{ 'checked' }} @endif type="checkbox" class="radioBox" id="betaaldInput" name="adminTimeClock">
+                    <input type="hidden" name="admin_timeclock" value="0">
+                    <input @if ($data->admin_timeclock == 1) {{ 'checked' }} @endif type="checkbox" class="radioBox"
+                        id="betaaldInput" name="admin_timeclock" value='1' >
                     <span class="checkMark"></span>
                     <span class="labelAndere">Admin tijdregistratie activeren</span>
                 </label>
             </span>
+            {{-- day_hours --}}
             <span style="grid-column: 1/3; grid-row:3/4; justify-self:center;">
-                <label for="werkUren">Daguren (decimaal)</label>
-                <input value="{{$data->day_hours}}" style="width:60px;" type="number" name="werkUren" id="werkUren">
+                <label for="day_hours">Daguren (decimaal)</label>
+                <input value="{{ $data->day_hours }}" style="width:60px;" type="number" name="day_hours" id="day_hours">
             </span>
+
+            {{-- set weekend days --}}
             <div style="justify-self: end">Weekend dagen</div>
             <span>
-                <select style="width: fit-content" name="weekendDag1" id="weekendDag1">
-                    <option value="Maandag" {{  $data->weekend_day_1 == 'Maandag' ? 'selected' : '' }}>Ma</option>
-                    <option value="Dinsdag" {{  $data->weekend_day_1 == 'Dinsdag' ? 'selected' : '' }}>Di</option>
-                    <option value="Woensdag" {{  $data->weekend_day_1 == 'Woensdag' ? 'selected' : '' }}>Wo</option>
-                    <option value="Donderdag" {{  $data->weekend_day_1 == 'Donderdag' ? 'selected' : '' }}>Do</option>
-                    <option value="Vrijdag"{{  $data->weekend_day_1 == 'Vrijdag' ? 'selected' : '' }}>Vr</option>
-                    <option value="Zaterdag"{{  $data->weekend_day_1 == 'Zaterdag' ? 'selected' : '' }}>Za</option>
-                    <option value="Zondag"{{  $data->weekend_day_1 == 'Zondag' ? 'selected' : '' }}>Zo</option>
+                <select style="width: fit-content" name="weekend_day_1" id="weekendDag1">
+                    <option value="Maandag" {{ $data->weekend_day_1 == 'Maandag' ? 'selected' : '' }}>Ma</option>
+                    <option value="Dinsdag" {{ $data->weekend_day_1 == 'Dinsdag' ? 'selected' : '' }}>Di</option>
+                    <option value="Woensdag" {{ $data->weekend_day_1 == 'Woensdag' ? 'selected' : '' }}>Wo</option>
+                    <option value="Donderdag" {{ $data->weekend_day_1 == 'Donderdag' ? 'selected' : '' }}>Do</option>
+                    <option value="Vrijdag"{{ $data->weekend_day_1 == 'Vrijdag' ? 'selected' : '' }}>Vr</option>
+                    <option value="Zaterdag"{{ $data->weekend_day_1 == 'Zaterdag' ? 'selected' : '' }}>Za</option>
+                    <option value="Zondag"{{ $data->weekend_day_1 == 'Zondag' ? 'selected' : '' }}>Zo</option>
                 </select>
-                <select style="width: fit-content" name="weekendDag2" id="weekendDag2">
-                    <option value="Maandag" {{  $data->weekend_day_2 == 'Maandag' ? 'selected' : '' }}>Ma</option>
-                    <option value="Dinsdag" {{  $data->weekend_day_2 == 'Dinsdag' ? 'selected' : '' }}>Di</option>
-                    <option value="Woensdag" {{  $data->weekend_day_2 == 'Woensdag' ? 'selected' : '' }}>Wo</option>
-                    <option value="Donderdag" {{  $data->weekend_day_2 == 'Donderdag' ? 'selected' : '' }}>Do</option>
-                    <option value="Vrijdag"{{  $data->weekend_day_2 == 'Vrijdag' ? 'selected' : '' }}>Vr</option>
-                    <option value="Zaterdag"{{  $data->weekend_day_2 == 'Zaterdag' ? 'selected' : '' }}>Za</option>
-                    <option value="Zondag"{{  $data->weekend_day_2 == 'Zondag' ? 'selected' : '' }}>Zo</option>
+                <select style="width: fit-content" name="weekend_day_2" id="weekendDag2">
+                    <option value="Maandag" {{ $data->weekend_day_2 == 'Maandag' ? 'selected' : '' }}>Ma</option>
+                    <option value="Dinsdag" {{ $data->weekend_day_2 == 'Dinsdag' ? 'selected' : '' }}>Di</option>
+                    <option value="Woensdag" {{ $data->weekend_day_2 == 'Woensdag' ? 'selected' : '' }}>Wo</option>
+                    <option value="Donderdag" {{ $data->weekend_day_2 == 'Donderdag' ? 'selected' : '' }}>Do</option>
+                    <option value="Vrijdag"{{ $data->weekend_day_2 == 'Vrijdag' ? 'selected' : '' }}>Vr</option>
+                    <option value="Zaterdag"{{ $data->weekend_day_2 == 'Zaterdag' ? 'selected' : '' }}>Za</option>
+                    <option value="Zondag"{{ $data->weekend_day_2 == 'Zondag' ? 'selected' : '' }}>Zo</option>
                 </select>
             </span>
 
