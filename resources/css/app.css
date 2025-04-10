@@ -36,6 +36,12 @@ a {
     position: absolute; /* Required for positioning */
     left: 0; 
     top: 0;
+    padding: 20px;
+    display: grid;
+    align-items:start;
+    justify-items: end;
+    grid-auto-rows: max-content;
+    gap: 5px;
     transform: translateX(-100%); /* Initially off-screen to the left */
     transition: transform 0.5s ease;
     height: 100%;
@@ -74,7 +80,7 @@ a {
     border-radius: 4px;
     opacity: 1;
     transition: .25s ease-in-out;
-    left: 25%; /* Center the spans horizontally (50% width means 25% left offset) */
+    left: 25%; 
 }
 
 /* Adjusted spacing to be centered vertically */
@@ -332,11 +338,15 @@ input:hover {
     grid-row: 2/3;
     grid-column: 1/13;
 }
+.browserHeader{
+    display: none;
+}
 header {
     /* display: flex;
     align-items: flex-start; */
     width: 100%;
     display: grid;
+    gap: 5px;
     grid-template-columns: repeat(auto-fit, auto);
     grid-template-rows: 1fr;
     justify-content: end;
@@ -512,6 +522,9 @@ img {
     text-decoration: none;
     color: black;
     border-top: solid 1px black;
+}
+#nav-icon4:hover{
+border-top:none;
 }
 
 .authLinks:hover {
@@ -1126,7 +1139,12 @@ p {
     .error {
         width: auto;
     }
-
+ .browserHeader{
+    display: block;
+ }
+ #nav-icon4{
+    display: none;
+ }
     .specialDays {
         grid-column: 2/12;
         grid-row: 3/5;

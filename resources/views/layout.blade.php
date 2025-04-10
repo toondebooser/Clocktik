@@ -64,12 +64,22 @@
                     <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
                         <img style="height: 40px" src="{{ asset('images/settings.png') }}" alt="settings">
                     </a>
+                    <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
                     <a class="authLinks button"
                         href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
 
                 </div>
                 <a class="headerLinks" href="{{ route('home') }}">Home</a>
                 @if ($currentUser->admin && $currentUser->company->admin_timeclock)
+                    <div class="browserHeader">
+                        <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
+                            <img style="height: 40px" src="{{ asset('images/settings.png') }}" alt="settings">
+                        </a>
+                        <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
+                        <a class="authLinks button"
+                            href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
+
+                    </div>
                     <div class="headerLinks " id="nav-icon4" onclick="toggle()">
                         <span></span>
                         <span></span>
