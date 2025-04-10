@@ -4,6 +4,7 @@ body {
     height: 100svh;
     font-family: "Noto Sans", sans-serif;
 }
+
 :root {
     --primary-color: black;
     --status-working: rgb(33, 222, 33);
@@ -16,28 +17,43 @@ a {
     color: inherit;
 }
 
-* {
-    margin: 0;
-    padding: 0;
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1); /* Slight overlay for better contrast */
+    backdrop-filter: blur(5px); /* Blur effect */
+    opacity: 0;
+    pointer-events: none; /* Allows clicks to pass through when hidden */
+    transition: opacity 0.3s ease;
+    z-index: 5; /* Below menu but above content */
 }
 
 
 .side-menu {
     position: absolute; /* Required for positioning */
-    left: 0; /* Starting point */
+    left: 0; 
+    top: 0;
     transform: translateX(-100%); /* Initially off-screen to the left */
     transition: transform 0.5s ease;
     height: 100%;
     width: 50%;
     background-color: white;
     opacity: 90%;
+    z-index: 10;
 }
 .side-menu.slide-in {
     transform: translateX(0); /* Slides to visible position */
 }
-
+.side-menu.slide-in ~ .backdrop {
+    opacity: 1;
+    pointer-events: auto; /* Blocks clicks on blurred content */
+}
   
 #nav-icon4 {
+    z-index: 15;
     width: 60px;
     height: 45px; /* Fixed height to properly contain and center the spans */
     position: relative;
@@ -332,6 +348,7 @@ header {
     margin-right: 50px;
     align-self: center;
     grid-row: 1/2;
+    z-index: 15; 
 }
 .newUserForm {
     justify-self: center;

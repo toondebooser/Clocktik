@@ -43,6 +43,8 @@ class TimesheetController extends Controller
             return redirect('/dashboard');
         }
     }
+
+    
     public function addNewTimesheet(Request $request)
     {
         // $newTimesheet = new Timesheet;
