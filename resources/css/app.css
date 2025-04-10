@@ -2,7 +2,7 @@ html,
 body {
     height: 100vh;
     height: 100svh;
-    font-family:"Noto Sans", sans-serif;
+    font-family: "Noto Sans", sans-serif;
 }
 :root {
     --primary-color: black;
@@ -11,11 +11,18 @@ body {
     --status-notWorking: rgb(252, 3, 3);
 }
 
-a{
+a {
     text-decoration: none;
     color: inherit;
 }
-.side-menu{
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+
+.side-menu {
     position: absolute; /* Required for positioning */
     left: 0; /* Starting point */
     transform: translateX(-100%); /* Initially off-screen to the left */
@@ -28,6 +35,69 @@ a{
 .side-menu.slide-in {
     transform: translateX(0); /* Slides to visible position */
 }
+
+  
+#nav-icon4 {
+    width: 60px;
+    height: 45px; /* Fixed height to properly contain and center the spans */
+    position: relative;
+    cursor: pointer;
+    transition: .5s ease-in-out;
+    display: flex; /* Added to help with centering */
+    align-items: center; /* Vertical centering */
+    justify-content: center; /* Horizontal centering */
+}
+
+/* Remove the duplicate span selector and consolidate */
+#nav-icon4 span {
+    display: block;
+    position: absolute;
+    height: 4px;
+    width: 50%; /* Keeping this as per your code */
+    background: grey; /* Changed from #d3531a to match your second definition */
+    border-radius: 4px;
+    opacity: 1;
+    transition: .25s ease-in-out;
+    left: 25%; /* Center the spans horizontally (50% width means 25% left offset) */
+}
+
+/* Adjusted spacing to be centered vertically */
+#nav-icon4 span:nth-child(1) {
+    top: 12px; /* Adjusted to center in the 45px height */
+    transform-origin: left center;
+}
+
+#nav-icon4 span:nth-child(2) {
+    top: 20px; /* Center line */
+    transform-origin: left center;
+}
+
+#nav-icon4 span:nth-child(3) {
+    top: 28px; /* Adjusted to center in the 45px height */
+    transform-origin: left center;
+}
+
+/* Adjusted open state for perfect cross */
+#nav-icon4.open span:nth-child(1) {
+    transform: rotate(45deg);
+    top: 9px; /* Fine-tuned for perfect cross */
+    left: 14px; /* Adjusted for centering */
+    width: 50%; /* Keep consistent width */
+}
+
+#nav-icon4.open span:nth-child(2) {
+    width: 0%;
+    opacity: 0;
+}
+
+#nav-icon4.open span:nth-child(3) {
+    transform: rotate(-45deg);
+    top: 31px; /* Fine-tuned for perfect cross */
+    left: 14px; /* Adjusted for centering */
+    width: 50%; /* Keep consistent width */
+}
+
+
 .button {
     padding: 2px 5px;
     background-color: var(--primary-color);
@@ -37,26 +107,25 @@ a{
     border-radius: 5px;
 }
 
-:hover.timesheetRow{
+:hover.timesheetRow {
     cursor: pointer;
 }
-.timesheetStyle{
+.timesheetStyle {
     text-align: center;
 }
-.hidden{
+.hidden {
     display: none;
 }
-.belongTogether{
-    background-color:lightcyan
+.belongTogether {
+    background-color: lightcyan;
 }
-
 
 table {
     grid-column: 1/13;
     justify-self: center;
-    border-collapse: collapse; 
+    border-collapse: collapse;
     font-size: smaller;
-    font-family:"Noto Sans", sans-serif;
+    font-family: "Noto Sans", sans-serif;
     width: 100%;
 }
 .content-row {
@@ -96,7 +165,6 @@ td {
     text-overflow: ellipsis;
 }
 
-
 th {
     background-color: rgb(200, 215, 248);
 }
@@ -106,7 +174,7 @@ th {
     grid-template-rows: 10% 10% 55% 15% 10%;
     height: 100%;
 }
-.form{
+.form {
     grid-row: 3/4;
     grid-column: 1/13;
     align-self: center;
@@ -149,8 +217,8 @@ th {
     border-radius: 10px;
     z-index: 1;
 }
-.success{
-    Max-width: 300px;
+.success {
+    max-width: 300px;
     align-items: center;
     border-radius: 10px;
     flex-direction: column;
@@ -203,7 +271,7 @@ th {
     justify-self: center;
     align-self: center;
 }
-.specialUpdateContainer{
+.specialUpdateContainer {
     grid-column: 1/3;
 }
 .updateStartTime,
@@ -253,9 +321,9 @@ header {
     align-items: flex-start; */
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(auto-fit,auto); 
+    grid-template-columns: repeat(auto-fit, auto);
     grid-template-rows: 1fr;
-    justify-content: end; 
+    justify-content: end;
     justify-items: end;
     align-items: center;
     grid-auto-flow: column;
@@ -275,7 +343,7 @@ header {
     gap: 10px;
     grid-template-columns: repeat(12, 1fr);
 }
-.forgotPassword{
+.forgotPassword {
     font-size: small;
     grid-column: 1/12;
     grid-row: 7/8;
@@ -378,7 +446,7 @@ h2 {
     grid-column: 1/13;
     justify-self: center;
 }
-h3{
+h3 {
     margin-bottom: 20px;
 }
 h4 {
@@ -393,7 +461,7 @@ img {
 .logo {
     height: 100%;
 }
-.verificationMessage{
+.verificationMessage {
     border: black solid;
     padding: 10px;
     background-color: lightgray;
@@ -402,9 +470,8 @@ img {
     justify-items: center;
     align-content: center;
     text-align: center;
-
 }
-.resendVerificationMessage{
+.resendVerificationMessage {
     color: red;
 }
 .logoContainer {
@@ -448,7 +515,7 @@ img {
 .displayDay {
     color: black;
 }
-.trashIcon{
+.trashIcon {
     height: 25px;
 }
 .noteIcon {
@@ -468,7 +535,7 @@ th {
 }
 
 .timesheetTable {
-    font-family:"Noto Sans", sans-serif;
+    font-family: "Noto Sans", sans-serif;
 
     border-radius: 10px;
     grid-row: 3/4;
@@ -510,7 +577,7 @@ h1 {
     grid-column: 2/12;
     justify-self: center;
     align-self: center;
-    max-height:400px;
+    max-height: 400px;
     overflow-y: auto; /* Enable vertical scrolling */
     overflow-x: hidden;
 }
@@ -587,7 +654,7 @@ footer {
     align-self: end;
     margin-bottom: 10px;
 }
-.bedrijvenLijst{
+.bedrijvenLijst {
     display: flex;
 }
 .workersForm {
@@ -678,7 +745,7 @@ fieldset {
     font-size: 20px;
     user-select: none;
 }
-#onbetaald{
+#onbetaald {
     margin-bottom: 20px;
 }
 .checkboxContainer .radioBox {
@@ -722,8 +789,8 @@ fieldset {
 #onbetaaldInput:checked ~ .onbetaaldInput {
     display: inline;
 }
-.smallText{
-    font-size:medium;
+.smallText {
+    font-size: medium;
 }
 
 .specialDayForm {
@@ -742,7 +809,7 @@ fieldset {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
-.updateSpecialInput{
+.updateSpecialInput {
     margin-bottom: 50px;
 }
 .radioInput {
@@ -868,20 +935,20 @@ fieldset {
     border: none;
     border-radius: 5px;
 } */
-.updateTimesheet{
+.updateTimesheet {
     width: 90dvw;
     display: grid;
     grid-template-columns: 50% 50%;
 }
 
-.gewerkt{
+.gewerkt {
     grid-column: 1/2;
 }
-.gepauzeerd{
+.gepauzeerd {
     grid-column: 2/3;
     grid-row: 1/2;
 }
-.updateTimesheetSubmit{
+.updateTimesheetSubmit {
     max-width: 100px;
     justify-self: center;
     grid-column: 1/3;
@@ -939,7 +1006,6 @@ fieldset {
 }
 p {
     height: max-content;
-    
 }
 .buttonText {
     font-family: "Noto Sans", sans-serif;
@@ -1014,25 +1080,31 @@ p {
     justify-self: center;
     width: 60px;
     aspect-ratio: 2;
-    
-    --_g: radial-gradient(circle closest-side, black 40%, transparent 55%) no-repeat;
-    
-    background: 
-      var(--_g) 0% 50%,
-      var(--_g) 50% 50%,
-      var(--_g) 100% 50%;
-      
+
+    --_g: radial-gradient(circle closest-side, black 40%, transparent 55%)
+        no-repeat;
+
+    background: var(--_g) 0% 50%, var(--_g) 50% 50%, var(--_g) 100% 50%;
+
     background-size: calc(100% / 3) 50%;
     animation: l3 1s infinite linear;
 }
 
 @keyframes l3 {
-  20% { background-position: 0% 0%, 50% 50%, 100% 50%; }
-  40% { background-position: 0% 100%, 50% 0%, 100% 50%; }
-  60% { background-position: 0% 50%, 50% 100%, 100% 0%; }
-  80% { background-position: 0% 50%, 50% 50%, 100% 100%; }
+    20% {
+        background-position: 0% 0%, 50% 50%, 100% 50%;
+    }
+    40% {
+        background-position: 0% 100%, 50% 0%, 100% 50%;
+    }
+    60% {
+        background-position: 0% 50%, 50% 100%, 100% 0%;
+    }
+    80% {
+        background-position: 0% 50%, 50% 50%, 100% 100%;
+    }
 }
-                                    
+
 @media (min-width: 768px) {
     .error {
         width: auto;

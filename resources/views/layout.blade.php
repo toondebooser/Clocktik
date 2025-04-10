@@ -58,20 +58,23 @@
             </div>
         @endif
         @yield('header')
-        <div id="slide-menu" class="side-menu">
-            <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
-                <img style="height: 40px" src="{{ asset('images/settings.png') }}" alt="settings">
-            </a>
-            <a class="authLinks button"
-                href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
-        
-        </div>
-        <header>
-            @auth
+        @auth
+            <div id="slide-menu" class="side-menu">
+                <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
+                    <img style="height: 40px" src="{{ asset('images/settings.png') }}" alt="settings">
+                </a>
+                <a class="authLinks button"
+                    href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
+
+            </div>
+            <header>
                 <a class="headerLinks" href="{{ route('home') }}">Home</a>
                 @if ($currentUser->admin && $currentUser->company->admin_timeclock)
-                
-                    <div class="headerLinks " onclick="toggle()">Hamburger</div>
+                    <div class="headerLinks " id="nav-icon4" onclick="toggle()"> 
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
                 @elseif ($currentUser->god)
                     <a class="authLinks button"
                         href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
@@ -106,23 +109,27 @@
         <footer> &copy Toon De Booser</footer>
     </div>
     <script>
-        const toggle = () => {
-            const element = document.getElementById('slide-menu');
-            element.classList.toggle('slide-in');
-        };
-        window.toggle = toggle; 
+    const toggle = () => {
+        const element = document.getElementById('slide-menu');
+        const icon = document.getElementById('nav-icon4');
+        element.classList.toggle('slide-in');
+        icon.classList.toggle('open');
+    };
+    window.toggle = toggle;
 
-        document.addEventListener('click', (event) => {
-            const menu = document.getElementById('slide-menu');
-            const isMenuOpen = menu.classList.contains('slide-in');
-            const clickedInsideMenu = menu.contains(event.target);
-            const clickedToggle = event.target.closest('.headerLinks') && event.target.textContent === 'Hamburger';
+    document.addEventListener('click', (event) => {
+        const menu = document.getElementById('slide-menu');
+        const icon = document.getElementById('nav-icon4');
+        const isMenuOpen = menu.classList.contains('slide-in');
+        const clickedInsideMenu = menu.contains(event.target);
+        const clickedToggle = event.target.closest('#nav-icon4');
 
-            if (isMenuOpen && !clickedInsideMenu && !clickedToggle) {
-                menu.classList.remove('slide-in');
-            }
-        });
-    </script>
+        if (isMenuOpen && !clickedInsideMenu && !clickedToggle) {
+            menu.classList.remove('slide-in');
+            icon.classList.remove('open');
+        }
+    });
+</script>
 </body>
 
 </html>

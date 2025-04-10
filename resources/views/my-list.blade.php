@@ -1,13 +1,11 @@
 @extends('layout')
 
 @section('content')
-    <style>
-        #searchInput {}
-    </style>
+   
 
     <h2>{{ $type }}</h2>
     <div id="list" class="workersForm">
-        <input type="text" id="searchInput" placeholder="Type a worker name..."> <br>
+        <input type="text" id="searchInput" placeholder="Zoek "> <br>
         <div class="hidden" id="type" type="{{$type}}"></div>
         @foreach ($dataSet as $data)
             @if (($type !== 'Bedrijven' && !$data->admin) || ($data->admin && $data->company->admin_timeclock))
