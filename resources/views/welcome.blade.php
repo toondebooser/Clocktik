@@ -1,6 +1,6 @@
 @extends('layout')
 @section('title')
-
+ 
     <h1>Tiktrack</h1>
     <a href="{{ route('dashboard') }}" class="logoContainer">
             <img class="logo" src="{{ auth()->check() && auth()->user()->company && auth()->user()->company->company_logo ? asset(auth()->user()->company->company_logo) : asset('images/TaxusLogo.png') }}"

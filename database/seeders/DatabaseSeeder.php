@@ -22,17 +22,24 @@ class DatabaseSeeder extends Seeder
         $companies = [
             [
                 'company_name' => 'Beterams',
-                'image' => 'images/95090418_1090903184610004_7235939885578715136_n.png',
-                'color' => "#019541",
+                'company_logo' => 'images/95090418_1090903184610004_7235939885578715136_n.png',
+                'company_color' => "#019541",
                 'company_code' => 1234567890,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
                 'company_name' => 'De Bever',
-                'image' => 'images/bever.png',
-                'color' => "black",
+                'company_logo' => 'images/bever.png',
+                'company_color' => "black",
                 'company_code' => 1234567891,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'company_name' => 'Heaven',
+                'company_logo' => 'images/TaxusLogo.png',
+                'company_code' => 1618033988,
                 'created_at' => now(),
                 'updated_at' => now()
             ]
@@ -48,7 +55,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'taxus.work@gmail.com',
                 'password' => Hash::make('password123'),
                 'admin' => true,
-                'company_code' => 0000000000,
+                'company_code' => 1618033988,
                 'email_verified_at' => now(),
                 'god' => true,
                 'created_at' => now(),

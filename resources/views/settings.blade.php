@@ -63,7 +63,7 @@
     <div style=" max-width: 400px; height: 100%;justify-content:center; align-content:center; grid-row: 3/5; grid-column: 2/12; justify-self:center;"
         class="content">
         <form
-            style=" margin: 10px 0px; grid-gap:10px; border-radius: 20px; padding: 10px;border: solid {{ $data->company_color }} 2px;display:grid; grid-template-rows:repeat(5, auto); grid-template-columns:repeat(2,1fr); align-items:start; "
+            style=" margin: 10px 0px; grid-gap:15px; border-radius: 20px; padding: 10px;border: solid {{ $data->company_color }} 2px;display:grid; grid-template-rows:repeat(5, auto); grid-template-columns:repeat(2,1fr); align-items:start; "
             action="{{ route('change-company-settings') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="company_code" value="{{ $data->company_code }}">

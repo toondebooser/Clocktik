@@ -25,7 +25,6 @@ class TimeloggingUtility
 
         $date = Carbon::parse($userRow->StartWork)->format('Y-m-d');
         $dayTotal = Daytotal::firstOrCreate(['Month' => $date, 'UserId' => $user->id], [
-            'company_code' => $user->company_code,
             'UserId' => $user->id,
             'Month' => $date,
         ]);
