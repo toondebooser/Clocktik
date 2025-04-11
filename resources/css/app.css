@@ -4,7 +4,9 @@ body {
     height: 100svh;
     font-family: "Noto Sans", sans-serif;
 }
-
+.hamburger {
+    display: none; /* Hidden by default, shown on mobile */
+}
 :root {
     --primary-color: black;
     --status-working: rgb(33, 222, 33);
@@ -1136,6 +1138,12 @@ p {
 }
 
 @media (min-width: 768px) {
+    .side-menu {
+        display: none; /* Hide side menu on desktop */
+    }
+    .backdrop {
+        display: none; /* Hide backdrop on desktop */
+    }
     .error {
         width: auto;
     }
@@ -1172,6 +1180,12 @@ p {
     }
 }
 @media (max-width: 768px) {
+    .desktop-nav > *:not(.hamburger) {
+        display: none; /* Hide desktop links on mobile */
+    }
+    .hamburger {
+        display: block; /* Show hamburger on mobile */
+    }
     h2 {
         font-size: x-large;
     }
