@@ -22,14 +22,12 @@ class TimeclockController extends Controller
         $currentUser = auth()->user();
         $userRow = $currentUser->timelogs;
         $now = now('Europe/Brussels');
-        
+
         // dd(Carbon::parse($currentUser->company->weekend_day_1));
         Daytotal::firstOrCreate(['Month' => Carbon::parse($userRow->StartWork)->format('Y-m-d'), 'UserId' => $currentUser->id], [
             'UserId' => $currentUser->id,
             'Month' => Carbon::parse($userRow->StartWork)->format('Y-m-d'),
         ]);
-        $dayTotal = auth()->user()->dayTotals->where('Month', Carbon::parse($userRow->StartWork)->format('Y-m-d'));
-       dd($dayTotal);
         // Carbon::parse($userRow->StartWork)->format('Y-m-d');
         //TODO: rewrite start logic when a user has already logged this day
         // $dayCheck = Timesheet::where('UserId', $currentUser->id)
@@ -70,11 +68,9 @@ class TimeclockController extends Controller
 
         $now = now('Europe/Brussels');
         $userRow = auth()->user()->timelogs;
-        $dayTotal = Daytotal::where("UserId", auth()->user()->id)->where('Month',Carbon::parse($now)->format('Y-m-d') );
+        $dayTotal = auth()->user()->dayTotals->where('Month', Carbon::parse($now)->format('Y-m-d'))->first();
         $dayTotal->RegularHours += CalculateUtility::calculateDecimal($userRow->EndBreak ? $userRow->EndBreak : $userRow->StartWork, $now);
         $userRow->BreakStatus = true;
-
-
         $userRow->fill([
             'StartBreak' => $now,
             'BreaksTaken' => $userRow->BreaksTaken += 1
@@ -86,41 +82,47 @@ class TimeclockController extends Controller
 
     public function stopBreak()
     {
-        $timeStamp = now('Europe/Brussels');
+        $now = now('Europe/Brussels');
         $userRow = auth()->user()->timelogs;
+        $dayTotal = auth()->user()->dayTotals->where('Month', Carbon::parse($now)->format('Y-m-d'))->first();
         $userRow->fill([
             'BreakStatus' => false,
-            'EndBreak' => $timeStamp,
+            'EndBreak' => $now,
             // 'BreakHours' => $userRow->BreakHours += CalculateUtility::calculateDecimal($userRow->StartBreak, $timeStamp)
         ]);
+        $dayTotal->BreakHours += CalculateUtility::calculateDecimal($userRow->StartBreak, $now);
         $userRow->save();
+        $dayTotal->save();
         return redirect()->back();
     }
 
     public function stop()
     {
         $userRow = auth()->user()->timelogs;
-        $timeStamp = now('Europe/Brussels');
+        $now = now('Europe/Brussels');
+        $dayTotal = auth()->user()->dayTotals->where('Month', Carbon::parse($now)->format('Y-m-d'))->first();
         $userRow->ShiftStatus = false;
         if ($userRow->BreakStatus == true) {
             $start = Carbon::parse($userRow->StartBreak, 'Europe/Brussels');
-            $end = Carbon::parse($timeStamp, 'Europe/Brussels');
+            $end = Carbon::parse($now, 'Europe/Brussels');
+            $dayTotal->BreakHours  += CalculateUtility::calculateDecimal($start, $end);
+            $dayTotal->save();
             $userRow->fill([
                 'BreakStatus' => false,
-                'EndBreak' => $timeStamp,
-                'BreakHours' => $userRow->BreakHours += CalculateUtility::calculateDecimal($start, $end)
+                'EndBreak' => $now,
+                // 'BreakHours' => $userRow->BreakHours += CalculateUtility::calculateDecimal($start, $end)
             ]);
         }
 
-
+        $dayTotal->RegularHours += CalculateUtility::calculateDecimal(
+            $userRow->EndBreak ?? $userRow->StartWork,
+            $now
+        );
         $userRow->fill([
-            'StopWork' => $timeStamp,
-            'RegularHours' => $userRow->RegularHours += CalculateUtility::calculateDecimal(
-                $userRow->EndBreak ?? $userRow->StartWork,
-                $timeStamp
-            )
+            'StopWork' => $now,
+            
         ]);
-
+        $dayTotal->save();
         $userRow->save();
         return Redirect::route('makeTimesheet', ['id' => auth()->user()->id]);
     }

@@ -14,6 +14,7 @@ class DashboardController extends Controller
     public function userDashboard(Request $request)
     {
         $userRow = Timelog::where('UserId',auth()->user()->id)->first();
+        $dayTotal = auth()->user()->dayTotals->where('Month',  Carbon::parse(now('Europe/Brussels'))->format('Y-m-d'))->first();
         // $today = now('Europe/Brussels')->format('Y-m-d');
         // $displayWorkedHours = 0.00;
         // $displayBreakHours = 0.00;
@@ -39,11 +40,11 @@ class DashboardController extends Controller
         $breakStatus = $userRow->BreakStatus;
         $start = $userRow->EndBreak? $userRow->EndBreak : $userRow->StartWork;
         $startBreak = $userRow->StartBreak;
-        $breakHours =   $userRow->BreakHours;
-        $workedHours =   $userRow->RegularHours;
-        $lastWorkedDate = Carbon::parse($userRow->StartWork, "Europe/Brussels");
+        $breakHours =   $dayTotal->BreakHours ?? 0;
+        $workedHours =   $dayTotal->RegularHours ?? 0;
+        // $lastWorkedDate = Carbon::parse($userRow->StartWork, "Europe/Brussels");
 
-        return view('dashboard', ['user' => auth()->user(),'lastWorkedDate' => $lastWorkedDate, 'workedHours' => $workedHours ,'breakHours' => $breakHours ,'startBreak'=> $startBreak, 'start' => $start , 'shiftStatus' => $shiftStatus, 'breakStatus' => $breakStatus, 'userNote' => $userNote]);
+        return view('dashboard', ['user' => auth()->user(), 'workedHours' => $workedHours ,'breakHours' => $breakHours ,'startBreak'=> $startBreak, 'start' => $start , 'shiftStatus' => $shiftStatus, 'breakStatus' => $breakStatus, 'userNote' => $userNote]);
     }
 
     
