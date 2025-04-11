@@ -83,7 +83,7 @@
                 style="grid-column: 2/3; width: 100px justify-self: center;">
                 <div>Kies je logo</div>
 
-                <img id="preview" for="file-input" src="{{ asset($data->company_logo) ?? asset('images/TaxusLogo.png') }}"
+                <img id="preview" for="file-input" src="{{ $data->company_logo ? asset($data->company_logo) : asset('images/TaxusLogo.png') }}"
                     alt="Logo preview"
                     style="  grid-row: 2/3; grid-column: 2/3;justify-self: center;max-height: 50px; max-width: auto;">
             </label>

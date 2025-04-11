@@ -264,12 +264,14 @@ th {
 }
 
 .dagenInstellen {
+    margin: 0;
     grid-row: 2/3;
     grid-column: 2/3;
     justify-self: start;
     align-self: center;
 }
 .timesheetToevoegen {
+    margin: 0;
     grid-row: 2/3;
     grid-column: 1/2;
     justify-self: end;
@@ -333,9 +335,10 @@ input:hover {
     color: grey;
 }
 .timesheetHeader {
-    margin-top: 20px;
+    /* margin-top: 20px; */
     font-family: "Noto Sans", sans-serif;
     font-size: x-large;
+    height: fit-content;
     justify-self: center;
     grid-row: 2/3;
     grid-column: 1/13;
@@ -1018,22 +1021,22 @@ fieldset {
 }
 .profileContent {
     margin-left: 10px;
+    align-items: end;
     margin-right: 10px;
     grid-row: 3/4;
     grid-column: 1/13;
     display: grid;
     grid-template-columns: repeat(12, auto);
-    grid-template-rows: repeat(auto-fit, max-content);
+    grid-auto-rows: repeat(auto-fit, max-content);
     grid-auto-rows: max-content;
     overflow: auto;
     max-height: 350px;
     white-space: nowrap;
 }
-.profileContent::-webkit-scrollbar {
+/* .profileContent::-webkit-scrollbar {
     display: none;
-}
+} */
 .profileContent {
-    -ms-overflow-style: none;
     scrollbar-width: none;
 }
 p {

@@ -135,13 +135,13 @@
 
             const startBreak = new Date("{{ $startBreak }}").getTime();
             const startShift = new Date("{{ $start }}").getTime();
-            
             const clockElement = document.getElementById('clock');
             const breakHours = parseFloat("{{ $breakHours }}"); 
             const workedHours = parseFloat("{{$workedHours}}");
             
             const workedMilliseconds = workedHours * 60 * 60 * 1000;
             const breakMilliseconds = breakHours * 60 * 60 * 1000;
+            console.log(workedMilliseconds)
 
 
             function updateClock(type) {
@@ -151,7 +151,7 @@
                 let elapsed = null
                 if(type == "work"){
                  elapsed = now - startShift   + workedMilliseconds    ;
-                 console.log(elapsed);
+                //  console.log(elapsed);
                  
                  
                  
