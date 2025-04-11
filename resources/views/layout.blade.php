@@ -65,12 +65,18 @@
                         <img style="height: 40px" src="{{ asset('images/settings.png') }}" alt="settings">
                     </a>
                     <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
-                    <a class="authLinks button"
-                        href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
-
+                    @if ($currentUser->god)
+                        <a class="authLinks button"
+                            href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
+                    @else    
+                            <a class="authLinks button"
+                            href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
+                    @endif
                 </div>
                 <a class="headerLinks" href="{{ route('home') }}">Home</a>
-                @if (($currentUser->god && $currentUser->company->admin_timeclock) || ($currentUser->admin && $currentUser->company->admin_timeclock))
+                @if (
+                    ($currentUser->god && $currentUser->company->admin_timeclock) ||
+                        ($currentUser->admin && $currentUser->company->admin_timeclock))
                     <div class="browserHeader">
                         <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
                             <img style="height: 40px" src="{{ asset('images/settings.png') }}" alt="settings">
@@ -88,7 +94,7 @@
                 @elseif ($currentUser->god)
                     <a class="authLinks button"
                         href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
-                @elseif (!$currentUser->admin )
+                @elseif (!$currentUser->admin)
                     <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
                     @if ($currentUser->admin && !$currentUser->god)
                         <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
