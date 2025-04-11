@@ -52,6 +52,11 @@ class SettingsController extends Controller
         
         if (!File::exists($fullPath)) {
             File::makeDirectory($fullPath, 0755, true);
+        }else{
+            $existingFiles = File::files($fullPath); 
+            foreach ($existingFiles as $file) {
+                File::delete($file->getPathname()); 
+            }
         }
         $company_logo->move($fullPath, $logoName);
         $logoPath = $folderPath . '/' . $logoName;

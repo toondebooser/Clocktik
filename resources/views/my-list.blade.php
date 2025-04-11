@@ -2,12 +2,12 @@
 
 @section('content')
    
-
-    <h2>{{ $type }}</h2>
-    <div id="list" class="workersForm">
+<h2>{{ $type }}</h2>
+<div id="list" class="workersForm">
         <input type="text" id="searchInput" placeholder="Zoek..."> <br>
         <div class="hidden" id="type" type="{{$type}}"></div>
         @foreach ($dataSet as $data)
+        
             @if (($type !== 'Bedrijven' && !$data->admin) || ($data->admin && $data->company->admin_timeclock))
                 <form class="workerForm" 
                     action="{{ $type === 'Personeel' ? route('getData') : route('specials') }}" method="post">
@@ -28,7 +28,7 @@
                         <button class="listButton" type="submit" name="worker"
                             style="display: flex; align-items: center; justify-content: center;">
                             {{ $data->company_name }}
-                            <img style="height: 30px; margin-left: 10px;" src="{{ asset($data->company_logo) }}"
+                            <img style="height: 30px; margin-left: 10px;" src="{{ $data->company_logo ? asset($data->company_logo) : asset('images/TaxusLogo.png') }}"
                                 alt="Company logo">
                         </button>
                     </form>
