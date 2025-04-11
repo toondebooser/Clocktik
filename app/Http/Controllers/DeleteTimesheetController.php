@@ -63,11 +63,11 @@ class DeleteTimesheetController extends Controller
    
     private function redirectSuccess(string $message)
     {
-        return redirect()->route('home')->with('success', $message);
+        return redirect()->back()->with('success', $message);
     }
 
     private function redirectError(string $message, $workerId)
     {
-        return redirect()->route('getData', ['worker' => $workerId])->with('error', $message);
+        return redirect()->back()->with('error', $message);
     }
 }

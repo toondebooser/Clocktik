@@ -40,7 +40,7 @@ class TimesheetController extends Controller
 
         // $total = CalculateUtility::calculateUserTotal(now('Europe/Brussels'), $id);
         if ($buildTimesheet) {
-            return redirect('/dashboard');
+            return redirect()->back();
         }
     }
 
@@ -51,8 +51,8 @@ class TimesheetController extends Controller
         $timeloggingUtility = new TimeloggingUtility;
         $date = $request->input('newTimesheetDate');
         $id = $request->input('workerId');
-        $timesheetCheck = UserUtility::userDayTotalCheck($date, $id);
-        if (!$timesheetCheck->isEmpty()) {
+        $dayTotalCheck = UserUtility::userDayTotalCheck($date, $id);
+        if (!$dayTotalCheck->isEmpty()) {
             return redirect()->route('timesheetForm', ['worker' => $id])->with('error', 'Datum al in gebruik: ' . $date);
         }
         if (Carbon::parse($date, 'Europe/Brussels')->isWeekend()) $weekend = true;

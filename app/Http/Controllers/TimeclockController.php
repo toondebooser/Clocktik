@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Timelog;
 use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\JsonController;
+use App\Models\Daytotal;
 use App\Models\Timesheet;
 use App\Models\Usertotal;
 use App\Utilities\CalculateUtility;
@@ -20,27 +21,31 @@ class TimeclockController extends Controller
     {
         $currentUser = auth()->user();
         $userRow = $currentUser->timelogs;
-        $timestamp = now('Europe/Brussels');
+        $now = now('Europe/Brussels');
      
-
+        Daytotal::firstOrCreate(['Month' => Carbon::parse($userRow->StartWork)->format('Y-m-d'), 'UserId' => $currentUser->id], [
+            'UserId' => $currentUser->id,
+            'Month' => Carbon::parse($userRow->StartWork)->format('Y-m-d'),
+        ]);
+        // Carbon::parse($userRow->StartWork)->format('Y-m-d');
         //TODO: rewrite start logic when a user has already logged this day
-        $dayCheck = Timesheet::where('UserId', $currentUser->id)
-        ->where('Month', '=', $timestamp->format('Y-m-d'))
-        ->first();
-        if(!$dayCheck) {
-            $userRow->fill([
-                'BreakHours' => 0,
-                'BreaksTaken' => 0,
-                'RegularHours' => 0,
-            ]);
-        }
+        // $dayCheck = Timesheet::where('UserId', $currentUser->id)
+        // ->where('Month', '=', $now->format('Y-m-d'))
+        // ->first();
+        // if(!$dayCheck) {
+        //     $userRow->fill([
+        //         'BreakHours' => 0,
+        //         'BreaksTaken' => 0,
+        //         'RegularHours' => 0,
+        //     ]);
+        // }
         
-
-        $weekDay = Carbon::parse($timestamp)->weekday();
+        dd();
+        $weekDay = Carbon::parse($now)->weekday();
         $weekDay == 0 || $weekDay == 6 ? $userRow->Weekend = true : $userRow->Weekend = false;
         //TODO: check if userRow exists
         $userRow->fill([
-            'StartWork' => $timestamp,
+            'StartWork' => $now,
             'StartBreak' => null,
             'EndBreak' => null,
             'StopWork' => null,
@@ -84,7 +89,7 @@ class TimeclockController extends Controller
             'BreakHours' => $userRow->BreakHours += CalculateUtility::calculateDecimal($userRow->StartBreak, $timeStamp)
         ]);
         $userRow->save();
-        return redirect('/dashboard');
+        return redirect()->back();
     }
 
     public function stop()
@@ -98,14 +103,14 @@ class TimeclockController extends Controller
             $userRow->fill([
                 'BreakStatus' => false,
                 'EndBreak' => $timeStamp,
-                'BreakHours' => $userRow->BreakHours + CalculateUtility::calculateDecimal($start, $end)
+                'BreakHours' => $userRow->BreakHours += CalculateUtility::calculateDecimal($start, $end)
             ]);
         }
       
 
         $userRow->fill([
             'StopWork' => $timeStamp,
-            'RegularHours' => $userRow->RegularHours + CalculateUtility::calculateDecimal(
+            'RegularHours' => $userRow->RegularHours += CalculateUtility::calculateDecimal(
                 $userRow->EndBreak ?? $userRow->StartWork, 
                 $timeStamp
             )

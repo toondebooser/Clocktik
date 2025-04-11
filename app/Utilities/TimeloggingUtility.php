@@ -45,6 +45,7 @@ class TimeloggingUtility
     private  function updateOrInsertTimesheet(array $newEntry, $oldLog = null)
     {
         if ($oldLog) {
+            dd($oldLog);
             $oldLog->update($newEntry);
         } else {
             Timesheet::create($newEntry);
