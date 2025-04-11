@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->integer('UserId');
             $table->index('UserId');
-            $table->bigInteger('company_code')->unsigned();
-            $table->index('company_code');
             $table->integer('DaytimeCount')->default(1);
             $table->decimal('RegularHours', 5, 2)->default(0, 00);
             $table->decimal('accountableHours', 5, 2)->default(0, 00);
