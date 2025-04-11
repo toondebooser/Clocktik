@@ -16,11 +16,11 @@ return new class extends Migration
             $table->integer('UserId');
             $table->index('UserId');
             $table->integer('DaytimeCount')->default(1);
-            $table->decimal('RegularHours', 5, 2)->default(0, 00);
-            $table->decimal('accountableHours', 5, 2)->default(0, 00);
+            $table->decimal('RegularHours', 5, 2)->default(0.00); // Fixed
+            $table->decimal('accountableHours', 5, 2)->default(0.00); // Fixed
             $table->integer('BreaksTaken')->default(0);
-            $table->decimal('BreakHours', 5, 2)->default(0, 00);
-            $table->decimal('OverTime', 5, 2)->default(0, 00);
+            $table->decimal('BreakHours', 5, 2)->default(0.00); // Fixed
+            $table->decimal('OverTime', 5, 2)->default(0.00); // Fixed
             $table->string('type')->default('workday');
             $table->text('userNote')->nullable();
             $table->date('Month');
@@ -28,8 +28,6 @@ return new class extends Migration
             $table->boolean('Weekend')->default(false);
             $table->boolean('NightShift')->default(false);
             $table->timestamps();
-
-
         });
     }
 

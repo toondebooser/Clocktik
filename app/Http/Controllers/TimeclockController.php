@@ -16,17 +16,20 @@ use Illuminate\Support\Facades\Redirect;
 class TimeclockController extends Controller
 {
 
-    
+
     public function startWorking(Request $request)
     {
         $currentUser = auth()->user();
         $userRow = $currentUser->timelogs;
         $now = now('Europe/Brussels');
-     
+        
+        // dd(Carbon::parse($currentUser->company->weekend_day_1));
         Daytotal::firstOrCreate(['Month' => Carbon::parse($userRow->StartWork)->format('Y-m-d'), 'UserId' => $currentUser->id], [
             'UserId' => $currentUser->id,
             'Month' => Carbon::parse($userRow->StartWork)->format('Y-m-d'),
         ]);
+        $dayTotal = auth()->user()->dayTotals->where('Month', Carbon::parse($userRow->StartWork)->format('Y-m-d'));
+       dd($dayTotal);
         // Carbon::parse($userRow->StartWork)->format('Y-m-d');
         //TODO: rewrite start logic when a user has already logged this day
         // $dayCheck = Timesheet::where('UserId', $currentUser->id)
@@ -39,9 +42,9 @@ class TimeclockController extends Controller
         //         'RegularHours' => 0,
         //     ]);
         // }
-        
-        dd();
+
         $weekDay = Carbon::parse($now)->weekday();
+        //TODO Check with stored weekend day company
         $weekDay == 0 || $weekDay == 6 ? $userRow->Weekend = true : $userRow->Weekend = false;
         //TODO: check if userRow exists
         $userRow->fill([
@@ -55,7 +58,7 @@ class TimeclockController extends Controller
 
 
 
-        
+
         $userRow->save();
 
         return redirect('/dashboard');
@@ -64,19 +67,21 @@ class TimeclockController extends Controller
 
     public function break()
     {
-   
-        $timeStamp = now('Europe/Brussels');
+
+        $now = now('Europe/Brussels');
         $userRow = auth()->user()->timelogs;
-        $userRow->RegularHours += CalculateUtility::calculateDecimal($userRow->EndBreak ? $userRow->EndBreak : $userRow->StartWork, $timeStamp);
+        $dayTotal = Daytotal::where("UserId", auth()->user()->id)->where('Month',Carbon::parse($now)->format('Y-m-d') );
+        $dayTotal->RegularHours += CalculateUtility::calculateDecimal($userRow->EndBreak ? $userRow->EndBreak : $userRow->StartWork, $now);
         $userRow->BreakStatus = true;
-  
-  
+
+
         $userRow->fill([
-            'StartBreak' => $timeStamp,
+            'StartBreak' => $now,
             'BreaksTaken' => $userRow->BreaksTaken += 1
         ]);
         $userRow->save();
-        return redirect('/dashboard');
+        $dayTotal->save();
+        return redirect()->back();
     }
 
     public function stopBreak()
@@ -86,7 +91,7 @@ class TimeclockController extends Controller
         $userRow->fill([
             'BreakStatus' => false,
             'EndBreak' => $timeStamp,
-            'BreakHours' => $userRow->BreakHours += CalculateUtility::calculateDecimal($userRow->StartBreak, $timeStamp)
+            // 'BreakHours' => $userRow->BreakHours += CalculateUtility::calculateDecimal($userRow->StartBreak, $timeStamp)
         ]);
         $userRow->save();
         return redirect()->back();
@@ -106,16 +111,16 @@ class TimeclockController extends Controller
                 'BreakHours' => $userRow->BreakHours += CalculateUtility::calculateDecimal($start, $end)
             ]);
         }
-      
+
 
         $userRow->fill([
             'StopWork' => $timeStamp,
             'RegularHours' => $userRow->RegularHours += CalculateUtility::calculateDecimal(
-                $userRow->EndBreak ?? $userRow->StartWork, 
+                $userRow->EndBreak ?? $userRow->StartWork,
                 $timeStamp
             )
         ]);
-        
+
         $userRow->save();
         return Redirect::route('makeTimesheet', ['id' => auth()->user()->id]);
     }
