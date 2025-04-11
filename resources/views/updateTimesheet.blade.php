@@ -49,7 +49,7 @@
                     <br>
                     <span class="radioInput">
                         <label for="betaaldInput" class="checkboxContainer">
-                            <input @if ($timesheet->accountableHours == 7.6) {{ 'checked' }} @endif type="radio" class="radioBox"
+                            <input @if ($timesheet->accountableHours == $worker->company->day_hours) {{ 'checked' }} @endif type="radio" class="radioBox"
                                 id="betaaldInput" name="dayType" value="betaald">
                             <span class="labelAndere">Betaald</span>
                             <br>

@@ -11,10 +11,7 @@
             height: fit-content;
         }
 
-        .labelAndere {
-            font-size: 15px;
-
-        }
+       
 
         .container-drag-drop {
             display: flex;
@@ -38,7 +35,7 @@
             margin-right: 5px;
             padding: 10px;
             background: #f9f9f9;
-            border: 2px solid {{ $data->color }};
+            border: 2px solid {{ $data->company_color }};
         }
 
         .name {
@@ -58,12 +55,15 @@
         .content {
             overflow-x: hidden;
         }
+        .justify-row {
+        justify-self: end !important; 
+    }
     </style>
     <h2>Instellingen</h2>
     <div style=" max-width: 400px; height: 100%;justify-content:center; align-content:center; grid-row: 3/5; grid-column: 2/12; justify-self:center;"
         class="content">
         <form
-            style=" margin: 10px 0px; grid-gap:10px; border-radius: 20px; padding: 10px;border: solid {{ $data->company_color }} 2px;display:grid; grid-template-rows:repeat(5, auto); grid-template-columns:repeat(2,auto); "
+            style=" margin: 10px 0px; grid-gap:10px; border-radius: 20px; padding: 10px;border: solid {{ $data->company_color }} 2px;display:grid; grid-template-rows:repeat(5, auto); grid-template-columns:repeat(2,1fr); align-items:start; "
             action="{{ route('change-company-settings') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="company_code" value="{{ $data->company_code }}">
@@ -88,25 +88,23 @@
                     style="  grid-row: 2/3; grid-column: 2/3;justify-self: center;max-height: 50px; max-width: auto;">
             </label>
             {{-- admin_timeclock --}}
-            <span style="grid-row: 2/3; grid-column: 1/3; justify-self: center" class="radioInput">
-                <label for="betaaldInput" class="checkboxContainer">
+            {{-- <span style="grid-row: 2/3; grid-column: 1/3; justify-self: center" class="radioInput justify-row"> --}}
+                <span class="justify-row">Admin klok </span>
+                <label for="betaaldInput" class="checkboxContainer" >
                     <input type="hidden" name="admin_timeclock" value="0">
                     <input @if ($data->admin_timeclock == 1) {{ 'checked' }} @endif type="checkbox" class="radioBox"
                         id="betaaldInput" name="admin_timeclock" value='1' >
                     <span class="checkMark"></span>
-                    <span class="labelAndere">Admin tijdregistratie activeren</span>
                 </label>
-            </span>
-            {{-- day_hours --}}
-            <span style="grid-column: 1/3; grid-row:3/4; justify-self:center;">
-                <label for="day_hours">Daguren (decimaal)</label>
-                <input  step="0.1" 
-                min="0" 
-                max="24" value="{{ $data->day_hours }}" style="width:60px;" type="number" name="day_hours" id="day_hours">
-            </span>
-
+                
+            {{-- </span> --}}
+                <label  style="text-align: end;  margin: 0" for="day_hours">Daguren decimaal</label>
+            <input  step="0.1" 
+            min="0" 
+            max="24" value="{{ $data->day_hours }}" style="width:60px;" type="number" name="day_hours" id="day_hours">
+                
             {{-- set weekend days --}}
-            <div style="justify-self: end">Weekend dagen</div>
+            <div style="text-align: end">Weekend dagen</div>
             <span>
                 <select style="width: fit-content" name="weekend_day_1" id="weekendDag1">
                     <option value="Maandag" {{ $data->weekend_day_1 == 'Maandag' ? 'selected' : '' }}>Ma</option>
@@ -202,7 +200,7 @@
         let draggedElement = null;
         let offsetX = 0;
         let offsetY = 0;
-        let originalParent = null; // Store the original parent
+        let originalParent = null; 
 
         function touchStart(event) {
             event.preventDefault();

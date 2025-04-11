@@ -14,22 +14,23 @@ class TimeloggingUtility
 
     public function logTimeEntry($userRow, $userId, $oldLog = null)
     {
-        $newEntry = $this->createTimeEntry($userRow, $userId);
+        $user = User::find($userId);
+        $newEntry = $this->createTimeEntry($userRow, $user);
         return $this->updateOrInsertTimesheet($newEntry, $oldLog);
     }
 
 
-    private  function createTimeEntry($userRow, $userId)
+    private  function createTimeEntry($userRow, $user)
     {
 
         $date = Carbon::parse($userRow->StartWork)->format('Y-m-d');
-        $dayTotal = Daytotal::firstOrCreate(['Month' => $date, 'UserId' => $userId], [
-            'company_code' => '1234567890',
-            'UserId' => $userId,
+        $dayTotal = Daytotal::firstOrCreate(['Month' => $date, 'UserId' => $user->id], [
+            'company_code' => $user->company_code,
+            'UserId' => $user->id,
             'Month' => $date,
         ]);
         return [
-            'UserId' => $userId,
+            'UserId' => $user->id,
             'daytotal_id' => $dayTotal->id,
             'ClockedIn' => $userRow->StartWork,
             'ClockedOut' => $userRow->StopWork,
