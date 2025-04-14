@@ -31,12 +31,13 @@ class TimesheetController extends Controller
     {
 
         $userRow = auth()->user()->timelogs;
-        $userDayTotalCheck = UserUtility::userDayTotalCheck(now('Europe/Brussels'), $id);
-        if ($userDayTotalCheck->wasRecentlyCreated && $userDayTotalCheck->type !== 'workday') {
+        $userDayTotalCheck = UserUtility::userDayTotalFetch(now('Europe/Brussels'), $id);
+        if ($userDayTotalCheck && $userDayTotalCheck->type !== 'workday') {
             return redirect()->route('dashboard')->with('error', 'Vandaag kan jij geen werkuren ingeven, kijk je profiel na.');
         }
         $buildTimesheet = new TimeloggingUtility;
-        return $buildTimesheet->logTimeEntry($userRow, $id, null);
+        $buildTimesheet->logTimeEntry($userRow, $id, null);
+        if($buildTimesheet) return redirect()->back()->with('Succes', 'Uren succesvol toegevoegd');
     }
 
 

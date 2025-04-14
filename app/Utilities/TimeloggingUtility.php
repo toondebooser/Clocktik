@@ -24,7 +24,7 @@ class TimeloggingUtility
             'Weekend' => $userRow->Weekend ?? false,
             'userNote' => $userRow->userNote ?? null,
         ];
-        $firstDayEntry = TimeloggingUtility::createTimeEntry($firstDayRow, $user);
+        $firstDayEntry = TimeloggingUtility::createTimesheetEntry($firstDayRow, $user);
         TimeloggingUtility::updateOrInsertTimesheet($firstDayEntry, null);
         TimeloggingUtility::updateDailySummery($userId, $firstDayEntry['Month']);  
         return CalculateUtility::calculateUserTotal($firstDayEntry['Month'], $userId);
@@ -33,14 +33,14 @@ class TimeloggingUtility
     public function logTimeEntry($userRow, $userId, $oldLog = null)
     {
         $user = User::find($userId);
-        $newEntry = $this->createTimeEntry($userRow, $user);
+        $newEntry = $this->createTimesheetEntry($userRow, $user);
         $this->updateOrInsertTimesheet($newEntry, $oldLog);
         $this->updateDailySummery($newEntry['UserId'], $newEntry['Month']);
         return CalculateUtility::calculateUserTotal($newEntry['Month'], $newEntry['UserId']);
     }
 
 
-    private  function createTimeEntry($userRow, $user)
+    private  function createTimesheetEntry($userRow, $user)
     {
         $date = Carbon::parse($userRow->StartWork)->format('Y-m-d');
         $dayTotal = UserUtility::findOrCreateUserDayTotal($date, $user->id);
@@ -52,7 +52,6 @@ class TimeloggingUtility
             'BreakStart' => $userRow->StartBreak,
             'BreakStop' => $userRow->EndBreak,
             'Weekend' => $userRow->Weekend ?? false,
-            'Completed' => true,
             'Month' => $date,
             'userNote' => $userRow->userNote ?? null,
         ];
@@ -72,7 +71,7 @@ class TimeloggingUtility
     {
         $user = User::find($userId);
         $companyDayHours = $user->company->day_hours;
-        $timesheets = $user->timesheets
+        $timesheets = $user->timesheets()
             ->where('Month', $day)
             ->get();
         $dayTotal = UserUtility::userDayTotalFetch($day,$userId);
@@ -88,7 +87,8 @@ class TimeloggingUtility
             'RegularHours' => 0,
             'DaytimeCount' => $timesheets->count(),
             'OverTime' => 0,
-            'accountableHours' => $companyDayHours
+            'accountableHours' => $companyDayHours,
+            'Completed' => true,
         ];
 
         $dailyHours = 0;
