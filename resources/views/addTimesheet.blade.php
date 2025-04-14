@@ -1,5 +1,6 @@
 @extends('layout')
 @section('content')
+
 <h2>Nieuw rooster voor: {{$worker->name}}</h2>
 @if(session('error'))
 <div class="error">{{ session('error') }} <br>

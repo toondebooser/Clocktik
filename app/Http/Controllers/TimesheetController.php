@@ -66,8 +66,8 @@ class TimesheetController extends Controller
         ];
         $addTimesheet = $timeloggingUtility->logTimeEntry($userRow, $id, null);
         // $newTimesheet->save();
-        // $total = CalculateUtility::calculateUserTotal($date, $id);
-        if ($addTimesheet) return redirect('/get-List/Personeel/' . User::find($id)->company_code);
+        $total = CalculateUtility::calculateUserTotal($date, $id);
+        if ($addTimesheet) return redirect()->route('timesheetForm', ['worker' => $id])->with('success', 'Uurrooster toegevoegd');
     }
 
     public function setDay($dayLabel, $dayType, $worker, $singleDay)
@@ -77,10 +77,10 @@ class TimesheetController extends Controller
             'Month' => $singleDay
         ], [
             'type' => $dayLabel,
-            'company_code' => '1234567890',
             'ClockedIn' => $singleDay,
             'Month' => $singleDay,
             'UserId' => $worker,
+            'Completed' => true,
             'accountableHours' => $dayType == 'onbetaald' ? 0 : User::find($worker)->company->day_hours,
         ]);
         if ($dayTotal->wasRecentlyCreated) {
@@ -93,7 +93,7 @@ class TimesheetController extends Controller
             // ]);
             // $newSpecialTimesheet->save();
             // $userTotal = UserUtility::fetchUserTotal($singleDay, $worker);
-            $calculateUserTotal =  CalculateUtility::calculateUserTotal($singleDay, $worker);
+           $calculateUserTotal = CalculateUtility::calculateUserTotal($singleDay, $worker);
             // $userTotal->save();
             if ($calculateUserTotal) return true;
         } else {

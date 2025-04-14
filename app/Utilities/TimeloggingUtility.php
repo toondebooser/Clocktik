@@ -26,7 +26,7 @@ class TimeloggingUtility
         ];
         $firstDayEntry = TimeloggingUtility::createTimesheetEntry($firstDayRow, $user);
         TimeloggingUtility::updateOrInsertTimesheet($firstDayEntry, null);
-        TimeloggingUtility::updateDailySummery($userId, $firstDayEntry['Month']);  
+        TimeloggingUtility::updateDailySummery($userId, $firstDayEntry['Month']);
         return CalculateUtility::calculateUserTotal($firstDayEntry['Month'], $userId);
     }
 
@@ -74,41 +74,11 @@ class TimeloggingUtility
         $timesheets = $user->timesheets()
             ->where('Month', $day)
             ->get();
-        $dayTotal = UserUtility::userDayTotalFetch($day,$userId);
-        $summary = $this->calculateSummaryForDay($timesheets, $companyDayHours);
+        $dayTotal = UserUtility::userDayTotalFetch($day, $userId);
+        $summary = CalculateUtility::calculateSummaryForDay($timesheets, $companyDayHours);
         $dayTotal->update($summary);
     }
 
 
-    private function calculateSummaryForDay($timesheets, $companyDayHours)
-    {
-        $summary = [
-            'BreakHours' => 0,
-            'RegularHours' => 0,
-            'DaytimeCount' => $timesheets->count(),
-            'OverTime' => 0,
-            'accountableHours' => $companyDayHours,
-            'Completed' => true,
-        ];
-
-        $dailyHours = 0;
-
-        foreach ($timesheets as $timesheet) {
-            $workHours = CalculateUtility::calculateDecimal($timesheet->ClockedIn, $timesheet->ClockedOut);
-            $breakHours = CalculateUtility::calculateDecimal($timesheet->BreakStart, $timesheet->BreakStop);
-            $netWorkHours = $workHours - $breakHours;
-
-
-
-
-            $dailyHours += $netWorkHours;
-
-            $summary['BreakHours'] += $breakHours;
-            $summary['RegularHours'] += $netWorkHours;
-        }
-
-        $summary['OverTime'] += $dailyHours - $companyDayHours;
-
-        return $summary;
-    }
+   
 }

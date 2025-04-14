@@ -58,8 +58,8 @@
         @endif
         <div class="timesheetHeader">
 
-            @if (isset($timesheet) && count($timesheet) != 0)
-                {{ date('F', strtotime($timesheet[0]->Month)) }}
+            @if (isset($days) && count($days) != 0)
+                {{ date('F', strtotime($days[0]->Month)) }}
             @endif
         </div>
         <table class="timesheetTable">

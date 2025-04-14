@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use App\Models\User;
+use App\Utilities\CalculateUtility;
+use App\Utilities\TimeloggingUtility;
+use App\Utilities\UserUtility;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 
@@ -68,15 +71,13 @@ class SettingsController extends Controller
     {
         $company =Company::where("company_code", $request->company_code)->first();
         $updateData = [];
-        foreach ($request->all() as $key => $value) {
-            // echo $key. ": ". $value.", ";
-            // dd($request->all());
+        foreach ($request->all() as $key => $value) {        
             if ($key === '_token') continue;
-            // if($key === 'company_logo') $this->updateLogo($value);
             $updateData[$key] = $key == 'company_logo' ? $this->logohandler($company, $value) : $value;
         }
          $success = $company->update($updateData);
          if($success){
+            UserUtility::updateAllUsersDayTotals(now('Europe/Brussels'), $company->company_code);
             return redirect()->back()->with('success', 'Instellingen zijn aangepast.');
          } else{
             return redirect()->back()->with('error', 'Er ging iets mis bij het aanpassen van de instellingen.');

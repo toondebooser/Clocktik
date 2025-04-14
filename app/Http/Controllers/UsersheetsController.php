@@ -45,11 +45,11 @@ class UsersheetsController extends Controller
             ->orderBy('Month', 'asc')
             ->get();
 
-        $days = $currentUser->dayTotals()->orderBy('Month','asc')->where('Completed', true)->get();
+        $days = $currentUser->dayTotals()->whereMonth('Month', $month)->where('Completed', true)->orderBy('Month','asc')->get();
         
         
         $monthlyTotal = $currentUser->userTotal()->where('UserId', '=', $currentUser->id)
-            ->whereMonth('Month', '=', $month)
+            ->whereMonth('Month', $month)
             ->get();
         $clockedMonths = $userTotal->select($userTotal->raw('DISTINCT MONTH(Month) AS month'))
             ->where('UserId', '=', $currentUser->id)

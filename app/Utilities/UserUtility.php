@@ -5,6 +5,7 @@ namespace App\Utilities;
 use App\Models\Company;
 use App\Models\Daytotal;
 use App\Models\Timesheet;
+use App\Models\User;
 use App\Models\Usertotal;
 use Carbon\Carbon;
 
@@ -63,7 +64,20 @@ class UserUtility
     }
 
 
-
+    public static function updateAllUsersDayTotals($date, $company_code)
+    {
+        $users = User::with('dayTotals')->where('company_code',$company_code)->get();
+        
+        foreach ($users as $user) {
+            foreach ($user->dayTotals as $dayTotal) {
+                $dayTotal->update([
+                    'accountableHours' => $user->company->day_hours,
+                ]);
+            }
+    
+            CalculateUtility::calculateUserTotal($date, $user->id);
+        }
+    }
     public static function companyNumberGenerator()
     {
 

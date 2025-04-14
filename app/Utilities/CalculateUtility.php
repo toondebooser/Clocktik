@@ -4,6 +4,7 @@ namespace App\Utilities;
 
 use App\Models\Daytotal;
 use App\Models\Timesheet;
+use App\Models\User;
 use App\Models\Usertotal;
 use Carbon\Carbon;
 
@@ -39,6 +40,37 @@ class CalculateUtility
 
         return $userTotal;
     }
-   
+ 
+    public static function calculateSummaryForDay($timesheets, $companyDayHours)
+    {
+        $summary = [
+            'BreakHours' => 0,
+            'RegularHours' => 0,
+            'DaytimeCount' => $timesheets->count(),
+            'OverTime' => 0,
+            'accountableHours' => $companyDayHours,
+            'Completed' => true,
+        ];
+
+        $dailyHours = 0;
+
+        foreach ($timesheets as $timesheet) {
+            $workHours = CalculateUtility::calculateDecimal($timesheet->ClockedIn, $timesheet->ClockedOut);
+            $breakHours = CalculateUtility::calculateDecimal($timesheet->BreakStart, $timesheet->BreakStop);
+            $netWorkHours = $workHours - $breakHours;
+
+
+
+
+            $dailyHours += $netWorkHours;
+
+            $summary['BreakHours'] += $breakHours;
+            $summary['RegularHours'] += $netWorkHours;
+        }
+
+        $summary['OverTime'] += $dailyHours - $companyDayHours;
+
+        return $summary;
+    }
 
 }
