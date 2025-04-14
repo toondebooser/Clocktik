@@ -11,49 +11,22 @@ use Carbon\Carbon;
 
 class TimeloggingUtility
 {
-    public function logOverMultipleDays($userRow, $userId)
+    public static function CompletePreviousDay($userRow, $userId)
     {
-        $startWork = Carbon::parse($userRow->StartWork); // e.g., '2025-04-14 22:00:00'
-        $stopWork = Carbon::parse($userRow->StopWork);   // e.g., '2025-04-15 02:00:00'
-    
-        // If same day, fallback to single-day logic
-        if ($startWork->isSameDay($stopWork)) {
-            return $this->logTimeEntry($userRow, $userId);
-        }
-    
+        $startWork = DateUtility::carbonParse($userRow->StartWork); // e.g., '2025-04-14 22:00:00'
+        $stopWork = DateUtility::carbonParse($userRow->StopWork);   // e.g., '2025-04-15 02:00:00'
         $user = User::find($userId);
-    
-        // First day: StartWork to end of day
-        $firstDayEnd = $startWork->copy()->endOfDay(); // '2025-04-14 23:59:59'
         $firstDayRow = (object) [
             'StartWork' => $userRow->StartWork,
-            'StopWork' => $firstDayEnd,
-            'StartBreak' => $userRow->StartBreak, // Adjust break if needed
+            'StopWork' => $startWork->copy()->endOfDay(),
+            'StartBreak' => $userRow->StartBreak,
             'EndBreak' => $userRow->EndBreak,
             'Weekend' => $userRow->Weekend ?? false,
             'userNote' => $userRow->userNote ?? null,
         ];
-    
-        $firstDayEntry = $this->createTimeEntry($firstDayRow, $user);
-        $this->updateOrInsertTimesheet($firstDayEntry, null);
-        $this->updateDailySummery($userId, $firstDayEntry['Month']);
-    
-        // Second day: Start of day to StopWork
-        $secondDayStart = $stopWork->copy()->startOfDay(); // '2025-04-15 00:00:00'
-        $secondDayRow = (object) [
-            'StartWork' => $secondDayStart,
-            'StopWork' => $userRow->StopWork,
-            'StartBreak' => null, // Assume no break unless specified
-            'EndBreak' => null,
-            'Weekend' => $userRow->Weekend ?? false,
-            'userNote' => $userRow->userNote ?? null,
-        ];
-    
-        $secondDayEntry = $this->createTimeEntry($secondDayRow, $user);
-        $this->updateOrInsertTimesheet($secondDayEntry, null);
-        $this->updateDailySummery($userId, $secondDayEntry['Month']);
-    
-        // Return total for the first day (or adjust as needed)
+        $firstDayEntry = TimeloggingUtility::createTimeEntry($firstDayRow, $user);
+        TimeloggingUtility::updateOrInsertTimesheet($firstDayEntry, null);
+        TimeloggingUtility::updateDailySummery($userId, $firstDayEntry['Month']);  
         return CalculateUtility::calculateUserTotal($firstDayEntry['Month'], $userId);
     }
 
@@ -69,9 +42,8 @@ class TimeloggingUtility
 
     private  function createTimeEntry($userRow, $user)
     {
-
         $date = Carbon::parse($userRow->StartWork)->format('Y-m-d');
-        $dayTotal = UserUtility::findOrCreateUserDayTotale($date, $user->id);
+        $dayTotal = UserUtility::findOrCreateUserDayTotal($date, $user->id);
         return [
             'UserId' => $user->id,
             'daytotal_id' => $dayTotal->id,
@@ -80,6 +52,7 @@ class TimeloggingUtility
             'BreakStart' => $userRow->StartBreak,
             'BreakStop' => $userRow->EndBreak,
             'Weekend' => $userRow->Weekend ?? false,
+            'Completed' => true,
             'Month' => $date,
             'userNote' => $userRow->userNote ?? null,
         ];
@@ -93,20 +66,16 @@ class TimeloggingUtility
         } else {
             Timesheet::create($newEntry);
         }
-        // $this->updateDailySummery($newEntry['UserId'], $newEntry['Month']);
-
-        // return CalculateUtility::calculateUserTotal($newEntry['Month'], $newEntry['UserId']);
     }
 
     public function updateDailySummery($userId, $day)
     {
         $user = User::find($userId);
         $companyDayHours = $user->company->day_hours;
-        $timesheets = $user->timesheets()
+        $timesheets = $user->timesheets
             ->where('Month', $day)
             ->get();
-
-        $dayTotal = UserUtility::findOrCreateUserDayTotale($day,$userId);
+        $dayTotal = UserUtility::userDayTotalFetch($day,$userId);
         $summary = $this->calculateSummaryForDay($timesheets, $companyDayHours);
         $dayTotal->update($summary);
     }

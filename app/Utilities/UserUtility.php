@@ -31,7 +31,7 @@ class UserUtility
         return $userTotal;
     }
 
-    public static function findOrCreateUserDayTotale($date, $id)
+    public static function findOrCreateUserDayTotal($date, $id)
     {
         $date = Carbon::parse($date)->format('Y-m-d');
         $dayTotal = Daytotal::firstOrCreate(['Month' => $date, 'UserId' => $id], [
@@ -41,17 +41,26 @@ class UserUtility
         return $dayTotal;
     }
 
-    // public static function userDayTotalCheck($date, $id)
-    // {
-    //     if (is_string($date)) {
-    //         $date = Carbon::parse($date);
-    //     }
-    //     $timesheetCheck = Daytotal::where('UserId', $id)
-    //         ->whereDate('Month', $date)
-    //         ->orderBy('created_at', 'asc')
-    //         ->first();
-    //     return $timesheetCheck;
-    // }
+    public static function userDayTotalCheck($date, $id)
+    {
+        if (is_string($date)) {
+            $date = Carbon::parse($date);
+        }
+    
+        return Daytotal::where('UserId', $id)
+            ->whereDate('Month', $date)
+            ->exists();
+    }
+    public static function userDayTotalFetch($date, $id)
+    {
+        if (is_string($date)) {
+            $date = Carbon::parse($date);
+        }
+    
+        return Daytotal::where('UserId', $id)
+            ->whereDate('Month', $date)
+            ->first();
+    }
 
 
 

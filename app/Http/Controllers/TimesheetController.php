@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Services\TimeloggingService;
 use App\Utilities\CalculateUtility;
+use App\Utilities\DateUtility;
 use App\Utilities\TimeloggingUtility;
 use App\Utilities\UserUtility;
 
@@ -30,37 +31,29 @@ class TimesheetController extends Controller
     {
 
         $userRow = auth()->user()->timelogs;
-
-        $userDayTotalCheck = UserUtility::findOrCreateUserDayTotale(now('Europe/Brussels'), $id);
-        if (!$userDayTotalCheck->wasRecentlyCreated && $userDayTotalCheck->type !== 'workday') {
+        $userDayTotalCheck = UserUtility::userDayTotalCheck(now('Europe/Brussels'), $id);
+        if ($userDayTotalCheck->wasRecentlyCreated && $userDayTotalCheck->type !== 'workday') {
             return redirect()->route('dashboard')->with('error', 'Vandaag kan jij geen werkuren ingeven, kijk je profiel na.');
         }
         $buildTimesheet = new TimeloggingUtility;
-        if ($userRow->StartWork->isSameDay($userRow->StopWork)) {
-            return $buildTimesheet->logTimeEntry($userRow, $id, null);
-        }else{
-            $buildTimesheet->logOverMultipleDays($userRow, $id);
-        }
-
-        // $total = CalculateUtility::calculateUserTotal(now('Europe/Brussels'), $id);
-            return redirect()->back();
+        return $buildTimesheet->logTimeEntry($userRow, $id, null);
     }
 
-    
+
     public function addNewTimesheet(Request $request)
     {
         // $newTimesheet = new Timesheet;
         $timeloggingUtility = new TimeloggingUtility;
         $date = $request->input('newTimesheetDate');
         $id = $request->input('workerId');
-        $dayTotalCheck = UserUtility::findOrCreateUserDayTotale($date, $id);
+        $dayTotalCheck = UserUtility::findOrCreateUserDayTotal($date, $id);
         if (!$dayTotalCheck->wasRecentlyCreated) {
             return redirect()->route('timesheetForm', ['worker' => $id])->with('error', 'Datum al in gebruik: ' . $date);
         }
 
 
         if (Carbon::parse($date, 'Europe/Brussels')->isWeekend()) $weekend = true;
-        
+
         $userRow = (object) [
             'UserId' => $id,
             'StartWork' => Carbon::parse($date . ' ' . $request->input('startTime'), 'Europe/Brussels'),
@@ -73,15 +66,15 @@ class TimesheetController extends Controller
         $addTimesheet = $timeloggingUtility->logTimeEntry($userRow, $id, null);
         // $newTimesheet->save();
         // $total = CalculateUtility::calculateUserTotal($date, $id);
-        if ($addTimesheet) return redirect('/get-List/Personeel/'. User::find($id)->company_code);
+        if ($addTimesheet) return redirect('/get-List/Personeel/' . User::find($id)->company_code);
     }
 
     public function setDay($dayLabel, $dayType, $worker, $singleDay)
     {
         $dayTotal = Daytotal::firstOrCreate([
-            'UserId'=>$worker,
+            'UserId' => $worker,
             'Month' => $singleDay
-        ],[
+        ], [
             'type' => $dayLabel,
             'company_code' => '1234567890',
             'ClockedIn' => $singleDay,
@@ -99,9 +92,9 @@ class TimesheetController extends Controller
             // ]);
             // $newSpecialTimesheet->save();
             // $userTotal = UserUtility::fetchUserTotal($singleDay, $worker);
-           $calculateUserTotal =  CalculateUtility::calculateUserTotal($singleDay, $worker);
+            $calculateUserTotal =  CalculateUtility::calculateUserTotal($singleDay, $worker);
             // $userTotal->save();
-           if ($calculateUserTotal) return true;
+            if ($calculateUserTotal) return true;
         } else {
             return  'Datum al in gebruik: ' . $singleDay->toDateString();
         }
@@ -122,43 +115,43 @@ class TimesheetController extends Controller
             }
             $currentDate->addDay();
         }
-        
+
         if (!empty($errors)) {
-            
+
             return $errors;
         } else {
             return true;
         }
     }
-    
+
     public function setSpecial(Request $request)
     {
-        
+
         $dayType = $request->input('dayType');
         $dayLabel = $request->input($dayType);
         $worker = $request->input('worker');
         $submitType = $request->input('submitType');
         $workerArray = json_decode($worker, true);
         $results = [];
-        
+
         if ($submitType ==  'Periode Toevoegen') {
             $validator = Validator::make(
                 $request->all(),
                 [
                     'startDate' => 'required|date',
                     'endDate' => 'required|date|after:startDate',
-                    ]
-                );
+                ]
+            );
 
-                //TODO REFACTOR THIS MESS!!!
-                if ($validator->fails()) {
+            //TODO REFACTOR THIS MESS!!!
+            if ($validator->fails()) {
                 if (is_array($workerArray) && count($workerArray) > 1) {
                     return redirect()
                         ->route('specials', ['worker' => $worker])
                         ->with('errList', ['result' => ['id' => 0, 'errorList' => ['Geen geldige datum doorgegeven.']]]);
                 }
                 return redirect()
-                ->route('specials', ['worker' => $worker])
+                    ->route('specials', ['worker' => $worker])
                     ->with('errList', ['result' => ['id' => $worker, 'errorList' => ['Geen geldige datum doorgegeven.']]]);
             }
         } else {
@@ -166,7 +159,7 @@ class TimesheetController extends Controller
                 $request->all(),
                 [
                     'singleDay' => 'required|date',
-                    ]
+                ]
             );
 
             if ($validator->fails()) {
@@ -174,8 +167,8 @@ class TimesheetController extends Controller
                     return redirect()
                         ->route('specials', ['worker' => $worker])
                         ->with('err', ['result' => ['id' => 0, 'errorList' => 'Geen geldige datum doorgegeven.']]);
-                    }
-                    return redirect()
+                }
+                return redirect()
                     ->route('specials', ['worker' => $worker])
                     ->with('err', ['result' => ['id' => $worker, 'errorList' => 'Geen geldige datum doorgegeven.']]);
             }
@@ -199,7 +192,7 @@ class TimesheetController extends Controller
                         return redirect()->route('specials', ['worker' => $worker])->with('err', $results);
                     }
                 } else {
-                    
+
                     $addDay = $this->setDay($dayLabel, $dayType, $worker, $singleDay);
                     if ($addDay !== true) {
                         array_push($results, ['id' => $worker, 'errorList' => $addDay]);
@@ -232,7 +225,7 @@ class TimesheetController extends Controller
                 }
             }
         }
-        
+
         return redirect('/')->with('error', 'Something went wrong try again or call for support');
     }
 }

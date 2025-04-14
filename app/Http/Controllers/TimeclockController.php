@@ -9,9 +9,12 @@ use App\Models\Daytotal;
 use App\Models\Timesheet;
 use App\Models\Usertotal;
 use App\Utilities\CalculateUtility;
+use App\Utilities\DateUtility;
+use App\Utilities\TimeloggingUtility;
 use App\Utilities\UserUtility;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 
 class TimeclockController extends Controller
@@ -25,7 +28,7 @@ class TimeclockController extends Controller
         $now = now('Europe/Brussels');
 
         // dd(Carbon::parse($currentUser->company->weekend_day_1));
-        UserUtility::findOrCreateUserDayTotale($now, $currentUser->id);
+        UserUtility::findOrCreateUserDayTotal($now, $currentUser->id);
         // Carbon::parse($userRow->StartWork)->format('Y-m-d');
         //TODO: rewrite start logic when a user has already logged this day
         // $dayCheck = Timesheet::where('UserId', $currentUser->id)
@@ -63,18 +66,24 @@ class TimeclockController extends Controller
 
     public function break()
     {
-
         $now = now('Europe/Brussels');
         $userRow = auth()->user()->timelogs;
-        $dayTotal = UserUtility::findOrCreateUserDayTotale($now, auth()->user()->id);
-        $dayTotal->RegularHours += CalculateUtility::calculateDecimal($userRow->EndBreak ? $userRow->EndBreak : $userRow->StartWork, $now);
-        $userRow->BreakStatus = true;
-        $userRow->fill([
-            'StartBreak' => $now,
-            'BreaksTaken' => $userRow->BreaksTaken += 1
-        ]);
-        $userRow->save();
-        $dayTotal->save();
+        if (!DateUtility::checkDayDiff($userRow->StartWork, $userRow->StopWork)) {
+            TimeloggingUtility::CompletePreviousDay($userRow, auth()->user()->id);
+            return redirect()->back()->with('error', 'Je hebt ingeklokt op een andere dag');
+        }
+        $dayTotal =  UserUtility::userDayTotalFetch($now, auth()->user()->id);
+        if($dayTotal->BreaksTaken > 0) return  redirect()->back()->with('error', 'Je hebt al pauze genomen vandaag');
+        DB::transaction(function () use ($userRow, $dayTotal, $now) {
+            $userRow->update([
+                'StartBreak' => $now,
+                'BreakStatus' => true,
+            ]);
+
+            $dayTotal->update([
+                'Regularhours' => $dayTotal->RegularHours += CalculateUtility::calculateDecimal($userRow->EndBreak ? $userRow->EndBreak : $userRow->StartWork, $now),
+            ]);
+        });
         return redirect()->back();
     }
 
@@ -82,15 +91,17 @@ class TimeclockController extends Controller
     {
         $now = now('Europe/Brussels');
         $userRow = auth()->user()->timelogs;
-        $dayTotal = UserUtility::findOrCreateUserDayTotale($now, auth()->user()->id);
-        $userRow->fill([
-            'BreakStatus' => false,
-            'EndBreak' => $now,
-            // 'BreakHours' => $userRow->BreakHours += CalculateUtility::calculateDecimal($userRow->StartBreak, $timeStamp)
-        ]);
-        $dayTotal->BreakHours += CalculateUtility::calculateDecimal($userRow->StartBreak, $now);
-        $userRow->save();
-        $dayTotal->save();
+        $dayTotal = UserUtility::userDayTotalFetch($now, auth()->user()->id);
+        DB::transaction(function () use ($userRow, $dayTotal, $now) {
+            $userRow->update([
+                'BreakStatus' => false,
+                'EndBreak' => $now,
+            ]);
+            $dayTotal->update([
+                'Breakhours' => $dayTotal->BreakHours += CalculateUtility::calculateDecimal($userRow->StartBreak, $now),
+                'BreaksTaken' => $dayTotal->BreaksTaken += 1,
+            ]);
+        });
         return redirect()->back();
     }
 
@@ -98,31 +109,35 @@ class TimeclockController extends Controller
     {
         $userRow = auth()->user()->timelogs;
         $now = now('Europe/Brussels');
-        
-        $dayTotal = UserUtility::findOrCreateUserDayTotale($now, auth()->user()->id);
-        $userRow->ShiftStatus = false;
-        if ($userRow->BreakStatus == true) {
-            $start = Carbon::parse($userRow->StartBreak, 'Europe/Brussels');
-            $end = Carbon::parse($now, 'Europe/Brussels');
-            $dayTotal->BreakHours  += CalculateUtility::calculateDecimal($start, $end);
-            $dayTotal->save();
-            $userRow->fill([
-                'BreakStatus' => false,
-                'EndBreak' => $now,
-                // 'BreakHours' => $userRow->BreakHours += CalculateUtility::calculateDecimal($start, $end)
-            ]);
+        if (!DateUtility::checkDayDiff($userRow->StartWork, $userRow->StopWork)) {
+            TimeloggingUtility::CompletePreviousDay($userRow, auth()->user()->id);
+            return redirect()->back()->with('error', 'Je hebt ingeklokt op een andere dag');
         }
-
-        $dayTotal->RegularHours += CalculateUtility::calculateDecimal(
-            $userRow->EndBreak ?? $userRow->StartWork,
-            $now
-        );
-        $userRow->fill([
-            'StopWork' => $now,
-
-        ]);
-        $dayTotal->save();
-        $userRow->save();
+        $dayTotal = UserUtility::userDayTotalFetch($now, auth()->user()->id);
+        DB::transaction(function () use ($userRow, $dayTotal, $now) {
+            $userRow->update([
+                'ShiftStatus' => false,
+                'StopWork' => $now,
+            ]);
+            if ($userRow->BreakStatus == true) {
+                $start = DateUtility::carbonParse($userRow->StartBreak);
+                $end = DateUtility::carbonParse($now);
+                
+                $dayTotal->BreakHours  += CalculateUtility::calculateDecimal($start, $end);
+                $dayTotal->save();
+                $userRow->update([
+                    'BreakStatus' => false,
+                    'EndBreak' => $now,
+                    // 'BreakHours' => $userRow->BreakHours += CalculateUtility::calculateDecimal($start, $end)
+                ]);
+            }
+            $dayTotal->update([
+                'RegularHours' => $dayTotal->RegularHours += CalculateUtility::calculateDecimal(
+                    $userRow->EndBreak ?? $userRow->StartWork,
+                    $now),
+                
+            ]);
+        });
         return Redirect::route('makeTimesheet', ['id' => auth()->user()->id]);
     }
 }
