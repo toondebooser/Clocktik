@@ -22,8 +22,6 @@ return new class extends Migration
             $table->timestamp('EndBreak')->nullable();
             $table->timestamp('StopWork')->nullable();
             $table->integer('BreaksTaken')->default(0);
-            $table->decimal('BreakHours', 5, 2)->default(0, 00);
-            $table->decimal('RegularHours', 5, 2)->default(0, 00);
             $table->text('userNote')->nullable();
             $table->integer('UserId');
             $table->index('UserId');

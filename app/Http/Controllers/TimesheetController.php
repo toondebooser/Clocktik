@@ -15,12 +15,12 @@ use App\Utilities\UserUtility;
 
 class TimesheetController extends Controller
 {
-    protected $timeloggingService;
+    // protected $timeloggingService;
 
-    public function __construct(TimeloggingService $timeloggingService)
-    {
-        $this->timeloggingService = $timeloggingService;
-    }
+    // public function __construct(TimeloggingService $timeloggingService)
+    // {
+    //     $this->timeloggingService = $timeloggingService;
+    // }
 
 
 
@@ -31,17 +31,19 @@ class TimesheetController extends Controller
 
         $userRow = auth()->user()->timelogs;
 
-        $userDayTotalCheck = UserUtility::userDayTotalCheck(now('Europe/Brussels'), $id);
-        if (!$userDayTotalCheck->isEmpty() && $userDayTotalCheck->first()->type !== 'workday') {
+        $userDayTotalCheck = UserUtility::findOrCreateUserDayTotale(now('Europe/Brussels'), $id);
+        if (!$userDayTotalCheck->wasRecentlyCreated && $userDayTotalCheck->type !== 'workday') {
             return redirect()->route('dashboard')->with('error', 'Vandaag kan jij geen werkuren ingeven, kijk je profiel na.');
         }
         $buildTimesheet = new TimeloggingUtility;
-        $buildTimesheet->logTimeEntry($userRow, $id, null);
+        if ($userRow->StartWork->isSameDay($userRow->StopWork)) {
+            return $buildTimesheet->logTimeEntry($userRow, $id, null);
+        }else{
+            $buildTimesheet->logOverMultipleDays($userRow, $id);
+        }
 
         // $total = CalculateUtility::calculateUserTotal(now('Europe/Brussels'), $id);
-        if ($buildTimesheet) {
             return redirect()->back();
-        }
     }
 
     
@@ -51,10 +53,12 @@ class TimesheetController extends Controller
         $timeloggingUtility = new TimeloggingUtility;
         $date = $request->input('newTimesheetDate');
         $id = $request->input('workerId');
-        $dayTotalCheck = UserUtility::userDayTotalCheck($date, $id);
-        if (!$dayTotalCheck->isEmpty()) {
+        $dayTotalCheck = UserUtility::findOrCreateUserDayTotale($date, $id);
+        if (!$dayTotalCheck->wasRecentlyCreated) {
             return redirect()->route('timesheetForm', ['worker' => $id])->with('error', 'Datum al in gebruik: ' . $date);
         }
+
+
         if (Carbon::parse($date, 'Europe/Brussels')->isWeekend()) $weekend = true;
         
         $userRow = (object) [

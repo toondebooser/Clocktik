@@ -9,6 +9,7 @@ use App\Models\Daytotal;
 use App\Models\Timesheet;
 use App\Models\Usertotal;
 use App\Utilities\CalculateUtility;
+use App\Utilities\UserUtility;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -24,10 +25,7 @@ class TimeclockController extends Controller
         $now = now('Europe/Brussels');
 
         // dd(Carbon::parse($currentUser->company->weekend_day_1));
-        Daytotal::firstOrCreate(['Month' => Carbon::parse($userRow->StartWork)->format('Y-m-d'), 'UserId' => $currentUser->id], [
-            'UserId' => $currentUser->id,
-            'Month' => Carbon::parse($userRow->StartWork)->format('Y-m-d'),
-        ]);
+        UserUtility::findOrCreateUserDayTotale($now, $currentUser->id);
         // Carbon::parse($userRow->StartWork)->format('Y-m-d');
         //TODO: rewrite start logic when a user has already logged this day
         // $dayCheck = Timesheet::where('UserId', $currentUser->id)
@@ -68,7 +66,7 @@ class TimeclockController extends Controller
 
         $now = now('Europe/Brussels');
         $userRow = auth()->user()->timelogs;
-        $dayTotal = auth()->user()->dayTotals->where('Month', Carbon::parse($now)->format('Y-m-d'))->first();
+        $dayTotal = UserUtility::findOrCreateUserDayTotale($now, auth()->user()->id);
         $dayTotal->RegularHours += CalculateUtility::calculateDecimal($userRow->EndBreak ? $userRow->EndBreak : $userRow->StartWork, $now);
         $userRow->BreakStatus = true;
         $userRow->fill([
@@ -84,7 +82,7 @@ class TimeclockController extends Controller
     {
         $now = now('Europe/Brussels');
         $userRow = auth()->user()->timelogs;
-        $dayTotal = auth()->user()->dayTotals->where('Month', Carbon::parse($now)->format('Y-m-d'))->first();
+        $dayTotal = UserUtility::findOrCreateUserDayTotale($now, auth()->user()->id);
         $userRow->fill([
             'BreakStatus' => false,
             'EndBreak' => $now,
@@ -100,7 +98,8 @@ class TimeclockController extends Controller
     {
         $userRow = auth()->user()->timelogs;
         $now = now('Europe/Brussels');
-        $dayTotal = auth()->user()->dayTotals->where('Month', Carbon::parse($now)->format('Y-m-d'))->first();
+        
+        $dayTotal = UserUtility::findOrCreateUserDayTotale($now, auth()->user()->id);
         $userRow->ShiftStatus = false;
         if ($userRow->BreakStatus == true) {
             $start = Carbon::parse($userRow->StartBreak, 'Europe/Brussels');
@@ -120,7 +119,7 @@ class TimeclockController extends Controller
         );
         $userRow->fill([
             'StopWork' => $now,
-            
+
         ]);
         $dayTotal->save();
         $userRow->save();

@@ -31,20 +31,27 @@ class UserUtility
         return $userTotal;
     }
 
-
-    public static function userDayTotalCheck($date, $id)
+    public static function findOrCreateUserDayTotale($date, $id)
     {
-        if (is_string($date)) {
-            $date = Carbon::parse($date);
-        } else {
-            $date = $date;
-        }
-        $timesheetCheck = Daytotal::where('UserId', $id)
-            ->whereDate('Month', $date)
-            ->orderBy('created_at', 'asc')
-            ->get();
-        return $timesheetCheck;
+        $date = Carbon::parse($date)->format('Y-m-d');
+        $dayTotal = Daytotal::firstOrCreate(['Month' => $date, 'UserId' => $id], [
+            'UserId' => $id,
+            'Month' => $date,
+        ]);
+        return $dayTotal;
     }
+
+    // public static function userDayTotalCheck($date, $id)
+    // {
+    //     if (is_string($date)) {
+    //         $date = Carbon::parse($date);
+    //     }
+    //     $timesheetCheck = Daytotal::where('UserId', $id)
+    //         ->whereDate('Month', $date)
+    //         ->orderBy('created_at', 'asc')
+    //         ->first();
+    //     return $timesheetCheck;
+    // }
 
 
 
