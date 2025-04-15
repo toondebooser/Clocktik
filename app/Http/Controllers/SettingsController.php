@@ -10,6 +10,8 @@ use App\Utilities\TimeloggingUtility;
 use App\Utilities\UserUtility;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class SettingsController extends Controller
 {
@@ -68,25 +70,33 @@ class SettingsController extends Controller
         return $logoPath;        
 
     }
-    public function updateSettings (Request $request)
-    {
-        $company =Company::where("company_code", $request->company_code)->first();
+    public function updateSettings(Request $request)
+{
+    try {
+        $company = Company::where('company_code', $request->company_code)->first();
+       
         $updateData = [];
-        foreach ($request->all() as $key => $value) {   
-                 
-            if ($key === '_token') continue;
-            $updateData[$key] = $key == 'company_logo' ? $this->logohandler($company, $value) : $value;
+        foreach ($request->all() as $key => $value) {
+            if ($key === '_token') {
+                continue;
+            }
+            $updateData[$key] = $key === 'company_logo' ? $this->logohandler($company, $value) : $value;
         }
-         $success = $company->update($updateData);
-         if($success){
-            UserUtility::updateAllUsersDayTotals(now('Europe/Brussels'), $company->company_code);
-            return redirect()->back()->with('success', 'Instellingen zijn aangepast.');
-         } else{
-            return redirect()->back()->with('error', 'Er ging iets mis bij het aanpassen van de instellingen.');
-         }
 
+        $success = $company->update($updateData);
+        if (!$success) {
+            throw new Exception('Failed to update company settings');
+        }
 
-        
-        
+        $result = UserUtility::updateAllUsersDayTotals($company->company_code);
+        if (is_array($result) && isset($result['error'])) {
+            throw new Exception($result['error']);
+        }
+
+        return redirect()->back()->with('success', 'Instellingen zijn aangepast.');
+    } catch (Exception $e) {
+        Log::error("Error in updateSettings for company {$request->company_code}: " . $e->getMessage());
+        return redirect()->back()->with('error', 'Er ging iets mis bij het aanpassen van de instellingen: ' . $e->getMessage());
     }
+}
 }

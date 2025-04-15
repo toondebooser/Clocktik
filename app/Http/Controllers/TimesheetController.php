@@ -37,7 +37,7 @@ class TimesheetController extends Controller
         }
         $buildTimesheet = new TimeloggingUtility;
         $buildTimesheet->logTimeEntry($userRow, $id, null);
-        if($buildTimesheet) return redirect()->back()->with('Succes', 'Uren succesvol toegevoegd');
+        if ($buildTimesheet) return redirect()->back()->with('Succes', 'Uren succesvol toegevoegd');
     }
 
 
@@ -64,8 +64,9 @@ class TimesheetController extends Controller
             'userNote' => $userNote ?? null,
         ];
         $addTimesheet = $timeloggingUtility->logTimeEntry($userRow, $id, null);
-        $total = CalculateUtility::calculateUserTotal( $id);
-        if ($addTimesheet) return redirect()->route('timesheetForm', ['worker' => $id])->with('success', 'Uurrooster toegevoegd');
+        $checkUserMonthTotal = UserUtility::CheckUserMonthTotal($date, $id);
+        $calculateTotal = CalculateUtility::calculateUserTotal($id);
+        if ($checkUserMonthTotal && $addTimesheet && $calculateTotal) return redirect()->route('timesheetForm', ['worker' => $id])->with('success', 'Uurrooster toegevoegd');
     }
 
     public function setDay($dayLabel, $dayType, $worker, $singleDay)
@@ -82,9 +83,8 @@ class TimesheetController extends Controller
             'accountableHours' => $dayType == 'onbetaald' ? 0 : User::find($worker)->company->day_hours,
         ]);
         if ($dayTotal->wasRecentlyCreated) {
-            
-           $calculateUserTotal = CalculateUtility::calculateUserTotal($worker);
-            if ($calculateUserTotal) return true;
+
+            return true;
         } else {
             return  'Datum al in gebruik: ' . $singleDay->toDateString();
         }
@@ -94,8 +94,8 @@ class TimesheetController extends Controller
     {
         $errors = [];
         $currentDate = clone $startDate;
-        $company_weekend_day_1= User::find($worker)->company->weekend_day_1 ;
-        $company_weekend_day_2= User::find($worker)->company->weekend_day_2;
+        $company_weekend_day_1 = User::find($worker)->company->weekend_day_1;
+        $company_weekend_day_2 = User::find($worker)->company->weekend_day_2;
         while ($currentDate <= $endDate) {
             $weekDay = Carbon::parse($currentDate)->weekday();
             if ($weekDay != $company_weekend_day_1 && $weekDay != $company_weekend_day_2) {
@@ -177,6 +177,8 @@ class TimesheetController extends Controller
                             continue;
                         }
                         $result = $this->setday($dayLabel, $dayType, $userObject['id'], $singleDay);
+                        UserUtility::CheckUserMonthTotal($singleDay, $worker);
+                        CalculateUtility::calculateUserTotal($worker);
                         if ($result !== true) {
                             array_push($results, ['id' => $userObject['id'], 'errorList' => $result]);
                         }
@@ -213,10 +215,13 @@ class TimesheetController extends Controller
                 }
             } else {
                 $result = $this->setPeriod($dayLabel, $dayType, $worker, $startDate, $endDate);
+                UserUtility::CheckUserMonthTotal($startDate, $worker);
+                CalculateUtility::calculateUserTotal($worker);
                 if ($result !== true) {
                     array_push($results, ['id' => $worker, 'errorList' => $result]);
                     return redirect()->route('specials', ['worker' => $worker])->with('errList',  $results);
                 }
+                if ($result) return redirect()->route('specials', ['worker' => $worker])->with('success', "Periode succesvol toegevoegd");
             }
         }
 

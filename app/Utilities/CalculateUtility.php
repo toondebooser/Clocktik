@@ -31,27 +31,27 @@ class CalculateUtility
             if (!$user) {
                 throw new Exception("User not found: ID $id");
             }
-
+    
             $userTotals = $user->userTotals()->get();
             foreach ($userTotals as $monthTotal) {
-                $dayTotal = Daytotal::where('UserId', $id)
-                    ->whereMonth('Month', DateUtility::carbonParse($monthTotal->Month))
-                    ->whereYear('Month', DateUtility::carbonParse($monthTotal->Month))
+                $dayTotals = Daytotal::where('UserId', $id)
+                    ->whereMonth('Month', Carbon::parse($monthTotal->Month)->month)
+                    ->whereYear('Month', Carbon::parse($monthTotal->Month)->year)
                     ->get();
+    
                 $monthTotal->update([
-                    'RegularHours' => $dayTotal->sum('accountableHours'),
-                    'BreakHours' => $dayTotal->sum('BreakHours'),
-                    'OverTime' => $dayTotal->sum('OverTime')
+                    'RegularHours' => $dayTotals->sum('accountableHours'),
+                    'BreakHours' => $dayTotals->sum('BreakHours'),
+                    'OverTime' => $dayTotals->sum('OverTime')
                 ]);
             }
-
-            return true; 
+    
+            return true;
         } catch (Exception $e) {
             Log::error("Error in calculateUserTotal for user ID $id: " . $e->getMessage());
             return ['error' => 'Failed to calculate user totals: ' . $e->getMessage()];
         }
     }
- 
     public static function calculateSummaryForDay($timesheets, $companyDayHours)
     {
         $summary = [

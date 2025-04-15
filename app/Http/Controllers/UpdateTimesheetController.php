@@ -16,7 +16,7 @@ use App\Utilities\UserUtility;
 
 class UpdateTimesheetController extends Controller
 {
-   
+
     public function updateForm($id, $timesheet, $type = null)
     {
 
@@ -27,17 +27,17 @@ class UpdateTimesheetController extends Controller
                 'worker' => $id,
             ];
 
-            return redirect()->route('getData', $postData)->with('error', $worker->name.' heeft juist ingeklokt. ');
+            return redirect()->route('getData', $postData)->with('error', $worker->name . ' heeft juist ingeklokt. ');
         }
         $startShift = Carbon::parse($timesheet->ClockedIn)->format('H:i');
         $endShift = Carbon::parse($timesheet->ClockedOut)->format('H:i');
         $startBreak = $timesheet->BreakStart ? Carbon::parse($timesheet->BreakStart)->format('H:i') : null;
         $endBreak = $timesheet->BreakStop ? Carbon::parse($timesheet->BreakStop)->format('H:i') : null;
         $monthString = Carbon::parse($timesheet->Month)->format('d/m/Y');
-        
-        return view('updateTimesheet', [ 'worker' => $worker, 'timesheet' => $timesheet, 'startShift' => $startShift, 'endShift' => $endShift, 'startBreak' => $startBreak, 'endBreak' => $endBreak, 'monthString' =>$monthString]);
+
+        return view('updateTimesheet', ['worker' => $worker, 'timesheet' => $timesheet, 'startShift' => $startShift, 'endShift' => $endShift, 'startBreak' => $startBreak, 'endBreak' => $endBreak, 'monthString' => $monthString]);
     }
-    
+
     public function updateTimesheet(Request $request)
     {
         $dayType = $request->input('dayType');
@@ -48,13 +48,14 @@ class UpdateTimesheetController extends Controller
         $weekend = DateUtility::checkWeekend($timesheet->Month, User::find($id)->company);
         $type == null ? $type = $timesheet->type : null;
         $date = $timesheet->Month;
-        if ($dayType == "onbetaald" && $type !== 'workday' ) {
+        if ($dayType == "onbetaald" && $type !== 'workday') {
             $timesheet->update([
                 'accountableHours' => 0,
                 'type' => $type,
             ]);
-            $fetchTotal = CalculateUtility::calculateUserTotal($date, $id);
-            if ( $fetchTotal == true) {
+            $fetchUserMonthTotal = UserUtility::CheckUserMonthTotal($date, $id);
+            $calculateUserMonthTotal = CalculateUtility::calculateUserTotal($id);
+            if ($fetchUserMonthTotal && $calculateUserMonthTotal) {
                 $postData = [
                     'worker' => $id,
                 ];
@@ -68,13 +69,13 @@ class UpdateTimesheetController extends Controller
                 return redirect()->route('getData', $postData)->with('error', 'Er ging iets mis, kijk even na of de dag in het uurrooster is aangepast.');
             }
         } elseif ($type !== 'workday') {
-            $timesheet->fill([
+            $timesheet->update([
                 'accountableHours' => $companyDayHours,
                 'type' => $type,
             ]);
-            $save = $timesheet->save();
-            $fetchTotal = CalculateUtility::calculateUserTotal($date, $id);
-            if ($save == true && $fetchTotal == true) { {
+            $fetchUserMonthTotal = UserUtility::CheckUserMonthTotal($date, $id);
+            $calculateUserMonthTotal = CalculateUtility::calculateUserTotal($id);
+            if ($fetchUserMonthTotal && $calculateUserMonthTotal) { {
                     $postData = [
                         'worker' => $id,
                     ];
@@ -95,15 +96,13 @@ class UpdateTimesheetController extends Controller
                 'StopWork' => Carbon::parse($date . ' ' . $request->input('endTime'), 'Europe/Brussels'),
                 'StartBreak' => Carbon::parse($date . ' ' . $request->input('startBreak'), 'Europe/Brussels'),
                 'EndBreak' => Carbon::parse($date . ' ' . $request->input('endBreak'), 'Europe/Brussels'),
-                'Weekend' => $weekend ,
+                'Weekend' => $weekend,
                 'userNote' => $userNote ?? null,
             ];
             $timeloggingUtility = new TimeloggingUtility;
             $addTimesheet = $timeloggingUtility->logTimeEntry($userRow, $id, $timesheet);
-           
+
             if ($addTimesheet) return redirect()->back()->with('success', 'Dag is aangepast');
-        
-           
         }
     }
 }
