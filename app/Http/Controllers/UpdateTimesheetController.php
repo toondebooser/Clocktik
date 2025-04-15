@@ -10,6 +10,7 @@ use App\Models\Daytotal;
 use Illuminate\Support\Carbon;
 use App\Models\Usertotal;
 use App\Utilities\CalculateUtility;
+use App\Utilities\DateUtility;
 use App\Utilities\TimeloggingUtility;
 use App\Utilities\UserUtility;
 
@@ -43,18 +44,17 @@ class UpdateTimesheetController extends Controller
         $id = $request->id;
         $companyDayHours = User::find($id)->company->day_hours;
         $timesheet = $request->type == 'workday' ? Timesheet::find($request->timesheet) : Daytotal::find($request->timesheet);
-     
         $type = $request->updateSpecial;
+        $weekend = DateUtility::checkWeekend($timesheet->Month, User::find($id)->company);
         $type == null ? $type = $timesheet->type : null;
         $date = $timesheet->Month;
         if ($dayType == "onbetaald" && $type !== 'workday' ) {
-            $timesheet->fill([
+            $timesheet->update([
                 'accountableHours' => 0,
                 'type' => $type,
             ]);
-            $save = $timesheet->save();
             $fetchTotal = CalculateUtility::calculateUserTotal($date, $id);
-            if ($save == true && $fetchTotal == true) {
+            if ( $fetchTotal == true) {
                 $postData = [
                     'worker' => $id,
                 ];
@@ -95,7 +95,7 @@ class UpdateTimesheetController extends Controller
                 'StopWork' => Carbon::parse($date . ' ' . $request->input('endTime'), 'Europe/Brussels'),
                 'StartBreak' => Carbon::parse($date . ' ' . $request->input('startBreak'), 'Europe/Brussels'),
                 'EndBreak' => Carbon::parse($date . ' ' . $request->input('endBreak'), 'Europe/Brussels'),
-                'Weekend' => $weekend ?? false,
+                'Weekend' => $weekend ,
                 'userNote' => $userNote ?? null,
             ];
             $timeloggingUtility = new TimeloggingUtility;
@@ -103,9 +103,7 @@ class UpdateTimesheetController extends Controller
            
             if ($addTimesheet) return redirect()->back()->with('success', 'Dag is aangepast');
         
-            // $timesheet->save();
-            // $userTotal = CalculateUtility::calculateUserTotal($date, $id);
-            // if ( $userTotal == true) return redirect()->route('myWorkers');
+           
         }
     }
 }

@@ -43,7 +43,6 @@ class TimesheetController extends Controller
 
     public function addNewTimesheet(Request $request)
     {
-        // $newTimesheet = new Timesheet;
         $timeloggingUtility = new TimeloggingUtility;
         $date = $request->input('newTimesheetDate');
         $id = $request->input('workerId');
@@ -65,7 +64,6 @@ class TimesheetController extends Controller
             'userNote' => $userNote ?? null,
         ];
         $addTimesheet = $timeloggingUtility->logTimeEntry($userRow, $id, null);
-        // $newTimesheet->save();
         $total = CalculateUtility::calculateUserTotal($date, $id);
         if ($addTimesheet) return redirect()->route('timesheetForm', ['worker' => $id])->with('success', 'Uurrooster toegevoegd');
     }
@@ -84,17 +82,8 @@ class TimesheetController extends Controller
             'accountableHours' => $dayType == 'onbetaald' ? 0 : User::find($worker)->company->day_hours,
         ]);
         if ($dayTotal->wasRecentlyCreated) {
-            // $newSpecialTimesheet->fill([
-            //     'type' => $dayLabel,
-            //     'ClockedIn' => $singleDay,
-            //     'Month' => $singleDay,
-            //     'UserId' => $worker,
-            //     'accountableHours' => $dayType == 'onbetaald' ? 0 : 7.6,
-            // ]);
-            // $newSpecialTimesheet->save();
-            // $userTotal = UserUtility::fetchUserTotal($singleDay, $worker);
+            
            $calculateUserTotal = CalculateUtility::calculateUserTotal($singleDay, $worker);
-            // $userTotal->save();
             if ($calculateUserTotal) return true;
         } else {
             return  'Datum al in gebruik: ' . $singleDay->toDateString();
@@ -105,9 +94,11 @@ class TimesheetController extends Controller
     {
         $errors = [];
         $currentDate = clone $startDate;
+        $company_weekend_day_1= User::find($worker)->company->weekend_day_1 ;
+        $company_weekend_day_2= User::find($worker)->company->weekend_day_2;
         while ($currentDate <= $endDate) {
-            $newSpecialTimesheet = new Timesheet;
-            if (!$currentDate->isWeekend()) {
+            $weekDay = Carbon::parse($currentDate)->weekday();
+            if ($weekDay != $company_weekend_day_1 && $weekDay != $company_weekend_day_2) {
                 $addDay =  $this->setDay($dayLabel, $dayType, $worker, $currentDate);
                 if ($addDay !== true) {
                     //TODO: push $addDay directly in error?

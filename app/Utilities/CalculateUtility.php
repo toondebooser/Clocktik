@@ -48,28 +48,38 @@ class CalculateUtility
             'RegularHours' => 0,
             'DaytimeCount' => $timesheets->count(),
             'OverTime' => 0,
-            'accountableHours' => $companyDayHours,
+            'accountableHours' => 0,
+            'Weekend' => false,
             'Completed' => true,
         ];
 
         $dailyHours = 0;
+        $isWeekendDay = $timesheets->isNotEmpty() && DateUtility::checkWeekend(
+            $timesheets->first()->ClockedIn,
+            User::find($timesheets->first()->UserId)->company
+        );
+        $summary['Weekend'] = $isWeekendDay;
 
         foreach ($timesheets as $timesheet) {
             $workHours = CalculateUtility::calculateDecimal($timesheet->ClockedIn, $timesheet->ClockedOut);
             $breakHours = CalculateUtility::calculateDecimal($timesheet->BreakStart, $timesheet->BreakStop);
             $netWorkHours = $workHours - $breakHours;
 
+            if($isWeekendDay){
+                $summary['OverTime'] += $netWorkHours;
+                $summary ['BreakHours'] += $breakHours;
+            }else{
+                $dailyHours += $netWorkHours;
+                $summary['BreakHours'] += $breakHours;
+                $summary['RegularHours'] += $netWorkHours;
 
-
-
-            $dailyHours += $netWorkHours;
-
-            $summary['BreakHours'] += $breakHours;
-            $summary['RegularHours'] += $netWorkHours;
+            }
         }
-
-        $summary['OverTime'] += $dailyHours - $companyDayHours;
-
+        if(!$isWeekendDay) {
+            $summary['OverTime'] += $dailyHours - $companyDayHours;
+            $summary['accountableHours'] = $companyDayHours;
+        };
+        
         return $summary;
     }
 

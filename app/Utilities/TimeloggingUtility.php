@@ -51,7 +51,7 @@ class TimeloggingUtility
             'ClockedOut' => $userRow->StopWork,
             'BreakStart' => $userRow->StartBreak,
             'BreakStop' => $userRow->EndBreak,
-            'Weekend' => $userRow->Weekend ?? false,
+            'Weekend' => $userRow->Weekend,
             'Month' => $date,
             'userNote' => $userRow->userNote ?? null,
         ];

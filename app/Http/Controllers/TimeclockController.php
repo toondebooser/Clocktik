@@ -27,24 +27,11 @@ class TimeclockController extends Controller
         $userRow = $currentUser->timelogs;
         $now = now('Europe/Brussels');
 
-        // dd(Carbon::parse($currentUser->company->weekend_day_1));
         UserUtility::findOrCreateUserDayTotal($now, $currentUser->id);
-        // Carbon::parse($userRow->StartWork)->format('Y-m-d');
-        //TODO: rewrite start logic when a user has already logged this day
-        // $dayCheck = Timesheet::where('UserId', $currentUser->id)
-        // ->where('Month', '=', $now->format('Y-m-d'))
-        // ->first();
-        // if(!$dayCheck) {
-        //     $userRow->fill([
-        //         'BreakHours' => 0,
-        //         'BreaksTaken' => 0,
-        //         'RegularHours' => 0,
-        //     ]);
-        // }
+      
 
         $weekDay = Carbon::parse($now)->weekday();
-        //TODO Check with stored weekend day company
-        $weekDay == 0 || $weekDay == 6 ? $userRow->Weekend = true : $userRow->Weekend = false;
+        $weekDay == $currentUser->company->weekend_day_1 || $weekDay == $currentUser->company->weekend_day_2 ? $userRow->Weekend = true : $userRow->Weekend = false;
         //TODO: check if userRow exists
         $userRow->fill([
             'StartWork' => $now,

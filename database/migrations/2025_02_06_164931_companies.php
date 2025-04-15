@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('company_color')->default("#4FAAFC");
             $table->bigInteger('company_code')->unsigned();
             $table->index('company_code');
-            $table->string('weekend_day_1')->default("Zaterdag"); 
-            $table->string('weekend_day_2')->default("Zondag"); 
+            $table->integer('weekend_day_1')->default(6); 
+            $table->integer('weekend_day_2')->default(0); 
             $table->decimal('day_hours', 5, 2)->default(7.6);
             $table->boolean('admin_timeclock')->default(false);
             $table->timestamps();

@@ -66,15 +66,14 @@ class UserUtility
 
     public static function updateAllUsersDayTotals($date, $company_code)
     {
-        $users = User::with('dayTotals')->where('company_code',$company_code)->get();
+        $users = User::with(['dayTotals', 'timesheets'])->where('company_code',$company_code)->get();
         
         foreach ($users as $user) {
             foreach ($user->dayTotals as $dayTotal) {
-                $dayTotal->update([
-                    'accountableHours' => $user->company->day_hours,
-                ]);
+                $summary = CalculateUtility::calculateSummaryForDay($user->timesheets,$user->company->day_hours);
+                $dayTotal->update($summary);
             }
-    
+            
             CalculateUtility::calculateUserTotal($date, $user->id);
         }
     }

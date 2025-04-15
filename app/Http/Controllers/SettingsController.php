@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\User;
 use App\Utilities\CalculateUtility;
+use App\Utilities\DateUtility;
 use App\Utilities\TimeloggingUtility;
 use App\Utilities\UserUtility;
 use Illuminate\Http\Request;
@@ -71,7 +72,8 @@ class SettingsController extends Controller
     {
         $company =Company::where("company_code", $request->company_code)->first();
         $updateData = [];
-        foreach ($request->all() as $key => $value) {        
+        foreach ($request->all() as $key => $value) {   
+                 
             if ($key === '_token') continue;
             $updateData[$key] = $key == 'company_logo' ? $this->logohandler($company, $value) : $value;
         }

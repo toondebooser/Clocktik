@@ -107,22 +107,22 @@
             <div style="text-align: end">Weekend dagen</div>
             <span>
                 <select style="width: fit-content" name="weekend_day_1" id="weekendDag1">
-                    <option value="Maandag" {{ $data->weekend_day_1 == 'Maandag' ? 'selected' : '' }}>Ma</option>
-                    <option value="Dinsdag" {{ $data->weekend_day_1 == 'Dinsdag' ? 'selected' : '' }}>Di</option>
-                    <option value="Woensdag" {{ $data->weekend_day_1 == 'Woensdag' ? 'selected' : '' }}>Wo</option>
-                    <option value="Donderdag" {{ $data->weekend_day_1 == 'Donderdag' ? 'selected' : '' }}>Do</option>
-                    <option value="Vrijdag"{{ $data->weekend_day_1 == 'Vrijdag' ? 'selected' : '' }}>Vr</option>
-                    <option value="Zaterdag"{{ $data->weekend_day_1 == 'Zaterdag' ? 'selected' : '' }}>Za</option>
-                    <option value="Zondag"{{ $data->weekend_day_1 == 'Zondag' ? 'selected' : '' }}>Zo</option>
+                    <option value="1" {{ $data->weekend_day_1 == 1 ? 'selected' : '' }}>Ma</option>
+                    <option value="2" {{ $data->weekend_day_1 == 2 ? 'selected' : '' }}>Di</option>
+                    <option value="3" {{ $data->weekend_day_1 == 3 ? 'selected' : '' }}>Wo</option>
+                    <option value="4" {{ $data->weekend_day_1 == 4 ? 'selected' : '' }}>Do</option>
+                    <option value="5" {{ $data->weekend_day_1 == 5 ? 'selected' : '' }}>Vr</option>
+                    <option value="6" {{ $data->weekend_day_1 == 6 ? 'selected' : '' }}>Za</option>
+                    <option value="0" {{ $data->weekend_day_1 == 0 ? 'selected' : '' }}>Zo</option>
                 </select>
                 <select style="width: fit-content" name="weekend_day_2" id="weekendDag2">
-                    <option value="Maandag" {{ $data->weekend_day_2 == 'Maandag' ? 'selected' : '' }}>Ma</option>
-                    <option value="Dinsdag" {{ $data->weekend_day_2 == 'Dinsdag' ? 'selected' : '' }}>Di</option>
-                    <option value="Woensdag" {{ $data->weekend_day_2 == 'Woensdag' ? 'selected' : '' }}>Wo</option>
-                    <option value="Donderdag" {{ $data->weekend_day_2 == 'Donderdag' ? 'selected' : '' }}>Do</option>
-                    <option value="Vrijdag"{{ $data->weekend_day_2 == 'Vrijdag' ? 'selected' : '' }}>Vr</option>
-                    <option value="Zaterdag"{{ $data->weekend_day_2 == 'Zaterdag' ? 'selected' : '' }}>Za</option>
-                    <option value="Zondag"{{ $data->weekend_day_2 == 'Zondag' ? 'selected' : '' }}>Zo</option>
+                    <option value="1" {{ $data->weekend_day_2 == 1 ? 'selected' : '' }}>Ma</option>
+                    <option value="2" {{ $data->weekend_day_2 == 2 ? 'selected' : '' }}>Di</option>
+                    <option value="3" {{ $data->weekend_day_2 == 3 ? 'selected' : '' }}>Wo</option>
+                    <option value="4" {{ $data->weekend_day_2 == 4 ? 'selected' : '' }}>Do</option>
+                    <option value="5" {{ $data->weekend_day_2 == 5 ? 'selected' : '' }}>Vr</option>
+                    <option value="6" {{ $data->weekend_day_2 == 6 ? 'selected' : '' }}>Za</option>
+                    <option value="0" {{ $data->weekend_day_2 == 0 ? 'selected' : '' }}>Zo</option>
                 </select>
             </span>
 
