@@ -2,12 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Timelog;
-use App\Http\Controllers\TimesheetController;
-use App\Http\Controllers\JsonController;
-use App\Models\Daytotal;
-use App\Models\Timesheet;
-use App\Models\Usertotal;
+
 use App\Utilities\CalculateUtility;
 use App\Utilities\DateUtility;
 use App\Utilities\TimeloggingUtility;

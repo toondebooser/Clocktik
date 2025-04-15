@@ -27,7 +27,7 @@ class TimeloggingUtility
         $firstDayEntry = TimeloggingUtility::createTimesheetEntry($firstDayRow, $user);
         TimeloggingUtility::updateOrInsertTimesheet($firstDayEntry, null);
         TimeloggingUtility::updateDailySummery($userId, $firstDayEntry['Month']);
-        return CalculateUtility::calculateUserTotal($firstDayEntry['Month'], $userId);
+        return CalculateUtility::calculateUserTotal( $userId);
     }
 
     public function logTimeEntry($userRow, $userId, $oldLog = null)
@@ -36,7 +36,7 @@ class TimeloggingUtility
         $newEntry = $this->createTimesheetEntry($userRow, $user);
         $this->updateOrInsertTimesheet($newEntry, $oldLog);
         $this->updateDailySummery($newEntry['UserId'], $newEntry['Month']);
-        return CalculateUtility::calculateUserTotal($newEntry['Month'], $newEntry['UserId']);
+        return CalculateUtility::calculateUserTotal( $newEntry['UserId']);
     }
 
 

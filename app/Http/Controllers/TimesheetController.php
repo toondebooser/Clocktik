@@ -64,7 +64,7 @@ class TimesheetController extends Controller
             'userNote' => $userNote ?? null,
         ];
         $addTimesheet = $timeloggingUtility->logTimeEntry($userRow, $id, null);
-        $total = CalculateUtility::calculateUserTotal($date, $id);
+        $total = CalculateUtility::calculateUserTotal( $id);
         if ($addTimesheet) return redirect()->route('timesheetForm', ['worker' => $id])->with('success', 'Uurrooster toegevoegd');
     }
 
@@ -83,7 +83,7 @@ class TimesheetController extends Controller
         ]);
         if ($dayTotal->wasRecentlyCreated) {
             
-           $calculateUserTotal = CalculateUtility::calculateUserTotal($singleDay, $worker);
+           $calculateUserTotal = CalculateUtility::calculateUserTotal($worker);
             if ($calculateUserTotal) return true;
         } else {
             return  'Datum al in gebruik: ' . $singleDay->toDateString();

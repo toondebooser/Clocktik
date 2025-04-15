@@ -101,7 +101,7 @@ class UserController extends Controller
             'Weekend' => false,
         ]);
 
-        $newUser->userTotal()->create([
+        $newUser->userTotals()->create([
             'RegularHours' => 0,
             'BreakHours' => 0,
             'OverTime' => 0,

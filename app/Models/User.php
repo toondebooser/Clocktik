@@ -64,7 +64,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     {
         return $this->hasMany(Timesheet::class, 'UserId');
     }
-    public function userTotal()
+    public function userTotals()
     {
         return $this->hasMany(Usertotal::class, 'UserId');
     }

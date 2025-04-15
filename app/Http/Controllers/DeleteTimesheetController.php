@@ -55,7 +55,7 @@ class DeleteTimesheetController extends Controller
                 $this->redirectError('Geen dagtotal gevonden, berekeningen bijgewerkt.', $workerId);
             }
 
-            CalculateUtility::calculateUserTotal($date, $workerId);
+            CalculateUtility::calculateUserTotal($workerId);
         });
 
         return $this->redirectSuccess('Timesheet succesvol verwijderd.', $user);

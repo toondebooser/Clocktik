@@ -74,7 +74,7 @@ class UserUtility
                 $dayTotal->update($summary);
             }
             
-            CalculateUtility::calculateUserTotal($date, $user->id);
+            CalculateUtility::calculateUserTotal( $user->id);
         }
     }
     public static function companyNumberGenerator()

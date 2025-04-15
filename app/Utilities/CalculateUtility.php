@@ -7,6 +7,8 @@ use App\Models\Timesheet;
 use App\Models\User;
 use App\Models\Usertotal;
 use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class CalculateUtility
 {
@@ -22,23 +24,32 @@ class CalculateUtility
 
         return $decimalTime;
     }
-    public static function calculateUserTotal($date, $id)
+    public static function calculateUserTotal($id)
     {
-        $userTotal = UserUtility::fetchUserTotal($date, $id);
-        is_string($date) ? $date = Carbon::parse($date) : null;
-        $userId = $id;
-        if ($userTotal != null) {
-            $dayTotal = Daytotal::where('UserId', $userId)
-            ->whereMonth('Month', $date)
-            ->whereYear('Month', $date);
-            $userTotal->update([
-                'RegularHours' => $dayTotal->sum('accountableHours'),
-                'BreakHours' => $dayTotal->sum('BreakHours'),
-                'OverTime' => $dayTotal->sum('OverTime')
-            ]);
-        }
+        try {
+            $user = User::find($id);
+            if (!$user) {
+                throw new Exception("User not found: ID $id");
+            }
 
-        return $userTotal;
+            $userTotals = $user->userTotals()->get();
+            foreach ($userTotals as $monthTotal) {
+                $dayTotal = Daytotal::where('UserId', $id)
+                    ->whereMonth('Month', DateUtility::carbonParse($monthTotal->Month))
+                    ->whereYear('Month', DateUtility::carbonParse($monthTotal->Month))
+                    ->get();
+                $monthTotal->update([
+                    'RegularHours' => $dayTotal->sum('accountableHours'),
+                    'BreakHours' => $dayTotal->sum('BreakHours'),
+                    'OverTime' => $dayTotal->sum('OverTime')
+                ]);
+            }
+
+            return true; 
+        } catch (Exception $e) {
+            Log::error("Error in calculateUserTotal for user ID $id: " . $e->getMessage());
+            return ['error' => 'Failed to calculate user totals: ' . $e->getMessage()];
+        }
     }
  
     public static function calculateSummaryForDay($timesheets, $companyDayHours)
