@@ -132,7 +132,7 @@ class TimesheetController extends Controller
         $dayLabel = $request->input($dayType);
         $worker = $request->input('worker');
         $submitType = $request->input('submitType');
-        $workerArray = json_decode($worker, true);
+        $workerObjectArray = json_decode($worker, true);
         $results = [];
 
         if ($submitType ==  'Periode Toevoegen') {
@@ -146,7 +146,7 @@ class TimesheetController extends Controller
 
             //TODO REFACTOR THIS MESS!!!
             if ($validator->fails()) {
-                if (is_array($workerArray) && count($workerArray) > 1) {
+                if (is_array($workerObjectArray) && count($workerObjectArray) > 1) {
                     return redirect()
                         ->route('specials', ['worker' => $worker])
                         ->with('errList', ['result' => ['id' => 0, 'errorList' => ['Geen geldige datum doorgegeven.']]]);
@@ -164,7 +164,7 @@ class TimesheetController extends Controller
             );
 
             if ($validator->fails()) {
-                if (is_array($workerArray) && count($workerArray) > 1) {
+                if (is_array($workerObjectArray) && count($workerObjectArray) > 1) {
                     return redirect()
                         ->route('specials', ['worker' => $worker])
                         ->with('err', ['result' => ['id' => 0, 'errorList' => 'Geen geldige datum doorgegeven.']]);
@@ -178,15 +178,16 @@ class TimesheetController extends Controller
             $singleDay = Carbon::parse($request->input('singleDay'));
             $newSpecialTimesheet = new Timesheet;
             if (!$singleDay->isWeekend()) {
-                if (is_array($workerArray) && count($workerArray) > 1) {
-                    foreach ($workerArray as $user) {
+                if (is_array($workerObjectArray) && count($workerObjectArray) > 1) {
+                    foreach ($workerObjectArray as $userObject) {
+                        $user = User::find($userObject['id']);
                         // $newSpecialTimesheetForEveryone = new Timesheet;
-                        // if ($user['admin'] == true) {
-                        //     continue;
-                        // }
-                        $result = $this->setday($dayLabel, $dayType, $user['id'], $singleDay);
+                        if ($user->admin && !$user->company->admin_timeclock) {
+                            continue;
+                        }
+                        $result = $this->setday($dayLabel, $dayType, $userObject['id'], $singleDay);
                         if ($result !== true) {
-                            array_push($results, ['id' => $user['id'], 'errorList' => $result]);
+                            array_push($results, ['id' => $userObject['id'], 'errorList' => $result]);
                         }
                     }
                     if (!empty($results)) {
@@ -204,15 +205,16 @@ class TimesheetController extends Controller
         } elseif ($submitType == 'Periode Toevoegen') {
             $startDate = Carbon::parse($request->input('startDate'));
             $endDate = Carbon::parse($request->input('endDate'));
-            if (is_array($workerArray) && count($workerArray) > 1) {
-                foreach ($workerArray as $user) {
+            if (is_array($workerObjectArray) && count($workerObjectArray) > 1) {
+                foreach ($workerObjectArray as $userObject) {
 
-                    if ($user['admin'] == true) {
+                    $user = User::find($userObject['id']);
+                    if ($user->admin && !$user->company->admin_timeclock) {
                         continue;
                     }
-                    $result = $this->setPeriod($dayLabel, $dayType, $user['id'], $startDate, $endDate);
+                    $result = $this->setPeriod($dayLabel, $dayType, $userObject['id'], $startDate, $endDate);
                     if ($result !== true) {
-                        array_push($results, ['id' => $user['id'], 'errorList' => $result]);
+                        array_push($results, ['id' => $userObject['id'], 'errorList' => $result]);
                     }
                 }
                 if (!empty($results)) {
