@@ -39,7 +39,7 @@ class DeleteTimesheetController extends Controller
 
 
         if ($day === null) {
-            return $this->redirectError('Dag niet gevonden.', $workerId);
+            return $this->redirectError('Dag niet gevonden.', $user);
         }
 
         DB::transaction(function () use ($day, $dayTotal, $date, $workerId) {
@@ -58,16 +58,16 @@ class DeleteTimesheetController extends Controller
             CalculateUtility::calculateUserTotal($date, $workerId);
         });
 
-        return $this->redirectSuccess('Timesheet succesvol verwijderd.');
+        return $this->redirectSuccess('Timesheet succesvol verwijderd.', $user);
     }
    
-    private function redirectSuccess(string $message)
+    private function redirectSuccess(string $message, $user)
     {
-        return redirect('/')->with('success', $message);
+        return redirect()->route('myList', ['type' => 'Personeel', 'company_code' => $user->company->company_code ])->with('success', $message);
     }
 
-    private function redirectError(string $message, $workerId)
+    private function redirectError(string $message, $user)
     {
-        return redirect()->back()->with('error', $message);
+        return redirect()->route('myList', ['type' => 'Personeel', 'company_code' => $user->company->company_code ])->with('success', $message);
     }
 }
