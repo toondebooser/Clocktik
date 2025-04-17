@@ -107,7 +107,8 @@ class TimeloggingUtility
         $date = Carbon::parse($userRow->StartWork)->format('Y-m-d');
         $dayTotal = UserUtility::findOrCreateUserDayTotal($date, $user->id);
         $dayTotal->update([
-            "NightShift" => !DateUtility::checkIfSameDay($userRow->StartWork,$userRow->StopWork)
+            "DayOverlap" => !DateUtility::checkIfSameDay($userRow->StartWork,$userRow->StopWork),
+            "NightShift" => ( !DateUtility::checkIfSameDay($userRow->StartWork,$userRow->StopWork) || DateUtility::checkNightShift($userRow->StartWork) || DateUtility::checkNightShift($userRow->StopWork) ) ? true : false,
         ]);
             return [
             'UserId' => $user->id,

@@ -23,7 +23,7 @@
             <input type="hidden" name="timesheet" value="{{ $timesheet->id }}">
             <input type="hidden" name="type" value="{{ $timesheet->type }}">
             @if ($timesheet->type == 'workday')
-            <fieldset class="periode" style="{{ $nightShift ? 'display: block;' : 'display: block;' }}">
+            <fieldset class="periode" style="{{ $nightShift ? 'display: block;' : 'display: none;' }}">
                 <legend>Datums</legend>
                 <input style="width: 120px" class="updateDateTime" name="startDate" type="date" value="{{$startDate}}">
                 <input style="width: 120px"  class="updateDateTime" name="endDate" type="date" value="{{$endDate}}">

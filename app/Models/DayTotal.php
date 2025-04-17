@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Daytotal extends Model
 {
     use HasFactory;
-    protected $fillable = ["NightShift",'Completed','Month','company_code','UserId','RegularHours','type', 'accountableHours', 'BreaksTaken', 'BreakHours', 'OverTime','Weekend'];
+    protected $fillable = ["DayOverlap","NightShift",'Completed','Month','company_code','UserId','RegularHours','type', 'accountableHours', 'BreaksTaken', 'BreakHours', 'OverTime','Weekend'];
     public function timesheets()
     {
         return $this->hasMany(Timesheet::class, 'daytotal_id');

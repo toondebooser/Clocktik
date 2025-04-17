@@ -86,11 +86,8 @@
 
                 @foreach ($days as $day)
                     <tr onclick="{{ $day->type == 'workday' ? 'toggleTimesheets(this)' : 'window.location.href=\'' . route('update', ['id' => $user->id, 'timesheet' => $day]) . '\'' }}"
-                        class="{{ collect([
-                            $day->type === 'workday' ? 'timesheetRow' : null,
-                            $day->NightShift ? 'nightShift' : null,
-                        ])->filter()->implode(' ') }}" data-dayType="{{ $day->type }}"
-                        data-day="{{ $day->id }}">
+                        class="{{ collect([$day->type === 'workday' ? 'timesheetRow' : null, $day->NightShift ? 'nightShift' : null])->filter()->implode(' ') }}"
+                        data-dayType="{{ $day->type }}" data-day="{{ $day->id }}">
                         <td style="width: 69.29px" class="date update" id="{{ $day->id }}">
                             @if ($day->type !== 'workday')
                                 <a class='displayDay'
@@ -107,10 +104,16 @@
                                     'Sat' => 'Za',
                                     'Sun' => 'Zo',
                                 ];
-                                $englishDay = date('D', $toTime);
-                                $dutchDay = $days[$englishDay];
-                                $dayOfMonth = date('d', $toTime);
-                                echo $dutchDay . ' ' . $dayOfMonth;
+                                if ($day->DayOverlap) {
+                                    $currentDate = date('d-m', $toTime);
+                                    $nextDate = date('d-m', strtotime('+1 day', $toTime));
+                                    echo $currentDate .'<br>'. '>>'. '<br>' . $nextDate;
+                                } else {
+                                    $englishDay = date('D', $toTime);
+                                    $dutchDay = $days[$englishDay];
+                                    $dayOfMonth = date('d', $toTime);
+                                    echo $dutchDay . ' ' . $dayOfMonth;
+                                }
                             @endphp
                             </a>
                             @if ($day->userNote !== null)

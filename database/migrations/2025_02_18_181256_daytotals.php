@@ -28,6 +28,7 @@ return new class extends Migration
             $table->boolean('Completed')->default(false);
             $table->boolean('Weekend')->default(false);
             $table->boolean('NightShift')->default(false);
+            $table->boolean('DayOverlap')->default(false);
             $table->timestamps();
         });
     }

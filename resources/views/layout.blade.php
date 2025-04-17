@@ -24,6 +24,9 @@
             --primary-color: {{ auth()->check() ? auth()->user()->company->company_color ?? '#4FAAFC' : '#4FAAFC' }};
             
         }
+        /* body{
+            background-color: 
+        } */
     </style>
 
 

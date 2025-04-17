@@ -21,7 +21,7 @@ class UsersheetsController extends Controller
         $now = now('Europe/Brussels');
 
         $month = date('m', strtotime($now));
-        $year = date('Y', strtotime($now));
+        // $year = date('Y', strtotime($now));
 
         if (isset($request->month)) {
             $month = $request->month;

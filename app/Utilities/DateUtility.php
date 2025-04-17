@@ -43,4 +43,9 @@ class DateUtility
    {
       return DateUtility::carbonParse($in)->isSameDay(DateUtility::carbonParse($out));
    }
+   public static function checkNightShift($timestamp)
+   {
+       $time = Carbon::parse($timestamp)->format('H:i');
+       return $time >= '20:00' || $time < '06:00';
+   }
 }
