@@ -22,6 +22,7 @@
     <style>
         :root {
             --primary-color: {{ auth()->check() ? auth()->user()->company->company_color ?? '#4FAAFC' : '#4FAAFC' }};
+            
         }
     </style>
 

@@ -24,9 +24,14 @@ class UpdateTimesheetController extends Controller
         if($type){
             $timesheet = Timesheet::find($timesheet);
             $nightShift = UserUtility::userDayTotalFetch($timesheet->Month, $id)->NightShift;
+            $endDate = Carbon::parse($timesheet->ClockedOut)->format('Y-m-d');
+            $startDate = Carbon::parse($timesheet->ClockedIn)->format('Y-m-d');
+
         }else{
             $timesheet = Daytotal::find($timesheet);
             $nightShift = null;
+            $startDate = null;
+            $endDate = null;
         }
         if ($timesheet === null) {
             $postData = [
@@ -41,7 +46,7 @@ class UpdateTimesheetController extends Controller
         $endBreak = $timesheet->BreakStop ? Carbon::parse($timesheet->BreakStop)->format('H:i') : null;
         $monthString = Carbon::parse($timesheet->Month)->format('d/m/Y');
 
-        return view('updateTimesheet', ['nightShift'=>$nightShift, 'worker' => $worker, 'timesheet' => $timesheet, 'startShift' => $startShift, 'endShift' => $endShift, 'startBreak' => $startBreak, 'endBreak' => $endBreak, 'monthString' => $monthString]);
+        return view('updateTimesheet', ['startDate'=>$startDate, 'endDate' => $endDate, 'nightShift'=>$nightShift, 'worker' => $worker, 'timesheet' => $timesheet, 'startShift' => $startShift, 'endShift' => $endShift, 'startBreak' => $startBreak, 'endBreak' => $endBreak, 'monthString' => $monthString]);
     }
 
     public function updateTimesheet(Request $request)
@@ -98,10 +103,10 @@ class UpdateTimesheetController extends Controller
         } else {
             $userRow = (object) [
                 'UserId' => $id,
-                'StartWork' => Carbon::parse($date . ' ' . $request->input('startTime'), 'Europe/Brussels'),
-                'StopWork' => Carbon::parse($date . ' ' . $request->input('endTime'), 'Europe/Brussels'),
-                'StartBreak' => Carbon::parse($date . ' ' . $request->input('startBreak'), 'Europe/Brussels'),
-                'EndBreak' => Carbon::parse($date . ' ' . $request->input('endBreak'), 'Europe/Brussels'),
+                'StartWork' => Carbon::parse($request->startDate . ' ' . $request->startTime, 'Europe/Brussels'),
+                'StopWork' => Carbon::parse($request->endDate . ' ' . $request->endTime, 'Europe/Brussels'),
+                'StartBreak' => Carbon::parse($date . ' ' . $request->startBreak, 'Europe/Brussels'),
+                'EndBreak' => Carbon::parse($date . ' ' . $request->endBreak, 'Europe/Brussels'),
                 'Weekend' => $weekend,
                 'userNote' => $userNote ?? null,
             ];

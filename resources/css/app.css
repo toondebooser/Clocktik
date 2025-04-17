@@ -314,11 +314,8 @@ th {
 .specialUpdateContainer {
     grid-column: 1/3;
 }
-.updateStartTime,
-.updateEndTime,
-.updateStartBreak,
-.updateEndBreak,
-.updateSpecialInput {
+
+.updateDateTime{
     color: red;
 }
 

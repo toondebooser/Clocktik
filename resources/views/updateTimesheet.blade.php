@@ -1,5 +1,12 @@
 @extends('layout')
 @section('content')
+<style>
+    
+    body {
+        background-color: {{ $nightShift ? 'var(--night-mode)' : 'white' }};
+        color: {{$nightShift ? 'white' : 'black'}};
+    }
+</style>
     <h2>Update rooster van: {{ $worker->name }}</h2>
     @php
         if ($timesheet === null) {
@@ -9,17 +16,17 @@
     @endphp
     
     <div class="formContainer">
-        <h3>{{ $monthString }}</h3>
+        <h3>{{ $nightShift ? "Nacht shift" : $monthString }}</h3>
         <form action="{{ route('updateTimesheet') }}" class="updateTimesheet" method="POST">
             @csrf
             <input type="hidden" name="id" value="{{ $worker->id }}">
             <input type="hidden" name="timesheet" value="{{ $timesheet->id }}">
             <input type="hidden" name="type" value="{{ $timesheet->type }}">
             @if ($timesheet->type == 'workday')
-            <fieldset class="periode" style="{{ $nightShift ? 'display: block;' : 'display: none;' }}">
+            <fieldset class="periode" style="{{ $nightShift ? 'display: block;' : 'display: block;' }}">
                 <legend>Datums</legend>
-                <input type="date" value="">
-                <input type="date" value="">
+                <input style="width: 120px" class="updateDateTime" name="startDate" type="date" value="{{$startDate}}">
+                <input style="width: 120px"  class="updateDateTime" name="endDate" type="date" value="{{$endDate}}">
 
             </fieldset>
             <fieldset class="gewerkt">
@@ -28,10 +35,10 @@
                        
                 <div>
                     <label for="startTime">Start:</label>
-                    <input id="startTime" class="updateStartTime" name="startTime" type="time"
+                    <input id="startTime" class="updateDateTime" name="startTime" type="time"
                         value="{{ $startShift }}"> 
                     <br><label for="endTime">End:</label>
-                    <input id="endTime" class="updateEndTime" type="time" name="endTime"
+                    <input id="endTime" class="updateDateTime" type="time" name="endTime"
                         value="{{ $endShift }}"> 
                 </div>
                 </fieldset>
@@ -41,10 +48,10 @@
                    
                     <div>
                         <label for="startBreak">Start:</label>
-                        <input id="startBreak" class="updateStartBreak" type="time" name="startBreak"
+                        <input id="startBreak" class="updateDateTime" type="time" name="startBreak"
                             value="{{ $startBreak }}"> <br>
                         <label for="endBreak">End:</label>
-                        <input id="endBreak" type="time" name="endBreak" class="updateEndBreak"
+                        <input id="endBreak" type="time" name="endBreak" class="updateDateTime"
                             value="{{ $endBreak }}">
                         <br>
                     </div>
