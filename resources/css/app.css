@@ -3,16 +3,28 @@ body {
     height: 100vh;
     height: 100svh;
     font-family: "Noto Sans", sans-serif;
+    /* color: white;
+    background-color:	#36454F; */
 }
 .hamburger {
-    display: none; /* Hidden by default, shown on mobile */
+
+    display: none; 
 }
+
 :root {
-    --primary-color: black;
+    --primary-color: #4FAAFC;
+    --night-mode: #36454F;
+    --night-shift: #8f969b;
     --status-working: rgb(33, 222, 33);
     --status-onBreak: rgb(18, 105, 244);
     --status-notWorking: rgb(252, 3, 3);
+    --select: #ccc;
 }
+.nightShift{
+    background-color: var(--night-shift);
+    color: white;
+}
+
 
 a {
     text-decoration: none;
@@ -141,6 +153,7 @@ a {
     display: none;
 }
 .belongTogether {
+    color: black;
     background-color: lightcyan;
 }
 
@@ -1141,6 +1154,10 @@ p {
 }
 
 @media (min-width: 768px) {
+    tr:hover{
+        background-color: var(--select);
+    
+    }
     .side-menu {
         display: none; /* Hide side menu on desktop */
     }

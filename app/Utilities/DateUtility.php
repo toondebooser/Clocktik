@@ -39,7 +39,7 @@ class DateUtility
          return false;
       }
    }
-   public static function checkDayDiff($in, $out)
+   public static function checkIfSameDay($in, $out)
    {
       return DateUtility::carbonParse($in)->isSameDay(DateUtility::carbonParse($out));
    }

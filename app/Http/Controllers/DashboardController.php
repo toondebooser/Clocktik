@@ -15,17 +15,7 @@ class DashboardController extends Controller
     {
         $userRow = Timelog::where('UserId',auth()->user()->id)->first();
         $dayTotal = auth()->user()->dayTotals->where('Month',  Carbon::parse(now('Europe/Brussels'))->format('Y-m-d'))->first();
-        // $today = now('Europe/Brussels')->format('Y-m-d');
-        // $displayWorkedHours = 0.00;
-        // $displayBreakHours = 0.00;
-        // $getLastWorkedDay = UserUtility::userDayTotalCheck($userRow->StartWork,auth()->user()->id)->first();
-        // if($getLastWorkedDay && $getLastWorkedDay->Month == $today && !$userRow->ShiftStatus){
-        //     $userRow->fill([
-        //         'BreakHours' => $getLastWorkedDay->BreakHours,
-        //         'RegularHours' => $getLastWorkedDay->RegularHours
-        //     ]);
-        //     $userRow->save();
-        // }
+     
    
 
         $userNoteInput = $request->input('userNote');

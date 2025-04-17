@@ -86,7 +86,10 @@
 
                 @foreach ($days as $day)
                     <tr onclick="{{ $day->type == 'workday' ? 'toggleTimesheets(this)' : 'window.location.href=\'' . route('update', ['id' => $user->id, 'timesheet' => $day]) . '\'' }}"
-                        class="{{ $day->type == 'workday' ? 'timesheetRow' : '' }}" data-dayType="{{ $day->type }}"
+                        class="{{ collect([
+                            $day->type === 'workday' ? 'timesheetRow' : null,
+                            $day->NightShift ? 'nightShift' : null,
+                        ])->filter()->implode(' ') }}" data-dayType="{{ $day->type }}"
                         data-day="{{ $day->id }}">
                         <td style="width: 69.29px" class="date update" id="{{ $day->id }}">
                             @if ($day->type !== 'workday')

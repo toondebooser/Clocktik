@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Usertotal;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class CalculateUtility
@@ -26,32 +27,31 @@ class CalculateUtility
     }
     public static function calculateUserTotal($id)
     {
-        try {
-            $user = User::find($id);
-            if (!$user) {
-                throw new Exception("User not found: ID $id");
-            }
     
+        return DB::transaction(function () use ($id) {
+            $user = User::find($id); 
+            if (!$user) {
+                throw new Exception("Arbeider niet gevonden: ID $id");
+            }
+
             $userTotals = $user->userTotals()->get();
             foreach ($userTotals as $monthTotal) {
                 $dayTotals = Daytotal::where('UserId', $id)
                     ->whereMonth('Month', Carbon::parse($monthTotal->Month)->month)
                     ->whereYear('Month', Carbon::parse($monthTotal->Month)->year)
                     ->get();
-    
+
                 $monthTotal->update([
                     'RegularHours' => $dayTotals->sum('accountableHours'),
                     'BreakHours' => $dayTotals->sum('BreakHours'),
-                    'OverTime' => $dayTotals->sum('OverTime')
+                    'OverTime' => $dayTotals->sum('OverTime'),
                 ]);
             }
-    
+
             return true;
-        } catch (Exception $e) {
-            Log::error("Error in calculateUserTotal for user ID $id: " . $e->getMessage());
-            return ['error' => 'Failed to calculate user totals: ' . $e->getMessage()];
+        });
         }
-    }
+    
     public static function calculateSummaryForDay($timesheets, $companyDayHours)
     {
         $summary = [

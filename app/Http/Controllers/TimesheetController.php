@@ -16,13 +16,6 @@ use App\Utilities\UserUtility;
 
 class TimesheetController extends Controller
 {
-    // protected $timeloggingService;
-
-    // public function __construct(TimeloggingService $timeloggingService)
-    // {
-    //     $this->timeloggingService = $timeloggingService;
-    // }
-
 
 
 
@@ -189,6 +182,8 @@ class TimesheetController extends Controller
                 } else {
 
                     $addDay = $this->setDay($dayLabel, $dayType, $worker, $singleDay);
+                    UserUtility::CheckUserMonthTotal($singleDay, $worker);
+                    CalculateUtility::calculateUserTotal($worker);
                     if ($addDay !== true) {
                         array_push($results, ['id' => $worker, 'errorList' => $addDay]);
                         return redirect()->route('specials', ['worker' => $worker])->with('err', $results);

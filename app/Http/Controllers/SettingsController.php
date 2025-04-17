@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use App\Models\User;
-use App\Utilities\CalculateUtility;
-use App\Utilities\DateUtility;
-use App\Utilities\TimeloggingUtility;
 use App\Utilities\UserUtility;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class SettingsController extends Controller
@@ -26,30 +24,39 @@ class SettingsController extends Controller
     }
     public function changeRights(Request $request, $id, $company_code)
     {
-        $user = User::find($id);
-        if ($user) {
+        try {
+            $user = User::find($id);
+            if (!$user) {
+                throw new Exception("User $id not found");
+            }
+
             $targetSide = $request->input('target_side');
-    
             $shouldToggle = false;
+
             if ($targetSide === 'left' && !$user->admin) {
                 $shouldToggle = true;
             } elseif ($targetSide === 'right' && $user->admin) {
                 $shouldToggle = true;
             }
-    
+
             if ($shouldToggle) {
-                $user->update([
-                    'admin' => !$user->admin
-                ]);
+                DB::transaction(function () use ($user) {
+                    $user->update([
+                        'admin' => !$user->admin
+                    ]);
+                });
+
                 return redirect()->route('adminSettings', ['company_code' => $company_code])
-                                 ->with('success', "Rechten voor $user->name zijn aangepast ");
+                                 ->with('success', "Rechten voor $user->name zijn aangepast");
             }
-    
+
             return redirect()->route('adminSettings', ['company_code' => $company_code])
                              ->with('message', "No rights change needed for user $id");
+        } catch (Exception $e) {
+            Log::error("Error in changeRights for user ID $id: " . $e->getMessage());
+            return redirect()->route('adminSettings', ['company_code' => $company_code])
+                             ->withErrors(['error' => 'Er ging iets mis bij het aanpassen van de rechten: ' . $e->getMessage()]);
         }
-        return redirect()->route('adminSettings', ['company_code' => $company_code])
-                         ->with('error', "User $id not found");
     }
     public function logohandler($company, $company_logo){
         $logoName = time(). '_' .$company_logo->getClientOriginalName();
