@@ -9,7 +9,7 @@ class DateUtility
 
    public static function carbonParse($date)
    {
-      $parsedDate = Carbon::parse( $date, 'Europe/Brussels');
+      $parsedDate = Carbon::parse($date, 'Europe/Brussels');
       return $parsedDate;
    }
    public static function getWeekdayNumber($dutchWeekDay)
@@ -33,9 +33,9 @@ class DateUtility
    public static function checkWeekend($date, $company)
    {
       $weekdayNr = Carbon::parse($date)->weekday();
-      if ($weekdayNr == $company->weekend_day_1 || $weekdayNr == $company->weekend_day_2){
+      if ($weekdayNr == $company->weekend_day_1 || $weekdayNr == $company->weekend_day_2) {
          return true;
-      }else{
+      } else {
          return false;
       }
    }
@@ -45,7 +45,35 @@ class DateUtility
    }
    public static function checkNightShift($timestamp)
    {
-       $time = Carbon::parse($timestamp)->format('H:i');
-       return $time >= '20:00' || $time < '06:00';
+      $time = Carbon::parse($timestamp)->format('H:i');
+      return $time >= '20:00' || $time < '06:00';
+   }
+   public static function updateDayTotalFlags($timesheets, $summary)
+   {
+      $hasOverlap = false;
+      $hasNightShift = false;
+
+      foreach ($timesheets as $timesheet) {
+         if (!DateUtility::checkIfSameDay($timesheet->ClockedIn, $timesheet->ClockedOut)) {
+            $hasOverlap = true;
+            $hasNightShift = true;
+         }
+
+         if (
+            DateUtility::checkNightShift($timesheet->ClockedIn) ||
+            DateUtility::checkNightShift($timesheet->ClockedOut)
+         ) {
+            $hasNightShift = true;
+         }
+
+         if ($hasOverlap && $hasNightShift) {
+            break;
+         }
+      }
+
+      $summary['DayOverlap'] = $hasOverlap;
+      $summary['NightShift'] = $hasNightShift;
+
+      return $summary;
    }
 }

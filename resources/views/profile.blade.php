@@ -149,7 +149,7 @@
                         <tr class='hidden timesheetStyle ' data-timesheet="{{ $day->id }}">
                             <td class="date">
                                 <a
-                                    href="{{ route('update', ['id' => $user->id, 'timesheet' => $timesheet, 'type' => 'timesheet']) }}">Update</a>
+                                    href="{{ route('update', ['id' => $user->id, 'timesheet' => $timesheet, 'type' => 'timesheet', 'usedDayTotalId' => $day->id , 'usedDayTotalDate' => $day->Month]) }}">Update</a>
                             </td>
 
 

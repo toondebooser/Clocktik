@@ -21,6 +21,8 @@
             @csrf
             <input type="hidden" name="id" value="{{ $worker->id }}">
             <input type="hidden" name="timesheet" value="{{ $timesheet->id }}">
+            <input type="hidden" name="usedDayTotalId" value="{{$usedDayTotalId}}">
+            <input type="hidden" name="usedDayTotalDate" value="{{$usedDayTotalDate}}">
             <input type="hidden" name="type" value="{{ $timesheet->type }}">
             @if ($timesheet->type == 'workday')
             <fieldset class="periode" style="{{ $nightShift ? 'display: block;' : 'display: none;' }}">

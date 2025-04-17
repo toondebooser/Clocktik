@@ -17,17 +17,17 @@ use App\Utilities\UserUtility;
 class UpdateTimesheetController extends Controller
 {
 
-    public function updateForm($id, $timesheet, $type = null)
+    public function updateForm($id, $timesheet, $type = null, $usedDayTotalId = null, $usedDayTotalDate = null)
     {
 
         $worker = User::find($id);
-        if($type){
+        if ($type) {
             $timesheet = Timesheet::find($timesheet);
             $nightShift = UserUtility::userDayTotalFetch($timesheet->Month, $id)->NightShift;
             $endDate = Carbon::parse($timesheet->ClockedOut)->format('Y-m-d');
             $startDate = Carbon::parse($timesheet->ClockedIn)->format('Y-m-d');
-
-        }else{
+            $usedDayTotalDate = Carbon::parse($usedDayTotalDate)->format('Y-m-d');
+        } else {
             $timesheet = Daytotal::find($timesheet);
             $nightShift = null;
             $startDate = null;
@@ -46,7 +46,7 @@ class UpdateTimesheetController extends Controller
         $endBreak = $timesheet->BreakStop ? Carbon::parse($timesheet->BreakStop)->format('H:i') : null;
         $monthString = Carbon::parse($timesheet->Month)->format('d/m/Y');
 
-        return view('updateTimesheet', ['startDate'=>$startDate, 'endDate' => $endDate, 'nightShift'=>$nightShift, 'worker' => $worker, 'timesheet' => $timesheet, 'startShift' => $startShift, 'endShift' => $endShift, 'startBreak' => $startBreak, 'endBreak' => $endBreak, 'monthString' => $monthString]);
+        return view('updateTimesheet', ['usedDayTotalId' => $usedDayTotalId, 'usedDayTotalDate' => $usedDayTotalDate, 'startDate' => $startDate, 'endDate' => $endDate, 'nightShift' => $nightShift, 'worker' => $worker, 'timesheet' => $timesheet, 'startShift' => $startShift, 'endShift' => $endShift, 'startBreak' => $startBreak, 'endBreak' => $endBreak, 'monthString' => $monthString]);
     }
 
     public function updateTimesheet(Request $request)
@@ -112,8 +112,18 @@ class UpdateTimesheetController extends Controller
             ];
             $timeloggingUtility = new TimeloggingUtility;
             $addTimesheet = $timeloggingUtility->logTimeEntry($userRow, $id, $timesheet);
+            $usedDayTotal = UserUtility::userDayTotalFetch($request->usedDayTotalDate, $id);
+            if ($request->usedDayTotalDate && !DateUtility::checkIfSameDay(Carbon::parse($request->usedDayTotalDate), Carbon::parse($request->startDate))) {
+                if ($usedDayTotal->timesheets()->where('Month', Carbon::parse($request->usedDayTotalDate))->exists()) {
+                    UserUtility::updateAllUsersDayTotals(User::find($id)->company_code);
+                    return redirect('/')->with('success', 'Dag is aangepast');
+                }
+                $usedDayTotal->delete();
+            }
 
-            if ($addTimesheet) return redirect()->back()->with('success', 'Dag is aangepast');
+            $updateAllTotals = UserUtility::updateAllUsersDayTotals(User::find($id)->company_code);
+
+            if ($addTimesheet && $updateAllTotals) return redirect('/')->with('success', 'Dag is aangepast');
         }
     }
 }

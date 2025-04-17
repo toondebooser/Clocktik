@@ -87,15 +87,17 @@ class UserUtility
                             dd('We should delete');
                         }
                     } else {
-                        // Filter timesheets for the specific day of the Daytotal
-                        $dayTimesheets = $user->timesheets->filter(function ($timesheet) use ($dayTotal) {
-                            return Carbon::parse($timesheet->ClockedIn)->startOfDay()->eq(
-                                Carbon::parse($dayTotal->Month)->startOfDay()
-                            );
-                        });
+                        $dayTimesheets = $user->timesheets()->where('Month', $dayTotal->Month)->get();
+                        // filter(function ($timesheet) use ($dayTotal) {
+                        //     return Carbon::parse($timesheet->ClockedIn)->startOfDay()->eq(
+                        //         Carbon::parse($dayTotal->Month)->startOfDay()
+                        //     );
+                        // });
                         
                         $summary = CalculateUtility::calculateSummaryForDay($dayTimesheets, $user->company->day_hours);
-                        $dayTotal->update($summary);
+                        
+                        $summaryWithFlags = DateUtility::updateDayTotalFlags($dayTimesheets, $summary);
+                        $dayTotal->update($summaryWithFlags);
                     }
                 }
 
