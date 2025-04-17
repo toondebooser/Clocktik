@@ -16,9 +16,15 @@
             <input type="hidden" name="timesheet" value="{{ $timesheet->id }}">
             <input type="hidden" name="type" value="{{ $timesheet->type }}">
             @if ($timesheet->type == 'workday')
+            <fieldset class="periode" style="{{ $nightShift ? 'display: block;' : 'display: none;' }}">
+                <legend>Datums</legend>
+                <input type="date" value="">
+                <input type="date" value="">
+
+            </fieldset>
             <fieldset class="gewerkt">
                 <legend>Gewerkt</legend>
-                    
+                
                        
                 <div>
                     <label for="startTime">Start:</label>

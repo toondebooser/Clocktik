@@ -21,7 +21,13 @@ class UpdateTimesheetController extends Controller
     {
 
         $worker = User::find($id);
-        $timesheet = $type == 'timesheet' ? Timesheet::find($timesheet) : Daytotal::find($timesheet);
+        if($type){
+            $timesheet = Timesheet::find($timesheet);
+            $nightShift = UserUtility::userDayTotalFetch($timesheet->Month, $id)->NightShift;
+        }else{
+            $timesheet = Daytotal::find($timesheet);
+            $nightShift = null;
+        }
         if ($timesheet === null) {
             $postData = [
                 'worker' => $id,
@@ -35,7 +41,7 @@ class UpdateTimesheetController extends Controller
         $endBreak = $timesheet->BreakStop ? Carbon::parse($timesheet->BreakStop)->format('H:i') : null;
         $monthString = Carbon::parse($timesheet->Month)->format('d/m/Y');
 
-        return view('updateTimesheet', ['worker' => $worker, 'timesheet' => $timesheet, 'startShift' => $startShift, 'endShift' => $endShift, 'startBreak' => $startBreak, 'endBreak' => $endBreak, 'monthString' => $monthString]);
+        return view('updateTimesheet', ['nightShift'=>$nightShift, 'worker' => $worker, 'timesheet' => $timesheet, 'startShift' => $startShift, 'endShift' => $endShift, 'startBreak' => $startBreak, 'endBreak' => $endBreak, 'monthString' => $monthString]);
     }
 
     public function updateTimesheet(Request $request)
