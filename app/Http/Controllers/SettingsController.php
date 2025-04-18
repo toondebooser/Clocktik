@@ -8,8 +8,10 @@ use App\Utilities\UserUtility;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Exception;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class SettingsController extends Controller
 {
@@ -59,6 +61,26 @@ class SettingsController extends Controller
         }
     }
     public function logohandler($company, $company_logo){
+        $validator = Validator::make(
+            ['company_logo' => $company_logo],
+            [
+                'company_logo' => [
+                    'required',
+                    'image', // Ensures file is an image (jpeg, png, bmp, gif, svg, or webp)
+                    'max:2048', // Max 2 MB (2048 KB)
+                ],
+            ],
+            [
+                'company_logo.required' => 'A company logo is required.',
+                'company_logo.image' => 'The company logo must be an image (e.g., JPEG, PNG).',
+                'company_logo.max' => 'The company logo must not exceed 2 MB.',
+            ]
+        );
+    
+        // If validation fails, redirect back with errors
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
         $logoName = time(). '_' .$company_logo->getClientOriginalName();
         $folderPath = 'logos/' . $company->company_code;
         $fullPath = public_path($folderPath);
