@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Daytotal;
-use App\Models\Timesheet;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
-use App\Services\TimeloggingService;
 use App\Utilities\CalculateUtility;
 use App\Utilities\DateUtility;
 use App\Utilities\TimeloggingUtility;
@@ -18,7 +16,7 @@ class TimesheetController extends Controller
 {
 
 
-
+    // MAKE TIMESHEET FROM LIVE LOGS
 
     public function makeTimesheet($id)
     {
@@ -33,9 +31,22 @@ class TimesheetController extends Controller
         if ($buildTimesheet) return redirect()->back()->with('Succes', 'Uren succesvol toegevoegd');
     }
 
+    //ADDING CUSTOM TIMESHEET LOGIC
 
     public function addNewTimesheet(Request $request)
     {
+        $validator = Validator::make(
+
+            [
+                // 'company_logo.required' => 'A company logo is required.',
+                // 'company_logo.image' => 'The company logo must be an image (e.g., JPEG, PNG).',
+                // 'company_logo.max' => 'The company logo must not exceed 2 MB.',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
         $timeloggingUtility = new TimeloggingUtility;
         $date = $request->input('newTimesheetDate');
         $id = $request->input('workerId');
@@ -43,10 +54,6 @@ class TimesheetController extends Controller
         if (!$dayTotalCheck->wasRecentlyCreated) {
             return redirect()->route('timesheetForm', ['worker' => $id])->with('error', 'Datum al in gebruik: ' . $date);
         }
-
-
-        // if (DateUtility::checkWeekend($date, User::find($id)->company)) $weekend = true;
-
         $userRow = (object) [
             'UserId' => $id,
             'StartWork' => Carbon::parse($date . ' ' . $request->input('startTime'), 'Europe/Brussels'),
@@ -62,11 +69,13 @@ class TimesheetController extends Controller
         if ($checkUserMonthTotal && $addTimesheet && $calculateTotal) return redirect()->route('timesheetForm', ['worker' => $id])->with('success', 'Uurrooster toegevoegd');
     }
 
+
+    //ADDING VACATION LOGIC 
+
     public function setDay($dayLabel, $dayType, $worker, $singleDay)
     {
         // dd(User::find($worker)->company->weekend_day_1);
-        if(DateUtility::checkWeekend($singleDay,User::find($worker)->company))
-        {
+        if (DateUtility::checkWeekend($singleDay, User::find($worker)->company)) {
             return $singleDay->toDateString() . ' is een weekend dag';
         };
         $dayTotal = Daytotal::firstOrCreate([
@@ -92,16 +101,16 @@ class TimesheetController extends Controller
     {
         $errors = [];
         $currentDate = clone $startDate;
-      
+
         while ($currentDate <= $endDate) {
             $weekDay = Carbon::parse($currentDate)->weekday();
-            
-                $addDay =  $this->setDay($dayLabel, $dayType, $worker, $currentDate);
-                if ($addDay !== true) {
-                    //TODO: push $addDay directly in error?
-                    array_push($errors, $addDay);
-                }
-            
+
+            $addDay =  $this->setDay($dayLabel, $dayType, $worker, $currentDate);
+            if ($addDay !== true) {
+                //TODO: push $addDay directly in error?
+                array_push($errors, $addDay);
+            }
+
             $currentDate->addDay();
         }
 
