@@ -45,7 +45,7 @@ class UpdateTimesheetController extends Controller
         $endShift = Carbon::parse($timesheet->ClockedOut)->format('H:i');
         $startBreak = $timesheet->BreakStart ? Carbon::parse($timesheet->BreakStart)->format('H:i') : null;
         $endBreak = $timesheet->BreakStop ? Carbon::parse($timesheet->BreakStop)->format('H:i') : null;
-        $monthString = Carbon::parse($timesheet->Month)->format('d/m/Y');
+        $monthString = $timesheet->Month->format('d/m/Y');
 
         return view('updateTimesheet', ['usedDayTotalId' => $usedDayTotalId, 'usedDayTotalDate' => $usedDayTotalDate, 'startDate' => $startDate, 'endDate' => $endDate, 'nightShift' => $nightShift, 'worker' => $worker, 'timesheet' => $timesheet, 'startShift' => $startShift, 'endShift' => $endShift, 'startBreak' => $startBreak, 'endBreak' => $endBreak, 'monthString' => $monthString]);
     }

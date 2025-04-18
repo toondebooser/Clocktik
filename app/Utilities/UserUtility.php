@@ -10,6 +10,7 @@ use App\Models\Usertotal;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\MessageBag;
 
 class UserUtility
 {
@@ -76,15 +77,19 @@ class UserUtility
     {
         try {
             $users = User::with(['dayTotals', 'timesheets'])->where('company_code', $company_code)->get();
-
+            $errors = new MessageBag(); 
             foreach ($users as $user) {
                 foreach ($user->dayTotals as $dayTotal) {
                     if ($dayTotal->type !== 'workday') {
-                        $dayTotal->update([
-                            'accountableHours' => $user->company->day_hours,
-                        ]);
                         if (DateUtility::checkWeekend($dayTotal->Month, $user->company)) {
-                            dd('We should delete');
+                            $errors->add('weekend_deletion', "Vakantiedag: {$dayTotal->Month->format('Y-m-d')} Verwijderd omdat het in een weekend valt");
+                            $dayTotal->delete();
+                            continue;
+                            
+                        }else{
+                            $dayTotal->update([
+                                'accountableHours' => $user->company->day_hours,
+                            ]);
                         }
                     } else {
                         $dayTimesheets = $user->timesheets()->where('Month', $dayTotal->Month)->get();
@@ -102,11 +107,13 @@ class UserUtility
                     throw new Exception($result['error']);
                 }
             }
-
-            return true;
+            if ($errors->isNotEmpty()) {
+                return redirect()->back()->withErrors($errors);
+            }else return true;
+            
         } catch (Exception $e) {
             Log::error("Error in updateAllUsersDayTotals for company $company_code: " . $e->getMessage());
-            return ['error' => 'Failed to update day totals: ' . $e->getMessage()];
+            return ['errors' => 'Failed to update day totals: ' . $e->getMessage()];
         }
     }
     public static function companyNumberGenerator()

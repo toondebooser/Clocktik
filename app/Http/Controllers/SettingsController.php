@@ -103,7 +103,7 @@ class SettingsController extends Controller
         return redirect()->back()->with('success', 'Instellingen zijn aangepast.');
     } catch (Exception $e) {
         Log::error("Error in updateSettings for company {$request->company_code}: " . $e->getMessage());
-        return redirect()->back()->with('error', 'Er ging iets mis bij het aanpassen van de instellingen: ' . $e->getMessage());
+        return redirect()->back()->withErrors('error', 'Er ging iets mis bij het aanpassen van de instellingen: ' . $e->getMessage());
     }
 }
 }
