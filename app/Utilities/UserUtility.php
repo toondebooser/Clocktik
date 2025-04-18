@@ -88,20 +88,15 @@ class UserUtility
                         }
                     } else {
                         $dayTimesheets = $user->timesheets()->where('Month', $dayTotal->Month)->get();
-                        // filter(function ($timesheet) use ($dayTotal) {
-                        //     return Carbon::parse($timesheet->ClockedIn)->startOfDay()->eq(
-                        //         Carbon::parse($dayTotal->Month)->startOfDay()
-                        //     );
-                        // });
-                        
+
+
                         $summary = CalculateUtility::calculateSummaryForDay($dayTimesheets, $user->company->day_hours);
-                        
+
                         $summaryWithFlags = DateUtility::updateDayTotalFlags($dayTimesheets, $summary);
                         $dayTotal->update($summaryWithFlags);
                     }
                 }
 
-                // Recalculate monthly totals
                 $result = CalculateUtility::calculateUserTotal($user->id);
                 if (is_array($result) && isset($result['error'])) {
                     throw new Exception($result['error']);

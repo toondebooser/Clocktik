@@ -13,6 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+
 class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -54,7 +55,15 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
      * @var array<string, string>
      */
     protected $casts = [
+        'id' => 'integer',
+        'name' => 'string',
+        'email' => 'string',
+        'admin' => 'boolean',
+        'god' => 'boolean',
+        'company_code' => 'integer',
         'email_verified_at' => 'datetime',
+        'password' => 'string',
+        'remember_token' => 'string',
     ];
     public function timelogs()
     {
@@ -68,7 +77,12 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     {
         return $this->hasMany(Usertotal::class, 'UserId');
     }
-    public function dayTotals()
+/**
+ * Get the day totals for the user.
+ *
+ * @return \Illuminate\Database\Eloquent\Relations\HasMany
+ */
+public function dayTotals()
 {
     return $this->hasMany(Daytotal::class, 'UserId');
 }

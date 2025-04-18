@@ -6,10 +6,28 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+
 class Daytotal extends Model
 {
     use HasFactory;
     protected $fillable = ["DayOverlap","NightShift",'Completed','Month','company_code','UserId','RegularHours','type', 'accountableHours', 'BreaksTaken', 'BreakHours', 'OverTime','Weekend'];
+    protected $casts = [
+        'id' => 'integer',
+        'UserId' => 'integer',
+        'DaytimeCount' => 'integer',
+        'RegularHours' => 'float',
+        'accountableHours' => 'float',
+        'BreaksTaken' => 'integer',
+        'BreakHours' => 'float',
+        'OverTime' => 'float',
+        'type' => 'string',
+        'userNote' => 'string',
+        'Month' => 'date',
+        'Completed' => 'boolean',
+        'Weekend' => 'boolean',
+        'NightShift' => 'boolean',
+        'DayOverlap' => 'boolean',
+    ];
     public function timesheets()
     {
         return $this->hasMany(Timesheet::class, 'daytotal_id');

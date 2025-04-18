@@ -21,14 +21,10 @@ class TimeclockController extends Controller
         $currentUser = auth()->user();
         $userRow = $currentUser->timelogs;
         $now = now('Europe/Brussels');
-
         UserUtility::findOrCreateUserDayTotal($now, $currentUser->id);
-
-
         $weekDay = Carbon::parse($now)->weekday();
         $weekDay == $currentUser->company->weekend_day_1 || $weekDay == $currentUser->company->weekend_day_2 ? $userRow->Weekend = true : $userRow->Weekend = false;
-        //TODO: check if userRow exists
-        $userRow->fill([
+        $userRow->update([
             'StartWork' => $now,
             'StartBreak' => null,
             'EndBreak' => null,
@@ -36,11 +32,6 @@ class TimeclockController extends Controller
             'userNote' => null,
             'ShiftStatus' => true
         ]);
-
-
-
-
-        $userRow->save();
 
         return redirect('/dashboard');
     }

@@ -13,6 +13,7 @@ use App\Utilities\CalculateUtility;
 use App\Utilities\DateUtility;
 use App\Utilities\TimeloggingUtility;
 use App\Utilities\UserUtility;
+use Illuminate\Support\Facades\Validator;
 
 class UpdateTimesheetController extends Controller
 {
@@ -51,6 +52,25 @@ class UpdateTimesheetController extends Controller
 
     public function updateTimesheet(Request $request)
     {
+
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'startDate'   => 'required|date',
+                'endDate'     => 'required|date|after_or_equal:startDate',
+
+                'startTime'   => 'required|date_format:H:i',
+                'endTime'     => 'required|date_format:H:i|after:startTime',
+
+                'startBreak'  => 'required|date_format:H:i',
+                'endBreak'    => 'required|date_format:H:i|after_or_equal:startBreak',
+            ]
+        );
+        if ($validator->fails()) {
+            return  redirect()->back()->withErrors($validator);
+        }
+
+
         $dayType = $request->input('dayType');
         $id = $request->id;
         $companyDayHours = User::find($id)->company->day_hours;
@@ -105,8 +125,8 @@ class UpdateTimesheetController extends Controller
                 'UserId' => $id,
                 'StartWork' => Carbon::parse($request->startDate . ' ' . $request->startTime, 'Europe/Brussels'),
                 'StopWork' => Carbon::parse($request->endDate . ' ' . $request->endTime, 'Europe/Brussels'),
-                'StartBreak' => Carbon::parse($date . ' ' . $request->startBreak, 'Europe/Brussels'),
-                'EndBreak' => Carbon::parse($date . ' ' . $request->endBreak, 'Europe/Brussels'),
+                'StartBreak' => Carbon::parse($date->format('Y-m-d') . ' ' . $request->startBreak, 'Europe/Brussels'),
+                'EndBreak' => Carbon::parse($date->format('Y-m-d') . ' ' . $request->endBreak, 'Europe/Brussels'),
                 'Weekend' => $weekend,
                 'userNote' => $userNote ?? null,
             ];
