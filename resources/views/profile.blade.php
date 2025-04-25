@@ -122,8 +122,7 @@
                         </td>
                         <td class="displayRegular">
                             @if ($day->RegularHours !== $companyDayHours && $day->Weekend == false && $day->type == 'workday')
-                                <s>{{ $day->RegularHours }}</s>
-                                => {{ $companyDayHours }}
+                             <s>{{ $day->RegularHours }}</s> => {{ $companyDayHours }}
                             @elseif($day->Weekend == true && $day->type == 'workday')
                                 Weekend
                             @elseif ($day->Weekend == false && $day->type !== 'workday')
@@ -135,14 +134,10 @@
 
                         </td>
                         <td class="displayBreak">
-                            {{-- <div class="displayBreak"> --}}
                             {{ $day->BreakHours }}
-                            {{-- </div> --}}
                         </td>
                         <td class="displayOvertTime">
-                            {{-- <div class="displayOvertTime"> --}}
                             {{ $day->OverTime }}
-                            {{-- </div> --}}
                         </td>
                     </tr>
                     @foreach ($day->timesheets as $timesheet)

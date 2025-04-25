@@ -26,15 +26,16 @@ class UserController extends Controller
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|max:255',
                 'password' => 'required|min:8|confirmed',
-                // 'companyCode' => 'required|min:10|exists:companies,company_code'
+                'company_code' => 'required|numeric|exists:companies,company_code'
 
             ],
             [
                 'name.string' => "please enter your name!",
                 'email.email' => "your email adress seems to be none existing.",
                 'password.string' => "The provided password is not allowed.",
-                // 'companyCode.required' => "Please provide a company code.",
-                // 'companyCode.exists' => "The provided company code does not exist.",
+                'company_code.numeric' => "Bedrijfscode moet een nummer zijn.",
+                'company_code.required' => "Voer een bedrijfscode in.",
+                'company_code.exists' => "De opgegeven bedrijfscode is ongeldig.",
             ]
         );
 
@@ -42,7 +43,7 @@ class UserController extends Controller
         $name = request()->input('name');
         $email = request()->input('email');
         $password = request()->input('password');
-        $companyCode = request()->input('companyCode');
+        $company_code = request()->input('company_code');
         $checkEmail = User::where('email', $email)->first();
 
         
@@ -51,7 +52,7 @@ class UserController extends Controller
             return redirect()->back()->withErrors(['email' => $exists]);
         }
         
-        $newUser = $this->createUser($name, $email, $password, $companyCode);
+        $newUser = $this->createUser($name, $email, $password, $company_code);
         // $newUser->name = $name;
         // $newUser->email = $email;
         // $newUser->password = $hashedPassword;
@@ -84,7 +85,7 @@ class UserController extends Controller
 
         // return redirect('/dashboard');
     }
-    public function createUser($name, $email, $password, $companyCode, $admin = false)
+    public function createUser($name, $email, $password, $company_code, $admin = false)
     {
         // Create the User with mass assignment
         $newUser = User::create([
@@ -92,7 +93,7 @@ class UserController extends Controller
             'email' => $email,
             'password' => Hash::make($password),
             'admin' => $admin,
-            'company_code' => $companyCode
+            'company_code' => $company_code
         ]);
 
         $newUser->timelogs()->create([

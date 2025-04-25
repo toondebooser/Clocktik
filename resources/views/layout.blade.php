@@ -48,7 +48,7 @@
         @if (session('success'))
             <div class="success">
                 {{ session('success') }} <br>
-                <a class="removeError" href="">OK</a> <!-- "#" voorkomt page reload -->
+                <a class="removeError" href="">Close</a> <!-- "#" voorkomt page reload -->
             </div>
         @endif
         @if ($errors->any())
@@ -58,7 +58,7 @@
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
-                <a class="removeError" href="">ok</a>
+                <a class="removeError" href="">Close</a>
             </div>
         @endif
         @yield('header')

@@ -8,45 +8,29 @@
         <p class="emailExists">{{$exists}}</p>
     @endif
 @endsection
-
-@section('error')
-<div class="loginError">
-    @if ($errors->any())
-    <div class="text-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-    @endif
-</div>
-@endsection
 @section('newUser')
 
     <form class="newUserForm" name="newUserForm" action="{{ route('registrate') }}" method="post" onsubmit="showLoader()">
 
         @csrf
-        <label class="nameLabel" for="name">Name</label>
-        <input id="name" class="name" type="text" name="name">
+
+        <input id="name" class="name" type="text" name="name" placeholder="Name">
         
 
     
 
-        <label class="emailLabel" for="email">Email</label>
-        <input id="email_adress" class="email" type="email" name="email">
+        <input id="email_adress" class="email" type="email" name="email" placeholder="Email">
 
+        <input id="company_code" class="company_code_input" type="number" name="company_code" placeholder="Bedrijfscode">
        
 
-        <label class="passwordLabel" for="password">Password</label>
-        <input id="password"  class="password" type="password" name="password">
+        <input id="password"  class="password" type="password" name="password" placeholder="Passwoord">
        
-        <label class="passwordConfirmationLabel" for="password_confirmation">Repeat password</label>
-        <input  class="passwordConfirmation" type="password" name="password_confirmation">
+        <input  class="passwordConfirmation" type="password" name="password_confirmation" placeholder="Herhaal passwoord">
 
       
 
-        <input class="registrationButton" type="submit" value="Registrate" >
+        <input class="registrationButton" type="submit" value="Registreer" >
         
         <div class="loader" style="display: {{$isLoading ? 'flex' : 'none'}}"></div>
     </form>
