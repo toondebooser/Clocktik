@@ -51,7 +51,7 @@ class TimesheetController extends Controller
         );
 
         if ($validator->fails()) {
-             redirect()->route('timesheetForm', ['worker' => $id])->withErrors($validator)->withInput();
+             return redirect()->route('timesheetForm', ['worker' => $id])->withErrors($validator)->withInput();
         }
         if (!$dayTotalCheck->wasRecentlyCreated) {
             return redirect()->route('timesheetForm', ['worker' => $id])->with('error', 'Datum al in gebruik: ' . $date);

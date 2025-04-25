@@ -2,11 +2,7 @@
 @section('content')
 
 <h2>Nieuw rooster voor: {{$worker->name}}</h2>
-{{-- @if(session('error'))
-<div class="error">{{ session('error') }} <br>
-    <a class="removeError" href=""> ok </a>
-</div>
-@endif --}}
+
 <form action="{{route('newTimesheet')}}" class="addNewTimesheetForm" method="POST">
 @csrf
 <input id="addDate" class="newTimesheetDate" type="date" name="newTimesheetDate"> <br>
