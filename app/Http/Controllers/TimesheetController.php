@@ -36,6 +36,10 @@ class TimesheetController extends Controller
     public function addNewTimesheet(Request $request)
     {
         
+        $timeloggingUtility = new TimeloggingUtility;
+        $date = $request->input('newTimesheetDate');
+        $id = $request->input('workerId');
+        $dayTotalCheck = UserUtility::findOrCreateUserDayTotal($date, $id);
         $validator = Validator::make(
             $request->all(),
             [
@@ -47,12 +51,8 @@ class TimesheetController extends Controller
         );
 
         if ($validator->fails()) {
-             redirect()->back()->withErrors($validator)->withInput();
+             redirect()->route('timesheetForm', ['worker' => $id])->withErrors($validator)->withInput();
         }
-        $timeloggingUtility = new TimeloggingUtility;
-        $date = $request->input('newTimesheetDate');
-        $id = $request->input('workerId');
-        $dayTotalCheck = UserUtility::findOrCreateUserDayTotal($date, $id);
         if (!$dayTotalCheck->wasRecentlyCreated) {
             return redirect()->route('timesheetForm', ['worker' => $id])->with('error', 'Datum al in gebruik: ' . $date);
         }
