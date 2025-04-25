@@ -47,7 +47,7 @@ class TimesheetController extends Controller
         );
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+             redirect()->back()->withErrors($validator)->withInput();
         }
         $timeloggingUtility = new TimeloggingUtility;
         $date = $request->input('newTimesheetDate');

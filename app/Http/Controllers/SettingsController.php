@@ -76,6 +76,7 @@ class SettingsController extends Controller
     
         if ($validator->fails()) {
             redirect()->back()->withErrors($validator)->withInput();
+            return null;
         }
         $logoName = time(). '_' .$company_logo->getClientOriginalName();
         $folderPath = 'logos/' . $company->company_code;
@@ -105,7 +106,14 @@ class SettingsController extends Controller
             if ($key === '_token') {
                 continue;
             }
-            $updateData[$key] = $key === 'company_logo' ? $this->logohandler($company, $value) : $value;
+            if ($key === 'company_logo' && $value && $request->hasFile('company_logo')) {
+                $logoResult = $this->logohandler($company, $value);
+                if ($logoResult !== null) { 
+                    $updateData[$key] = $logoResult;
+                }
+            } else {
+                $updateData[$key] = $value;
+            }
         }
 
         $success = $company->update($updateData);
