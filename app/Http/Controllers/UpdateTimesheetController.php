@@ -62,8 +62,8 @@ class UpdateTimesheetController extends Controller
                 'startTime'   => 'required|date_format:H:i',
                 'endTime'     => 'required|date_format:H:i|after:startTime',
 
-                'startBreak'  => 'required|date_format:H:i',
-                'endBreak'    => 'required|date_format:H:i|after_or_equal:startBreak',
+                'startBreak'  => 'date_format:H:i',
+                'endBreak'    => 'date_format:H:i|after_or_equal:startBreak',
             ]
         );
         if ($validator->fails()) {

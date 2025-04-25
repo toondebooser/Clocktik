@@ -35,12 +35,14 @@ class TimesheetController extends Controller
 
     public function addNewTimesheet(Request $request)
     {
+        
         $validator = Validator::make(
-
+            $request->all(),
             [
-                // 'company_logo.required' => 'A company logo is required.',
-                // 'company_logo.image' => 'The company logo must be an image (e.g., JPEG, PNG).',
-                // 'company_logo.max' => 'The company logo must not exceed 2 MB.',
+                'startTime'   => 'required|date_format:H:i',
+                'endTime'     => 'required|date_format:H:i|after:startTime',
+                
+                'newTimesheetDate' => 'required|date'
             ]
         );
 

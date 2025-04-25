@@ -64,11 +64,8 @@ class SettingsController extends Controller
         $validator = Validator::make(
             ['company_logo' => $company_logo],
             [
-                'company_logo' => [
-                    'required',
-                    'image', // Ensures file is an image (jpeg, png, bmp, gif, svg, or webp)
-                    'max:2048', // Max 2 MB (2048 KB)
-                ],
+                'company_logo' =>  'required|image|max:2048'
+                   
             ],
             [
                 'company_logo.required' => 'A company logo is required.',
@@ -77,9 +74,8 @@ class SettingsController extends Controller
             ]
         );
     
-        // If validation fails, redirect back with errors
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            redirect()->back()->withErrors($validator)->withInput();
         }
         $logoName = time(). '_' .$company_logo->getClientOriginalName();
         $folderPath = 'logos/' . $company->company_code;
@@ -125,7 +121,7 @@ class SettingsController extends Controller
         return redirect()->back()->with('success', 'Instellingen zijn aangepast.');
     } catch (Exception $e) {
         Log::error("Error in updateSettings for company {$request->company_code}: " . $e->getMessage());
-        return redirect()->back()->withErrors('error', 'Er ging iets mis bij het aanpassen van de instellingen: ' . $e->getMessage());
+        return redirect()->back()->withErrors(['error',  $e->getMessage()]);
     }
 }
 }
