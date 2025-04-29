@@ -90,7 +90,7 @@ class TimeclockController extends Controller
             ]);
             $dayTotal->update([
                 'Breakhours' => $dayTotal->BreakHours += CalculateUtility::calculateDecimal($userRow->StartBreak, $now),
-                'BreaksTaken' => $dayTotal->BreaksTaken += 1,
+                // 'BreaksTaken' => $dayTotal->BreaksTaken += 1,
             ]);
         });
         return redirect()->back();

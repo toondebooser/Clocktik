@@ -14,7 +14,6 @@ class UsersheetsController extends Controller
 {
     public function myProfile(Request $request)
     {
-
         // $userTimesheet = new Timesheet;
         $userTotal = new Usertotal;
         $currentUser = auth()->user();

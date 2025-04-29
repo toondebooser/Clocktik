@@ -79,20 +79,20 @@
                         <img class="previewIcon" src="{{ asset('/images/preview.png') }}" alt="Preview">
                     </a>
                     <a class="downloadLink"
-                        href="{{ route('exportPdf', ['userId' => $userId, 'month' => $days[0]->Month, 'type' => 'download']) }}">
-                        <img class="downloadIcon" src="{{ asset('/images/download.png') }}" alt="Download">
+                    href="{{ route('exportPdf', ['userId' => $userId, 'month' => $days[0]->Month, 'type' => 'download']) }}">
+                    <img class="downloadIcon" src="{{ asset('/images/download.png') }}" alt="Download">
                     </a>
-                @endif
+                    @endif
 
-                @foreach ($days as $day)
+                    @foreach ($days as $day)
                     <tr onclick="{{ $day->type == 'workday' ? 'toggleTimesheets(this)' : 'window.location.href=\'' . route('update', ['id' => $user->id, 'timesheet' => $day]) . '\'' }}"
                         class="{{ collect([$day->type === 'workday' ? 'timesheetRow' : null, $day->NightShift ? 'nightShift' : null])->filter()->implode(' ') }}"
                         data-dayType="{{ $day->type }}" data-day="{{ $day->id }}">
                         <td style="width: 69.29px" class="date update" id="{{ $day->id }}">
-                            @if ($day->type !== 'workday')
-                                <a class='displayDay'
-                                    href="{{ route('update', ['id' => $user->id, 'timesheet' => $day]) }}">
-                            @endif
+                            {{-- @if ($day->type !== 'workday')
+                            <a class='displayDay'
+                                    href="{{ route('update', ['id' => $user->id, 'timesheet' => $day]) }}"> 
+                            @endif --}}
                             @php
                                 $toTime = strtotime($day->Month);
                                 $days = [
@@ -107,7 +107,7 @@
                                 if ($day->DayOverlap) {
                                     $currentDate = date('d-m', $toTime);
                                     $nextDate = date('d-m', strtotime('+1 day', $toTime));
-                                    echo $currentDate .'<br>'. '>>'. '<br>' . $nextDate;
+                                    echo $currentDate . '<br>' . '>>' . '<br>' . $nextDate;
                                 } else {
                                     $englishDay = date('D', $toTime);
                                     $dutchDay = $days[$englishDay];
@@ -115,14 +115,14 @@
                                     echo $dutchDay . ' ' . $dayOfMonth;
                                 }
                             @endphp
-                            </a>
+                            {{-- </a> --}}
                             @if ($day->userNote !== null)
                                 <img class="noteIcon"src="{{ asset('/images/148883.png') }}" alt="Icon">
                             @endif
                         </td>
                         <td class="displayRegular">
                             @if ($day->RegularHours !== $companyDayHours && $day->Weekend == false && $day->type == 'workday')
-                             <s>{{ $day->RegularHours }}</s> => {{ $companyDayHours }}
+                                <s>{{ $day->RegularHours }}</s> => {{ $companyDayHours }}
                             @elseif($day->Weekend == true && $day->type == 'workday')
                                 Weekend
                             @elseif ($day->Weekend == false && $day->type !== 'workday')
@@ -144,7 +144,7 @@
                         <tr class='hidden timesheetStyle ' data-timesheet="{{ $day->id }}">
                             <td class="date">
                                 <a
-                                    href="{{ route('update', ['id' => $user->id, 'timesheet' => $timesheet, 'type' => 'timesheet', 'usedDayTotalId' => $day->id , 'usedDayTotalDate' => $day->Month]) }}">Update</a>
+                                    href="{{ route('update', ['id' => $user->id, 'timesheet' => $timesheet, 'type' => 'timesheet', 'usedDayTotalId' => $day->id, 'usedDayTotalDate' => $day->Month]) }}">Update</a>
                             </td>
 
 

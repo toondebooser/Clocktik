@@ -70,11 +70,11 @@ class DeleteTimesheetController extends Controller
    
     private function redirectSuccess(string $message, $user)
     {
-        return redirect()->route('myList', ['type' => 'Personeel', 'company_code' => $user->company->company_code ])->with('success', $message);
+        return redirect()->route('getData', ['worker' => $user->id  ])->with('success', $message);
     }
 
     private function redirectError(string $message, $user)
     {
-        return redirect()->route('myList', ['type' => 'Personeel', 'company_code' => $user->company->company_code ])->with('success', $message);
+        return redirect()->route('getData', ['worker' => $user->id  ])->with('success', $message);
     }
 }

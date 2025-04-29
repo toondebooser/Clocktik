@@ -6,11 +6,16 @@ body {
     /* color: white;
     background-color:	#36454F; */
 }
+a:hover{
+    text-decoration: none;
+}
 .hamburger {
 
     display: none; 
 }
-
+tr:hover{
+    cursor: pointer;
+}
 :root {
     --primary-color: #4FAAFC;
     --night-mode: #36454F;
@@ -335,10 +340,12 @@ input:hover {
 .removeError {
     text-decoration: none;
     background-color: var(--primary-color);
+    
     border-radius: 5px;
     margin-top: 10px;
+    padding: 0px 5px;
     color: white;
-    width: 50%;
+    width: fit-content;
     text-align: center;
 }
 .removeError:hover {
