@@ -22,6 +22,7 @@ class TimesheetController extends Controller
     {
 
         $userRow = auth()->user()->timelogs;
+        // $timesheet = $userRow->BreaksTaken > 1 ? 
         $userDayTotalCheck = UserUtility::userDayTotalFetch(now('Europe/Brussels'), $id);
         if ($userDayTotalCheck && $userDayTotalCheck->type !== 'workday') {
             return redirect()->route('dashboard')->with('error', 'Vandaag kan jij geen werkuren ingeven, kijk je profiel na.');

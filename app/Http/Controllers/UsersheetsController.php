@@ -39,10 +39,10 @@ class UsersheetsController extends Controller
             ->where('Month', '<', $threeMonthsAgo)
             ->delete();
 
-        $timesheet = $currentUser->timesheets()
-            ->whereMonth('Month', '=', $month)
-            ->orderBy('Month', 'asc')
-            ->get();
+        // $timesheet = $currentUser->timesheets()
+        //     ->whereMonth('Month', '=', $month)
+        //     ->orderBy('Month', 'asc')
+        //     ->get();
 
         $days = $currentUser->dayTotals()->whereMonth('Month', $month)->where('Completed', true)->orderBy('Month','asc')->get();
         
@@ -55,6 +55,6 @@ class UsersheetsController extends Controller
             ->orderBy('Month', 'desc')
             ->get();
 
-        return view('profile', ['user' => $currentUser, 'companyDayHours' => $currentUser->company->day_hours , 'days' => $days,'clockedMonths' => $clockedMonths, 'timesheet' => $timesheet, 'monthlyTotal' => $monthlyTotal]);
+        return view('profile', ['user' => $currentUser, 'companyDayHours' => $currentUser->company->day_hours , 'days' => $days,'clockedMonths' => $clockedMonths,  'monthlyTotal' => $monthlyTotal]);
     }
 }

@@ -276,7 +276,7 @@ th {
     color: green;
     text-align: center;
     font-size: larger;
-    z-index: 1;
+    z-index: 3;
 }
 .specifiedError {
     color: black;

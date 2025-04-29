@@ -23,14 +23,14 @@ class TimeclockController extends Controller
             $currentUser = auth()->user();
             $userRow = $currentUser->timelogs;
             $now = now('Europe/Brussels');
-    
+
             // Ensure UserDayTotal exists
             UserUtility::findOrCreateUserDayTotal($now, $currentUser->id);
-    
+
             $weekDay = Carbon::parse($now)->weekday();
-    
+
             $isWeekend = $weekDay == $currentUser->company->weekend_day_1 || $weekDay == $currentUser->company->weekend_day_2;
-    
+
             $userRow->Weekend = $isWeekend;
             $userRow->update([
                 'StartWork' => $now,
@@ -41,40 +41,43 @@ class TimeclockController extends Controller
                 'ShiftStatus' => true
             ]);
         });
-    
+
         return redirect('/dashboard');
     }
-    
+
 
 
     public function break()
     {
-        
-        
+
+
         DB::transaction(function () {
             $now = now('Europe/Brussels');
             $userRow = auth()->user()->timelogs;
             $dayTotal = UserUtility::findOrCreateUserDayTotal($now, auth()->user()->id);
             $currentUser = auth()->user();
 
-    
-            // if ( $userRow->StartBreak !== null) {
-            //     $timesheet = (object) [
-            //         'UserId' => $currentUser->id,
-            //         'StartWork' => null,
-            //         'StopWork' => null,
-            //         'StartBreak' => ,
-            //         'EndBreak' => ,
-            //         'Weekend' => $userRow->Weekend,
-            //         'userNote' =>  null,
-            //     ];
-            // }
-    
+
+            if ($userRow->StartBreak !== null) {
+                $timesheet = (object) [
+                    'UserId' => $currentUser->id,
+                    'StartWork' => null,
+                    'StopWork' => null,
+                    'StartBreak' => $userRow->StartBreak,
+                    'EndBreak' => $userRow->EndBreak,
+                    'Weekend' => $userRow->Weekend,
+                    'userNote' =>  null,
+                ];
+                $timesheetEntry = TimeloggingUtility::createTimesheetEntry($timesheet, $currentUser);
+                TimeloggingUtility::updateOrInsertTimesheet($timesheetEntry, null);
+            }
+
             $userRow->update([
                 'StartBreak' => $now,
                 'BreakStatus' => true,
+                // 'BreaksTaken' => $userRow->BreaksTaken += 1
             ]);
-    
+
             $dayTotal->update([
                 'Regularhours' => $dayTotal->RegularHours += CalculateUtility::calculateDecimal(
                     $userRow->EndBreak ?: $userRow->StartWork,
@@ -82,10 +85,10 @@ class TimeclockController extends Controller
                 ),
             ]);
         });
-    
+
         return redirect()->back();
     }
-    
+
 
     public function stopBreak()
     {

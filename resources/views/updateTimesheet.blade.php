@@ -51,6 +51,7 @@
                     
 
                 @endif
+                @if($startBreak && $startBreak !== $EndBreak)
                 <fieldset class="gepauzeerd">
                     <legend>Gepauzeerd</legend>
 
@@ -64,6 +65,7 @@
                         <br>
                     </div>
                 </fieldset>
+                @endif
             @else
                 <div class="specialUpdateContainer">
                     <input class="updateSpecialInput" type="text" name="updateSpecial" value="{{ $timesheet->type }}">
