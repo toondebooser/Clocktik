@@ -79,12 +79,12 @@
                         <img class="previewIcon" src="{{ asset('/images/preview.png') }}" alt="Preview">
                     </a>
                     <a class="downloadLink"
-                    href="{{ route('exportPdf', ['userId' => $userId, 'month' => $days[0]->Month, 'type' => 'download']) }}">
-                    <img class="downloadIcon" src="{{ asset('/images/download.png') }}" alt="Download">
+                        href="{{ route('exportPdf', ['userId' => $userId, 'month' => $days[0]->Month, 'type' => 'download']) }}">
+                        <img class="downloadIcon" src="{{ asset('/images/download.png') }}" alt="Download">
                     </a>
-                    @endif
+                @endif
 
-                    @foreach ($days as $day)
+                @foreach ($days as $day)
                     <tr onclick="{{ $day->type == 'workday' ? 'toggleTimesheets(this)' : 'window.location.href=\'' . route('update', ['id' => $user->id, 'timesheet' => $day]) . '\'' }}"
                         class="{{ collect([$day->type === 'workday' ? 'timesheetRow' : null, $day->NightShift ? 'nightShift' : null])->filter()->implode(' ') }}"
                         data-dayType="{{ $day->type }}" data-day="{{ $day->id }}">
@@ -149,12 +149,19 @@
 
 
                             <td class="timesheetStyle">
-                                In: {{ \Carbon\Carbon::parse($timesheet->ClockedIn)->format('H:i') }} <br>
-                                Uit: {{ \Carbon\Carbon::parse($timesheet->ClockedOut)->format('H:i') }}
+                                @if ($timesheet->ClockedIn)
+                                    In: {{ $timesheet->ClockedIn->format('H:i') }} <br>
+                                    Uit: {{ $timesheet->ClockedOut->format('H:i') }}
+                                @else
+                                    /
+                                @endif
                             </td>
-                            <td class="timesheetStyle"> In:
-                                {{ \Carbon\Carbon::parse($timesheet->BreakStart)->format('H:i') }} <br>
-                                Uit: {{ \Carbon\Carbon::parse($timesheet->BreakStop)->format('H:i') }}</td>
+                            <td class="timesheetStyle">
+                                @if($timesheet->BreakStart)
+                                In: {{ $timesheet->BreakStart->format('H:i') }} <br>
+                                Uit: {{ $timesheet->BreakStop->format('H:i') }}</td>
+                                @else/
+                                @endif
                             <td>
                                 <a href="{{ route('delete', ['workerId' => $userId, 'deleteSheet' => $timesheet->id, 'date' => $timesheet->Month]) }}"
                                     onclick="return confirm('Zedde zeker?')">

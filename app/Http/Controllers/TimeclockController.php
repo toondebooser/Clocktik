@@ -52,14 +52,13 @@ class TimeclockController extends Controller
         $now = now('Europe/Brussels');
         $userRow = auth()->user()->timelogs;
   
-        // }
+    
         DB::transaction(function () use ($userRow, $now) {
             $dayTotal = UserUtility::findOrCreateUserDayTotal($now, auth()->user()->id);
     
-            // Optional: Uncomment to check breaks taken
-            // if ($dayTotal->BreaksTaken > 0) {
-            //     throw new \Exception('Je hebt al pauze genomen vandaag');
-            // }
+            if ($dayTotal->BreaksTaken > 0) {
+                ;
+            }
     
             $userRow->update([
                 'StartBreak' => $now,
@@ -74,7 +73,7 @@ class TimeclockController extends Controller
             ]);
         });
     
-        return redirect()->back()->with('success', 'Pauze gestart');
+        return redirect()->back();
     }
     
 
