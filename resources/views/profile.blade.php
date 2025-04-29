@@ -116,7 +116,7 @@
                                 }
                             @endphp
                             {{-- </a> --}}
-                            @if ($day->userNote !== null)
+                            @if ($day->userNote)
                                 <img class="noteIcon"src="{{ asset('/images/148883.png') }}" alt="Icon">
                             @endif
                         </td>
@@ -157,15 +157,14 @@
                                 @if ($timesheet->ClockedIn)
                                     In: {{ $timesheet->ClockedIn->format('H:i') }} <br>
                                     Uit: {{ $timesheet->ClockedOut->format('H:i') }}
-                                @else
-                                    /
+                                    
                                 @endif
                             </td>
                             <td class="timesheetStyle">
-                                @if($timesheet->BreakStart)
+                                @if($timesheet->BreakStart && $timesheet->BreakStart->format('H:i') !== $timesheet->BreakStop->format('H:i'))
                                 In: {{ $timesheet->BreakStart->format('H:i') }} <br>
                                 Uit: {{ $timesheet->BreakStop->format('H:i') }}</td>
-                                @else/
+                               
                                 @endif
                             <td>
                                 <a href="{{ route('delete', ['workerId' => $userId, 'deleteSheet' => $timesheet->id, 'date' => $timesheet->Month]) }}"
