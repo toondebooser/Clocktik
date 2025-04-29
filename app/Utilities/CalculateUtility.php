@@ -75,7 +75,7 @@ class CalculateUtility
             $workHours = CalculateUtility::calculateDecimal($timesheet->ClockedIn, $timesheet->ClockedOut);
             $breakHours = CalculateUtility::calculateDecimal($timesheet->BreakStart, $timesheet->BreakStop);
             $netWorkHours = $workHours - $breakHours;
-
+            $timesheet->userNote ? $summary['UserNote'] = true : null;
             if($isWeekendDay){
                 $summary['OverTime'] += $netWorkHours;
                 $summary ['BreakHours'] += $breakHours;

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->decimal('BreakHours', 5, 2)->default(0.00); // Fixed
             $table->decimal('OverTime', 5, 2)->default(0.00); // Fixed
             $table->string('type')->default('workday');
-            $table->text('userNote')->nullable();
+            $table->boolean('userNote')->default(false);
             $table->date('Month');
             $table->index('Month');
             $table->boolean('Completed')->default(false);

@@ -145,6 +145,11 @@
                             <td class="date">
                                 <a
                                     href="{{ route('update', ['id' => $user->id, 'timesheet' => $timesheet, 'type' => 'timesheet', 'usedDayTotalId' => $day->id, 'usedDayTotalDate' => $day->Month]) }}">Update</a>
+                                    @php
+                                    @endphp
+                                    @if ($timesheet->userNote !== null)
+                                    <img class="noteIcon"src="{{ asset('/images/148883.png') }}" alt="Icon">
+                                @endif
                             </td>
 
 

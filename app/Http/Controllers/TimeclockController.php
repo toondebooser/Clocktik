@@ -49,16 +49,26 @@ class TimeclockController extends Controller
 
     public function break()
     {
-        $now = now('Europe/Brussels');
-        $userRow = auth()->user()->timelogs;
-  
-    
-        DB::transaction(function () use ($userRow, $now) {
+        
+        
+        DB::transaction(function () {
+            $now = now('Europe/Brussels');
+            $userRow = auth()->user()->timelogs;
             $dayTotal = UserUtility::findOrCreateUserDayTotal($now, auth()->user()->id);
+            $currentUser = auth()->user();
+
     
-            if ($dayTotal->BreaksTaken > 0) {
-                ;
-            }
+            // if ( $userRow->StartBreak !== null) {
+            //     $timesheet = (object) [
+            //         'UserId' => $currentUser->id,
+            //         'StartWork' => null,
+            //         'StopWork' => null,
+            //         'StartBreak' => ,
+            //         'EndBreak' => ,
+            //         'Weekend' => $userRow->Weekend,
+            //         'userNote' =>  null,
+            //     ];
+            // }
     
             $userRow->update([
                 'StartBreak' => $now,
