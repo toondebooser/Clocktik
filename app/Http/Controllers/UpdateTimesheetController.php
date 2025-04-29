@@ -53,7 +53,6 @@ class UpdateTimesheetController extends Controller
 
     public function updateTimesheet(Request $request)
     {
-
         $validator = Validator::make(
             $request->all(),
             [
@@ -148,7 +147,7 @@ class UpdateTimesheetController extends Controller
                 'StartBreak' => Carbon::parse($date->format('Y-m-d') . ' ' . $request->startBreak, 'Europe/Brussels'),
                 'EndBreak' => Carbon::parse($date->format('Y-m-d') . ' ' . $request->endBreak, 'Europe/Brussels'),
                 'Weekend' => $weekend,
-                'userNote' => $userNote ?? null,
+                'userNote' => $request->userNote ?? null,
             ];
             $timeloggingUtility = new TimeloggingUtility;
             $addTimesheet = $timeloggingUtility->logTimeEntry($userRow, $id, $timesheet);

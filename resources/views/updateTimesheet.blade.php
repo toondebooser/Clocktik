@@ -23,6 +23,7 @@
             <input type="hidden" name="timesheet" value="{{ $timesheet->id }}">
             <input type="hidden" name="usedDayTotalId" value="{{$usedDayTotalId}}">
             <input type="hidden" name="usedDayTotalDate" value="{{$usedDayTotalDate}}">
+            <input type="hidden" name="userNote" value="{{$timesheet->userNote}}">
             <input type="hidden" name="type" value="{{ $timesheet->type }}">
             @if ($timesheet->type == 'workday')
             <fieldset class="periode" style="{{ $nightShift ? 'display: block;' : 'display: none;' }}">
@@ -88,7 +89,7 @@
     <form action="{{ route('delete')}}" class="delete" method="POST">
         @csrf
         <input type="hidden" name="workerId" value="{{ $worker->id }}">
-        <input type="hidden" name="type" value="{{$timesheet->type}}">
+        {{-- <input type="hidden" name="type" value="{{$timesheet->type}}"> --}}
         <input type="hidden" name="deleteSheet" value="{{ $timesheet->id }}">
         <input type="hidden" name="date" value="{{ $timesheet->Month }}">
         <input onclick="return confirm('zedde zeker ?')" class="submit" type="image"
