@@ -16,56 +16,74 @@ class TimeclockController extends Controller
 {
 
 
+
     public function startWorking()
     {
-        $currentUser = auth()->user();
-        $userRow = $currentUser->timelogs;
-        $now = now('Europe/Brussels');
-        UserUtility::findOrCreateUserDayTotal($now, $currentUser->id);
-        $weekDay = Carbon::parse($now)->weekday();
-        $weekDay == $currentUser->company->weekend_day_1 || $weekDay == $currentUser->company->weekend_day_2 ? $userRow->Weekend = true : $userRow->Weekend = false;
-        $userRow->update([
-            'StartWork' => $now,
-            'StartBreak' => null,
-            'EndBreak' => null,
-            'StopWork' => null,
-            'userNote' => null,
-            'ShiftStatus' => true
-        ]);
-
+        DB::transaction(function () {
+            $currentUser = auth()->user();
+            $userRow = $currentUser->timelogs;
+            $now = now('Europe/Brussels');
+    
+            // Ensure UserDayTotal exists
+            UserUtility::findOrCreateUserDayTotal($now, $currentUser->id);
+    
+            $weekDay = Carbon::parse($now)->weekday();
+    
+            $isWeekend = $weekDay == $currentUser->company->weekend_day_1 || $weekDay == $currentUser->company->weekend_day_2;
+    
+            $userRow->Weekend = $isWeekend;
+            $userRow->update([
+                'StartWork' => $now,
+                'StartBreak' => null,
+                'EndBreak' => null,
+                'StopWork' => null,
+                'userNote' => null,
+                'ShiftStatus' => true
+            ]);
+        });
+    
         return redirect('/dashboard');
     }
+    
 
 
     public function break()
     {
         $now = now('Europe/Brussels');
         $userRow = auth()->user()->timelogs;
-        // if (!DateUtility::checkDayDiff($userRow->StartWork, $userRow->StopWork)) {
-        //     TimeloggingUtility::CompletePreviousDay($userRow, auth()->user()->id);
-        //     return redirect()->back()->with('error', 'Je hebt ingeklokt op een andere dag');
+  
         // }
-        $dayTotal =  UserUtility::findOrCreateUserDayTotal($now, auth()->user()->id);
-        if ($dayTotal->BreaksTaken > 0) return  redirect()->back()->with('error', 'Je hebt al pauze genomen vandaag');
-        DB::transaction(function () use ($userRow, $dayTotal, $now) {
+        DB::transaction(function () use ($userRow, $now) {
+            $dayTotal = UserUtility::findOrCreateUserDayTotal($now, auth()->user()->id);
+    
+            // Optional: Uncomment to check breaks taken
+            // if ($dayTotal->BreaksTaken > 0) {
+            //     throw new \Exception('Je hebt al pauze genomen vandaag');
+            // }
+    
             $userRow->update([
                 'StartBreak' => $now,
                 'BreakStatus' => true,
             ]);
-
+    
             $dayTotal->update([
-                'Regularhours' => $dayTotal->RegularHours += CalculateUtility::calculateDecimal($userRow->EndBreak ? $userRow->EndBreak : $userRow->StartWork, $now),
+                'Regularhours' => $dayTotal->RegularHours += CalculateUtility::calculateDecimal(
+                    $userRow->EndBreak ?: $userRow->StartWork,
+                    $now
+                ),
             ]);
         });
-        return redirect()->back();
+    
+        return redirect()->back()->with('success', 'Pauze gestart');
     }
+    
 
     public function stopBreak()
     {
         $now = now('Europe/Brussels');
         $userRow = auth()->user()->timelogs;
-        $dayTotal = UserUtility::findOrCreateUserDayTotal($now, auth()->user()->id);
-        DB::transaction(function () use ($userRow, $dayTotal, $now) {
+        DB::transaction(function () use ($userRow, $now) {
+            $dayTotal = UserUtility::findOrCreateUserDayTotal($now, auth()->user()->id);
             $userRow->update([
                 'BreakStatus' => false,
                 'EndBreak' => $now,
