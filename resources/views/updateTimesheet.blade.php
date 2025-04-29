@@ -25,25 +25,32 @@
             <input type="hidden" name="userNote" value="{{ $timesheet->userNote }}">
             <input type="hidden" name="type" value="{{ $timesheet->type }}">
             @if ($timesheet->type == 'workday')
-                <fieldset class="periode" style="{{ $nightShift ? 'display: block;' : 'display: none;' }}">
-                    <legend>Datums</legend>
-                    <input style="width: 120px" class="updateDateTime" name="startDate" type="date"
-                        value="{{ $startDate }}">
-                    <input style="width: 120px" class="updateDateTime" name="endDate" type="date"
-                        value="{{ $endDate }}">
+                @if ($startShift && $startShift !== $endShift)
+                    <fieldset class="periode" style="{{ $nightShift ? 'display: block;' : 'display: none;' }}">
+                        <legend>Datums</legend>
+                        <input style="width: 120px" class="updateDateTime" name="startDate" type="date"
+                            value="{{ $startDate }}">
+                        <input style="width: 120px" class="updateDateTime" name="endDate" type="date"
+                            value="{{ $endDate }}">
 
-                </fieldset>
-                <fieldset class="gewerkt">
-                    <legend>Gewerkt</legend>
-                    <div>
-                        <label for="startTime">Start:</label>
-                        <input id="startTime" class="updateDateTime" name="startTime" type="time"
-                            value="{{ $startShift }}">
-                        <br><label for="endTime">End:</label>
-                        <input id="endTime" class="updateDateTime" type="time" name="endTime"
-                            value="{{ $endShift }}">
-                    </div>
-                </fieldset>
+                    </fieldset>
+                    <fieldset class="gewerkt">
+                        <legend>Gewerkt</legend>
+                        <div>
+                            <label for="startTime">Start:</label>
+                            <input id="startTime" class="updateDateTime" name="startTime" type="time"
+                                value="{{ $startShift }}">
+                            <br><label for="endTime">End:</label>
+                            <input id="endTime" class="updateDateTime" type="time" name="endTime"
+                                value="{{ $endShift }}">
+                        </div>
+                    </fieldset>
+                @else
+                    <input type="hidden" name="startTime" value="{{null}}">
+                    <input type="hidden" name="endTime" value="{{null}}">
+                    
+
+                @endif
                 <fieldset class="gepauzeerd">
                     <legend>Gepauzeerd</legend>
 

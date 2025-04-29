@@ -56,33 +56,29 @@ class UpdateTimesheetController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'startDate' => 'required|date',
-                'endDate' => 'required|date|after_or_equal:startDate',
-        
-                // startTime and endTime: optional as a pair, but both required if one is provided
+                'usedDayTotalDate' => 'required|date', // Replace startDate/endDate
                 'startTime' => 'nullable|date_format:H:i|required_with:endTime',
                 'endTime' => 'nullable|date_format:H:i|required_with:startTime|after:startTime',
-        
-                // startBreak and endBreak: optional as a pair, but both required if one is provided
                 'startBreak' => 'nullable|date_format:H:i|required_with:endBreak',
                 'endBreak' => 'nullable|date_format:H:i|required_with:startBreak|after_or_equal:startBreak',
-        
-                // Custom rule to ensure at least one timeslot pair is provided
-                '*' => Rule::requiredIf(function () use ($request) {
+                // Custom rule to ensure at least one timeslot pair
+                'timeslot_pair' => Rule::requiredIf(function () use ($request) {
                     return (
-                        is_null($request->startTime) && is_null($request->endTime) &&
-                        is_null($request->startBreak) && is_null($request->endBreak)
+                        (is_null($request->startTime) || is_null($request->endTime)) &&
+                        (is_null($request->startBreak) || is_null($request->endBreak))
                     );
                 }),
             ],
             [
+                'usedDayTotalDate.required' => 'De datum is verplicht.',
+                'usedDayTotalDate.date' => 'De datum moet een geldige datum zijn.',
                 'startTime.required_with' => 'Starttijd is verplicht als eindtijd is ingevuld.',
                 'endTime.required_with' => 'Eindtijd is verplicht als starttijd is ingevuld.',
                 'endTime.after' => 'Eindtijd moet na starttijd liggen.',
                 'startBreak.required_with' => 'Pauzestart is verplicht als pauzeeinde is ingevuld.',
                 'endBreak.required_with' => 'Pauzeeinde is verplicht als pauzestart is ingevuld.',
                 'endBreak.after_or_equal' => 'Pauzeeinde moet gelijk aan of na pauzestart liggen.',
-                '*.required' => 'Ten minste één tijdsblok (werkuren of pauze) moet worden ingevuld.',
+                'timeslot_pair.required' => 'Ten minste één tijdsblok (werkuren of pauze) moet worden ingevuld.',
             ]
         );
         if ($validator->fails()) {
@@ -142,10 +138,10 @@ class UpdateTimesheetController extends Controller
         } else {
             $userRow = (object) [
                 'UserId' => $id,
-                'StartWork' => Carbon::parse($request->startDate . ' ' . $request->startTime, 'Europe/Brussels'),
-                'StopWork' => Carbon::parse($request->endDate . ' ' . $request->endTime, 'Europe/Brussels'),
-                'StartBreak' => Carbon::parse($date->format('Y-m-d') . ' ' . $request->startBreak, 'Europe/Brussels'),
-                'EndBreak' => Carbon::parse($date->format('Y-m-d') . ' ' . $request->endBreak, 'Europe/Brussels'),
+                'StartWork' => $request->startTime ? Carbon::parse($request->startDate . ' ' . $request->startTime, 'Europe/Brussels') : null,
+                'StopWork' => $request->endTime ? Carbon::parse($request->endDate . ' ' . $request->endTime, 'Europe/Brussels') : null,
+                'StartBreak' => $request->startBreak ?  Carbon::parse($date->format('Y-m-d') . ' ' . $request->startBreak, 'Europe/Brussels') : null,
+                'EndBreak' => $request->endBreak ? Carbon::parse($date->format('Y-m-d') . ' ' . $request->endBreak, 'Europe/Brussels') : null,
                 'Weekend' => $weekend,
                 'userNote' => $request->userNote ?? null,
             ];
