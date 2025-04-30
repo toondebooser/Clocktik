@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-
-class Timesheet extends Model
+class Timesheet_break extends Model
 {
     use HasFactory;
     protected $fillable = ['UserId','daytotal_id', 'ClockedIn', 'ClockedOut', 'BreakStart', 'BreakStop', 'DaytimeCount', 'RegularHours', 'accountableHours', 'BreaksTaken', 'BreakHours', 'OverTime', 'userNote', 'Weekend', 'NightShift', 'Month', 'type'];
@@ -28,10 +27,9 @@ class Timesheet extends Model
         'NightShift' => 'boolean',
         'Month' => 'datetime:Y-m-d',
         'type' => 'string',
-        // Add other timestamp fields as needed, e.g., 'created_at' => 'datetime'
     ];
-    public function daytotal(): BelongsTo
-    {
-        return $this->belongsTo(Daytotal::class, 'daytotal_id');
-    }
+//     public function timesheet_shift(): BelongsTo
+//     {
+//         // return $this->belongsTo(::class, 'daytotal_id');
+//     }
 }

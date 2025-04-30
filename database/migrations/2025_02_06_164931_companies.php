@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('weekend_day_2')->default(0); 
             $table->decimal('day_hours', 5, 2)->default(7.6);
             $table->boolean('admin_timeclock')->default(false);
+            $table->integer('amount_of_users')->default(5);
             $table->timestamps();
 
         });

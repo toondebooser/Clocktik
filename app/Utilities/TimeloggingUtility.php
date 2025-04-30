@@ -14,32 +14,7 @@ use Illuminate\Support\Facades\Log;
 
 class TimeloggingUtility
 {
-    // public static function CompletePreviousDay($userRow, $userId)
-    // {
-    //     $startWork = DateUtility::carbonParse($userRow->StartWork); // e.g., '2025-04-14 22:00:00'
-    //     $stopWork = DateUtility::carbonParse($userRow->StopWork);   // e.g., '2025-04-15 02:00:00'
-    //     $user = User::find($userId);
-    //     if (!$user) {
-    //         throw new Exception("User $userId not found");
-    //     }
-
-    //     $firstDayRow = (object) [
-    //         'StartWork' => $startWork,
-    //         'StopWork' => $startWork->copy()->endOfDay(),
-    //         'StartBreak' => $userRow->StartBreak,
-    //         'EndBreak' => $userRow->EndBreak,
-    //         'Weekend' => $userRow->Weekend ?? false,
-    //         'userNote' => $userRow->userNote ?? null,
-    //     ];
-
-    //     $firstDayEntry = static::createTimesheetEntry($firstDayRow, $user);
-    //     $firstDayTotal = UserUtility::findOrCreateUserDayTotal($firstDayEntry['Month'], $userId);
-    //     $firstDayTotal->update(['nightshift' => true]);
-
-    //     static::updateOrInsertTimesheet($firstDayEntry, null);
-    //     static::updateDailySummery($userId, $firstDayEntry['Month']);
-    //     return CalculateUtility::calculateUserTotal($userId);
-    // }
+   
 
     public static function logTimeEntry($userRow, $userId, $oldLog = null)
     {
@@ -47,9 +22,7 @@ class TimeloggingUtility
         if (!$user) {
             throw new Exception("User $userId not found");
         }
-        // if (!$startWork->isSameDay($stopWork)) {
-        //     return static::handleNightShift($userRow, $userId, $oldLog);
-        // }
+      
 
         $newEntry = static::createTimesheetEntry($userRow, $user);
         static::updateOrInsertTimesheet($newEntry, $oldLog);
@@ -57,46 +30,7 @@ class TimeloggingUtility
         return CalculateUtility::calculateUserTotal($userId);
     }
 
-    // public static function handleNightShift($userRow, $userId, $oldLog)
-    // {
-    //     $startWork = DateUtility::carbonParse($userRow->StartWork);
-    //     $stopWork = DateUtility::carbonParse($userRow->StopWork);
-    //     $user = User::find($userId);
-    //     if (!$user) {
-    //         throw new Exception("User $userId not found");
-    //     }
-
-    //     $dayEntries = [
-    //         (object) [
-    //             'StartWork' => $startWork,
-    //             'StopWork' => $startWork->copy()->endOfDay(),
-    //             'StartBreak' => $userRow->StartBreak,
-    //             'EndBreak' => $userRow->EndBreak,
-    //             'Weekend' => $userRow->Weekend ?? false,
-    //             'userNote' => $userRow->userNote ?? null,
-    //         ],
-    //         (object) [
-    //             'StartWork' => $stopWork->copy()->startOfDay(),
-    //             'StopWork' => $stopWork,
-    //             'StartBreak' => null, // Adjust if breaks occur on second day
-    //             'EndBreak' => null,
-    //             'Weekend' => Carbon::parse($stopWork)->isWeekend(),
-    //             'userNote' => $userRow->userNote ?? null,
-    //         ],
-    //     ];
-
-    //     DB::transaction(function () use ($dayEntries, $user, $oldLog) {
-    //         foreach ($dayEntries as $index => $dayRow) {
-    //             $entry = static::createTimesheetEntry($dayRow, $user);
-    //             $dayTotal = UserUtility::findOrCreateUserDayTotal($entry['Month'], $user->id);
-    //             $dayTotal->update(['nightshift' => true]);
-    //             static::updateOrInsertTimesheet($entry, $index === 0 ? $oldLog : null);
-    //             static::updateDailySummery($user->id, $entry['Month']);
-    //         }
-    //     });
-
-    //     return CalculateUtility::calculateUserTotal($user->id);
-    // }
+   
 
     public static function createTimesheetEntry($userRow, $user)
     {

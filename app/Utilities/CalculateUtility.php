@@ -57,7 +57,6 @@ class CalculateUtility
         $summary = [
             'BreakHours' => 0,
             'RegularHours' => 0,
-            'DaytimeCount' => $timesheets->count(),
             'OverTime' => 0,
             'accountableHours' => 0,
             'Weekend' => false,

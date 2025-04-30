@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Company extends Model
 {
     use HasFactory;
-    protected $fillable = ['company_code','company_name','company_logo','company_color', 'weekend_day_1', 'weekend_day_2', 'day_hours', 'admin_timeclock'];
+    protected $fillable = ['amount_of_users','company_code','company_name','company_logo','company_color', 'weekend_day_1', 'weekend_day_2', 'day_hours', 'admin_timeclock'];
     protected $casts = [
         'id' => 'integer',
         'company_name' => 'string',
@@ -20,6 +20,7 @@ class Company extends Model
         'weekend_day_2' => 'integer',
         'day_hours' => 'float',
         'admin_timeclock' => 'boolean',
+        'amount_of_users' => 'integer',
         'start_time' => 'date',
         'end_time' => 'date',
     ];

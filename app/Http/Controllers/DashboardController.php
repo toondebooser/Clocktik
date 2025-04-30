@@ -4,10 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Timelog;
-use App\Models\Timesheet;
 use App\Models\User;
-use App\Utilities\UserUtility;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller

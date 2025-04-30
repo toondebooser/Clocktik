@@ -85,14 +85,15 @@
                 @endif
 
                 @foreach ($days as $day)
+                {{-- Daytotal Row --}}
                     <tr onclick="{{ $day->type == 'workday' ? 'toggleTimesheets(this)' : 'window.location.href=\'' . route('update', ['id' => $user->id, 'timesheet' => $day]) . '\'' }}"
                         class="{{ collect([$day->type === 'workday' ? 'timesheetRow' : null, $day->NightShift ? 'nightShift' : null])->filter()->implode(' ') }}"
                         data-dayType="{{ $day->type }}" data-day="{{ $day->id }}">
+
+                        {{-- Date cell --}}
+
                         <td style="width: 69.29px" class="date update" id="{{ $day->id }}">
-                            {{-- @if ($day->type !== 'workday')
-                            <a class='displayDay'
-                                    href="{{ route('update', ['id' => $user->id, 'timesheet' => $day]) }}"> 
-                            @endif --}}
+
                             @php
                                 $toTime = strtotime($day->Month);
                                 $days = [
@@ -115,11 +116,13 @@
                                     echo $dutchDay . ' ' . $dayOfMonth;
                                 }
                             @endphp
-                            {{-- </a> --}}
                             @if ($day->userNote)
                                 <img class="noteIcon"src="{{ asset('/images/148883.png') }}" alt="Icon">
                             @endif
                         </td>
+
+                        {{-- Regular hour cell --}}
+
                         <td class="displayRegular">
                             @if ($day->RegularHours !== $companyDayHours && $day->Weekend == false && $day->type == 'workday')
                                 <s>{{ $day->RegularHours }}</s> => {{ $companyDayHours }}
@@ -130,22 +133,28 @@
                             @else
                                 {{ $day->RegularHours }}
                             @endif
-
-
                         </td>
+
+                        {{-- Break hour cell --}}
+
                         <td class="displayBreak">
                             {{ $day->BreakHours }}
                         </td>
+
+
+                        {{-- OverTime cell --}}
                         <td class="displayOvertTime">
                             {{ $day->OverTime }}
-                        </td>
+                        </td>                       
                     </tr>
+
+                    {{--  Hidden Timesheets linked to daytotals --}}
                     @foreach ($day->timesheets as $timesheet)
                         <tr class='hidden timesheetStyle ' data-timesheet="{{ $day->id }}">
                             <td class="date">
                                 <a
                                     href="{{ route('update', ['id' => $user->id, 'timesheet' => $timesheet, 'type' => 'timesheet', 'usedDayTotalId' => $day->id, 'usedDayTotalDate' => $day->Month]) }}">Update</a>
-                                    @if ($timesheet->userNote !== null)
+                                @if ($timesheet->userNote !== null)
                                     <img class="noteIcon"src="{{ asset('/images/148883.png') }}" alt="Icon">
                                 @endif
                             </td>
@@ -155,27 +164,26 @@
                                 @if ($timesheet->ClockedIn)
                                     In: {{ $timesheet->ClockedIn->format('H:i') }} <br>
                                     Uit: {{ $timesheet->ClockedOut->format('H:i') }}
-                                    
                                 @endif
                             </td>
                             <td class="timesheetStyle">
-                                @if($timesheet->BreakStart && $timesheet->BreakStart->format('H:i') !== $timesheet->BreakStop->format('H:i'))
-                                In: {{ $timesheet->BreakStart->format('H:i') }} <br>
-                                Uit: {{ $timesheet->BreakStop->format('H:i') }}</td>
-                               
-                                @endif
-                            <td>
-                                <a href="{{ route('delete', ['workerId' => $userId, 'deleteSheet' => $timesheet->id, 'date' => $timesheet->Month]) }}"
-                                    onclick="return confirm('Zedde zeker?')">
-
-                                    <img class="trashIcon" src="{{ asset('/images/1843344.png') }}" alt="Delete">
-                                </a>
+                                @if ($timesheet->BreakStart && $timesheet->BreakStart->format('H:i') !== $timesheet->BreakStop->format('H:i'))
+                                    In: {{ $timesheet->BreakStart->format('H:i') }} <br>
+                                    Uit: {{ $timesheet->BreakStop->format('H:i') }}
                             </td>
-                        </tr>
-                    @endforeach
+                    @endif
+                    <td>
+                        <a href="{{ route('delete', ['workerId' => $userId, 'deleteSheet' => $timesheet->id, 'date' => $timesheet->Month]) }}"
+                            onclick="return confirm('Zedde zeker?')">
+
+                            <img class="trashIcon" src="{{ asset('/images/1843344.png') }}" alt="Delete">
+                        </a>
+                    </td>
+                    </tr>
                 @endforeach
-            @else
-                <p class="text-danger">No data</p>
+            @endforeach
+        @else
+            <p class="text-danger">No data</p>
             @endif
 
         </table>

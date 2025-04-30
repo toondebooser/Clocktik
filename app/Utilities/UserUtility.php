@@ -4,7 +4,6 @@ namespace App\Utilities;
 
 use App\Models\Company;
 use App\Models\Daytotal;
-use App\Models\Timesheet;
 use App\Models\User;
 use App\Models\Usertotal;
 use Carbon\Carbon;
