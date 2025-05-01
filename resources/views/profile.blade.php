@@ -167,7 +167,7 @@
                                 @endif
                             </td>
                             <td class="timesheetStyle">
-                                @if ($timesheet->extraBreakSlots->isNotEmpty())
+                            @if ($timesheet->extraBreakSlots->isNotEmpty())
                                     @php
                                         $firstBreak = $timesheet->extraBreakSlots->sortBy('BreakStart')->first();
 
@@ -182,8 +182,8 @@
                                     @endphp
                                     In: {{ $timesheet->BreakStart->format('H:i') }} <br>
                                     Uit: {{ $timesheet->BreakStop->format('H:i') }}
-                                @endif
-                            </td>
+                                    @endif
+                                </td>
                             <td>
                                 <a href="{{ route('delete', ['workerId' => $userId, 'deleteSheet' => $timesheet->id, 'date' => $timesheet->Month]) }}"
                                     onclick="return confirm('Zedde zeker?')">
@@ -194,7 +194,6 @@
                         @if ($timesheet->extraBreakSlots->isNotEmpty())
                             @foreach ($timesheet->extraBreakSlots->sortByDesc('BreakStart') as $breakSlot)
                                 {{-- Set extra break slots as row --}}
-                                @if ($firstBreak && $breakSlot->id !== $firstBreak->id)
                                     <tr class='hidden timesheetStyle' data-timesheet="{{ $day->id }}">
                                         <td class="date"> <a
                                                 href="{{ route('update', ['id' => $user->id, 'timesheet' => $breakSlot, 'type' => 'extraBreakSlot', 'usedDayTotalId' => $day->id, 'usedDayTotalDate' => $day->Month]) }}">Update</a>
@@ -207,7 +206,8 @@
                                                     $breakSlot->BreakStart->format('H:i') !== $breakSlot->BreakStop->format('H:i'))
                                                 In: {{ $breakSlot->BreakStart->format('H:i') }} <br>
                                                 Uit: {{ $breakSlot->BreakStop->format('H:i') }}
-                                            @endif
+                                           
+                                                @endif
                                         </td>
                                         <td><a href="{{ route('delete', ['workerId' => $userId, 'deleteSheet' => $breakSlot->id, 'date' => $breakSlot->Month]) }}"
                                                 onclick="return confirm('Zedde zeker?')">
@@ -215,28 +215,27 @@
                                                     alt="Delete">
                                             </a></td>
                                     </tr>
-                                @endif
-                                <tr class='hidden timesheetStyle' data-timesheet="{{ $day->id }}">
-                                    <td class="date"><a
-                                            href="{{ route('update', ['id' => $user->id, 'timesheet' => $breakSlot, 'type' => 'extraBreakSlot', 'usedDayTotalId' => $day->id, 'usedDayTotalDate' => $day->Month]) }}">Update</a>
-                                    </td>
-                                    </td>
-                                    <td class="timesheetStyle"></td>
-                                    <td class="timesheetStyle">
-                                        @if (
-                                            $breakSlot->BreakStart &&
-                                                $breakSlot->BreakStop &&
-                                                $breakSlot->BreakStart->format('H:i') !== $breakSlot->BreakStop->format('H:i'))
-                                            In: {{ $timesheet->BreakStart->format('H:i') }} <br>
-                                            Uit: {{ $timesheet->BreakStop->format('H:i') }}
-                                        @endif
-                                    </td>
-                                    <td><a href="{{ route('delete', ['workerId' => $userId, 'deleteSheet' => $breakSlot->id, 'date' => $breakSlot->Month]) }}"
-                                            onclick="return confirm('Zedde zeker?')">
-                                            <img class="trashIcon" src="{{ asset('/images/1843344.png') }}" alt="Delete">
-                                        </a></td>
-
-                                </tr>
+                                    {{-- <tr class='hidden timesheetStyle' data-timesheet="{{ $day->id }}">
+                                        <td class="date"><a
+                                                href="{{ route('update', ['id' => $user->id, 'timesheet' => $breakSlot, 'type' => 'extraBreakSlot', 'usedDayTotalId' => $day->id, 'usedDayTotalDate' => $day->Month]) }}">Update</a>
+                                        </td>
+                                        </td>
+                                        <td class="timesheetStyle"></td>
+                                        <td class="timesheetStyle">
+                                            @if (
+                                                $breakSlot->BreakStart &&
+                                                    $breakSlot->BreakStop &&
+                                                    $breakSlot->BreakStart->format('H:i') !== $breakSlot->BreakStop->format('H:i'))
+                                                In: {{ $timesheet->BreakStart->format('H:i') }} <br>
+                                                Uit: {{ $timesheet->BreakStop->format('H:i') }}
+                                            @endif
+                                        </td>
+                                        <td><a href="{{ route('delete', ['workerId' => $userId, 'deleteSheet' => $breakSlot->id, 'date' => $breakSlot->Month]) }}"
+                                                onclick="return confirm('Zedde zeker?')">
+                                                <img class="trashIcon" src="{{ asset('/images/1843344.png') }}" alt="Delete">
+                                            </a></td>
+    
+                                    </tr> --}}
                             @endforeach
                         @endif
                     @endforeach
