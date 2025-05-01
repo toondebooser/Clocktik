@@ -29,9 +29,9 @@ class TimeclockController extends Controller
 
             $weekDay = Carbon::parse($now)->weekday();
 
-            $isWeekend = $weekDay == $currentUser->company->weekend_day_1 || $weekDay == $currentUser->company->weekend_day_2;
+            // $isWeekend = $weekDay == $currentUser->company->weekend_day_1 || $weekDay == $currentUser->company->weekend_day_2;
 
-            $userRow->Weekend = $isWeekend;
+            // $userRow->Weekend = $isWeekend;
             $userRow->update([
                 'daytotal_id' => $dayTotal->id,
                 'StartWork' => $now,
