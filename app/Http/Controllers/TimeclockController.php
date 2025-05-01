@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Models\Extra_break_slot;
 use App\Utilities\CalculateUtility;
 use App\Utilities\DateUtility;
 use App\Utilities\TimeloggingUtility;
@@ -25,7 +25,7 @@ class TimeclockController extends Controller
             $now = now('Europe/Brussels');
 
             // Ensure UserDayTotal exists
-            UserUtility::findOrCreateUserDayTotal($now, $currentUser->id);
+           $dayTotal = UserUtility::findOrCreateUserDayTotal($now, $currentUser->id);
 
             $weekDay = Carbon::parse($now)->weekday();
 
@@ -33,6 +33,7 @@ class TimeclockController extends Controller
 
             $userRow->Weekend = $isWeekend;
             $userRow->update([
+                'daytotal_id' => $dayTotal->id,
                 'StartWork' => $now,
                 'StartBreak' => null,
                 'EndBreak' => null,
@@ -54,22 +55,26 @@ class TimeclockController extends Controller
         DB::transaction(function () {
             $now = now('Europe/Brussels');
             $userRow = auth()->user()->timelogs;
-            $dayTotal = UserUtility::findOrCreateUserDayTotal($now, auth()->user()->id);
-            $currentUser = auth()->user();
+            $dayTotal = $userRow->dayTotal;
+            dd($dayTotal);
 
 
-            if ($userRow->StartBreak !== null) {
-                $timesheet = (object) [
-                    'UserId' => $currentUser->id,
-                    'StartWork' => null,
-                    'StopWork' => null,
-                    'StartBreak' => $userRow->StartBreak,
-                    'EndBreak' => $userRow->EndBreak,
-                    'Weekend' => $userRow->Weekend,
-                    'userNote' =>  null,
-                ];
-                $timesheetEntry = TimeloggingUtility::createTimesheetEntry($timesheet, $currentUser);
-                TimeloggingUtility::updateOrInsertTimesheet($timesheetEntry, null);
+            if ($userRow->StartBreak !== null && $userRow->BreaksTaken >= 1) {
+                
+                // $timesheet = (object) [
+                //     'UserId' => $currentUser->id,
+                //     'BreakStart' => null,
+                //     'BreakStop' => null,
+                // ];
+                // $timesheetEntry = TimeloggingUtility::createTimesheetEntry($timesheet, $currentUser);
+                // TimeloggingUtility::updateOrInsertTimesheet($timesheetEntry, null);
+                // $extraBreakRow = Extra_break_slot::
+                 Extra_break_slot::create([
+                    'Month' => $now,
+                    'daytotal_id' => $dayTotal->id,
+                    'BreakStart' => $userRow->BreakStart,
+                    'BreakStop' => $userRow->BreakStop
+                ]);
             }
 
             $userRow->update([
@@ -95,14 +100,13 @@ class TimeclockController extends Controller
         $now = now('Europe/Brussels');
         $userRow = auth()->user()->timelogs;
         DB::transaction(function () use ($userRow, $now) {
-            $dayTotal = UserUtility::findOrCreateUserDayTotal($now, auth()->user()->id);
+            $dayTotal = $userRow->dayTotal;
             $userRow->update([
                 'BreakStatus' => false,
                 'EndBreak' => $now,
             ]);
             $dayTotal->update([
                 'Breakhours' => $dayTotal->BreakHours += CalculateUtility::calculateDecimal($userRow->StartBreak, $now),
-                // 'BreaksTaken' => $dayTotal->BreaksTaken += 1,
             ]);
         });
         return redirect()->back();
@@ -114,7 +118,7 @@ class TimeclockController extends Controller
         $now = now('Europe/Brussels');
 
         DB::transaction(function () use ($userRow, $now) {
-            $dayTotal = UserUtility::findOrCreateUserDayTotal($now, auth()->user()->id);
+            $dayTotal = $userRow->dayTotal;
             $userRow->update([
                 'ShiftStatus' => false,
                 'StopWork' => $now,

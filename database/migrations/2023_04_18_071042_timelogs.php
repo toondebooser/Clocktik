@@ -23,6 +23,7 @@ return new class extends Migration
             $table->timestamp('StopWork')->nullable();
             $table->integer('BreaksTaken')->default(0);
             $table->text('userNote')->nullable();
+            $table->integer('daytotal_id')->nullable();
             $table->integer('UserId');
             $table->index('UserId');
             $table->timestamps();

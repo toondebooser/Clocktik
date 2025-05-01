@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 
 class TimeloggingUtility
 {
-   
+
 
     public static function logTimeEntry($userRow, $userId, $oldLog = null)
     {
@@ -22,29 +22,39 @@ class TimeloggingUtility
         if (!$user) {
             throw new Exception("User $userId not found");
         }
-      
+
 
         $newEntry = static::createTimesheetEntry($userRow, $user);
-        static::updateOrInsertTimesheet($newEntry, $oldLog);
-        static::updateDailySummery($userId, $newEntry['Month']);
+        $timesheet =  static::updateOrInsertTimesheet($newEntry, $oldLog);
+        $userRow->BrakesTaken >= 1 ? static::linkExtraBreakSlots($timesheet->id, $userRow) : null; 
+            static::updateDailySummery($userId, $newEntry['Month']);
         return CalculateUtility::calculateUserTotal($userId);
     }
 
-   
 
+    public static function linkExtraBreakSlots($timesheetId, $userRow) 
+    {
+        foreach($userRow->dayTotal->extraBreakSlots->get() as $breakSlot)
+        {
+            $breakSlot->update([
+                'timesheet_id' => $timesheetId
+            ]);
+        }
+    }
     public static function createTimesheetEntry($userRow, $user)
     {
-        if (!$user instanceof User) {
-            Log::error('Invalid user in createTimesheetEntry', ['user' => $user]);
-            throw new Exception('Expected a single User instance, received: ' . gettype($user));
-        }
-        $date = Carbon::parse($userRow->StartWork)->format('Y-m-d');
+        // if (!$user instanceof User) {
+        //     Log::error('Invalid user in createTimesheetEntry', ['user' => $user]);
+        //     throw new Exception('Expected a single User instance, received: ' . gettype($user));
+        // }
+        $date = $userRow->StartWork->format('Y-m-d');
         $dayTotal = UserUtility::findOrCreateUserDayTotal($date, $user->id);
+        $overlapCheck = DateUtility::checkIfSameDay($userRow->StartWork, $userRow->StopWork);
         $dayTotal->update([
-            "DayOverlap" => !DateUtility::checkIfSameDay($userRow->StartWork,$userRow->StopWork),
-            "NightShift" => ( !DateUtility::checkIfSameDay($userRow->StartWork,$userRow->StopWork) || DateUtility::checkNightShift($userRow->StartWork) || DateUtility::checkNightShift($userRow->StopWork) ) ? true : false,
+            "DayOverlap" => !$overlapCheck,
+            "NightShift" => (!$overlapCheck || DateUtility::checkNightShift($userRow->StartWork) || DateUtility::checkNightShift($userRow->StopWork)) ? true : false,
         ]);
-            return [
+        return [
             'UserId' => $user->id,
             'daytotal_id' => $dayTotal->id,
             'ClockedIn' => $userRow->StartWork,
@@ -63,7 +73,8 @@ class TimeloggingUtility
         if ($oldLog != null) {
             $oldLog->update($newEntry);
         } else {
-            Timesheet::create($newEntry);
+            $timesheet = Timesheet::create($newEntry);
+            return $timesheet->id;
         }
     }
 
@@ -80,7 +91,4 @@ class TimeloggingUtility
         $summary = CalculateUtility::calculateSummaryForDay($timesheets, $companyDayHours);
         $dayTotal->update($summary);
     }
-
-
-   
 }

@@ -12,8 +12,10 @@ return new class extends Migration
         
         Schema::create('extra_break_slots', function (Blueprint $table) {
             $table->id();
-            $table->integer('timesheet_id');
+            $table->integer('timesheet_id')->nullable();
             $table->index('timesheet_id');
+            $table->integer('daytotal_id');
+            $table->index('daytotal_id');
             $table->integer('UserId');
             $table->index('UserId');
             $table->timestamp('BreakStart')->nullable();

@@ -28,4 +28,9 @@ class Timelog extends Model
     {
         return $this->belongsTo(User::class, 'UserId');
     }
+
+    public function dayTotal ()
+    {
+        return $this->hasOne(Daytotal::class, 'id', 'daytotal_id');
+    }
 }

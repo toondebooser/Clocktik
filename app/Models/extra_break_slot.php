@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class extra_break_slot extends Model
+class Extra_break_slot extends Model
 {
     use HasFactory;
     protected $fillable = ['UserId','timesheet_id', 'BreakStart', 'BreakStop' , 'Month'];
@@ -20,5 +20,9 @@ class extra_break_slot extends Model
     public function timesheet(): BelongsTo
     {
         return $this->belongsTo(Timesheet::class, 'timesheet_id');
+    }
+    public function dayTotal(): BelongsTo
+    {
+        return $this->belongsTo(Daytotal::class, 'dayTotal_id');
     }
 }
