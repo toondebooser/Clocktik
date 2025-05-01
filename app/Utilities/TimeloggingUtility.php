@@ -26,16 +26,15 @@ class TimeloggingUtility
 
         $newEntry = static::createTimesheetEntry($userRow, $user);
         $timesheet =  static::updateOrInsertTimesheet($newEntry, $oldLog);
-        $userRow->BrakesTaken >= 1 ? static::linkExtraBreakSlots($timesheet->id, $userRow) : null; 
-            static::updateDailySummery($userId, $newEntry['Month']);
+        $userRow->BrakesTaken >= 1 ? static::linkExtraBreakSlots($timesheet->id, $userRow) : null;
+        static::updateDailySummery($userId, $newEntry['Month']);
         return CalculateUtility::calculateUserTotal($userId);
     }
 
 
-    public static function linkExtraBreakSlots($timesheetId, $userRow) 
+    public static function linkExtraBreakSlots($timesheetId, $userRow)
     {
-        foreach($userRow->dayTotal->extraBreakSlots->get() as $breakSlot)
-        {
+        foreach ($userRow->dayTotal->extraBreakSlots->get() as $breakSlot) {
             $breakSlot->update([
                 'timesheet_id' => $timesheetId
             ]);
