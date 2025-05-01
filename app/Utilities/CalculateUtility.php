@@ -73,6 +73,11 @@ class CalculateUtility
         foreach ($timesheets as $timesheet) {
             $workHours = CalculateUtility::calculateDecimal($timesheet->ClockedIn, $timesheet->ClockedOut);
             $breakHours = CalculateUtility::calculateDecimal($timesheet->BreakStart, $timesheet->BreakStop);
+            if($timesheet->extraBreakSlots->isNotEmpty()){
+                foreach ($timesheet->extraBreakSlots as $breakSlot) {
+                    $breakHours += CalculateUtility::calculateDecimal($breakSlot->BreakStart, $breakSlot->BreakStop);
+                }
+            }
             $netWorkHours = $workHours - $breakHours;
             $timesheet->userNote ? $summary['UserNote'] = true : null;
             if($isWeekendDay){

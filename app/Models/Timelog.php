@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Timelog extends Model
 {
     use HasFactory;
-    protected $fillable = ['BreakStatus','ShiftStatus','Weekend','NightShift','StartWork','StartBreak', 'EndBreak','StopWork','BreaksTaken','BreakHours','RegularHours', 'userNote', 'userId'];
+    protected $fillable = ['BreakStatus','ShiftStatus','Weekend','NightShift','StartWork','StartBreak', 'EndBreak','StopWork','BreaksTaken','BreakHours','RegularHours', 'userNote', 'userId','daytotal_id'];
     protected $casts = [
         'id' => 'integer',
         'BreakStatus' => 'boolean',
@@ -23,6 +23,7 @@ class Timelog extends Model
         'BreaksTaken' => 'integer',
         'userNote' => 'string',
         'UserId' => 'integer',
+        'daytotal_id' => 'integer'
     ];
     public function user()
     {

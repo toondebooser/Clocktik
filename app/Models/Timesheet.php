@@ -33,7 +33,7 @@ class Timesheet extends Model
     {
         return $this->belongsTo(Daytotal::class, 'daytotal_id');
     }
-    public function extra_break_slots()
+    public function extraBreakSlots()
     {
         return $this->hasMany(Extra_break_slot::class, 'timesheet_id');
     }

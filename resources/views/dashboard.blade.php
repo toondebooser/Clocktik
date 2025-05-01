@@ -3,7 +3,7 @@
     <h2>Welcome {{ $user->name }}</h2>
     <h3 style="height:fit-content;grid-row: 3/4; grid-column: 1/13; justify-self:center" id="clock"></h3>
 @endsection
-@section('userDashboard')
+@section('content')
 
     @if (session('error'))
         <div class="error">

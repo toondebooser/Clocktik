@@ -9,10 +9,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Extra_break_slot extends Model
 {
     use HasFactory;
-    protected $fillable = ['UserId','timesheet_id', 'BreakStart', 'BreakStop' , 'Month'];
+    protected $fillable = ['UserId','timesheet_id','daytotal_id', 'BreakStart', 'BreakStop' , 'Month'];
     protected $casts = [
         'BreakStart' => 'datetime',
         'BreakStop' => 'datetime',
+        'daytotal_id' => 'integer',
         'timeheet_id' => 'integer',
         'UserId' => 'integer',
         'Month' => 'datetime:Y-m-d',
@@ -23,6 +24,6 @@ class Extra_break_slot extends Model
     }
     public function dayTotal(): BelongsTo
     {
-        return $this->belongsTo(Daytotal::class, 'dayTotal_id');
+        return $this->belongsTo(Daytotal::class, 'daytotal_id');
     }
 }

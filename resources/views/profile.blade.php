@@ -85,7 +85,7 @@
                 @endif
 
                 @foreach ($days as $day)
-                {{-- Daytotal Row --}}
+                    {{-- Daytotal Row --}}
                     <tr onclick="{{ $day->type == 'workday' ? 'toggleTimesheets(this)' : 'window.location.href=\'' . route('update', ['id' => $user->id, 'timesheet' => $day]) . '\'' }}"
                         class="{{ collect([$day->type === 'workday' ? 'timesheetRow' : null, $day->NightShift ? 'nightShift' : null])->filter()->implode(' ') }}"
                         data-dayType="{{ $day->type }}" data-day="{{ $day->id }}">
@@ -145,7 +145,7 @@
                         {{-- OverTime cell --}}
                         <td class="displayOvertTime">
                             {{ $day->OverTime }}
-                        </td>                       
+                        </td>
                     </tr>
 
                     {{--  Hidden Timesheets linked to daytotals --}}
@@ -167,23 +167,72 @@
                                 @endif
                             </td>
                             <td class="timesheetStyle">
-                                @if ($timesheet->BreakStart && $timesheet->BreakStart->format('H:i') !== $timesheet->BreakStop->format('H:i'))
+                                @if ($timesheet->extraBreakSlots->isNotEmpty())
+                                    @php
+                                        $firstBreak = $timesheet->extraBreakSlots->sortBy('BreakStart')->first();
+                                    @endphp
+                                    @if ($firstBreak && $firstBreak->BreakStart->format('H:i') !== $firstBreak->BreakStop->format('H:i'))
+                                        In: {{ $firstBreak->BreakStart->format('H:i') }} <br>
+                                        Uit: {{ $firstBreak->BreakStop->format('H:i') }}
+                                    @endif
+                                @elseif (
+                                    $timesheet->BreakStart &&
+                            
+                                        $timesheet->BreakStart->format('H:i') !== $timesheet->BreakStop->format('H:i'))
                                     In: {{ $timesheet->BreakStart->format('H:i') }} <br>
                                     Uit: {{ $timesheet->BreakStop->format('H:i') }}
+                                @endif
                             </td>
-                    @endif
-                    <td>
-                        <a href="{{ route('delete', ['workerId' => $userId, 'deleteSheet' => $timesheet->id, 'date' => $timesheet->Month]) }}"
-                            onclick="return confirm('Zedde zeker?')">
-
-                            <img class="trashIcon" src="{{ asset('/images/1843344.png') }}" alt="Delete">
-                        </a>
-                    </td>
-                    </tr>
+                            <td>
+                                <a href="{{ route('delete', ['workerId' => $userId, 'deleteSheet' => $timesheet->id, 'date' => $timesheet->Month]) }}"
+                                    onclick="return confirm('Zedde zeker?')">
+                                    <img class="trashIcon" src="{{ asset('/images/1843344.png') }}" alt="Delete">
+                                </a>
+                            </td>
+                        </tr>
+                        @if ($timesheet->extraBreakSlots->isNotEmpty())
+                        {{-- @php
+                            dd($firstBreak
+                        );
+                        @endphp --}}
+                            @foreach ($timesheet->extraBreakSlots as $breakLog)
+                                @if ($firstBreak && $breakLog->id !== $firstBreak->id)
+                                    <tr class='hidden timesheetStyle' data-timesheet="{{ $day->id }}">
+                                        <td class="date"></td>
+                                        <td class="timesheetStyle"></td>
+                                        <td class="timesheetStyle">
+                                            @if (
+                                                $breakLog->BreakStart &&
+                                                    $breakLog->BreakStop &&
+                                                    $breakLog->BreakStart->format('H:i') !== $breakLog->BreakStop->format('H:i'))
+                                                In: {{ $breakLog->BreakStart->format('H:i') }} <br>
+                                                Uit: {{ $breakLog->BreakStop->format('H:i') }}
+                                            @endif
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                @endif
+                                <tr class='hidden timesheetStyle' data-timesheet="{{ $day->id }}">
+                                    <td class="date"></td>
+                                    <td class="timesheetStyle"></td>
+                                    <td class="timesheetStyle">
+                                        @if (
+                                            $breakLog->BreakStart &&
+                                                $breakLog->BreakStop &&
+                                                $breakLog->BreakStart->format('H:i') !== $breakLog->BreakStop->format('H:i'))
+                                            In: {{ $timesheet->BreakStart->format('H:i') }} <br>
+                                            Uit: {{ $timesheet->BreakStop->format('H:i') }}
+                                        @endif
+                                    </td>
+                                    <td></td>
+                                
+                                </tr>
+                            @endforeach
+                        @endif
+                    @endforeach
                 @endforeach
-            @endforeach
-        @else
-            <p class="text-danger">No data</p>
+            @else
+                <p class="text-danger">No data</p>
             @endif
 
         </table>

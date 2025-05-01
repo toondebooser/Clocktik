@@ -56,8 +56,6 @@ class TimeclockController extends Controller
             $now = now('Europe/Brussels');
             $userRow = auth()->user()->timelogs;
             $dayTotal = $userRow->dayTotal;
-            dd($dayTotal);
-
 
             if ($userRow->StartBreak !== null && $userRow->BreaksTaken >= 1) {
                 
@@ -71,9 +69,10 @@ class TimeclockController extends Controller
                 // $extraBreakRow = Extra_break_slot::
                  Extra_break_slot::create([
                     'Month' => $now,
-                    'daytotal_id' => $dayTotal->id,
-                    'BreakStart' => $userRow->BreakStart,
-                    'BreakStop' => $userRow->BreakStop
+                    'UserId' => auth()->user()->id,
+                    'daytotal_id' => $userRow->daytotal_id,
+                    'BreakStart' => $userRow->StartBreak,
+                    'BreakStop' => $userRow->EndBreak
                 ]);
             }
 
