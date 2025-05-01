@@ -8,8 +8,12 @@ use App\Utilities\DateUtility;
 use App\Utilities\TimeloggingUtility;
 use App\Utilities\UserUtility;
 use Carbon\Carbon;
+use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 
 class TimeclockController extends Controller
@@ -17,34 +21,42 @@ class TimeclockController extends Controller
 
 
 
-    public function startWorking()
-    {
-        DB::transaction(function () {
-            $currentUser = auth()->user();
-            $userRow = $currentUser->timelogs;
+    public function startWorking(): RedirectResponse
+{
+    try {
+        return DB::transaction(function (): RedirectResponse {
+            $currentUser = Auth::user();
+            if (!$currentUser) {
+                throw new Exception('User not authenticated');
+            }
             $now = now('Europe/Brussels');
-
-            // Ensure UserDayTotal exists
-           $dayTotal = UserUtility::findOrCreateUserDayTotal($now, $currentUser->id);
-
-            $weekDay = Carbon::parse($now)->weekday();
-
-            // $isWeekend = $weekDay == $currentUser->company->weekend_day_1 || $weekDay == $currentUser->company->weekend_day_2;
-
-            // $userRow->Weekend = $isWeekend;
+            $dayTotal = UserUtility::findOrCreateUserDayTotal($now, $currentUser->id);
+            $userRow = $currentUser->timelogs;
+            dd($dayTotal);
+            if (!$userRow) {
+                $userRow = $currentUser->timelogs->create([
+                    'UserId' => $currentUser->id,
+                    'daytotal_id' => $dayTotal->id,
+                    'Month' => $now->format('Y-m-d'),
+                ]);
+            }
             $userRow->update([
                 'daytotal_id' => $dayTotal->id,
                 'StartWork' => $now,
                 'StartBreak' => null,
                 'EndBreak' => null,
+                'BreaksTaken' => $dayTotal->BreaksTaken,
                 'StopWork' => null,
                 'userNote' => null,
-                'ShiftStatus' => true
+                'ShiftStatus' => true,
             ]);
+            return redirect('/dashboard')->with('success', 'Shift started');
         });
-
-        return redirect('/dashboard');
+    } catch (Exception $e) {
+        Log::error('startWorking failed', ['error' => $e->getMessage(), 'user_id' => Auth::id()]);
+        return redirect('/dashboard')->with('error', 'Failed to start shift: ' . $e->getMessage());
     }
+}
 
 
 

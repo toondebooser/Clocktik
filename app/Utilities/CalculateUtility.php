@@ -59,11 +59,13 @@ class CalculateUtility
             'RegularHours' => 0,
             'OverTime' => 0,
             'accountableHours' => 0,
+            'BreaksTaken' => 0,
             'Weekend' => false,
             'Completed' => true,
         ];
 
         $dailyHours = 0;
+        $breaksTaken = 0;
         $isWeekendDay = $timesheets->isNotEmpty() && DateUtility::checkWeekend(
             $timesheets->first()->ClockedIn,
             User::find($timesheets->first()->UserId)->company
@@ -73,11 +75,14 @@ class CalculateUtility
         foreach ($timesheets as $timesheet) {
             $workHours = CalculateUtility::calculateDecimal($timesheet->ClockedIn, $timesheet->ClockedOut);
             $breakHours = CalculateUtility::calculateDecimal($timesheet->BreakStart, $timesheet->BreakStop);
-            if($timesheet->extraBreakSlots->isNotEmpty()){
+            $breaksTaken += $breakHours === 0 ?? 1;
+            if($timesheet->extraBreakSlots){
+                $breaksTaken += $timesheet->extraBreakSlots->count();
                 foreach ($timesheet->extraBreakSlots as $breakSlot) {
                     $breakHours += CalculateUtility::calculateDecimal($breakSlot->BreakStart, $breakSlot->BreakStop);
                 }
             }
+            $summary['BreaksTaken'] = $breaksTaken;
             $netWorkHours = $workHours - $breakHours;
             $timesheet->userNote ? $summary['UserNote'] = true : null;
             if($isWeekendDay){

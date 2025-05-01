@@ -43,11 +43,23 @@ class UserUtility
     public static function findOrCreateUserDayTotal($date, $id)
     {
         $date = Carbon::parse($date)->format('Y-m-d');
-        $dayTotal = Daytotal::firstOrCreate(['Month' => $date, 'UserId' => $id], [
-            'UserId' => $id,
-            'Month' => $date,
-        ]);
-        return $dayTotal;
+        return Daytotal::firstOrCreate(
+            ['Month' => Carbon::parse($date)->format('Y-m-d'), 'UserId' => $id],
+            [
+                'DaytimeCount' => 1,
+                'RegularHours' => 0.00,
+                'accountableHours' => 0.00,
+                'BreaksTaken' => 0,
+                'BreakHours' => 0.00,
+                'OverTime' => 0.00,
+                'type' => 'workday',
+                'userNote' => false,
+                'Completed' => false,
+                'Weekend' => false,
+                'NightShift' => false,
+                'DayOverlap' => false,
+            ]
+        );
     }
 
     public static function userDayTotalCheck($date, $id)
