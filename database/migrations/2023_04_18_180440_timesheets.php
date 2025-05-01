@@ -20,6 +20,7 @@ return new class extends Migration
             $table->timestamp('BreakStart')->nullable();
             $table->timestamp('BreakStop')->nullable();
             $table->text('userNote')->nullable();
+            $table->string('type')->default('workday');
             $table->date('Month');
             $table->index('Month');
             $table->timestamps();

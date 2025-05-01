@@ -24,7 +24,7 @@ class TimeloggingUtility
 
             $newEntry = static::createTimesheetEntry($userRow, $user);
             $timesheet = static::updateOrInsertTimesheet($newEntry, $oldLog);
-            if ($userRow->BreaksTaken >= 1) { // Fixed typo: BrakesTaken -> BreaksTaken
+            if ($userRow->BreaksTaken >= 1) { 
                 static::linkExtraBreakSlots($timesheet->id, $userRow);
             }
             static::updateDailySummery($userId, $newEntry['Month']);

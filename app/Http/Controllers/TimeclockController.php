@@ -32,7 +32,6 @@ class TimeclockController extends Controller
             $now = now('Europe/Brussels');
             $dayTotal = UserUtility::findOrCreateUserDayTotal($now, $currentUser->id);
             $userRow = $currentUser->timelogs;
-            dd($dayTotal);
             if (!$userRow) {
                 $userRow = $currentUser->timelogs->create([
                     'UserId' => $currentUser->id,
@@ -50,7 +49,7 @@ class TimeclockController extends Controller
                 'userNote' => null,
                 'ShiftStatus' => true,
             ]);
-            return redirect('/dashboard')->with('success', 'Shift started');
+            return redirect('/dashboard');
         });
     } catch (Exception $e) {
         Log::error('startWorking failed', ['error' => $e->getMessage(), 'user_id' => Auth::id()]);
@@ -71,14 +70,7 @@ class TimeclockController extends Controller
 
             if ($userRow->StartBreak !== null && $userRow->BreaksTaken >= 1) {
                 
-                // $timesheet = (object) [
-                //     'UserId' => $currentUser->id,
-                //     'BreakStart' => null,
-                //     'BreakStop' => null,
-                // ];
-                // $timesheetEntry = TimeloggingUtility::createTimesheetEntry($timesheet, $currentUser);
-                // TimeloggingUtility::updateOrInsertTimesheet($timesheetEntry, null);
-                // $extraBreakRow = Extra_break_slot::
+         
                  Extra_break_slot::create([
                     'Month' => $now,
                     'UserId' => auth()->user()->id,

@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\TimesheetController;
 use App\Models\Daytotal;
+use App\Models\Extra_break_slot;
 use Illuminate\Support\Carbon;
 use App\Models\Usertotal;
 use App\Utilities\CalculateUtility;
@@ -23,17 +24,27 @@ class UpdateTimesheetController extends Controller
     {
 
         $worker = User::find($id);
-        if ($type) {
-            $timesheet = Timesheet::find($timesheet);
-            $nightShift = UserUtility::userDayTotalFetch($timesheet->Month, $id)->NightShift;
-            $endDate = Carbon::parse($timesheet->ClockedOut)->format('Y-m-d');
-            $startDate = Carbon::parse($timesheet->ClockedIn)->format('Y-m-d');
-            $usedDayTotalDate = Carbon::parse($usedDayTotalDate)->format('Y-m-d');
-        } else {
-            $timesheet = Daytotal::find($timesheet);
-            $nightShift = null;
-            $startDate = null;
-            $endDate = null;
+        switch ($type) {
+            case 'timesheet':
+                $timesheet = Timesheet::find($timesheet);
+                $nightShift = UserUtility::userDayTotalFetch($timesheet->Month, $id)->NightShift;
+                $endDate = Carbon::parse($timesheet->ClockedOut)->format('Y-m-d');
+                $startDate = Carbon::parse($timesheet->ClockedIn)->format('Y-m-d');
+                $usedDayTotalDate = Carbon::parse($usedDayTotalDate)->format('Y-m-d');
+                break;
+            case 'extraBreakSLot':
+                $timesheet = Extra_break_slot::find($timesheet);
+                $nightShift = null;
+                $endDate = null;
+                $startDate = null;
+                $usedDayTotalDate = Carbon::parse($usedDayTotalDate)->format('Y-m-d');
+                break;
+            case false:
+                $timesheet = Daytotal::find($timesheet);
+                $nightShift = null;
+                $endDate = null;
+                $startDate = null;
+                break;
         }
         if ($timesheet === null) {
             $postData = [

@@ -167,18 +167,17 @@
                                 @endif
                             </td>
                             <td class="timesheetStyle">
-                                @if ($timesheet->extraBreakSlots->isNotEmpty())
+                                @if ($timesheet->extraBreakSlots)
                                     @php
                                         $firstBreak = $timesheet->extraBreakSlots->sortBy('BreakStart')->first();
+
                                     @endphp
+                                    {{-- Set first break shift stored in extra_break_slots --}}
                                     @if ($firstBreak && $firstBreak->BreakStart->format('H:i') !== $firstBreak->BreakStop->format('H:i'))
                                         In: {{ $firstBreak->BreakStart->format('H:i') }} <br>
                                         Uit: {{ $firstBreak->BreakStop->format('H:i') }}
                                     @endif
-                                @elseif (
-                                    $timesheet->BreakStart &&
-                            
-                                        $timesheet->BreakStart->format('H:i') !== $timesheet->BreakStop->format('H:i'))
+                                @elseif ($timesheet->BreakStart && $timesheet->BreakStart->format('H:i') !== $timesheet->BreakStop->format('H:i'))
                                     In: {{ $timesheet->BreakStart->format('H:i') }} <br>
                                     Uit: {{ $timesheet->BreakStop->format('H:i') }}
                                 @endif
@@ -190,44 +189,53 @@
                                 </a>
                             </td>
                         </tr>
-                        @if ($timesheet->extraBreakSlots->isNotEmpty())
-                        {{-- @php
-                            dd($firstBreak
-                        );
-                        @endphp --}}
-                            @foreach ($timesheet->extraBreakSlots as $breakLog)
-                                @if ($firstBreak && $breakLog->id !== $firstBreak->id)
+                        @if ($timesheet->extraBreakSlots)
+                            @foreach ($timesheet->extraBreakSlots->sortByDesc('BreakStart') as $breakSlot)
+                                {{-- Set extra break slots as row --}}
+                                @if ($firstBreak && $breakSlot->id !== $firstBreak->id)
                                     <tr class='hidden timesheetStyle' data-timesheet="{{ $day->id }}">
-                                        <td class="date"></td>
+                                        <td class="date"> <a
+                                                href="{{ route('update', ['id' => $user->id, 'timesheet' => $breakSlot, 'type' => 'extraBreakSlot', 'usedDayTotalId' => $day->id, 'usedDayTotalDate' => $day->Month]) }}">Update</a>
+                                        </td>
                                         <td class="timesheetStyle"></td>
                                         <td class="timesheetStyle">
                                             @if (
-                                                $breakLog->BreakStart &&
-                                                    $breakLog->BreakStop &&
-                                                    $breakLog->BreakStart->format('H:i') !== $breakLog->BreakStop->format('H:i'))
-                                                In: {{ $breakLog->BreakStart->format('H:i') }} <br>
-                                                Uit: {{ $breakLog->BreakStop->format('H:i') }}
+                                                $breakSlot->BreakStart &&
+                                                    $breakSlot->BreakStop &&
+                                                    $breakSlot->BreakStart->format('H:i') !== $breakSlot->BreakStop->format('H:i'))
+                                                In: {{ $breakSlot->BreakStart->format('H:i') }} <br>
+                                                Uit: {{ $breakSlot->BreakStop->format('H:i') }}
                                             @endif
                                         </td>
-                                        <td></td>
+                                        <td><a href="{{ route('delete', ['workerId' => $userId, 'deleteSheet' => $breakSlot->id, 'date' => $breakSlot->Month]) }}"
+                                                onclick="return confirm('Zedde zeker?')">
+                                                <img class="trashIcon" src="{{ asset('/images/1843344.png') }}"
+                                                    alt="Delete">
+                                            </a></td>
                                     </tr>
                                 @endif
                                 <tr class='hidden timesheetStyle' data-timesheet="{{ $day->id }}">
-                                    <td class="date"></td>
+                                    <td class="date"><a
+                                            href="{{ route('update', ['id' => $user->id, 'timesheet' => $breakSlot, 'type' => 'extraBreakSlot', 'usedDayTotalId' => $day->id, 'usedDayTotalDate' => $day->Month]) }}">Update</a>
+                                    </td>
+                                    </td>
                                     <td class="timesheetStyle"></td>
                                     <td class="timesheetStyle">
                                         @if (
-                                            $breakLog->BreakStart &&
-                                                $breakLog->BreakStop &&
-                                                $breakLog->BreakStart->format('H:i') !== $breakLog->BreakStop->format('H:i'))
+                                            $breakSlot->BreakStart &&
+                                                $breakSlot->BreakStop &&
+                                                $breakSlot->BreakStart->format('H:i') !== $breakSlot->BreakStop->format('H:i'))
                                             In: {{ $timesheet->BreakStart->format('H:i') }} <br>
                                             Uit: {{ $timesheet->BreakStop->format('H:i') }}
                                         @endif
                                     </td>
-                                    <td></td>
-                                
+                                    <td><a href="{{ route('delete', ['workerId' => $userId, 'deleteSheet' => $breakSlot->id, 'date' => $breakSlot->Month]) }}"
+                                            onclick="return confirm('Zedde zeker?')">
+                                            <img class="trashIcon" src="{{ asset('/images/1843344.png') }}" alt="Delete">
+                                        </a></td>
+
                                 </tr>
-                            @endforeach
+                                @endforeach
                         @endif
                     @endforeach
                 @endforeach
