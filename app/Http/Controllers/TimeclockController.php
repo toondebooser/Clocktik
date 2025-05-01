@@ -75,7 +75,7 @@ class TimeclockController extends Controller
             $userRow->update([
                 'StartBreak' => $now,
                 'BreakStatus' => true,
-                // 'BreaksTaken' => $userRow->BreaksTaken += 1
+                'BreaksTaken' => $userRow->BreaksTaken += 1
             ]);
 
             $dayTotal->update([

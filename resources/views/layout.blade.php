@@ -24,9 +24,7 @@
             --primary-color: {{ auth()->check() ? auth()->user()->company->company_color ?? '#4FAAFC' : '#4FAAFC' }};
             
         }
-        /* body{
-            background-color: 
-        } */
+    
     </style>
 
 
@@ -123,9 +121,9 @@
             @endguest
         </header>
 
-        @yield('login')
+        {{-- @yield('login')
         @yield('userDashboard')
-        @yield('newUser')
+        @yield('newUser') --}}
 
         <footer> &copy Toon De Booser</footer>
     </div>

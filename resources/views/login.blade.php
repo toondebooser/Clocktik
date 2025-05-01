@@ -16,7 +16,7 @@
 <div class="success">Thank you for verifying your email!</div>
 @endif
 @endsection
-@section('login')
+@section('content')
    
         <form class="loginForm" action="{{route('authentication')}}" method="post">
             @csrf

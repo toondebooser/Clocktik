@@ -11,7 +11,7 @@
         {{ $user->name }}
     </h2>
 @endsection
-@section('userDashboard')
+@section('content')
     @if (session('error'))
         <div class="error">
             {{ session('error') }} <br>

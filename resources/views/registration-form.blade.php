@@ -8,7 +8,7 @@
         <p class="emailExists">{{$exists}}</p>
     @endif
 @endsection
-@section('newUser')
+@section('content')
 
     <form class="newUserForm" name="newUserForm" action="{{ route('registrate') }}" method="post" onsubmit="showLoader()">
 

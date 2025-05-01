@@ -50,6 +50,7 @@ class TimeloggingUtility
             'ClockedIn' => $userRow->StartWork,
             'ClockedOut' => $userRow->StopWork,
             'BreakStart' => $userRow->StartBreak,
+            'BreaksTaken' => $userRow->Breakstaken ?? 0,
             'BreakStop' => $userRow->EndBreak,
             'Weekend' => $userRow->Weekend,
             'Month' => $date,

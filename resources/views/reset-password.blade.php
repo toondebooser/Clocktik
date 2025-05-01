@@ -26,7 +26,7 @@
     @enderror
 </div>
 @endsection
-@section('newUser')
+@section('content')
 
     <form class="newUserForm" name="newUserForm" action="{{route('password.update')}}" method="post" onsubmit="showLoader()">
 

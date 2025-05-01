@@ -7,7 +7,7 @@
     use Carbon\Carbon;
 
 
-    $holidays = Holidays::for('be')->getInRange(Carbon::now()->startOfMonth(),Carbon::now()->endOfmonth() );
+    $holidays = Holidays::for('be')->get();;
 dd($holidays);
 @endphp --}}
     <h1>Tiktrack</h1>

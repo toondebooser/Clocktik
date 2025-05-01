@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Timesheet_break extends Model
+
+class Timesheet extends Model
 {
     use HasFactory;
-    protected $fillable = ['UserId','daytotal_id', 'ClockedIn', 'ClockedOut', 'BreakStart', 'BreakStop', 'DaytimeCount', 'RegularHours', 'accountableHours', 'BreaksTaken', 'BreakHours', 'OverTime', 'userNote', 'Weekend', 'NightShift', 'Month', 'type'];
+    protected $fillable = ['UserId', 'daytotal_id', 'ClockedIn', 'ClockedOut', 'BreakStart', 'BreakStop', 'DaytimeCount', 'RegularHours', 'accountableHours', 'BreaksTaken', 'BreakHours', 'OverTime', 'userNote', 'Weekend', 'NightShift', 'Month', 'type'];
     protected $casts = [
         'ClockedIn' => 'datetime',
         'ClockedOut' => 'datetime',
@@ -28,8 +29,12 @@ class Timesheet_break extends Model
         'Month' => 'datetime:Y-m-d',
         'type' => 'string',
     ];
-//     public function timesheet_shift(): BelongsTo
-//     {
-//         // return $this->belongsTo(::class, 'daytotal_id');
-//     }
+    public function daytotal(): BelongsTo
+    {
+        return $this->belongsTo(Daytotal::class, 'daytotal_id');
+    }
+    public function extra_break_slots()
+    {
+        return $this->hasMany(extra_break_slot::class, 'timesheet_id');
+    }
 }

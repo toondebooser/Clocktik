@@ -243,6 +243,7 @@ th {
     grid-column: 2/12;
     word-break: break-all;
 }
+
 .error {
     display: flex;
     flex-direction: column;
@@ -259,6 +260,52 @@ th {
     align-items: center;
     border-radius: 10px;
     z-index: 1;
+}
+/* Uniform input field styling */
+.uniform-input {
+    display: block;
+    width: 100%; /* Full width for consistency */
+    max-width: 200px; /* Limit width for readability */
+    padding: 8px 12px; /* Comfortable padding */
+    font-size: 14px; /* Readable on mobile */
+    border: 2px solid #ccc; /* Rectangular border */
+    border-radius: 6px; /* Slightly rounded corners for modern look */
+    background-color: #fff; /* White background */
+    color: #333; /* Dark text */
+    box-sizing: border-box; /* Include padding/border in width */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth hover/focus */
+}
+
+/* Hover effect */
+.uniform-input:hover {
+    border-color: #007bff; /* Highlight border on hover */
+}
+
+/* Focus effect */
+.uniform-input:focus {
+    outline: none; /* Remove default outline */
+    border-color: #007bff; /* Blue border */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3); /* Subtle glow */
+}
+
+/* Night mode adjustments */
+body.night-mode .uniform-input {
+    background-color: #333; /* Dark background */
+    color: #fff; /* Light text */
+    border-color: #555; /* Darker border */
+}
+
+body.night-mode .uniform-input:hover,
+body.night-mode .uniform-input:focus {
+    border-color: #4da8ff; /* Lighter blue for night mode */
+    box-shadow: 0 0 5px rgba(77, 168, 255, 0.3);
+}
+
+/* Specific styles for date and time inputs */
+.uniform-input[type="date"],
+.uniform-input[type="time"] {
+    -webkit-appearance: none; /* Remove default styling on WebKit browsers */
+    appearance: none; /* Ensure native picker is used */
 }
 .success {
     max-width: 300px;

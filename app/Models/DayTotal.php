@@ -30,7 +30,7 @@ class Daytotal extends Model
     ];
     public function timesheets()
     {
-        return $this->hasMany(Timesheet_shift::class, 'daytotal_id');
+        return $this->hasMany(Timesheet::class, 'daytotal_id');
     }
     public function user(): BelongsTo
     {

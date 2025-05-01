@@ -1,7 +1,7 @@
 
 @extends('layout')
 
-@section('login')
+@section('content')
 <div class="verificationMessage">
     <h2>Verify Your Email Address</h2>
 
