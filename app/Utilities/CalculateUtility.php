@@ -76,7 +76,7 @@ class CalculateUtility
             $workHours = CalculateUtility::calculateDecimal($timesheet->ClockedIn, $timesheet->ClockedOut);
             $breakHours = CalculateUtility::calculateDecimal($timesheet->BreakStart, $timesheet->BreakStop);
             $breaksTaken += $breakHours === 0 ?? 1;
-            if($timesheet->extraBreakSlots){
+            if($timesheet->extraBreakSlots->isNotEmpty()){
                 $breaksTaken += $timesheet->extraBreakSlots->count();
                 foreach ($timesheet->extraBreakSlots as $breakSlot) {
                     $breakHours += CalculateUtility::calculateDecimal($breakSlot->BreakStart, $breakSlot->BreakStop);

@@ -167,7 +167,7 @@
                                 @endif
                             </td>
                             <td class="timesheetStyle">
-                                @if ($timesheet->extraBreakSlots)
+                                @if ($timesheet->extraBreakSlots->isNotEmpty())
                                     @php
                                         $firstBreak = $timesheet->extraBreakSlots->sortBy('BreakStart')->first();
 
@@ -178,6 +178,8 @@
                                         Uit: {{ $firstBreak->BreakStop->format('H:i') }}
                                     @endif
                                 @elseif ($timesheet->BreakStart && $timesheet->BreakStart->format('H:i') !== $timesheet->BreakStop->format('H:i'))
+                                    @php
+                                    @endphp
                                     In: {{ $timesheet->BreakStart->format('H:i') }} <br>
                                     Uit: {{ $timesheet->BreakStop->format('H:i') }}
                                 @endif
@@ -189,7 +191,7 @@
                                 </a>
                             </td>
                         </tr>
-                        @if ($timesheet->extraBreakSlots)
+                        @if ($timesheet->extraBreakSlots->isNotEmpty())
                             @foreach ($timesheet->extraBreakSlots->sortByDesc('BreakStart') as $breakSlot)
                                 {{-- Set extra break slots as row --}}
                                 @if ($firstBreak && $breakSlot->id !== $firstBreak->id)
@@ -235,7 +237,7 @@
                                         </a></td>
 
                                 </tr>
-                                @endforeach
+                            @endforeach
                         @endif
                     @endforeach
                 @endforeach

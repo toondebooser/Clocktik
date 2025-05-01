@@ -24,6 +24,7 @@
             <input type="hidden" name="usedDayTotalDate" value="{{ $usedDayTotalDate }}">
             <input type="hidden" name="userNote" value="{{ $timesheet->userNote }}">
             <input type="hidden" name="type" value="{{ $timesheet->type }}">
+            <input type="hidden" name="BreaksTaken" value="{{$timesheet->BreaksTaken}}">
             @if ($timesheet->type == 'workday')
                 @if ($startShift && $startShift !== $endShift)
                     <fieldset class="periode" style="{{ $nightShift ? 'display: block;' : 'display: none;' }}">
@@ -51,7 +52,7 @@
                     
 
                 @endif
-                @if($startBreak && $startBreak !== $EndBreak)
+                @if($startBreak && $startBreak !== $endBreak)
                 <fieldset class="gepauzeerd">
                     <legend>Gepauzeerd</legend>
 

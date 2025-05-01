@@ -24,7 +24,7 @@ class TimeloggingUtility
 
             $newEntry = static::createTimesheetEntry($userRow, $user);
             $timesheet = static::updateOrInsertTimesheet($newEntry, $oldLog);
-            if ($userRow->BreaksTaken >= 1) { 
+            if (isset($userRow->BreaksTaken) && $userRow->BreaksTaken >= 1) { 
                 static::linkExtraBreakSlots($timesheet->id, $userRow);
             }
             static::updateDailySummery($userId, $newEntry['Month']);
@@ -37,9 +37,11 @@ class TimeloggingUtility
     {
         DB::transaction(function () use ($timesheetId, $userRow) {
             foreach ($userRow->dayTotal->extraBreakSlots as $breakSlot) {
+                if(!$breakSlot->timesheet_id){
                 $breakSlot->update([
                     'timesheet_id' => $timesheetId,
                 ]);
+            }
             }
         });
     }
