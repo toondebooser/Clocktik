@@ -786,6 +786,7 @@ footer {
     grid-column: 2/12;
     grid-row: 3/4;
     min-height: 100px;
+    overflow-y: scroll;
     justify-self: center;
     display: flex;
     flex-direction: column;

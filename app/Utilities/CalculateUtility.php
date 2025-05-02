@@ -31,6 +31,7 @@ class CalculateUtility
         return DB::transaction(function () use ($id) {
             $user = User::find($id); 
             if (!$user) {
+
                 throw new Exception("Arbeider niet gevonden: ID $id");
             }
 

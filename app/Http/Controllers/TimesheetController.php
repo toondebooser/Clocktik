@@ -27,7 +27,7 @@ class TimesheetController extends Controller
         if ($userDayTotalCheck && $userDayTotalCheck->type !== 'workday') {
             return redirect()->route('dashboard')->with('error', 'Vandaag kan jij geen werkuren ingeven, kijk je profiel na.');
         }
-        if($userRow->timesheet_id !== null){
+        if ($userRow->timesheet_id !== null) {
             $timesheet = $userRow->timesheet_id;
             $userRow = (object) [
                 'UserId' => $userRow->userId,
@@ -47,7 +47,7 @@ class TimesheetController extends Controller
 
     public function addNewTimesheet(Request $request)
     {
-        
+
         $timeloggingUtility = new TimeloggingUtility;
         $date = $request->input('newTimesheetDate');
         $id = $request->input('workerId');
@@ -57,13 +57,13 @@ class TimesheetController extends Controller
             [
                 'startTime'   => 'required|date_format:H:i',
                 'endTime'     => 'required|date_format:H:i|after:startTime',
-                
+
                 'newTimesheetDate' => 'required|date'
             ]
         );
 
         if ($validator->fails()) {
-             return redirect()->route('timesheetForm', ['worker' => $id])->withErrors($validator)->withInput();
+            return redirect()->route('timesheetForm', ['worker' => $id])->withErrors($validator)->withInput();
         }
         if (!$dayTotalCheck->wasRecentlyCreated) {
             return redirect()->route('timesheetForm', ['worker' => $id])->with('error', 'Datum al in gebruik: ' . $date);
@@ -88,26 +88,27 @@ class TimesheetController extends Controller
 
     public function setDay($dayLabel, $dayType, $worker, $singleDay)
     {
-        // dd(User::find($worker)->company->weekend_day_1);
         if (DateUtility::checkWeekend($singleDay, User::find($worker)->company)) {
             return $singleDay->toDateString() . ' is een weekend dag';
         };
-        $dayTotal = Daytotal::firstOrCreate([
+        $dayTotal = Daytotal::where([
             'UserId' => $worker,
-            'Month' => $singleDay
-        ], [
-            'type' => $dayLabel,
-            'ClockedIn' => $singleDay,
             'Month' => $singleDay,
-            'UserId' => $worker,
-            'Completed' => true,
-            'accountableHours' => $dayType == 'onbetaald' ? 0 : User::find($worker)->company->day_hours,
-        ]);
-        if ($dayTotal->wasRecentlyCreated) {
-
-            return true;
+        ])->first();
+        
+        if (!$dayTotal) {
+            // No existing record, create a new one
+            $dayTotal = Daytotal::create([
+                'UserId' => $worker,
+                'Month' => $singleDay,
+                'type' => $dayLabel,
+                'ClockedIn' => $singleDay,
+                'Completed' => true,
+                'accountableHours' => $dayType == 'onbetaald' ? 0 : User::find($worker)->company->day_hours,
+            ]);
+            return true; // New record created
         } else {
-            return  'Datum al in gebruik: ' . $singleDay->toDateString();
+            return 'Datum al in gebruik: ' . $singleDay->toDateString();
         }
     }
 
@@ -190,13 +191,13 @@ class TimesheetController extends Controller
             if (is_array($workerObjectArray) && count($workerObjectArray) > 1) {
                 foreach ($workerObjectArray as $userObject) {
                     $user = User::find($userObject['id']);
-                    // $newSpecialTimesheetForEveryone = new Timesheet;
                     if ($user->admin && !$user->company->admin_timeclock) {
                         continue;
                     }
+
                     $result = $this->setday($dayLabel, $dayType, $userObject['id'], $singleDay);
-                    UserUtility::CheckUserMonthTotal($singleDay, $worker);
-                    CalculateUtility::calculateUserTotal($worker);
+                    UserUtility::CheckUserMonthTotal($singleDay->copy(), $worker);
+                    CalculateUtility::calculateUserTotal($user->id);
                     if ($result !== true) {
                         array_push($results, ['id' => $userObject['id'], 'errorList' => $result]);
                     }
@@ -228,13 +229,15 @@ class TimesheetController extends Controller
                     if ($result !== true) {
                         array_push($results, ['id' => $userObject['id'], 'errorList' => $result]);
                     }
+                    UserUtility::CheckUserMonthTotal($startDate, $user->id);
+                    CalculateUtility::calculateUserTotal($user->id);
                 }
                 if (!empty($results)) {
                     return redirect()->route('specials', ['worker' => $worker])->with('errList', $results);
                 }
             } else {
                 $result = $this->setPeriod($dayLabel, $dayType, $worker, $startDate, $endDate);
-                UserUtility::CheckUserMonthTotal($startDate, $worker);
+                UserUtility::CheckUserMonthTotal($startDate->copy(), $worker);
                 CalculateUtility::calculateUserTotal($worker);
                 if ($result !== true) {
                     array_push($results, ['id' => $worker, 'errorList' => $result]);
