@@ -167,17 +167,7 @@
                                 @endif
                             </td>
                             <td class="timesheetStyle">
-                                @if ($timesheet->extraBreakSlots->isNotEmpty())
-                                    @php
-                                        $firstBreak = $timesheet->extraBreakSlots->sortBy('BreakStart')->first();
-
-                                    @endphp
-                                    {{-- Set first break shift stored in extra_break_slots --}}
-                                    @if ($firstBreak)
-                                        1 In: {{ $firstBreak->BreakStart->format('H:i') }} <br>
-                                        Uit: {{ $firstBreak->BreakStop->format('H:i') }}
-                                    @endif
-                                @elseif ($timesheet->BreakStart && $timesheet->BreakStart->format('H:i') !== $timesheet->BreakStop->format('H:i'))
+                                @if ($timesheet->BreakStart && $timesheet->BreakStart->format('H:i') !== $timesheet->BreakStop->format('H:i'))
                                     In: {{ $timesheet->BreakStart->format('H:i') }} <br>
                                     Uit: {{ $timesheet->BreakStop->format('H:i') }}
                                 @endif
@@ -190,7 +180,7 @@
                             </td>
                         </tr>
                         @if ($timesheet->extraBreakSlots->isNotEmpty())
-                            @foreach ($timesheet->extraBreakSlots->sortByDesc('BreakStart') as $breakSlot)
+                            @foreach ($timesheet->extraBreakSlots->sortBy('BreakStart') as $breakSlot)
                                 {{-- Set extra break slots as row --}}
                                 <tr class='hidden timesheetStyle' data-timesheet="{{ $day->id }}">
                                     <td class="date"> <a
@@ -199,7 +189,7 @@
                                     <td class="timesheetStyle"></td>
                                     <td class="timesheetStyle">
                                         @if ($breakSlot->BreakStart && $breakSlot->BreakStop)
-                                            2 In: {{ $breakSlot->BreakStart->format('H:i') }} <br>
+                                            In: {{ $breakSlot->BreakStart->format('H:i') }} <br>
                                             Uit: {{ $breakSlot->BreakStop->format('H:i') }}
                                         @endif
                                     </td>
@@ -208,24 +198,7 @@
                                             <img class="trashIcon" src="{{ asset('/images/1843344.png') }}" alt="Delete">
                                         </a></td>
                                 </tr>
-                                {{-- <tr class='hidden timesheetStyle' data-timesheet="{{ $day->id }}">
-                                        <td class="date"><a
-                                                href="{{ route('update', ['id' => $user->id, 'timesheet' => $breakSlot, 'type' => 'extraBreakSlot', 'usedDayTotalId' => $day->id, 'usedDayTotalDate' => $day->Month]) }}">Update</a>
-                                        </td>
-                                        </td>
-                                        <td class="timesheetStyle"></td>
-                                        <td class="timesheetStyle">
-                                            @if ($breakSlot->BreakStart && $breakSlot->BreakStop && $breakSlot->BreakStart->format('H:i') !== $breakSlot->BreakStop->format('H:i'))
-                                                In: {{ $timesheet->BreakStart->format('H:i') }} <br>
-                                                Uit: {{ $timesheet->BreakStop->format('H:i') }}
-                                            @endif
-                                        </td>
-                                        <td><a href="{{ route('delete', ['workerId' => $userId, 'deleteSheet' => $breakSlot->id, 'date' => $breakSlot->Month]) }}"
-                                                onclick="return confirm('Zedde zeker?')">
-                                                <img class="trashIcon" src="{{ asset('/images/1843344.png') }}" alt="Delete">
-                                            </a></td>
-    
-                                    </tr> --}}
+                            
                             @endforeach
                         @endif
                     @endforeach

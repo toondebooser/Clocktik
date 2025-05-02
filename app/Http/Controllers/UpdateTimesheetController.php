@@ -156,7 +156,7 @@ class UpdateTimesheetController extends Controller
                 'userNote' => $request->userNote ?? null,
             ];
             $timeloggingUtility = new TimeloggingUtility;
-            $addTimesheet = $timeloggingUtility->logTimeEntry($userRow, $id, $timesheet);
+            $addTimesheet = $timeloggingUtility->logTimeEntry($userRow, $id, $timesheet->id);
             $usedDayTotal = UserUtility::userDayTotalFetch($request->usedDayTotalDate, $id);
             if ($request->usedDayTotalDate && !DateUtility::checkIfSameDay(Carbon::parse($request->usedDayTotalDate), Carbon::parse($request->startDate))) {
                 if ($usedDayTotal->timesheets()->where('Month', Carbon::parse($request->usedDayTotalDate))->exists()) {

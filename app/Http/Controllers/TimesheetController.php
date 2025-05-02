@@ -22,12 +22,24 @@ class TimesheetController extends Controller
     {
 
         $userRow = auth()->user()->timelogs;
+        $timesheet = null;
         $userDayTotalCheck = $userRow->dayTotal;
         if ($userDayTotalCheck && $userDayTotalCheck->type !== 'workday') {
             return redirect()->route('dashboard')->with('error', 'Vandaag kan jij geen werkuren ingeven, kijk je profiel na.');
         }
+        if($userRow->timesheet_id !== null){
+            $timesheet = $userRow->timesheet_id;
+            $userRow = (object) [
+                'UserId' => $userRow->userId,
+                'daytotal_id' => $userRow->dayTotal_id,
+                'StartWork' => $userRow->StartWork,
+                'StopWork' => $userRow->StopWork,
+                'userNote' => $userRow->userNote,
+                'Month' => $userRow->StartWork->format('Y-m-d'),
+            ];
+        }
         $buildTimesheet = new TimeloggingUtility;
-        $buildTimesheet->logTimeEntry($userRow, $id, null);
+        $buildTimesheet->logTimeEntry($userRow, $id, $timesheet);
         if ($buildTimesheet) return redirect()->back()->with('Succes', 'Uren succesvol toegevoegd');
     }
 

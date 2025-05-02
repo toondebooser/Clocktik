@@ -9,9 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 class Timelog extends Model
 {
     use HasFactory;
-    protected $fillable = ['BreakStatus','ShiftStatus','Weekend','NightShift','StartWork','StartBreak', 'EndBreak','StopWork','BreaksTaken','BreakHours','RegularHours', 'userNote', 'userId','daytotal_id'];
+    protected $fillable = ['BreakStatus','timesheet_id','ShiftStatus','Weekend','NightShift','StartWork','StartBreak', 'EndBreak','StopWork','BreaksTaken','BreakHours','RegularHours', 'userNote', 'userId','daytotal_id'];
     protected $casts = [
         'id' => 'integer',
+        'timesheet_id' => 'integer',
         'BreakStatus' => 'boolean',
         'ShiftStatus' => 'boolean',
         'Weekend' => 'boolean',

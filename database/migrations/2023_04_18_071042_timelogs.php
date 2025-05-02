@@ -16,6 +16,8 @@ return new class extends Migration
             $table->boolean('BreakStatus')->default(false);
             $table->boolean('ShiftStatus')->default(false);
             $table->boolean('Weekend')->default(false);
+            $table->integer('timesheet_id')->nullable();
+            $table->index('timesheet_id');
             $table->boolean('NightShift')->default(false); 
             $table->timestamp('StartWork')->nullable();
             $table->timestamp('StartBreak')->nullable();

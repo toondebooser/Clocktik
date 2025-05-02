@@ -22,40 +22,41 @@ class TimeclockController extends Controller
 
 
     public function startWorking(): RedirectResponse
-{
-    try {
-        return DB::transaction(function (): RedirectResponse {
-            $currentUser = Auth::user();
-            if (!$currentUser) {
-                throw new Exception('User not authenticated');
-            }
-            $now = now('Europe/Brussels');
-            $dayTotal = UserUtility::findOrCreateUserDayTotal($now, $currentUser->id);
-            $userRow = $currentUser->timelogs;
-            if (!$userRow) {
-                $userRow = $currentUser->timelogs->create([
-                    'UserId' => $currentUser->id,
+    {
+        try {
+            return DB::transaction(function (): RedirectResponse {
+                $currentUser = Auth::user();
+                if (!$currentUser) {
+                    throw new Exception('User not authenticated');
+                }
+                $now = now('Europe/Brussels');
+                $dayTotal = UserUtility::findOrCreateUserDayTotal($now, $currentUser->id);
+                $userRow = $currentUser->timelogs;
+                if (!$userRow) {
+                    $userRow = $currentUser->timelogs->create([
+                        'UserId' => $currentUser->id,
+                        'daytotal_id' => $dayTotal->id,
+                        'Month' => $now->format('Y-m-d'),
+                    ]);
+                }
+                $userRow->update([
                     'daytotal_id' => $dayTotal->id,
-                    'Month' => $now->format('Y-m-d'),
+                    'timesheet_id' => null,
+                    'StartWork' => $now,
+                    'StartBreak' => null,
+                    'EndBreak' => null,
+                    'BreaksTaken' => $dayTotal->BreaksTaken,
+                    'StopWork' => null,
+                    'userNote' => null,
+                    'ShiftStatus' => true,
                 ]);
-            }
-            $userRow->update([
-                'daytotal_id' => $dayTotal->id,
-                'StartWork' => $now,
-                'StartBreak' => null,
-                'EndBreak' => null,
-                'BreaksTaken' => $dayTotal->BreaksTaken,
-                'StopWork' => null,
-                'userNote' => null,
-                'ShiftStatus' => true,
-            ]);
-            return redirect('/dashboard');
-        });
-    } catch (Exception $e) {
-        Log::error('startWorking failed', ['error' => $e->getMessage(), 'user_id' => Auth::id()]);
-        return redirect('/dashboard')->with('error', 'Failed to start shift: ' . $e->getMessage());
+                return redirect('/dashboard');
+            });
+        } catch (Exception $e) {
+            Log::error('startWorking failed', ['error' => $e->getMessage(), 'user_id' => Auth::id()]);
+            return redirect('/dashboard')->with('error', 'Failed to start shift: ' . $e->getMessage());
+        }
     }
-}
 
 
 
@@ -67,17 +68,16 @@ class TimeclockController extends Controller
             $now = now('Europe/Brussels');
             $userRow = auth()->user()->timelogs;
             $dayTotal = $userRow->dayTotal;
+            if ($userRow->StartBreak !== null && $userRow->BreaksTaken == 1 && $userRow->timesheet_id == null) {
 
-            if ($userRow->StartBreak !== null && $userRow->BreaksTaken >= 1) {
-                
-         
-                 Extra_break_slot::create([
-                    'Month' => $now,
-                    'UserId' => auth()->user()->id,
-                    'daytotal_id' => $userRow->daytotal_id,
-                    'BreakStart' => $userRow->StartBreak,
-                    'BreakStop' => $userRow->EndBreak
-                ]);
+                $buildTimesheet = TimeloggingUtility::createTimesheetEntry([
+                    $userRow->id
+                ], auth()->user()->id);
+
+                $addTimesheet = TimeloggingUtility::updateOrInsertTimesheet($buildTimesheet, null);
+                $userRow->update(['timesheet_id' => $addTimesheet->id]);
+            } elseif ($userRow->BreaksTaken > 1 && $userRow->timesheet_id !== null) {
+              TimeloggingUtility::ExtraBreakSlot($userRow->id);
             }
 
             $userRow->update([
