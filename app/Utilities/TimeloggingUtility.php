@@ -23,9 +23,6 @@ class TimeloggingUtility
 
             $newEntry = static::createTimesheetEntry($userRow, $userId);
             static::updateOrInsertTimesheet($newEntry, $timesheetExists);
-            // if (isset($userRow->BreaksTaken) && $userRow->BreaksTaken >= 1) { 
-            //     static::linkExtraBreakSlots($timesheet->id, $userRow);
-            // }
             static::updateDailySummery($userId, $newEntry['Month']);
             return CalculateUtility::calculateUserTotal($userId);
         });

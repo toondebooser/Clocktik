@@ -23,7 +23,7 @@ class UpdateTimesheetController extends Controller
     public function updateForm($id, $timesheet, $type = null, $usedDayTotalId = null, $usedDayTotalDate = null)
     {
         $worker = User::find($id);
-        switch ($type ) {
+        switch ($type) {
             case 'timesheet':
                 $timesheet = Timesheet::find($timesheet);
                 $nightShift = UserUtility::userDayTotalFetch($timesheet->Month, $id)->NightShift;
@@ -31,7 +31,7 @@ class UpdateTimesheetController extends Controller
                 $startDate = Carbon::parse($timesheet->ClockedIn)->format('Y-m-d');
                 $usedDayTotalDate = Carbon::parse($usedDayTotalDate)->format('Y-m-d');
                 break;
-                case 'extraBreakSlot':
+            case 'extraBreakSlot':
                 $timesheet = Extra_break_slot::find($timesheet);
                 $nightShift = null;
                 $endDate = null;
@@ -53,7 +53,7 @@ class UpdateTimesheetController extends Controller
             return redirect()->route('getData', $postData)->with('error', $worker->name . ' heeft juist ingeklokt. ');
         }
         $startShift = $timesheet->ClockedIn ? Carbon::parse($timesheet->ClockedIn)->format('H:i') : null;
-        $endShift = $timesheet->ClockedOut ? Carbon::parse($timesheet->ClockedOut)->format('H:i'): null;
+        $endShift = $timesheet->ClockedOut ? Carbon::parse($timesheet->ClockedOut)->format('H:i') : null;
         $startBreak = $timesheet->BreakStart ? Carbon::parse($timesheet->BreakStart)->format('H:i') : null;
         $endBreak = $timesheet->BreakStop ? Carbon::parse($timesheet->BreakStop)->format('H:i') : null;
         $monthString = $timesheet->Month->format('d/m/Y');
@@ -94,7 +94,6 @@ class UpdateTimesheetController extends Controller
         if ($validator->fails()) {
             return  redirect()->back()->withErrors($validator);
         }
-
 
         $dayType = $request->input('dayType');
         $id = $request->id;
@@ -146,17 +145,25 @@ class UpdateTimesheetController extends Controller
                 return redirect()->route('getData', $postData)->with('error', 'Er ging iets mis, kijk even na of de dag in het uurrooster is aangepast.');
             }
         } else {
-            $userRow = (object) [
-                'UserId' => $id,
-                'StartWork' => $request->startTime ? Carbon::parse($request->startDate . ' ' . $request->startTime, 'Europe/Brussels') : null,
-                'StopWork' => $request->endTime ? Carbon::parse($request->endDate . ' ' . $request->endTime, 'Europe/Brussels') : null,
-                'StartBreak' => $request->startBreak ?  Carbon::parse($date->format('Y-m-d') . ' ' . $request->startBreak, 'Europe/Brussels') : null,
-                'EndBreak' => $request->endBreak ? Carbon::parse($date->format('Y-m-d') . ' ' . $request->endBreak, 'Europe/Brussels') : null,
-                'Weekend' => $weekend,
-                'userNote' => $request->userNote ?? null,
-            ];
-            $timeloggingUtility = new TimeloggingUtility;
-            $addTimesheet = $timeloggingUtility->logTimeEntry($userRow, $id, $timesheet->id);
+            if ($request->startTime !== null) {
+                $userRow = (object) [
+                    'UserId' => $id,
+                    'StartWork' => $request->startTime ? Carbon::parse($request->startDate . ' ' . $request->startTime, 'Europe/Brussels') : null,
+                    'StopWork' => $request->endTime ? Carbon::parse($request->endDate . ' ' . $request->endTime, 'Europe/Brussels') : null,
+                    'StartBreak' => $request->startBreak ?  Carbon::parse($date->format('Y-m-d') . ' ' . $request->startBreak, 'Europe/Brussels') : null,
+                    'EndBreak' => $request->endBreak ? Carbon::parse($date->format('Y-m-d') . ' ' . $request->endBreak, 'Europe/Brussels') : null,
+                    'Weekend' => $weekend,
+                    'userNote' => $request->userNote ?? null,
+                ];
+                $addTimesheet = TimeloggingUtility::logTimeEntry($userRow, $id, $timesheet->id);
+            }else{
+                $extraBreakSlot = Extra_break_slot::find($request->timesheet);
+                $extraBreakSlot->update([
+                    'BreakStart' => $request->startBreak,
+                    'BreakStop' => $request->endBreak
+                ]);
+            }
+
             $usedDayTotal = UserUtility::userDayTotalFetch($request->usedDayTotalDate, $id);
             if ($request->usedDayTotalDate && !DateUtility::checkIfSameDay(Carbon::parse($request->usedDayTotalDate), Carbon::parse($request->startDate))) {
                 if ($usedDayTotal->timesheets()->where('Month', Carbon::parse($request->usedDayTotalDate))->exists()) {
@@ -168,7 +175,7 @@ class UpdateTimesheetController extends Controller
 
             $updateAllTotals = UserUtility::updateAllUsersDayTotals(User::find($id)->company_code);
 
-            if ($addTimesheet && $updateAllTotals) return redirect()->back()->with('success', 'Dag is aangepast');
+            if ($updateAllTotals) return redirect()->back()->with('success', 'Dag is aangepast');
         }
     }
 }
