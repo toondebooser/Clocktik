@@ -14,16 +14,16 @@ use Illuminate\Support\Facades\Log;
 class TimeloggingUtility
 {
   
-    public static function logTimeEntry($userRow, $userId, $oldLog = null)
+    public static function logTimeEntry($userRow, $userId, $timesheetExists = null)
     {
-        return DB::transaction(function () use ($userRow, $userId, $oldLog) {
+        return DB::transaction(function () use ($userRow, $userId, $timesheetExists) {
             $user = User::find($userId);
             if (!$user) {
                 throw new Exception("User $userId not found");
             }
 
             $newEntry = static::createTimesheetEntry($userRow, $user);
-            $timesheet = static::updateOrInsertTimesheet($newEntry, $oldLog);
+            $timesheet = static::updateOrInsertTimesheet($newEntry, $timesheetExists);
             if (isset($userRow->BreaksTaken) && $userRow->BreaksTaken >= 1) { 
                 static::linkExtraBreakSlots($timesheet->id, $userRow);
             }
@@ -72,12 +72,12 @@ class TimeloggingUtility
     }
 
 
-    public static function updateOrInsertTimesheet(array $newEntry, $oldLog)
+    public static function updateOrInsertTimesheet(array $newEntry, $timesheetExists)
     {
-        return DB::transaction(function () use ($newEntry, $oldLog) {
-            if ($oldLog) {
-                $oldLog->update($newEntry);
-                return $oldLog;
+        return DB::transaction(function () use ($newEntry, $timesheetExists) {
+            if ($timesheetExists) {
+                $timesheetExists->update($newEntry);
+                return $timesheetExists;
             }
             return Timesheet::create($newEntry);
         });

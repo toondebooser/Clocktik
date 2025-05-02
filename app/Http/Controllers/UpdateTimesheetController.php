@@ -22,9 +22,8 @@ class UpdateTimesheetController extends Controller
 
     public function updateForm($id, $timesheet, $type = null, $usedDayTotalId = null, $usedDayTotalDate = null)
     {
-
         $worker = User::find($id);
-        switch ($type) {
+        switch ($type ) {
             case 'timesheet':
                 $timesheet = Timesheet::find($timesheet);
                 $nightShift = UserUtility::userDayTotalFetch($timesheet->Month, $id)->NightShift;
@@ -32,7 +31,7 @@ class UpdateTimesheetController extends Controller
                 $startDate = Carbon::parse($timesheet->ClockedIn)->format('Y-m-d');
                 $usedDayTotalDate = Carbon::parse($usedDayTotalDate)->format('Y-m-d');
                 break;
-            case 'extraBreakSLot':
+                case 'extraBreakSlot':
                 $timesheet = Extra_break_slot::find($timesheet);
                 $nightShift = null;
                 $endDate = null;
@@ -53,8 +52,8 @@ class UpdateTimesheetController extends Controller
 
             return redirect()->route('getData', $postData)->with('error', $worker->name . ' heeft juist ingeklokt. ');
         }
-        $startShift = Carbon::parse($timesheet->ClockedIn)->format('H:i');
-        $endShift = Carbon::parse($timesheet->ClockedOut)->format('H:i');
+        $startShift = $timesheet->ClockedIn ? Carbon::parse($timesheet->ClockedIn)->format('H:i') : null;
+        $endShift = $timesheet->ClockedOut ? Carbon::parse($timesheet->ClockedOut)->format('H:i'): null;
         $startBreak = $timesheet->BreakStart ? Carbon::parse($timesheet->BreakStart)->format('H:i') : null;
         $endBreak = $timesheet->BreakStop ? Carbon::parse($timesheet->BreakStop)->format('H:i') : null;
         $monthString = $timesheet->Month->format('d/m/Y');

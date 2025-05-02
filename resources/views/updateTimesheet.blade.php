@@ -24,9 +24,9 @@
             <input type="hidden" name="usedDayTotalDate" value="{{ $usedDayTotalDate }}">
             <input type="hidden" name="userNote" value="{{ $timesheet->userNote }}">
             <input type="hidden" name="type" value="{{ $timesheet->type }}">
-            <input type="hidden" name="BreaksTaken" value="{{$timesheet->BreaksTaken}}">
+            <input type="hidden" name="BreaksTaken" value="{{ $timesheet->BreaksTaken }}">
             @if ($timesheet->type == 'workday')
-                @if ($startShift && $startShift !== $endShift)
+                @if ($startShift )
                     <fieldset class="periode" style="{{ $nightShift ? 'display: block;' : 'display: none;' }}">
                         <legend>Datums</legend>
                         <input style="width: 120px" class="updateDateTime" name="startDate" type="date"
@@ -47,27 +47,25 @@
                         </div>
                     </fieldset>
                 @else
-                    <input type="hidden" name="startTime" value="{{null}}">
-                    <input type="hidden" name="endTime" value="{{null}}">
-                    
-
+                    <input type="hidden" name="startTime" value="{{ null }}">
+                    <input type="hidden" name="endTime" value="{{ null }}">
                 @endif
-                @if($startBreak && $startBreak !== $endBreak)
-                <fieldset class="gepauzeerd">
-                    <legend>Gepauzeerd</legend>
+                @if ($startBreak )
+                    <fieldset class="gepauzeerd">
+                        <legend>Gepauzeerd</legend>
 
-                    <div>
-                        <label for="startBreak">Start:</label>
-                        <input id="startBreak" class="updateDateTime" type="time" name="startBreak"
-                            value="{{ $startBreak }}"> <br>
-                        <label for="endBreak">End:</label>
-                        <input id="endBreak" type="time" name="endBreak" class="updateDateTime"
-                            value="{{ $endBreak }}">
-                        <br>
-                    </div>
-                </fieldset>
+                        <div>
+                            <label for="startBreak">Start:</label>
+                            <input id="startBreak" class="updateDateTime" type="time" name="startBreak"
+                                value="{{ $startBreak }}"> <br>
+                            <label for="endBreak">End:</label>
+                            <input id="endBreak" type="time" name="endBreak" class="updateDateTime"
+                                value="{{ $endBreak }}">
+                            <br>
+                        </div>
+                    </fieldset>
                 @endif
-            @else
+            @elseif(isset($timesheet->type))
                 <div class="specialUpdateContainer">
                     <input class="updateSpecialInput" type="text" name="updateSpecial" value="{{ $timesheet->type }}">
                     <br>
@@ -88,8 +86,9 @@
                         </label>
                     </span>
                 </div>
-            @endif
-            <input class="updateTimesheetSubmit button" type="submit" value="update">
+                @endif
+                <input class="updateTimesheetSubmit button" type="submit" value="update">
+         
 
         </form>
     </div>
