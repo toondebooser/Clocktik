@@ -2,6 +2,7 @@
 
 namespace App\Utilities;
 
+use App\Models\Company;
 use Carbon\Carbon;
 use Spatie\Holidays\Holidays;
 use Spatie\Holidays\Countries\Belgium;
@@ -32,26 +33,36 @@ class DateUtility
       return $dutchToCarbonNumber[$dutchWeekdayLowCase];
    }
 
-   public static function checkWeekend($date, $company)
+   public static function checkWeekend($date, $company_code)
    {
-      $weekdayNr = Carbon::parse($date)->weekday();
-      if ($weekdayNr == $company->weekend_day_1 || $weekdayNr == $company->weekend_day_2) {
-         return true;
-      } else {
-         return false;
-      }
+      $company = Company::where('company_code', $company_code)->first();
+       $weekdayNr = Carbon::parse($date)->weekday();
+       return $weekdayNr == $company->weekend_day_1 || $weekdayNr == $company->weekend_day_2;
    }
+
    public static function checkIfSameDay($in, $out)
    {
       return DateUtility::carbonParse($in)->isSameDay(DateUtility::carbonParse($out));
    }
-   public static function checkHolidaysInMonth()
-   {
+  public static function checkHolidaysInMonth($company_code)
+{
+    $start = now('Europe/Brussels')->startOfMonth()->format('Y-m-d');
+    $end = now('Europe/Brussels')->endOfMonth()->format('Y-m-d');
 
-      $holidaysCheck = Holidays::for('be')->getInRange(now('Europe/Brussels')->startOfMonth()->format('Y-m-d'), now('Europe/Brussels')->endOfMonth()->format('Y-m-d'));
+    $holidays = Holidays::for('be')->getInRange($start, $end);
 
-      return $holidaysCheck;
-   }
+    $processed = [];
+    foreach ($holidays as $date => $name) {
+        $processed[] = [
+            'date' => $name,
+            'name' => $date,
+            'weekend' => self::checkWeekend($date, $company_code),
+        ];
+    }
+
+    return $processed;
+}
+
    public static function checkNightShift($timestamp)
    {
       $time = Carbon::parse($timestamp)->format('H:i');

@@ -75,7 +75,7 @@ class TimesheetController extends Controller
             'StopWork' => Carbon::parse($date . ' ' . $request->input('endTime'), 'Europe/Brussels'),
             'StartBreak' => Carbon::parse($date . ' ' . $request->input('endTime'), 'Europe/Brussels')->subMinutes(30),
             'EndBreak' => Carbon::parse($date . ' ' . $request->input('endTime'), 'Europe/Brussels'),
-            'Weekend' => DateUtility::checkWeekend($date, User::find($id)->company),
+            'Weekend' => DateUtility::checkWeekend($date, User::find($id)->company->company_code),
             'userNote' => $userNote ?? null,
         ];
         $addTimesheet = $timeloggingUtility->logTimeEntry($userRow, $id, null);
@@ -90,7 +90,7 @@ class TimesheetController extends Controller
     public static function setDay($dayLabel, $dayType, $worker, $singleDay)
     {
         $singleDay = $singleDay instanceof Carbon ? $singleDay : Carbon::parse($singleDay);
-        if (DateUtility::checkWeekend($singleDay, User::find($worker)->company)) {
+        if (DateUtility::checkWeekend($singleDay, User::find($worker)->company->company_code)) {
             return  $singleDay->toDateString() . ' is een weekend dag';
         };
         $dayTotal = Daytotal::where([

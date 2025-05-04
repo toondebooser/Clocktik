@@ -32,7 +32,7 @@ class TimeclockController extends Controller
                 $now = now('Europe/Brussels');
                 $dayTotal = UserUtility::findOrCreateUserDayTotal($now, $currentUser->id);
                 UserUtility::CheckUserMonthTotal($now->copy(), $currentUser->id);
-                $dayTotal->Weekend = DateUtility::checkWeekend($now, $currentUser->company);
+                $dayTotal->Weekend = DateUtility::checkWeekend($now, $currentUser->company->company_code);
                 $userRow = $currentUser->timelogs;
                 if (!$userRow) {
                     $userRow = $currentUser->timelogs->create([

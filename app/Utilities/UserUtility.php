@@ -121,7 +121,7 @@ class UserUtility
                     UserUtility::CheckUserMonthTotal($dayTotal->Month,$user->id);
 
                     if ($dayTotal->type !== 'workday') {
-                        if (DateUtility::checkWeekend($dayTotal->Month, $user->company)) {
+                        if (DateUtility::checkWeekend($dayTotal->Month, $user->company->company_code)) {
                             $errors->add('weekend_deletion', "Vakantiedag: {$dayTotal->Month->format('Y-m-d')} Verwijderd omdat het in een weekend valt");
                             $dayTotal->delete();
                             continue;

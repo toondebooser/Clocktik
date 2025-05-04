@@ -136,6 +136,9 @@
             action="{{route('add-holidays')}}" method="POST">
             
         </form>
+        @php
+            dd($holidays);
+        @endphp
         @endif
         <div style="text-align: center"> &#8592; Sleep &#8594; <br> om van rechten te veranderen.</div>
         <div class="container-drag-drop">

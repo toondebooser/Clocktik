@@ -70,7 +70,7 @@ class UpdateTimesheetController extends Controller
         $companyDayHours = User::find($id)->company->day_hours;
         $timesheet = $request->type == 'workday' ? Timesheet::find($request->timesheet) : Daytotal::find($request->timesheet);
         $type = $request->updateSpecial;
-        $weekend = DateUtility::checkWeekend($timesheet->Month, User::find($id)->company);
+        $weekend = DateUtility::checkWeekend($timesheet->Month, User::find($id)->company->company_code);
         $type == null ? $type = $timesheet->type : null;
         $date = $timesheet->Month;
         if ($dayType == "onbetaald" && $type !== 'workday') {

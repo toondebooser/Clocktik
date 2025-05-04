@@ -69,7 +69,7 @@ class CalculateUtility
         $breaksTaken = 0;
         $isWeekendDay = $timesheets->isNotEmpty() && DateUtility::checkWeekend(
             $timesheets->first()->ClockedIn,
-            User::find($timesheets->first()->UserId)->company
+            User::find($timesheets->first()->UserId)->company->company_code
         );
         $summary['Weekend'] = $isWeekendDay;
 
