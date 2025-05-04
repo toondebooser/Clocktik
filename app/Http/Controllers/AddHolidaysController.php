@@ -8,6 +8,6 @@ class AddHolidaysController extends Controller
 {
     public static function addHolidays (Request $request)
     {
-        
+        dd($request->all());
     }
 }

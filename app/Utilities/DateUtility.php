@@ -54,9 +54,9 @@ class DateUtility
     $processed = [];
     foreach ($holidays as $date => $name) {
         $processed[] = [
-            'date' => $name,
-            'name' => $date,
-            'weekend' => self::checkWeekend($date, $company_code),
+            'date' => $date,
+            'name' => $name,
+            'weekend' => self::getWeekdayNumber( Carbon::parse($date)->locale('nl')->isoFormat('dddd')),
         ];
     }
 

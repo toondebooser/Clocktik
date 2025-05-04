@@ -63,7 +63,7 @@
     <div style=" max-width: 400px; height: 100%;justify-content:center; align-content:center; grid-row: 3/5; grid-column: 2/12; justify-self:center;"
         class="content">
         <form
-            style=" margin: 10px 0px; grid-gap:15px; border-radius: 20px; padding: 10px;border: solid {{ $data->company_color }} 2px;display:grid; grid-template-rows:repeat(5, auto); grid-template-columns:repeat(2,1fr); align-items:start; "
+            style=" margin: 0px 0px 10px 0px; grid-gap:15px; border-radius: 20px; padding: 10px;border: solid {{ $data->company_color }} 2px;display:grid; grid-template-rows:repeat(5, auto); grid-template-columns:repeat(2,1fr); align-items:start; "
             action="{{ route('change-company-settings') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="company_code" value="{{ $data->company_code }}">
@@ -132,13 +132,26 @@
                 style="  grid-row: 5/6; grid-column: 1/3; justify-self: center; height: 30px">Update instellingen</button>
         </form>
         @if(isset($holidays))
-        <form  style=" margin: 10px 0px; grid-gap:15px; border-radius: 20px; padding: 10px;border: solid {{ $data->company_color }} 2px;display:grid; grid-template-rows:repeat(5, auto); grid-template-columns:repeat(2,1fr); align-items:start; "
+        <form  style=" margin: 10px 0px ;  border-radius: 20px; padding: 10px;border: solid {{ $data->company_color }} 2px;display:grid;  align-items:start; "
             action="{{route('add-holidays')}}" method="POST">
-            
+            @csrf
+            <h5 style="text-align: center">Officiële vakantie dagen</h5>
+            @foreach($holidays as $holiday)
+            <div style="margin-top:10px; display: flex; justify-content: space-between">
+              
+                <div>{{$holiday['name']}}: </div>
+              
+                @if($holiday['weekend'] == $data->weekend_day_1 || $holiday['weekend'] == $data->weekend_day_2)
+                <div style="color: red">Weekend</div>
+                @else
+                <input type="date" name="{{ $holiday['name'] }}" value="{{ $holiday['date'] }}">
+
+                @endif
+            </div>
+                @endforeach
+            <button style="margin-top:10px; width: fit-content; justify-self:center" class="button" type="submit">Toevoegen</button>
         </form>
-        @php
-            dd($holidays);
-        @endphp
+        
         @endif
         <div style="text-align: center"> &#8592; Sleep &#8594; <br> om van rechten te veranderen.</div>
         <div class="container-drag-drop">
