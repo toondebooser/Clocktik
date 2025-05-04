@@ -2,16 +2,14 @@
 
 namespace App\Utilities;
 
-use App\Models\Daytotal;
+use App\Http\Controllers\TimesheetController;
 use App\Models\Extra_break_slot;
 use App\Models\Timelog;
 use App\Models\Timesheet;
 use App\Models\User;
 use App\Utilities\CalculateUtility;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Exception;
-use Illuminate\Support\Facades\Log;
 
 class TimeloggingUtility
 {
@@ -46,7 +44,17 @@ class TimeloggingUtility
         });
     }
 
- 
+    public static function addHolidaysForMonth($holidays, $userId)
+    {
+        // $errors = [] ;
+        collect($holidays)->map(function ($name, $date) use ($userId) {
+            TimesheetController::setDay($name,'betaald',$userId,$date);
+            // !$addDay ? array_push($errors, [$addDay]): null ;
+        });
+         
+        return true;
+    }        
+    
     public static function createTimesheetEntry($userRow_id, $user)
     {
         return DB::transaction(function () use ($userRow_id, $user) {

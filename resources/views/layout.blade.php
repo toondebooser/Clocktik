@@ -22,9 +22,8 @@
     <style>
         :root {
             --primary-color: {{ auth()->check() ? auth()->user()->company->company_color ?? '#4FAAFC' : '#4FAAFC' }};
-            
+
         }
-    
     </style>
 
 
@@ -42,27 +41,29 @@
         {{-- @yield('error') --}}
         @yield('title')
         @yield('content')
-<div class="message">
+        @if (session('success') || $errors->any())
+            <div class="message">
 
-    @if (session('success'))
-    <div class="success">
-        {{ session('success') }} <br>
-        <a class="removeError" href="">Sluiten</a> <!-- "#" voorkomt page reload -->
-    </div>
-    @endif
-    @if ($errors->any())
-    <div class="error">
-        <ul>
-            @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-        <a class="removeError" href="">Sluiten</a>
-    </div>
-    @endif
-</div>
-    @yield('header')
-    <header>
+                @if (session('success'))
+                    <div class="success">
+                        {{ session('success') }} <br>
+                        <a class="removeError" href="">Sluiten</a> <!-- "#" voorkomt page reload -->
+                    </div>
+                @endif
+                @if ($errors->any())
+                    <div class="error">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <a class="removeError" href="">Sluiten</a>
+                    </div>
+                @endif
+            </div>
+        @endif
+        @yield('header')
+        <header>
             @auth
                 <div id="side-menu" class="side-menu">
                     <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
@@ -72,8 +73,8 @@
                     @if ($currentUser->god)
                         <a class="authLinks button"
                             href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
-                    @else    
-                            <a class="authLinks button"
+                    @else
+                        <a class="authLinks button"
                             href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
                     @endif
                 </div>

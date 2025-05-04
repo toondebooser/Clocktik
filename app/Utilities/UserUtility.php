@@ -17,26 +17,29 @@ class UserUtility
     public static function CheckUserMonthTotal($date, $id)
     {
         try {
-
             if (is_string($date)) {
                 $date = Carbon::parse($date);
             }
-
+            
             $userTotal = Usertotal::where('UserId', $id)
-                ->whereMonth('Month', $date->month)
-                ->whereYear('Month', $date->year)
-                ->firstOrCreate(
-                    ['UserId' => $id, 'Month' => $date->startOfMonth()],
-                    [
-                        'RegularHours' => 0,
-                        'BreakHours' => 0,
-                        'OverTime' => 0
+            ->whereMonth('Month', $date->month)
+            ->whereYear('Month', $date->year)
+            ->firstOrCreate(
+                ['UserId' => $id, 'Month' => $date->startOfMonth()],
+                [
+                    'RegularHours' => 0,
+                    'BreakHours' => 0,
+                    'OverTime' => 0
                     ]
                 );
-               $hollidayCheck = $userTotal->wasRecentlyCreated ? DateUtility::checkHolidayInMonth($date) : null;
-               dd($hollidayCheck);
-               !Empty($hollidayCheck) ? dd($hollidayCheck): null;
-                           return $userTotal; 
+                
+                $hollidayCheck = $userTotal->wasRecentlyCreated ? DateUtility::checkHolidayInMonth($date) : null;
+                 if(!empty($hollidayCheck)) {
+                     TimeloggingUtility::addHolidaysForMonth($hollidayCheck, $id);
+                     CalculateUtility::calculateUserTotal($id);
+                } 
+                    
+                return $userTotal; 
         } catch (Exception $e) {
             Log::error("Error in CheckUserMonthTotal for user ID $id: " . $e->getMessage());
             return ['error' => 'Failed to check user month total: ' . $e->getMessage()];

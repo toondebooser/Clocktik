@@ -89,7 +89,7 @@ class TimesheetController extends Controller
     public static function setDay($dayLabel, $dayType, $worker, $singleDay)
     {
         if (DateUtility::checkWeekend($singleDay, User::find($worker)->company)) {
-            return $singleDay->toDateString() . ' is een weekend dag';
+            return $dayLabel . ' ' . $singleDay->toDateString() . ' is een weekend dag';
         };
         $dayTotal = Daytotal::where([
             'UserId' => $worker,
@@ -118,7 +118,7 @@ class TimesheetController extends Controller
         $currentDate = clone $startDate;
 
         while ($currentDate <= $endDate) {
-            $weekDay = Carbon::parse($currentDate)->weekday();
+            // $weekDay = Carbon::parse($currentDate)->weekday();
 
             $addDay =  $this->setDay($dayLabel, $dayType, $worker, $currentDate);
             if ($addDay !== true) {

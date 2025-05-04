@@ -47,9 +47,7 @@ class DateUtility
    }
    public static function checkHolidayInMonth($month)
    {
-      $parsedMonth = Carbon::parse($month);
-      $holidays = Holidays::for('be')->getInRange( '01/05/2025', '30/05/2025');
-      dd($holidays);
+      $holidays = Holidays::for('be')->getInRange( '2025/05/01', '2025/05/30');
       return $holidays;
    }
    public static function checkNightShift($timestamp)
