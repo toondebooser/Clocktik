@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use App\Models\User;
+use App\Utilities\DateUtility;
 use App\Utilities\UserUtility;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -12,6 +13,7 @@ use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Holidays\Holidays;
 
 class SettingsController extends Controller
 {
@@ -21,8 +23,18 @@ class SettingsController extends Controller
         $data = Company::where('company_code', $company_code)->first();
         $admins = User::where('company_code', $company_code)->where('admin', true)->get();
         $workers = User::where('company_code', $company_code)->where('admin', false)->get();
-        return view('settings', ['data' =>  $data, 'admins' => $admins, 'workers' => $workers]);
+        $holidaysCheck = DateUtility::checkHolidaysInMonth();
+        $holidays = null;
+        $workersNeedingHolidays = null;
+        if (!empty($holidaysCheck)) {
+            $holidays = $holidaysCheck;
+            $workersNeedingHolidays = UserUtility::workersHolidayCheck($company_code);
+        }
+        return view('settings', ['data' =>  $data, 'admins' => $admins, 'holidays' => $holidays, 'workersNeedingHolidays' => $workersNeedingHolidays, 'workers' => $workers]);
     }
+
+   
+
     public function changeRights(Request $request, $id, $company_code)
     {
         try {
@@ -59,6 +71,7 @@ class SettingsController extends Controller
                 ->withErrors(['error' => 'Er ging iets mis bij het aanpassen van de rechten: ' . $e->getMessage()]);
         }
     }
+
     public function logohandler($company, $company_logo)
     {
         $validator = Validator::make(
@@ -95,6 +108,7 @@ class SettingsController extends Controller
 
         return $logoPath;
     }
+
     public function updateSettings(Request $request)
     {
         try {

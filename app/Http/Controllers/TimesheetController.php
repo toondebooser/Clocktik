@@ -11,6 +11,7 @@ use App\Utilities\CalculateUtility;
 use App\Utilities\DateUtility;
 use App\Utilities\TimeloggingUtility;
 use App\Utilities\UserUtility;
+use Hamcrest\Type\IsString;
 
 class TimesheetController extends Controller
 {
@@ -88,8 +89,9 @@ class TimesheetController extends Controller
 
     public static function setDay($dayLabel, $dayType, $worker, $singleDay)
     {
+        $singleDay = $singleDay instanceof Carbon ? $singleDay : Carbon::parse($singleDay);
         if (DateUtility::checkWeekend($singleDay, User::find($worker)->company)) {
-            return $dayLabel . ' ' . $singleDay->toDateString() . ' is een weekend dag';
+            return  $singleDay->toDateString() . ' is een weekend dag';
         };
         $dayTotal = Daytotal::where([
             'UserId' => $worker,
@@ -249,6 +251,13 @@ class TimesheetController extends Controller
 
         return redirect('/')->with('error', 'Something went wrong try again or call for support');
     }
-
+    // public static function addHolidaysForMonth($holidays, $company_code)
+    // {
+    //     foreach ($holidays as $date => $name) {
+    //         TimesheetController::setDay($name,'betaald',$userId,$date);
+    //     };
+         
+    //     return true;
+    // }   
    
 }

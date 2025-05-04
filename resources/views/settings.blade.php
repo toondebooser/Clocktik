@@ -97,13 +97,11 @@
                     <span class="checkMark"></span>
                 </label>
                 
-            {{-- </span> --}}
                 <label  style="text-align: end;  margin: 0" for="day_hours">Daguren decimaal</label>
             <input  step="0.1" 
             min="0" 
             max="24" value="{{ $data->day_hours }}" style="width:60px;" type="number" name="day_hours" id="day_hours">
                 
-            {{-- set weekend days --}}
             <div style="text-align: end">Weekend dagen</div>
             <span>
                 <select style="width: fit-content" name="weekend_day_1" id="weekendDag1">
@@ -133,6 +131,12 @@
             <button class="button" type="submit"
                 style="  grid-row: 5/6; grid-column: 1/3; justify-self: center; height: 30px">Update instellingen</button>
         </form>
+        @if(isset($holidays))
+        <form  style=" margin: 10px 0px; grid-gap:15px; border-radius: 20px; padding: 10px;border: solid {{ $data->company_color }} 2px;display:grid; grid-template-rows:repeat(5, auto); grid-template-columns:repeat(2,1fr); align-items:start; "
+            action="{{route('add-holidays')}}" method="POST">
+            
+        </form>
+        @endif
         <div style="text-align: center"> &#8592; Sleep &#8594; <br> om van rechten te veranderen.</div>
         <div class="container-drag-drop">
             <div class="side" id="left" ondrop="drop(event)" ondragover="allowDrop(event)">

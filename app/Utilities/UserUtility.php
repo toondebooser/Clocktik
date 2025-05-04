@@ -33,11 +33,11 @@ class UserUtility
                     ]
                 );
                 
-                $hollidayCheck = $userTotal->wasRecentlyCreated ? DateUtility::checkHolidayInMonth($date) : null;
-                 if(!empty($hollidayCheck)) {
-                     TimeloggingUtility::addHolidaysForMonth($hollidayCheck, $id);
-                     CalculateUtility::calculateUserTotal($id);
-                } 
+                // $hollidayCheck =  DateUtility::checkHolidayInMonth($date->copy());
+                //  if(!empty($hollidayCheck)) {
+                //      TimeloggingUtility::addHolidaysForMonth($hollidayCheck, $id);
+                //      CalculateUtility::calculateUserTotal($id);
+                // } 
                     
                 return $userTotal; 
         } catch (Exception $e) {
@@ -45,7 +45,27 @@ class UserUtility
             return ['error' => 'Failed to check user month total: ' . $e->getMessage()];
         }
     }
+    public static function workersHolidayCheck($company_code)
+    {
+        $now = now('Europe/Brussels');
+        $month = $now->month;
+        $year = $now->year;
 
+        $workers = User::with(['userTotals' => function ($q) use ($month, $year) {
+            $q->whereMonth('created_at', $month)
+              ->whereYear('created_at', $year);
+        }])->where('company_code', $company_code)
+          ->where('admin', false)
+          ->get();
+        
+
+          $workersNeedingHolidays = $workers->filter(function ($worker) {
+            $monthTotal = $worker->userTotals->first(); // Only loads totals from this month
+            return !$monthTotal || $monthTotal->HolidaysAdded === false;
+        });
+        
+        return $workersNeedingHolidays;
+    }
     public static function findOrCreateUserDayTotal($date, $id)
     {
         $date = Carbon::parse($date)->format('Y-m-d');
@@ -97,6 +117,9 @@ class UserUtility
             $errors = new MessageBag(); 
             foreach ($users as $user) {
                 foreach ($user->dayTotals as $dayTotal) {
+                    
+                    UserUtility::CheckUserMonthTotal($dayTotal->Month,$user->id);
+
                     if ($dayTotal->type !== 'workday') {
                         if (DateUtility::checkWeekend($dayTotal->Month, $user->company)) {
                             $errors->add('weekend_deletion', "Vakantiedag: {$dayTotal->Month->format('Y-m-d')} Verwijderd omdat het in een weekend valt");

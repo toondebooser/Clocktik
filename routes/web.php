@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AddCustomTimesheetController;
+use App\Http\Controllers\AddHolidaysController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ConfirmAction;
 use App\Http\Controllers\DashboardController;
@@ -54,6 +55,7 @@ Route::middleware(['auth', 'verified','check.admin.timeclock'])->group(function 
 
 // Admin Routes
 Route::middleware(['admin', 'auth'])->group(function () {
+    Route::post('/add-holidays', [AddHolidaysController::class, 'addHolidays'])->name('add-holidays');
     Route::match(['get', 'post'], '/new-timesheet-form', [AddCustomTimesheetController::class, 'customTimesheetForm'])->name('timesheetForm');
     Route::match(['get', 'post'], '/add-new-timesheet', [TimesheetController::class, 'addNewTimesheet'])->name('newTimesheet');
     Route::get('/get-List/{type?}/{company_code?}', [MyListController::class, 'fetchList'])->name('myList');

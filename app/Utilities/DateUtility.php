@@ -45,10 +45,12 @@ class DateUtility
    {
       return DateUtility::carbonParse($in)->isSameDay(DateUtility::carbonParse($out));
    }
-   public static function checkHolidayInMonth($month)
+   public static function checkHolidaysInMonth()
    {
-      $holidays = Holidays::for('be')->getInRange( '2025/05/01', '2025/05/30');
-      return $holidays;
+
+      $holidaysCheck = Holidays::for('be')->getInRange(now('Europe/Brussels')->startOfMonth()->format('Y-m-d'), now('Europe/Brussels')->endOfMonth()->format('Y-m-d'));
+
+      return $holidaysCheck;
    }
    public static function checkNightShift($timestamp)
    {

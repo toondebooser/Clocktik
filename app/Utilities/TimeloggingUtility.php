@@ -44,16 +44,7 @@ class TimeloggingUtility
         });
     }
 
-    public static function addHolidaysForMonth($holidays, $userId)
-    {
-        // $errors = [] ;
-        collect($holidays)->map(function ($name, $date) use ($userId) {
-            TimesheetController::setDay($name,'betaald',$userId,$date);
-            // !$addDay ? array_push($errors, [$addDay]): null ;
-        });
-         
-        return true;
-    }        
+        
     
     public static function createTimesheetEntry($userRow_id, $user)
     {

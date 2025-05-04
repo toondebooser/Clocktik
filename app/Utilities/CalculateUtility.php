@@ -27,9 +27,9 @@ class CalculateUtility
     }
     public static function calculateUserTotal($id)
     {
-    
+
         return DB::transaction(function () use ($id) {
-            $user = User::find($id); 
+            $user = User::find($id);
             if (!$user) {
 
                 throw new Exception("Arbeider niet gevonden: ID $id");
@@ -51,8 +51,8 @@ class CalculateUtility
 
             return true;
         });
-        }
-    
+    }
+
     public static function calculateSummaryForDay($timesheets, $companyDayHours)
     {
         $summary = [
@@ -77,7 +77,7 @@ class CalculateUtility
             $workHours = CalculateUtility::calculateDecimal($timesheet->ClockedIn, $timesheet->ClockedOut);
             $breakHours = CalculateUtility::calculateDecimal($timesheet->BreakStart, $timesheet->BreakStop);
             $breaksTaken += $timesheet->BreakStart && $timesheet->BreakStop !== null ? 1 : 0;
-            if($timesheet->extraBreakSlots->isNotEmpty()){
+            if ($timesheet->extraBreakSlots->isNotEmpty()) {
                 $breaksTaken += $timesheet->extraBreakSlots->count();
                 foreach ($timesheet->extraBreakSlots as $breakSlot) {
                     $breakHours += CalculateUtility::calculateDecimal($breakSlot->BreakStart, $breakSlot->BreakStop);
@@ -86,22 +86,20 @@ class CalculateUtility
             $summary['BreaksTaken'] = $breaksTaken;
             $netWorkHours = $workHours - $breakHours;
             $timesheet->userNote ? $summary['UserNote'] = true : null;
-            if($isWeekendDay){
+            if ($isWeekendDay) {
                 $summary['OverTime'] += $netWorkHours;
-                $summary ['BreakHours'] += $breakHours;
-            }else{
+                $summary['BreakHours'] += $breakHours;
+            } else {
                 $dailyHours += $netWorkHours;
                 $summary['BreakHours'] += $breakHours;
                 $summary['RegularHours'] += $netWorkHours;
-
             }
         }
-        if(!$isWeekendDay) {
+        if (!$isWeekendDay) {
             $summary['OverTime'] += $dailyHours - $companyDayHours;
             $summary['accountableHours'] = $companyDayHours;
         };
-        
+
         return $summary;
     }
-
 }
