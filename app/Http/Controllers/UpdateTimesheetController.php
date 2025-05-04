@@ -63,39 +63,9 @@ class UpdateTimesheetController extends Controller
 
     public function updateTimesheet(Request $request)
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'usedDayTotalDate' => 'required|date', // Replace startDate/endDate
-                'startTime' => 'nullable|date_format:H:i|required_with:endTime',
-                'endTime' => 'nullable|date_format:H:i|required_with:startTime|after:startTime',
-                'startBreak' => 'nullable|date_format:H:i|required_with:endBreak',
-                'endBreak' => 'nullable|date_format:H:i|required_with:startBreak|after_or_equal:startBreak',
-                // Custom rule to ensure at least one timeslot pair
-                'timeslot_pair' => Rule::requiredIf(function () use ($request) {
-                    return (
-                        (is_null($request->startTime) || is_null($request->endTime)) &&
-                        (is_null($request->startBreak) || is_null($request->endBreak))
-                    );
-                }),
-            ],
-            [
-                'usedDayTotalDate.required' => 'De datum is verplicht.',
-                'usedDayTotalDate.date' => 'De datum moet een geldige datum zijn.',
-                'startTime.required_with' => 'Starttijd is verplicht als eindtijd is ingevuld.',
-                'endTime.required_with' => 'Eindtijd is verplicht als starttijd is ingevuld.',
-                'endTime.after' => 'Eindtijd moet na starttijd liggen.',
-                'startBreak.required_with' => 'Pauzestart is verplicht als pauzeeinde is ingevuld.',
-                'endBreak.required_with' => 'Pauzeeinde is verplicht als pauzestart is ingevuld.',
-                'endBreak.after_or_equal' => 'Pauzeeinde moet gelijk aan of na pauzestart liggen.',
-                'timeslot_pair.required' => 'Ten minste één tijdsblok (werkuren of pauze) moet worden ingevuld.',
-            ]
-        );
-        if ($validator->fails()) {
-            return  redirect()->back()->withErrors($validator);
-        }
+        
 
-        $dayType = $request->input('dayType');
+        $dayType = $request->dayType;
         $id = $request->id;
         $companyDayHours = User::find($id)->company->day_hours;
         $timesheet = $request->type == 'workday' ? Timesheet::find($request->timesheet) : Daytotal::find($request->timesheet);
@@ -145,6 +115,36 @@ class UpdateTimesheetController extends Controller
                 return redirect()->route('getData', $postData)->with('error', 'Er ging iets mis, kijk even na of de dag in het uurrooster is aangepast.');
             }
         } else {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'usedDayTotalDate' => 'required|date', // Replace startDate/endDate
+                    'startTime' => 'nullable|date_format:H:i|required_with:endTime',
+                    'endTime' => 'nullable|date_format:H:i|required_with:startTime|after:startTime',
+                    'startBreak' => 'nullable|date_format:H:i|required_with:endBreak',
+                    'endBreak' => 'nullable|date_format:H:i|required_with:startBreak|after_or_equal:startBreak',
+                    'timeslot_pair' => Rule::requiredIf(function () use ($request) {
+                        return (
+                            (is_null($request->startTime) || is_null($request->endTime)) &&
+                            (is_null($request->startBreak) || is_null($request->endBreak))
+                        );
+                    }),
+                ],
+                [
+                    'usedDayTotalDate.required' => 'De datum is verplicht.',
+                    'usedDayTotalDate.date' => 'De datum moet een geldige datum zijn.',
+                    'startTime.required_with' => 'Starttijd is verplicht als eindtijd is ingevuld.',
+                    'endTime.required_with' => 'Eindtijd is verplicht als starttijd is ingevuld.',
+                    'endTime.after' => 'Eindtijd moet na starttijd liggen.',
+                    'startBreak.required_with' => 'Pauzestart is verplicht als pauzeeinde is ingevuld.',
+                    'endBreak.required_with' => 'Pauzeeinde is verplicht als pauzestart is ingevuld.',
+                    'endBreak.after_or_equal' => 'Pauzeeinde moet gelijk aan of na pauzestart liggen.',
+                    'timeslot_pair.required' => 'Ten minste één tijdsblok (werkuren of pauze) moet worden ingevuld.',
+                ]
+            );
+            if ($validator->fails()) {
+                return  redirect()->back()->withErrors($validator);
+            }
             if ($request->startTime !== null) {
                 $userRow = (object) [
                     'UserId' => $id,

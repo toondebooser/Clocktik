@@ -22,7 +22,6 @@ class SettingsController extends Controller
         $admins = User::where('company_code', $company_code)->where('admin', true)->get();
         $workers = User::where('company_code', $company_code)->where('admin', false)->get();
         return view('settings', ['data' =>  $data, 'admins' => $admins, 'workers' => $workers]);
-
     }
     public function changeRights(Request $request, $id, $company_code)
     {
@@ -49,87 +48,87 @@ class SettingsController extends Controller
                 });
 
                 return redirect()->route('adminSettings', ['company_code' => $company_code])
-                                 ->with('success', "Rechten voor $user->name zijn aangepast");
+                    ->with('success', "Rechten voor $user->name zijn aangepast");
             }
 
             return redirect()->route('adminSettings', ['company_code' => $company_code])
-                             ->with('message', "No rights change needed for user $id");
+                ->with('message', "No rights change needed for user $id");
         } catch (Exception $e) {
             Log::error("Error in changeRights for user ID $id: " . $e->getMessage());
             return redirect()->route('adminSettings', ['company_code' => $company_code])
-                             ->withErrors(['error' => 'Er ging iets mis bij het aanpassen van de rechten: ' . $e->getMessage()]);
+                ->withErrors(['error' => 'Er ging iets mis bij het aanpassen van de rechten: ' . $e->getMessage()]);
         }
     }
-    public function logohandler($company, $company_logo){
+    public function logohandler($company, $company_logo)
+    {
         $validator = Validator::make(
             ['company_logo' => $company_logo],
             [
                 'company_logo' =>  'required|image|max:2048'
-                   
+
             ],
             [
                 'company_logo.required' => 'A company logo is required.',
-                'company_logo.image' => 'The company logo must be an image (e.g., JPEG, PNG).',
-                'company_logo.max' => 'The company logo must not exceed 2 MB.',
+                'company_logo.image' => 'Logo moet een afbeelding zijn (e.g., JPEG, PNG).',
+                'company_logo.max' => 'Logo mag niet groter zijn dan 2 MB.',
             ]
         );
-    
+
         if ($validator->fails()) {
             redirect()->back()->withErrors($validator)->withInput();
             return null;
         }
-        $logoName = time(). '_' .$company_logo->getClientOriginalName();
+        $logoName = time() . '_' . $company_logo->getClientOriginalName();
         $folderPath = 'logos/' . $company->company_code;
         $fullPath = public_path($folderPath);
-        
+
         if (!File::exists($fullPath)) {
             File::makeDirectory($fullPath, 0755, true);
-        }else{
-            $existingFiles = File::files($fullPath); 
+        } else {
+            $existingFiles = File::files($fullPath);
             foreach ($existingFiles as $file) {
-                File::delete($file->getPathname()); 
+                File::delete($file->getPathname());
             }
         }
         $company_logo->move($fullPath, $logoName);
         $logoPath = $folderPath . '/' . $logoName;
-        
-        return $logoPath;        
 
+        return $logoPath;
     }
     public function updateSettings(Request $request)
-{
-    try {
-        $company = Company::where('company_code', $request->company_code)->first();
-       
-        $updateData = [];
-        foreach ($request->all() as $key => $value) {
-            if ($key === '_token') {
-                continue;
-            }
-            if ($key === 'company_logo' && $value && $request->hasFile('company_logo')) {
-                $logoResult = $this->logohandler($company, $value);
-                if ($logoResult !== null) { 
-                    $updateData[$key] = $logoResult;
+    {
+        try {
+            $company = Company::where('company_code', $request->company_code)->first();
+
+            $updateData = [];
+            foreach ($request->all() as $key => $value) {
+                if ($key === '_token') {
+                    continue;
                 }
-            } else {
-                $updateData[$key] = $value;
+                if ($key === 'company_logo' && $value && $request->hasFile('company_logo')) {
+                    $logoResult = $this->logohandler($company, $value);
+                    if ($logoResult !== null) {
+                        $updateData[$key] = $logoResult;
+                    }
+                } else {
+                    $updateData[$key] = $value;
+                }
             }
-        }
 
-        $success = $company->update($updateData);
-        if (!$success) {
-            throw new Exception('Failed to update company settings');
-        }
+            $success = $company->update($updateData);
+            if (!$success) {
+                throw new Exception('Failed to update company settings');
+            }
 
-        $result = UserUtility::updateAllUsersDayTotals($company->company_code);
-        if (is_array($result) && isset($result['error'])) {
-            throw new Exception($result['error']);
-        }
+            $result = UserUtility::updateAllUsersDayTotals($company->company_code);
+            if (is_array($result) && isset($result['error'])) {
+                throw new Exception($result['error']);
+            }
 
-        return redirect()->back()->with('success', 'Instellingen zijn aangepast.');
-    } catch (Exception $e) {
-        Log::error("Error in updateSettings for company {$request->company_code}: " . $e->getMessage());
-        return redirect()->back()->withErrors(['error',  $e->getMessage()]);
+            return redirect()->back()->with('success', 'Instellingen zijn aangepast.');
+        } catch (Exception $e) {
+            Log::error("Error in updateSettings for company {$request->company_code}: " . $e->getMessage());
+            return redirect()->back()->withErrors(['error',  $e->getMessage()]);
+        }
     }
-}
 }

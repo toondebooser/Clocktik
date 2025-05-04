@@ -2,6 +2,7 @@
 
 namespace App\Utilities;
 
+use App\Http\Controllers\TimesheetController;
 use App\Models\Company;
 use App\Models\Daytotal;
 use App\Models\User;
@@ -32,8 +33,10 @@ class UserUtility
                         'OverTime' => 0
                     ]
                 );
-
-            return $userTotal; // Return the Usertotal record
+               $hollidayCheck = $userTotal->wasRecentlyCreated ? DateUtility::checkHolidayInMonth($date) : null;
+               dd($hollidayCheck);
+               !Empty($hollidayCheck) ? dd($hollidayCheck): null;
+                           return $userTotal; 
         } catch (Exception $e) {
             Log::error("Error in CheckUserMonthTotal for user ID $id: " . $e->getMessage());
             return ['error' => 'Failed to check user month total: ' . $e->getMessage()];

@@ -3,6 +3,8 @@
 namespace App\Utilities;
 
 use Carbon\Carbon;
+use Spatie\Holidays\Holidays;
+use Spatie\Holidays\Countries\Belgium;
 
 class DateUtility
 {
@@ -42,6 +44,13 @@ class DateUtility
    public static function checkIfSameDay($in, $out)
    {
       return DateUtility::carbonParse($in)->isSameDay(DateUtility::carbonParse($out));
+   }
+   public static function checkHolidayInMonth($month)
+   {
+      $parsedMonth = Carbon::parse($month);
+      $holidays = Holidays::for('be')->getInRange( '01/05/2025', '30/05/2025');
+      dd($holidays);
+      return $holidays;
    }
    public static function checkNightShift($timestamp)
    {

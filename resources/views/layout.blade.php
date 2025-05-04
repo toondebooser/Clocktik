@@ -39,28 +39,30 @@
     $currentUser = auth()->user(); ?>
     <div class="bodyContent">
 
-        @yield('error')
+        {{-- @yield('error') --}}
         @yield('title')
         @yield('content')
+<div class="message">
 
-        @if (session('success'))
-            <div class="success">
-                {{ session('success') }} <br>
-                <a class="removeError" href="">Sluiten</a> <!-- "#" voorkomt page reload -->
-            </div>
-        @endif
-        @if ($errors->any())
-            <div class="error">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <a class="removeError" href="">Sluiten</a>
-            </div>
-        @endif
-        @yield('header')
-        <header>
+    @if (session('success'))
+    <div class="success">
+        {{ session('success') }} <br>
+        <a class="removeError" href="">Sluiten</a> <!-- "#" voorkomt page reload -->
+    </div>
+    @endif
+    @if ($errors->any())
+    <div class="error">
+        <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+        <a class="removeError" href="">Sluiten</a>
+    </div>
+    @endif
+</div>
+    @yield('header')
+    <header>
             @auth
                 <div id="side-menu" class="side-menu">
                     <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">

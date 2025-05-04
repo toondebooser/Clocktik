@@ -5,7 +5,6 @@
  
 @endsection
 
-@section('error')
 
    
 
@@ -15,7 +14,6 @@
 @if (session()->has('verified'))
 <div class="success">Thank you for verifying your email!</div>
 @endif
-@endsection
 @section('content')
    
         <form class="loginForm" action="{{route('authentication')}}" method="post">

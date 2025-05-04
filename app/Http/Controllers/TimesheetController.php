@@ -86,7 +86,7 @@ class TimesheetController extends Controller
 
     //ADDING VACATION LOGIC 
 
-    public function setDay($dayLabel, $dayType, $worker, $singleDay)
+    public static function setDay($dayLabel, $dayType, $worker, $singleDay)
     {
         if (DateUtility::checkWeekend($singleDay, User::find($worker)->company)) {
             return $singleDay->toDateString() . ' is een weekend dag';
@@ -249,4 +249,6 @@ class TimesheetController extends Controller
 
         return redirect('/')->with('error', 'Something went wrong try again or call for support');
     }
+
+   
 }

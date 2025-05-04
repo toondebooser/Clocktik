@@ -173,10 +173,12 @@
                                 @endif
                             </td>
                             <td>
+                                @if(auth()->user()->admin)
                                 <a href="{{ route('delete', ['workerId' => $userId, 'deleteSheet' => $timesheet->id, 'date' => $timesheet->Month]) }}"
                                     onclick="return confirm('Zedde zeker?')">
                                     <img class="trashIcon" src="{{ asset('/images/1843344.png') }}" alt="Delete">
                                 </a>
+                                @endif
                             </td>
                         </tr>
                         @if ($timesheet->extraBreakSlots->isNotEmpty())

@@ -23,6 +23,8 @@ class TimeloggingUtility
 
             $newEntry = static::createTimesheetEntry($userRow, $userId);
             static::updateOrInsertTimesheet($newEntry, $timesheetExists);
+            UserUtility::CheckUserMonthTotal($newEntry['Month'], $userId);
+
             static::updateDailySummery($userId, $newEntry['Month']);
             return CalculateUtility::calculateUserTotal($userId);
         });
