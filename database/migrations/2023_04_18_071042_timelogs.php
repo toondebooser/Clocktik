@@ -26,7 +26,7 @@ return new class extends Migration
             $table->integer('BreaksTaken')->default(0);
             $table->text('userNote')->nullable();
             $table->integer('daytotal_id')->nullable();
-            $table->integer('UserId');
+            $table->unsignedBigInteger('UserId');
             $table->index('UserId');
             $table->timestamps();
             $table->foreign('UserId')

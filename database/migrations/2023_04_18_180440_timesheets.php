@@ -11,9 +11,9 @@ return new class extends Migration
     {
         Schema::create('timesheets', function (Blueprint $table) {
             $table->id();
-            $table->integer('daytotal_id');
+            $table->unsignedBigInteger('daytotal_id');
             $table->index('daytotal_id');
-            $table->integer('UserId');
+            $table->unsignedBigInteger('UserId');
             $table->index('UserId');
             $table->timestamp('ClockedIn')->nullable();
             $table->timestamp('ClockedOut')->nullable();

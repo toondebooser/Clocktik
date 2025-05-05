@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('daytotals', function (Blueprint $table) {
             $table->id();
-            $table->integer('UserId');
+            $table->unsignedBigInteger('UserId');
             $table->index('UserId');
             $table->integer('DaytimeCount')->default(1);
             $table->decimal('RegularHours', 5, 2)->default(0.00); // Fixed

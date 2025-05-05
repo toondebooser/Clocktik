@@ -12,11 +12,11 @@ return new class extends Migration
 
         Schema::create('extra_break_slots', function (Blueprint $table) {
             $table->id();
-            $table->integer('timesheet_id')->nullable();
+            $table->unsignedBigInteger('timesheet_id');
             $table->index('timesheet_id');
-            $table->integer('daytotal_id');
+            $table->unsignedBigInteger('daytotal_id');
             $table->index('daytotal_id');
-            $table->integer('UserId');
+            $table->unsignedBigInteger('UserId');
             $table->index('UserId');
             $table->timestamp('BreakStart')->nullable();
             $table->timestamp('BreakStop')->nullable();
@@ -32,6 +32,11 @@ return new class extends Migration
             $table->foreign('timesheet_id')
                 ->references('id')
                 ->on('timesheets')
+                ->onDelete('cascade');
+                
+            $table->foreign('UserId')
+                ->references('id')
+                ->on('users')
                 ->onDelete('cascade');
         });
     }

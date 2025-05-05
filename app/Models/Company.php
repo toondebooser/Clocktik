@@ -15,7 +15,7 @@ class Company extends Model
         'company_name' => 'string',
         'company_logo' => 'string',
         'company_color' => 'string',
-        'company_code' => 'integer',
+        'company_code' => 'string',
         'weekend_day_1' => 'integer',
         'weekend_day_2' => 'integer',
         'day_hours' => 'float',

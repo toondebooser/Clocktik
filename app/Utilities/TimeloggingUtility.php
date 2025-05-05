@@ -53,7 +53,7 @@ class TimeloggingUtility
                 $userRow = $userRow_id;
 
             } else {
-                $userRow = Timelog::find($userRow_id);
+                $userRow = Timelog::find($userRow_id)->first();
             }  
             $date = $userRow->StartWork->format('Y-m-d');
             $dayTotal = UserUtility::findOrCreateUserDayTotal($date, $user);

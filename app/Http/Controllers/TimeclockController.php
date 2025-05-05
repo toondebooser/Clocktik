@@ -78,9 +78,10 @@ class TimeclockController extends Controller
 
                 $addTimesheet = TimeloggingUtility::updateOrInsertTimesheet($buildTimesheet, null);
                 $userRow->update(['timesheet_id' => $addTimesheet->id]);
-            } elseif ($userRow->BreaksTaken > 1 && $userRow->timesheet_id !== null) {
-              TimeloggingUtility::ExtraBreakSlot($userRow->id);
-            }
+            } 
+            // elseif ($userRow->BreaksTaken > 1 && $userRow->timesheet_id !== null) {
+            //   TimeloggingUtility::ExtraBreakSlot($userRow->id);
+            // }
 
             $userRow->update([
                 'StartBreak' => $now,
@@ -110,6 +111,9 @@ class TimeclockController extends Controller
                 'BreakStatus' => false,
                 'EndBreak' => $now,
             ]);
+            if ($userRow->BreaksTaken > 1 && $userRow->timesheet_id !== null) {
+                TimeloggingUtility::ExtraBreakSlot($userRow->id);
+              }
             $dayTotal->update([
                 'Breakhours' => $dayTotal->BreakHours += CalculateUtility::calculateDecimal($userRow->StartBreak, $now),
             ]);

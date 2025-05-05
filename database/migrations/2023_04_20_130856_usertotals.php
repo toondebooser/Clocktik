@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('usertotals', function (Blueprint $table) {
             $table->id();
-            $table->integer('UserId');
+            $table->unsignedBigInteger('UserId');
             $table->index('UserId');
             $table->decimal('RegularHours', 5, 2)->default(0, 00);
             $table->decimal('BreakHours', 5, 2)->default(0, 00);
