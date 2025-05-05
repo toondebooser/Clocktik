@@ -20,51 +20,72 @@ class UserUtility
             if (is_string($date)) {
                 $date = Carbon::parse($date);
             }
-            
+
             $userTotal = Usertotal::where('UserId', $id)
-            ->whereMonth('Month', $date->month)
-            ->whereYear('Month', $date->year)
-            ->firstOrCreate(
-                ['UserId' => $id, 'Month' => $date->startOfMonth()],
-                [
-                    'RegularHours' => 0,
-                    'BreakHours' => 0,
-                    'OverTime' => 0
+                ->whereMonth('Month', $date->month)
+                ->whereYear('Month', $date->year)
+                ->firstOrCreate(
+                    ['UserId' => $id, 'Month' => $date->startOfMonth()],
+                    [
+                        'RegularHours' => 0,
+                        'BreakHours' => 0,
+                        'OverTime' => 0
                     ]
                 );
-                
-                // $hollidayCheck =  DateUtility::checkHolidayInMonth($date->copy());
-                //  if(!empty($hollidayCheck)) {
-                //      TimeloggingUtility::addHolidaysForMonth($hollidayCheck, $id);
-                //      CalculateUtility::calculateUserTotal($id);
-                // } 
-                    
-                return $userTotal; 
+
+            // $hollidayCheck =  DateUtility::checkHolidayInMonth($date->copy());
+            //  if(!empty($hollidayCheck)) {
+            //      TimeloggingUtility::addHolidaysForMonth($hollidayCheck, $id);
+            //      CalculateUtility::calculateUserTotal($id);
+            // } 
+
+            return $userTotal;
         } catch (Exception $e) {
             Log::error("Error in CheckUserMonthTotal for user ID $id: " . $e->getMessage());
             return ['error' => 'Failed to check user month total: ' . $e->getMessage()];
         }
     }
-    public static function workersHolidayCheck($company_code)
+    public static function workersHolidayCheck($company_code, $holidays)
+{
+    $now = now('Europe/Brussels');
+    $month = $now->month;
+    $year = $now->year;
+
+    // Get workers with userTotals for the current month
+    // $workers = User::with(['userTotals' => function ($q) use ($month, $year) {
+    //     $q->whereMonth('created_at', $month)
+    //       ->whereYear('created_at', $year);
+    // }])->where('company_code', $company_code)
+    //   ->where('admin', false)
+    //   ->get();
+
+    // // Filter workers needing holidays
+    // $workersNeedingHolidays = $workers->filter(function ($worker) {
+    //     $monthTotal = $worker->userTotals->first();
+    //     return !$monthTotal || $monthTotal->HolidaysAdded === false;
+    // });
+
+    // Filter holidays not already added in dayTotals
+    $unaddedHolidays = array_filter($holidays, function ($holiday) use ($company_code) {
+        return !self::hasDayTotalsForHolidays($company_code, $holiday);
+    });
+    // dd($unaddedHolidays);
+    // Return both filtered workers and holidays
+    return $unaddedHolidays;
+}
+    public static function hasDayTotalsForHolidays($companyCode, $holiday)
     {
-        $now = now('Europe/Brussels');
-        $month = $now->month;
-        $year = $now->year;
+        $company = Company::where('company_code', $companyCode)->first();
 
-        $workers = User::with(['userTotals' => function ($q) use ($month, $year) {
-            $q->whereMonth('created_at', $month)
-              ->whereYear('created_at', $year);
-        }])->where('company_code', $company_code)
-          ->where('admin', false)
-          ->get();
-        
+        foreach ($company->users as $user) {
+                $name = str_replace('_', ' ', $holiday['name']);
 
-          $workersNeedingHolidays = $workers->filter(function ($worker) {
-            $monthTotal = $worker->userTotals->first(); // Only loads totals from this month
-            return !$monthTotal || $monthTotal->HolidaysAdded === false;
-        });
-        
-        return $workersNeedingHolidays;
+                if ($user->dayTotals()->where('type', $name)->exists()) {
+                    return true;
+                }
+        }
+
+        return false;
     }
     public static function findOrCreateUserDayTotal($date, $id)
     {
@@ -114,19 +135,18 @@ class UserUtility
     {
         try {
             $users = User::with(['dayTotals', 'timesheets'])->where('company_code', $company_code)->get();
-            $errors = new MessageBag(); 
+            $errors = new MessageBag();
             foreach ($users as $user) {
                 foreach ($user->dayTotals as $dayTotal) {
-                    
-                    UserUtility::CheckUserMonthTotal($dayTotal->Month,$user->id);
+
+                    UserUtility::CheckUserMonthTotal($dayTotal->Month, $user->id);
 
                     if ($dayTotal->type !== 'workday') {
                         if (DateUtility::checkWeekend($dayTotal->Month, $user->company->company_code)) {
                             $errors->add('weekend_deletion', "Vakantiedag: {$dayTotal->Month->format('Y-m-d')} Verwijderd omdat het in een weekend valt");
                             $dayTotal->delete();
                             continue;
-                            
-                        }else{
+                        } else {
                             $dayTotal->update([
                                 'accountableHours' => $user->company->day_hours,
                             ]);
@@ -149,8 +169,7 @@ class UserUtility
             }
             if ($errors->isNotEmpty()) {
                 return redirect()->back()->withErrors($errors);
-            }else return true;
-            
+            } else return true;
         } catch (Exception $e) {
             Log::error("Error in updateAllUsersDayTotals for company $company_code: " . $e->getMessage());
             return ['errors' => 'Failed to update day totals: ' . $e->getMessage()];

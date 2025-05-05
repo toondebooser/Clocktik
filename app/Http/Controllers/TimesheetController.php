@@ -87,26 +87,26 @@ class TimesheetController extends Controller
 
     //ADDING VACATION LOGIC 
 
-    public static function setDay($dayLabel, $dayType, $worker, $singleDay)
+    public static function setDay($dayLabel, $dayType, $userId, $singleDay)
     {
         $singleDay = $singleDay instanceof Carbon ? $singleDay : Carbon::parse($singleDay);
-        if (DateUtility::checkWeekend($singleDay, User::find($worker)->company->company_code)) {
+        if (DateUtility::checkWeekend($singleDay, User::find($userId)->company->company_code)) {
             return  $singleDay->toDateString() . ' is een weekend dag';
         };
         $dayTotal = Daytotal::where([
-            'UserId' => $worker,
+            'UserId' => $userId,
             'Month' => $singleDay,
         ])->first();
         
         if (!$dayTotal) {
             // No existing record, create a new one
             $dayTotal = Daytotal::create([
-                'UserId' => $worker,
+                'UserId' => $userId,
                 'Month' => $singleDay,
                 'type' => $dayLabel,
                 'ClockedIn' => $singleDay,
                 'Completed' => true,
-                'accountableHours' => $dayType == 'onbetaald' ? 0 : User::find($worker)->company->day_hours,
+                'accountableHours' => $dayType == 'onbetaald' ? 0 : User::find($userId)->company->day_hours,
             ]);
             return true; // New record created
         } else {

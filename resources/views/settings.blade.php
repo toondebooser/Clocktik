@@ -11,7 +11,7 @@
             height: fit-content;
         }
 
-       
+
 
         .container-drag-drop {
             display: flex;
@@ -55,9 +55,10 @@
         .content {
             overflow-x: hidden;
         }
+
         .justify-row {
-        justify-self: end !important; 
-    }
+            justify-self: end !important;
+        }
     </style>
     <h2>Instellingen</h2>
     <div style=" max-width: 400px; height: 100%;justify-content:center; align-content:center; grid-row: 3/5; grid-column: 2/12; justify-self:center;"
@@ -83,25 +84,25 @@
                 style="grid-column: 2/3; width: 100px justify-self: center;">
                 <div>Kies je logo</div>
 
-                <img id="preview" for="file-input" src="{{ $data->company_logo ? asset($data->company_logo) : asset('images/TaxusLogo.png') }}"
+                <img id="preview" for="file-input"
+                    src="{{ $data->company_logo ? asset($data->company_logo) : asset('images/TaxusLogo.png') }}"
                     alt="Logo preview"
                     style="  grid-row: 2/3; grid-column: 2/3;justify-self: center;max-height: 50px; max-width: auto;">
             </label>
             {{-- admin_timeclock --}}
             {{-- <span style="grid-row: 2/3; grid-column: 1/3; justify-self: center" class="radioInput justify-row"> --}}
-                <span class="justify-row">Admin klok </span>
-                <label for="betaaldInput" class="checkboxContainer" >
-                    <input type="hidden" name="admin_timeclock" value="0">
-                    <input @if ($data->admin_timeclock == 1) {{ 'checked' }} @endif type="checkbox" class="radioBox"
-                        id="betaaldInput" name="admin_timeclock" value='1' >
-                    <span class="checkMark"></span>
-                </label>
-                
-                <label  style="text-align: end;  margin: 0" for="day_hours">Daguren decimaal</label>
-            <input  step="0.1" 
-            min="0" 
-            max="24" value="{{ $data->day_hours }}" style="width:60px;" type="number" name="day_hours" id="day_hours">
-                
+            <span class="justify-row">Admin klok </span>
+            <label for="betaaldInput" class="checkboxContainer">
+                <input type="hidden" name="admin_timeclock" value="0">
+                <input @if ($data->admin_timeclock == 1) {{ 'checked' }} @endif type="checkbox" class="radioBox"
+                    id="betaaldInput" name="admin_timeclock" value='1'>
+                <span class="checkMark"></span>
+            </label>
+
+            <label style="text-align: end;  margin: 0" for="day_hours">Daguren decimaal</label>
+            <input step="0.1" min="0" max="24" value="{{ $data->day_hours }}" style="width:60px;"
+                type="number" name="day_hours" id="day_hours">
+
             <div style="text-align: end">Weekend dagen</div>
             <span>
                 <select style="width: fit-content" name="weekend_day_1" id="weekendDag1">
@@ -131,27 +132,36 @@
             <button class="button" type="submit"
                 style="  grid-row: 5/6; grid-column: 1/3; justify-self: center; height: 30px">Update instellingen</button>
         </form>
-        @if(isset($holidays))
-        <form  style=" margin: 10px 0px ;  border-radius: 20px; padding: 10px;border: solid {{ $data->company_color }} 2px;display:grid;  align-items:start; "
-            action="{{route('add-holidays')}}" method="POST">
-            @csrf
-            <h5 style="text-align: center">Officiële vakantie dagen</h5>
-            @foreach($holidays as $holiday)
-            <div style="margin-top:10px; display: flex; justify-content: space-between">
-              
-                <div>{{$holiday['name']}}: </div>
-              
-                @if($holiday['weekend'] == $data->weekend_day_1 || $holiday['weekend'] == $data->weekend_day_2)
-                <div style="color: red">Weekend</div>
-                @else
-                <input type="date" name="{{ $holiday['name'] }}" value="{{ $holiday['date'] }}">
+        @if (isset($holidays))
+            <form
+                style=" margin: 10px 0px ;  border-radius: 20px; padding: 10px;border: solid {{ $data->company_color }} 2px;display:grid;  align-items:start; "
+                action="{{ route('add-holidays') }}" method="POST">
+                @csrf
+                <h5 style="text-align: center">Officiële vakantie dagen</h5>
+                @php
+                    // dd($holidays);
+                @endphp
+                @foreach ($holidays as $holiday)
+                    <div style="margin-top:10px; display: flex; justify-content: space-between">
 
-                @endif
-            </div>
-                @endforeach
-            <button style="margin-top:10px; width: fit-content; justify-self:center" class="button" type="submit">Toevoegen</button>
-        </form>
-        
+                        <div>{{ $holiday['name'] }}: </div>
+
+                        @if ($holiday['weekend'] === $data->weekend_day_1 || $holiday['weekend'] === $data->weekend_day_2)
+                            <div  style=" color: red">!</div>
+                            <input style="width: 120px;" type="date" name="{{ $holiday['name'] }}" value="{{ $holiday['date'] }}">
+                            @else
+                            <div>{{ $holiday['date'] }}</div>
+                            <input type="hidden" name="{{$holiday['name']}}" value="{{$holiday['date']}}">
+                            @endif
+                        </div>
+                        @endforeach
+                        @if ($holiday['weekend'] === $data->weekend_day_1 || $holiday['weekend'] === $data->weekend_day_2)
+                        <div class="alert"><span class="red">!</span> feestdag valt in een weekend, kies een andere datum.  </div>
+                        @endif
+                        <input type="hidden" name="company_code" value="{{$data->company_code}}">
+                <button style="margin-top:10px; width: fit-content; justify-self:center" class="button"
+                    type="submit">Toevoegen</button>
+            </form>
         @endif
         <div style="text-align: center"> &#8592; Sleep &#8594; <br> om van rechten te veranderen.</div>
         <div class="container-drag-drop">
@@ -220,7 +230,7 @@
         let draggedElement = null;
         let offsetX = 0;
         let offsetY = 0;
-        let originalParent = null; 
+        let originalParent = null;
 
         function touchStart(event) {
             event.preventDefault();

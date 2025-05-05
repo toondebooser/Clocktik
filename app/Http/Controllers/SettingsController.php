@@ -25,15 +25,14 @@ class SettingsController extends Controller
         $workers = User::where('company_code', $company_code)->where('admin', false)->get();
         $holidaysCheck = DateUtility::checkHolidaysInMonth($company_code);
         $holidays = null;
-        $workersNeedingHolidays = null;
+        // $workersNeedingHolidays = null;
         if (!empty($holidaysCheck)) {
             $holidays = $holidaysCheck;
-            $workersNeedingHolidays = UserUtility::workersHolidayCheck($company_code);
+            $unAddedHolidays = UserUtility::workersHolidayCheck($company_code, $holidays);
         }
-        return view('settings', ['data' =>  $data, 'admins' => $admins, 'holidays' => $holidays, 'workersNeedingHolidays' => $workersNeedingHolidays, 'workers' => $workers]);
+        return view('settings', ['data' =>  $data, 'admins' => $admins, 'holidays' => $unAddedHolidays,  'workers' => $workers]);
     }
 
-   
 
     public function changeRights(Request $request, $id, $company_code)
     {

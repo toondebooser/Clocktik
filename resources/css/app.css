@@ -9,6 +9,15 @@ body {
 a:hover{
     text-decoration: none;
 }
+.red{
+    color: red;
+}
+.alert{
+    background-color: pink;
+    border-radius: 10px;
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
 .message{
     position: fixed;
     top: 50%;
