@@ -25,6 +25,7 @@ return new class extends Migration
             $table->boolean('userNote')->default(false);
             $table->date('Month');
             $table->index('Month');
+            $table->boolean('official_holiday')->default(false);
             $table->boolean('Completed')->default(false);
             $table->boolean('Weekend')->default(false);
             $table->boolean('NightShift')->default(false);

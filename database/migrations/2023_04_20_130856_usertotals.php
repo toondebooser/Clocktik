@@ -18,7 +18,6 @@ return new class extends Migration
             $table->decimal('RegularHours', 5, 2)->default(0, 00);
             $table->decimal('BreakHours', 5, 2)->default(0, 00);
             $table->decimal('OverTime', 5, 2)->default(0, 00);
-            $table->boolean('HolidaysAdded')->default(false);
             $table->date('Month');
             $table->timestamps();
         });

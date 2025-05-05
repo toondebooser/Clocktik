@@ -36,33 +36,39 @@ class DateUtility
    public static function checkWeekend($date, $company_code)
    {
       $company = Company::where('company_code', $company_code)->first();
-       $weekdayNr = Carbon::parse($date)->weekday();
-       return $weekdayNr == $company->weekend_day_1 || $weekdayNr == $company->weekend_day_2;
+      $weekdayNr = Carbon::parse($date)->weekday();
+      return $weekdayNr == $company->weekend_day_1 || $weekdayNr == $company->weekend_day_2;
    }
 
    public static function checkIfSameDay($in, $out)
    {
       return DateUtility::carbonParse($in)->isSameDay(DateUtility::carbonParse($out));
    }
-  public static function checkHolidaysInMonth($company_code)
-{
-    $start = now('Europe/Brussels')->startOfMonth()->format('Y-m-d');
-    $end = now('Europe/Brussels')->endOfMonth()->format('Y-m-d');
+   public static function checkHolidaysInMonth($date)
+   {
+      $start = $date->startOfMonth()->format('Y-m-d');
+      $end = $date->endOfMonth()->format('Y-m-d');
 
-    $holidays = Holidays::for('be')->getInRange($start, $end);
+      $holidays = Holidays::for('be')->getInRange($start, $end);
 
-    $processed = [];
-    foreach ($holidays as $date => $name) {
-        $processed[] = [
+      $processed = [];
+      foreach ($holidays as $date => $name) {
+         $processed[] = [
             'date' => $date,
             'name' => $name,
-            'weekend' => self::getWeekdayNumber( Carbon::parse($date)->locale('nl')->isoFormat('dddd')),
-        ];
-    }
+            'weekend' => self::getWeekdayNumber(Carbon::parse($date)->locale('nl')->isoFormat('dddd')),
+         ];
+      }
 
-    return $processed;
+      return $processed;
+   }
+   public static function isValidHolidayName($holidayName)
+{
+    $holidays = Holidays::for('be')->get();
+    $holidayNames = array_column($holidays, 'name'); 
+    $normalizedInputName = str_replace('_', ' ', $holidayName); 
+    return in_array($normalizedInputName, $holidayNames);
 }
-
    public static function checkNightShift($timestamp)
    {
       $time = Carbon::parse($timestamp)->format('H:i');

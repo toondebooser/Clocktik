@@ -51,36 +51,21 @@ class UserUtility
     $month = $now->month;
     $year = $now->year;
 
-    // Get workers with userTotals for the current month
-    // $workers = User::with(['userTotals' => function ($q) use ($month, $year) {
-    //     $q->whereMonth('created_at', $month)
-    //       ->whereYear('created_at', $year);
-    // }])->where('company_code', $company_code)
-    //   ->where('admin', false)
-    //   ->get();
 
-    // // Filter workers needing holidays
-    // $workersNeedingHolidays = $workers->filter(function ($worker) {
-    //     $monthTotal = $worker->userTotals->first();
-    //     return !$monthTotal || $monthTotal->HolidaysAdded === false;
-    // });
-
-    // Filter holidays not already added in dayTotals
     $unaddedHolidays = array_filter($holidays, function ($holiday) use ($company_code) {
         return !self::hasDayTotalsForHolidays($company_code, $holiday);
     });
-    // dd($unaddedHolidays);
-    // Return both filtered workers and holidays
+
     return $unaddedHolidays;
 }
     public static function hasDayTotalsForHolidays($companyCode, $holiday)
     {
         $company = Company::where('company_code', $companyCode)->first();
-
+        $currentMonth = now('Europe/Brussels');
         foreach ($company->users as $user) {
                 $name = str_replace('_', ' ', $holiday['name']);
 
-                if ($user->dayTotals()->where('type', $name)->exists()) {
+                if ($user->dayTotals()->whereMonth('Month', $currentMonth)->where('type', $name)->where('official_holiday', true)->exists()) {
                     return true;
                 }
         }

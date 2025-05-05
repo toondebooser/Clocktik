@@ -99,18 +99,18 @@ class TimesheetController extends Controller
         ])->first();
         
         if (!$dayTotal) {
-            // No existing record, create a new one
             $dayTotal = Daytotal::create([
                 'UserId' => $userId,
                 'Month' => $singleDay,
                 'type' => $dayLabel,
                 'ClockedIn' => $singleDay,
                 'Completed' => true,
+                'official_holiday'=> DateUtility::isValidHolidayName($dayLabel),
                 'accountableHours' => $dayType == 'onbetaald' ? 0 : User::find($userId)->company->day_hours,
             ]);
             return true; // New record created
         } else {
-            return 'Datum al in gebruik: ' . $singleDay->toDateString();
+            return 'Datum al in gebruik: ' . $singleDay->toDateString() . ' ('. User::find($userId)->name . ')';
         }
     }
 

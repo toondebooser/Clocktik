@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Daytotal extends Model
 {
     use HasFactory;
-    protected $fillable = ["DayOverlap","NightShift",'Completed','Month','company_code','UserId','RegularHours','type', 'accountableHours', 'BreaksTaken', 'BreakHours', 'OverTime','Weekend'];
+    protected $fillable = ['official_holiday',"DayOverlap","NightShift",'Completed','Month','company_code','UserId','RegularHours','type', 'accountableHours', 'BreaksTaken', 'BreakHours', 'OverTime','Weekend'];
     protected $casts = [
         'id' => 'integer',
         'UserId' => 'integer',
@@ -25,6 +25,7 @@ class Daytotal extends Model
         'Month' => 'date',
         'Completed' => 'boolean',
         'Weekend' => 'boolean',
+        'official_holiday' => 'boolean',
         'NightShift' => 'boolean',
         'DayOverlap' => 'boolean',
     ];

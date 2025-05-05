@@ -65,9 +65,9 @@
                         </div>
                     </fieldset>
                 @endif
-            @elseif(isset($timesheet->type))
+            @elseif(isset($timesheet->type) && $timesheet->type !== 'workday')
                 <div class="specialUpdateContainer">
-                    <input class="updateSpecialInput" type="text" name="updateSpecial" value="{{ $timesheet->type }}">
+                    <input class="updateSpecialInput" type="text" name="updateSpecial" value="{{ $timesheet->type }}" @readonly($timesheet->official_holiday)>
                     <br>
                     <span class="radioInput">
                         <label for="betaaldInput" class="checkboxContainer">

@@ -138,9 +138,7 @@
                 action="{{ route('add-holidays') }}" method="POST">
                 @csrf
                 <h5 style="text-align: center">Officiële vakantie dagen</h5>
-                @php
-                    // dd($holidays);
-                @endphp
+            
                 @foreach ($holidays as $holiday)
                     <div style="margin-top:10px; display: flex; justify-content: space-between">
 
