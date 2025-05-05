@@ -24,7 +24,7 @@ class SettingsController extends Controller
         $admins = User::where('company_code', $company_code)->where('admin', true)->get();
         $workers = User::where('company_code', $company_code)->where('admin', false)->get();
         $holidaysCheck = DateUtility::checkHolidaysInMonth(now('Europe/Brussels'));
-        $holidays = null;
+        $unAddedHolidays = null;
         // $workersNeedingHolidays = null;
         if (!empty($holidaysCheck)) {
             $holidays = $holidaysCheck;

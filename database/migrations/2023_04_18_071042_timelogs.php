@@ -18,7 +18,7 @@ return new class extends Migration
             $table->boolean('Weekend')->default(false);
             $table->integer('timesheet_id')->nullable();
             $table->index('timesheet_id');
-            $table->boolean('NightShift')->default(false); 
+            $table->boolean('NightShift')->default(false);
             $table->timestamp('StartWork')->nullable();
             $table->timestamp('StartBreak')->nullable();
             $table->timestamp('EndBreak')->nullable();
@@ -29,6 +29,10 @@ return new class extends Migration
             $table->integer('UserId');
             $table->index('UserId');
             $table->timestamps();
+            $table->foreign('UserId')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
         });
     }
 

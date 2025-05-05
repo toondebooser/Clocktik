@@ -31,6 +31,10 @@ return new class extends Migration
             $table->boolean('NightShift')->default(false);
             $table->boolean('DayOverlap')->default(false);
             $table->timestamps();
+            $table->foreign('UserId')
+            ->references('id')
+            ->on('users')
+            ->onDelete('cascade');
         });
     }
 

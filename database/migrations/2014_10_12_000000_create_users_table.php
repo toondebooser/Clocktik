@@ -23,6 +23,10 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+            $table->foreign('company_code')
+                  ->references('company_code')
+                  ->on('companies')
+                  ->onDelete('cascade');
         });
     }
 

@@ -46,28 +46,28 @@ class UserUtility
         }
     }
     public static function workersHolidayCheck($company_code, $holidays)
-{
-    $now = now('Europe/Brussels');
-    $month = $now->month;
-    $year = $now->year;
+    {
+        $now = now('Europe/Brussels');
+        $month = $now->month;
+        $year = $now->year;
 
 
-    $unaddedHolidays = array_filter($holidays, function ($holiday) use ($company_code) {
-        return !self::hasDayTotalsForHolidays($company_code, $holiday);
-    });
+        $unaddedHolidays = array_filter($holidays, function ($holiday) use ($company_code) {
+            return !self::hasDayTotalsForHolidays($company_code, $holiday);
+        });
 
-    return $unaddedHolidays;
-}
+        return $unaddedHolidays;
+    }
     public static function hasDayTotalsForHolidays($companyCode, $holiday)
     {
         $company = Company::where('company_code', $companyCode)->first();
         $currentMonth = now('Europe/Brussels');
         foreach ($company->users as $user) {
-                $name = str_replace('_', ' ', $holiday['name']);
+            $name = str_replace('_', ' ', $holiday['name']);
 
-                if ($user->dayTotals()->whereMonth('Month', $currentMonth)->where('type', $name)->where('official_holiday', true)->exists()) {
-                    return true;
-                }
+            if ($user->dayTotals()->whereMonth('Month', $currentMonth)->where('type', $name)->where('official_holiday', true)->exists()) {
+                return true;
+            }
         }
 
         return false;

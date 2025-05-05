@@ -41,4 +41,5 @@ class Daytotal extends Model
     {
         return $this->belongsTo(User::class, 'UserId');
     }
+   
 }

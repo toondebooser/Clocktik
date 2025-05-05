@@ -9,7 +9,7 @@ return new class extends Migration
 
     public function up(): void
     {
-        
+
         Schema::create('extra_break_slots', function (Blueprint $table) {
             $table->id();
             $table->integer('timesheet_id')->nullable();
@@ -24,6 +24,15 @@ return new class extends Migration
             $table->date('Month');
             $table->index('Month');
             $table->timestamps();
+            $table->foreign('daytotal_id')
+                ->references('id')
+                ->on('daytotals')
+                ->onDelete('cascade');
+
+            $table->foreign('timesheet_id')
+                ->references('id')
+                ->on('timesheets')
+                ->onDelete('cascade');
         });
     }
 
@@ -31,6 +40,5 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('extra_break_slots');
-
     }
 };

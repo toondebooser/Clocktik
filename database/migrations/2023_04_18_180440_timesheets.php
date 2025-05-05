@@ -24,6 +24,15 @@ return new class extends Migration
             $table->date('Month');
             $table->index('Month');
             $table->timestamps();
+            $table->foreign('daytotal_id')
+                ->references('id')
+                ->on('daytotals')
+                ->onDelete('cascade');
+
+            $table->foreign('UserId')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
         });
     }
 

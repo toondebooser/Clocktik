@@ -132,13 +132,14 @@
             <button class="button" type="submit"
                 style="  grid-row: 5/6; grid-column: 1/3; justify-self: center; height: 30px">Update instellingen</button>
         </form>
-        @if (isset($holidays))
+        @if (!empty($holidays))
             <form
                 style=" margin: 10px 0px ;  border-radius: 20px; padding: 10px;border: solid {{ $data->company_color }} 2px;display:grid;  align-items:start; "
                 action="{{ route('add-holidays') }}" method="POST">
                 @csrf
                 <h5 style="text-align: center">Officiële vakantie dagen</h5>
             
+           
                 @foreach ($holidays as $holiday)
                     <div style="margin-top:10px; display: flex; justify-content: space-between">
 

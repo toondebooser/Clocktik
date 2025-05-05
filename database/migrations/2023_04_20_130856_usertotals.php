@@ -20,6 +20,10 @@ return new class extends Migration
             $table->decimal('OverTime', 5, 2)->default(0, 00);
             $table->date('Month');
             $table->timestamps();
+            $table->foreign('UserId')
+            ->references('id')
+            ->on('users')
+            ->onDelete('cascade');
         });
     }
 
