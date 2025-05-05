@@ -184,6 +184,9 @@
                         @if ($timesheet->extraBreakSlots->isNotEmpty())
                             @foreach ($timesheet->extraBreakSlots->sortBy('BreakStart') as $breakSlot)
                                 {{-- Set extra break slots as row --}}
+                                {{-- @php
+                                    dd($breakSlot->timesheet_id);
+                                @endphp --}}
                                 <tr class='hidden timesheetStyle' data-timesheet="{{ $day->id }}">
                                     <td class="date"> <a
                                             href="{{ route('update', ['id' => $user->id, 'timesheet' => $breakSlot, 'type' => 'extraBreakSlot', 'usedDayTotalId' => $day->id, 'usedDayTotalDate' => $day->Month]) }}">Update</a>

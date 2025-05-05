@@ -137,6 +137,9 @@ class TimeclockController extends Controller
                     'BreakStatus' => false,
                     'EndBreak' => $now,
                 ]);
+                if ($userRow->BreaksTaken > 1 && $userRow->timesheet_id !== null) {
+                    TimeloggingUtility::ExtraBreakSlot($userRow->id);
+                  }
                 $dayTotal->update([
                     'BreakHours' => $dayTotal->BreakHours += CalculateUtility::calculateDecimal($userRow->StartBreak, $now)
                 ]);
