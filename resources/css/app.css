@@ -355,6 +355,9 @@ body.night-mode .uniform-input:focus {
     justify-self: end;
     align-self: center;
 }
+#weekendDag1,#weekendDag2,#colorPreview,#preview:hover{
+cursor: pointer;
+}
 .previewLink {
     grid-row: 2/3;
     grid-column: 11/12;
