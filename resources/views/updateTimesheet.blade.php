@@ -6,7 +6,7 @@
             color: {{ $nightShift ? 'white' : 'black' }};
         }
     </style>
-    <h2>Update rooster van: {{ $worker->name }}</h2>
+    <h2>{{ $worker->name }}</h2>
     @php
         if ($timesheet === null) {
             header('Location: /my-workers');
@@ -66,28 +66,32 @@
                     </fieldset>
                 @endif
             @elseif(isset($timesheet->type) && $timesheet->type !== 'workday')
-                <div class="specialUpdateContainer">
-                    <input class="updateSpecialInput" type="text" name="updateSpecial" value="{{ $timesheet->type }}" @readonly($timesheet->official_holiday)>
-                    <br>
-                    <span class="radioInput">
-                        <label for="betaaldInput" class="checkboxContainer">
-                            <input @if ($timesheet->accountableHours == $worker->company->day_hours) {{ 'checked' }} @endif type="radio"
-                                class="radioBox" id="betaaldInput" name="dayType" value="betaald">
-                            <span class="labelAndere">Betaald</span>
-                            <br>
-                            <span class="checkMark"></span>
-                        </label>
-                        <label for="onbetaaldInput" class="checkboxContainer" id="onbetaald">
-                            <input @if ($timesheet->accountableHours == 0) {{ 'checked' }} @endif type="radio"
-                                class="radioBox" id="onbetaaldInput" name="dayType" value="onbetaald">
-                            <span class="labelAndere">Onbetaald</span>
-                            <br>
-                            <span class="checkMark"></span>
-                        </label>
-                    </span>
-                </div>
+            <div class="specialUpdateContainer">
+                <input class="updateSpecialInput" type="text" name="updateSpecial" value="{{ $timesheet->type }}" {{ $timesheet->official_holiday ? 'readonly' : '' }}>
+                <br>
+                <span class="radioInput">
+                    <label for="betaaldInput" class="checkboxContainer">
+                        <input type="radio" class="radioBox" id="betaaldInput" name="dayType" value="betaald"
+                            {{ $timesheet->accountableHours == $worker->company->day_hours ? 'checked' : '' }}
+                            {{ $timesheet->official_holiday ? 'disabled' : '' }}>
+                        <span class="labelAndere">Betaald</span>
+                        <br>
+                        <span class="checkMark"></span>
+                    </label>
+                    <label style="margin-bottom: 0px" for="onbetaaldInput" class="checkboxContainer" id="onbetaald">
+                        <input type="radio" class="radioBox" id="onbetaaldInput" name="dayType" value="onbetaald"
+                            {{ $timesheet->accountableHours == 0 ? 'checked' : '' }}
+                            {{ $timesheet->official_holiday ? 'disabled' : '' }}>
+                        <span class="labelAndere">Onbetaald</span>
+                        <br>
+                        <span class="checkMark"></span>
+                    </label>
+                </span>
+               @if($timesheet->official_holiday ) <div style="margin-top: 0px; " class="alert">Officiële feestdagen <br> kunnen niet worden aangepast. </div>
+               @endif
+            </div>
                 @endif
-                <input class="updateTimesheetSubmit button" type="submit" value="update">
+                <input class="updateTimesheetSubmit button" type="submit" value="update" {{ $timesheet->official_holiday ? 'disabled' : '' }}>
          
 
         </form>
@@ -104,7 +108,7 @@
         <input onclick="return confirm('zedde zeker ?')" class="submit" type="image"
             src="{{ asset('/images/1843344.png') }}" name="deleteThisSheet" alt="Delete">
     </form>
-    @if ($timesheet->userNote !== null)
+    @if ($timesheet->userNote)
         <fieldset class="userNoteContainer">
             <div><b>Notitie:</b></div>
             <div class="userNote">{{ $timesheet->userNote }}</div>

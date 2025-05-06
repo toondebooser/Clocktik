@@ -101,11 +101,11 @@
 
             <label style="text-align: end;  margin: 0" for="day_hours">Daguren decimaal</label>
             <input step="0.1" min="0" max="24" value="{{ $data->day_hours }}" style="width:60px;"
-                type="number" name="day_hours" id="day_hours">
+               class="uniform-input" type="number" name="day_hours" id="day_hours">
 
             <div style="text-align: end">Weekend dagen</div>
-            <span>
-                <select style="width: fit-content" name="weekend_day_1" id="weekendDag1">
+            <span style="display: flex">
+                <select style="width: fit-content" class="uniform-input" name="weekend_day_1" id="weekendDag1">
                     <option value="1" {{ $data->weekend_day_1 == 1 ? 'selected' : '' }}>Ma</option>
                     <option value="2" {{ $data->weekend_day_1 == 2 ? 'selected' : '' }}>Di</option>
                     <option value="3" {{ $data->weekend_day_1 == 3 ? 'selected' : '' }}>Wo</option>
@@ -114,7 +114,7 @@
                     <option value="6" {{ $data->weekend_day_1 == 6 ? 'selected' : '' }}>Za</option>
                     <option value="0" {{ $data->weekend_day_1 == 0 ? 'selected' : '' }}>Zo</option>
                 </select>
-                <select style="width: fit-content" name="weekend_day_2" id="weekendDag2">
+                <select style="width: fit-content" class="uniform-input" name="weekend_day_2" id="weekendDag2">
                     <option value="1" {{ $data->weekend_day_2 == 1 ? 'selected' : '' }}>Ma</option>
                     <option value="2" {{ $data->weekend_day_2 == 2 ? 'selected' : '' }}>Di</option>
                     <option value="3" {{ $data->weekend_day_2 == 3 ? 'selected' : '' }}>Wo</option>

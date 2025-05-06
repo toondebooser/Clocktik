@@ -21,23 +21,23 @@ class UserUtility
                 $date = Carbon::parse($date);
             }
 
-            $userTotal = Usertotal::where('UserId', $id)
-                ->whereMonth('Month', $date->month)
-                ->whereYear('Month', $date->year)
-                ->firstOrCreate(
-                    ['UserId' => $id, 'Month' => $date->startOfMonth()],
-                    [
-                        'RegularHours' => 0,
-                        'BreakHours' => 0,
-                        'OverTime' => 0
-                    ]
-                );
+            $user = User::find($id);
+            $monthStart = $date->copy()->startOfMonth();
 
-            // $hollidayCheck =  DateUtility::checkHolidayInMonth($date->copy());
-            //  if(!empty($hollidayCheck)) {
-            //      TimeloggingUtility::addHolidaysForMonth($hollidayCheck, $id);
-            //      CalculateUtility::calculateUserTotal($id);
-            // } 
+            // Search by exact match on Month column (assuming it's a DATE or DATETIME field)
+            $userTotal = $user->userTotals()
+                ->where('Month', $monthStart)
+                ->first();
+            // If no record found, create one
+            if (!$userTotal) {
+                $userTotal = $user->userTotals()->create([
+                    'UserId' => $id,
+                    'Month' => $monthStart,
+                    'RegularHours' => 0,
+                    'BreakHours' => 0,
+                    'OverTime' => 0
+                ]);
+            }
 
             return $userTotal;
         } catch (Exception $e) {
@@ -45,6 +45,7 @@ class UserUtility
             return ['error' => 'Failed to check user month total: ' . $e->getMessage()];
         }
     }
+
     public static function workersHolidayCheck($company_code, $holidays)
     {
         $now = now('Europe/Brussels');

@@ -39,14 +39,15 @@ class DeleteTimesheetController extends Controller
                 'sheetType' => $sheetType
             ]);
         }
-
+        
         $request->validate([
             'workerId' => 'required|numeric',
             'deleteSheet' => 'required|numeric',
             'date' => 'required|date',
+            'sheetType' => 'required|string'
         ]);
-        $sheet = $modelMap[$sheetType]::find($deleteSheet);
-
+        $sheet = $modelMap[$request->sheetType]::find($deleteSheet);
+        
         if ($sheet === null) {
             return $this->redirectError('Dag niet gevonden.', $user);
         }

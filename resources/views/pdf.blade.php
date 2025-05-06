@@ -8,77 +8,70 @@
     <style>
         body {
             font-family: "Noto Sans", sans-serif;
-
         }
-
+    
         h1 {
             color: #333;
             text-align: center;
         }
-
-        .notitie {
-            word-break: break-all;
-        }
-
-
+    
         table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate; /* Prevents collapsing row heights */
+            border-spacing: 0; /* Maintains border appearance */
         }
-
+    
         .timesheetRow {
-            height: 100px;
+            min-height: 50px; /* Set row height to 50px */
+            height: 50px; /* Enforce exact height */
         }
-
+    
         table,
         th,
         td {
-            border: 1px solid #333;
+            border: 0.4px solid #333;
         }
-
+    
         th {
-            height: 40px;
-            background-color: rgb(200, 215, 248);
+            height: 70px;
+            font-size: x-large;
+            background-color:lightblue;
         }
-
+    
         td {
             width: 130px;
-        }
+            min-height: 50px; 
+            height: 50px; 
+            vertical-align:middle; 
+            box-sizing: border-box; 
 
-        .notitie {
-            min-height: 60px;
-            width: 95%;
-            margin: 5px;
-            word-break: break-all;
         }
-
+    
         .date {
             text-align: center;
         }
-
+    
         .displayRegular {
             text-align: center;
             color: #2626da;
+            padding: 5px; /* Reduced padding for smaller height */
         }
-
-        .inOut {
-            text-align:left;
-            color: black;
-        }
-
+    
+    
         .displayBreak {
             text-align: center;
             color: #da0a0a;
+            padding: 5px;
         }
-
+    
         .displayOvertTime {
             text-align: center;
-            color: #daa30a;
+            color: black
+            padding: 5px;
         }
-
+    
         .displayTotalRegular {
             text-align: center;
-
             justify-self: center;
             align-self: center;
             color: #2626da;
@@ -87,10 +80,9 @@
             border-radius: 10px;
             border: 1px solid #2626da;
         }
-
+    
         .displayTotalBreak {
             text-align: center;
-
             justify-self: center;
             align-self: center;
             color: #da0a0a;
@@ -99,30 +91,34 @@
             border-radius: 10px;
             border: 1px solid #da0a0a;
         }
-
+    
         .totalContainer {
             text-align: center;
         }
-
+    
         .total {
             display: inline-block;
             width: 150px;
             margin: 10px;
         }
-
+    
         h3 {
             text-align: start;
         }
-
+    
         .displayTotalOverTime {
             text-align: center;
             justify-self: center;
             align-self: center;
-            color: #daa30a;
-            background-color: rgb(248, 239, 200);
+            color: black;
+            background-color: lightgrey;
             padding: 10px;
             border-radius: 10px;
-            border: 1px solid #daa30a;
+            border: 1px solid black;
+        }
+    
+        .text-danger {
+            color: red;
         }
     </style>
 </head>
@@ -131,20 +127,21 @@
 
     <div class="content">
         <header>
-            <h1>{{ date('F', strtotime($timesheet[0]->Month)) }} {{ $user->name }}</h1>
+            <h1>{{ date('F', strtotime($dayTotal[0]->Month)) }} {{ $user->name }}</h1>
         </header>
         <div class="totalContainer">
             <h3>Maand Totaal</h3>
             @if (isset($monthlyTotal))
+            
                 @foreach ($monthlyTotal as $item)
                     <div class="displayTotalRegular total">
-                        Regular {{ $item->RegularHours }}
+                        Gewerkt {{ $item->RegularHours }}
                     </div>
                     <div class="displayTotalBreak total">
-                        Break {{ $item->BreakHours }}
+                        Gepauzeerd {{ $item->BreakHours }}
                     </div>
                     <div class="displayTotalOverTime total">
-                        Overtime {{ $item->OverTime }}
+                        Overuren {{ $item->OverTime }}
                     </div>
                 @endforeach
             @else
@@ -156,20 +153,21 @@
     <main>
         <table>
             <thead>
-                <tr>
+                <tr class="pdfTableHeader">
                     <th>Datum</th>
                     <th>Werkuren</th>
                     <th>Pauze</th>
                     <th>Overuren</th>
-                    <th>Notitie</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($timesheet as $item)
-                    <tr class="timesheetRow">
+                @foreach ($dayTotal as $item)
+                 
+                    <tr  class="timesheetRow">
+                        {{-- date --}}
                         <td class="date" id="{{ $item->id }}">
                             <?php
-                            $toTime = strtotime($item->ClockedIn);
+                            $toTime = strtotime($item->Month);
                             $days = ['Mon' => 'Ma', 'Tue' => 'Di', 'Wed' => 'Wo', 'Thu' => 'Do', 'Fri' => 'Vr', 'Sat' => 'Za', 'Sun' => 'Zo'];
                             $englishDay = date('D', $toTime);
                             $dutchDay = $days[$englishDay];
@@ -177,6 +175,7 @@
                             echo $dutchDay . ' ' . $dayOfMonth;
                             ?>
                         </td>
+                        {{-- regular --}}
                         <td>
                             <div class="displayRegular">
                                 @if ($item->RegularHours < 7.6 && $item->Weekend == false && $item->type == 'workday')
@@ -189,37 +188,40 @@
                                 @else
                                     {{ $item->RegularHours }}
                                 @endif
-                                @if ($item->type == 'workday')
+                                {{-- @if ($item->type == 'workday')
                                         <span class="inOut">
                                             <br> Clocked in: {{ date('H:i', $toTime) }}
                                             <br> Clocked out: {{ date('H:i', strtotime($item->ClockedOut)) }}
                                         </span>
-                                @endif
+                                @endif --}}
                             </div>
                         </td>
+                        {{-- break --}}
                         <td>
                             <div class="displayBreak">
                                 {{ $item->BreakHours }}
-                                @if ($item->type == 'workday' && $item->BreakStart !== $item->BreakStop)
-                                <span class="inOut">
-                                    <br> Clocked in: {{ date('H:i', strtotime($item->BreakStart)) }}
-                                    <br> Clocked out: {{ date('H:i', strtotime($item->BreakStop)) }}
-                                </span>
-                        @endif  
+                                {{-- @if ($item->type == 'workday' && $item->BreakStart !== $item->BreakStop)
+                                    <span class="inOut">
+                                        <br> Clocked in: {{ date('H:i', strtotime($item->BreakStart)) }}
+                                        <br> Clocked out: {{ date('H:i', strtotime($item->BreakStop)) }}
+                                    </span>
+                                @endif --}}
                             </div>
                         </td>
+                        {{-- overTime --}}
                         <td>
                             <div class="displayOvertTime">
                                 {{ $item->OverTime }}
                             </div>
                         </td>
-                        <td>
+                        {{-- notes --}}
+                        {{-- <td>
                             <div class="notitie">
                                 @if ($item->userNote !== null)
                                     {{ $item->userNote }}
                                 @endif
                             </div>
-                        </td>
+                        </td> --}}
 
                     </tr>
                 @endforeach

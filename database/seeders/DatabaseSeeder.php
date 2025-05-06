@@ -157,7 +157,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
         ];
-
+        $now= now('Europe/Brussels');
         // Count predefined users per company
         $companyUserCounts = [
             1234567890 => 0, // Beterams
@@ -173,14 +173,14 @@ class DatabaseSeeder extends Seeder
             $createdUser = User::create($user);
             Timelog::create([
                 'UserId' => $createdUser->id,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => $now,
+                'updated_at' => $now,
             ]);
             Usertotal::create([
                 'UserId' => $createdUser->id,
-                'Month' => now(),
-                'created_at' => now(),
-                'updated_at' => now(),
+                'Month' => $now->startOfMonth(),
+                'created_at' => $now,
+                'updated_at' => $now,
             ]);
         }
 
@@ -213,14 +213,14 @@ class DatabaseSeeder extends Seeder
             $createdUser = User::create($user);
             Timelog::create([
                 'UserId' => $createdUser->id,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => $now,
+                'updated_at' => $now,
             ]);
             Usertotal::create([
                 'UserId' => $createdUser->id,
-                'Month' => now(),
-                'created_at' => now(),
-                'updated_at' => now(),
+                'Month' => $now->startOfMonth(),
+                'created_at' => $now,
+                'updated_at' => $now,
             ]);
         }
     }

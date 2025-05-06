@@ -106,7 +106,7 @@ class UserController extends Controller
             'RegularHours' => 0,
             'BreakHours' => 0,
             'OverTime' => 0,
-            'Month' => Carbon::now('Europe/Brussels'),
+            'Month' => Carbon::now('Europe/Brussels')->startOfMonth(),
         ]);
 
         return $newUser; 

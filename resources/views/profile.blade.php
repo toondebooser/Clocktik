@@ -25,17 +25,16 @@
             <select class="dropDownMonth" name="month" size="1">
                 @foreach ($clockedMonths as $allMonths)
                     @php
-                        $currentMonth = \Carbon\Carbon::now()->month;
-
+            
+                        $currentMonth = Carbon\Carbon::now()->month;
+                        $carbonDate = Carbon\Carbon::create(null, $allMonths->month, 1)->locale('nl');
                     @endphp
                     <option value="{{ $allMonths->month }}" {{ $allMonths->month == $currentMonth ? 'selected' : '' }}>
-                        @php
-                            $carbonDate = \Carbon\Carbon::create(null, $allMonths->month, 1);
-                            echo $carbonDate->format('F');
-                        @endphp
-
+                        {{ $carbonDate->translatedFormat('F') }}
                     </option>
                 @endforeach
+            </select>
+            
             </select>
             @if (isset($user))
                 <input type="hidden" name="worker" value='{{ $user->id }}'>
@@ -59,7 +58,10 @@
         <div class="timesheetHeader">
 
             @if (isset($days) && count($days) != 0)
-                {{ date('F', strtotime($days[0]->Month)) }}
+            @php
+            $monthName = Carbon\Carbon::parse($days[0]->Month)->locale('nl')->translatedFormat('F');
+        @endphp
+        {{ $monthName }}
             @endif
         </div>
         <table class="timesheetTable">

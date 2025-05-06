@@ -4,7 +4,7 @@
    
 <h2>{{ $type }}</h2>
 <div id="list" class="workersForm">
-        <input type="text" id="searchInput" placeholder="Zoek..."> <br>
+        <input class="uniform-input" type="text" id="searchInput" placeholder="Zoek..."> <br>
         <div class="hidden" id="type" type="{{$type}}"></div>
         @foreach ($dataSet as $data)
         
