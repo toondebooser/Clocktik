@@ -95,9 +95,11 @@
     <br>
     <form action="{{ route('delete') }}" class="delete" method="POST">
         @csrf
+       
         <input type="hidden" name="workerId" value="{{ $worker->id }}">
         {{-- <input type="hidden" name="type" value="{{$timesheet->type}}"> --}}
         <input type="hidden" name="deleteSheet" value="{{ $timesheet->id }}">
+        <input type="hidden" name="sheetType" value="{{$timesheet->getTable()}}">
         <input type="hidden" name="date" value="{{ $timesheet->Month }}">
         <input onclick="return confirm('zedde zeker ?')" class="submit" type="image"
             src="{{ asset('/images/1843344.png') }}" name="deleteThisSheet" alt="Delete">

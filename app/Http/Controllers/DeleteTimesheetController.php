@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Daytotal;
+use App\Models\Extra_break_slot;
 use App\Models\Timesheet;
 use App\Models\User;
 use App\Utilities\CalculateUtility;
@@ -16,7 +17,7 @@ use function PHPUnit\Framework\isEmpty;
 
 class DeleteTimesheetController extends Controller
 {
-    public function deleteTimesheet(Request $request, $workerId = null, $deleteSheet = null, $date = null)
+    public function deleteTimesheet(Request $request, $workerId = null, $deleteSheet = null, $date = null, $sheetType = null)
 {
     try {
         $workerId = $workerId ?? $request->workerId;
@@ -24,12 +25,18 @@ class DeleteTimesheetController extends Controller
         $date = $date ?? $request->date;
         $user = User::find($workerId);
         $dayTotal = $user->daytotals()->where('Month', $date)->first();
+        $modelMap = [
+            'timesheets' => Timesheet::class,
+            'extra_break_slots' => Extra_break_slot::class,
+            'daytotals' => Daytotal::class
+        ];
 
         if (empty($request->all())) {
             $request->merge([
                 'workerId' => $workerId,
                 'deleteSheet' => $deleteSheet,
                 'date' => $date,
+                'sheetType' => $sheetType
             ]);
         }
 
@@ -38,15 +45,14 @@ class DeleteTimesheetController extends Controller
             'deleteSheet' => 'required|numeric',
             'date' => 'required|date',
         ]);
+        $sheet = $modelMap[$sheetType]::find($deleteSheet);
 
-        $day = Timesheet::find($deleteSheet) ?? Daytotal::find($deleteSheet);
-
-        if ($day === null) {
+        if ($sheet === null) {
             return $this->redirectError('Dag niet gevonden.', $user);
         }
 
-        DB::transaction(function () use ($day, $dayTotal, $date, $workerId) {
-            $day->delete();
+        DB::transaction(function () use ($sheet, $dayTotal, $date, $workerId) {
+            $sheet->delete();
 
             if ($dayTotal) {
                 if ($dayTotal->type !== 'workday' || $dayTotal->timesheets->isEmpty()) {

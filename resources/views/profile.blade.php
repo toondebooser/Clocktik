@@ -174,7 +174,7 @@
                             </td>
                             <td>
                                 @if(auth()->user()->admin)
-                                <a href="{{ route('delete', ['workerId' => $userId, 'deleteSheet' => $timesheet->id, 'date' => $timesheet->Month]) }}"
+                                <a href="{{ route('delete', ['workerId' => $userId, 'deleteSheet' => $timesheet->id, 'date' => $timesheet->Month , 'sheetType' => $timesheet->getTable()]) }}"
                                     onclick="return confirm('Zedde zeker?')">
                                     <img class="trashIcon" src="{{ asset('/images/1843344.png') }}" alt="Delete">
                                 </a>
@@ -198,7 +198,7 @@
                                             Uit: {{ $breakSlot->BreakStop->format('H:i') }}
                                         @endif
                                     </td>
-                                    <td><a href="{{ route('delete', ['workerId' => $userId, 'deleteSheet' => $breakSlot->id, 'date' => $breakSlot->Month]) }}"
+                                    <td><a href="{{ route('delete', ['workerId' => $userId, 'deleteSheet' => $breakSlot->id, 'date' => $breakSlot->Month , 'sheetType' => $breakSlot->getTable()]) }}"
                                             onclick="return confirm('Zedde zeker?')">
                                             <img class="trashIcon" src="{{ asset('/images/1843344.png') }}" alt="Delete">
                                         </a></td>
