@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\UserActivityLogger;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
@@ -11,20 +12,26 @@ class AddCustomTimesheetController extends Controller
 {
     public function customTimesheetForm(Request $request)
     {
-        $id = $request->input('worker');
-        
         try {
+            $id = $request->input('worker');
             $worker = User::where('id', $id)->first();
+
+            if (!$worker) {
+                return redirect()->back()->withErrors('error', 'Werknemer niet gevonden.');
+            }
+
+            
+
             return view('addTimesheet', ['id' => $id, 'worker' => $worker]);
         } catch (QueryException $e) {
-            Log::error('Failed to retrieve worker in customTimesheetForm', [
-                'worker_id' => $id,
+            Log::error('Failed to load custom timesheet form', [
+                'worker_id' => $request->input('worker'),
                 'error' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
             ]);
-            
-            return redirect()->back()->with('error', 'Er is een fout opgetreden bij het ophalen van de gegevens.');
+
+            return redirect()->back()->withErrors('error', 'Er is een fout opgetreden bij het laden van het timesheet-formulier.');
         }
     }
 }

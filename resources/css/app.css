@@ -343,9 +343,9 @@ body.night-mode .uniform-input:focus {
     overflow-y: auto;
     padding: 10px 20px;
     display: flex;
-    border: 3px solid green;
+    border: 3px solid #40C057;
     background-color: white;
-    color: green;
+    color: #40C057;
     text-align: center;
     font-size: larger;
     z-index: 3;
