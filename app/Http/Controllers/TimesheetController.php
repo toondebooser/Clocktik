@@ -39,6 +39,12 @@ class TimesheetController extends Controller
                 'Month' => $userRow->StartWork->format('Y-m-d'),
             ];
         }
+        if (isset($userRow->StartBreak) && $userRow->StartBreak !== null) {
+             $timesheetAttributes['BreakStart'] = $userRow->StartBreak;
+         }
+         if (isset($userRow->EndBreak) && $userRow->EndBreak !== null ) {
+             $timesheetAttributes['BreakStop'] = $userRow->EndBreak;
+         }
         $buildTimesheet = new TimeloggingUtility;
         $buildTimesheet->logTimeEntry($userRow, $id, $timesheet);
         if ($buildTimesheet) return redirect()->back()->with('Succes', 'Uren succesvol toegevoegd');
@@ -48,7 +54,6 @@ class TimesheetController extends Controller
 
     public function addNewTimesheet(Request $request)
     {
-
         $date = $request->newTimesheetDate;
         $id = $request->workerId;
         $validator = Validator::make(
@@ -58,10 +63,10 @@ class TimesheetController extends Controller
                 'endTime'     => 'required|date_format:H:i|after:startTime',
                 'StartBreak' => 'nullable|date_format:H:i',
                 'EndBreak'  => 'nullable|date_format:H:i|after:StartBreak',
-
+                
                 'newTimesheetDate' => 'required|date'
-            ]
-        );
+                ]
+            );
         
         if ($validator->fails()) {
             return redirect()->route('timesheetForm', ['worker' => $id])->withErrors($validator)->withInput();
@@ -79,12 +84,6 @@ class TimesheetController extends Controller
             'Weekend' => DateUtility::checkWeekend($date, User::find($id)->company->company_code),
             'userNote' => $userNote ?? null,
         ];
-        if (isset($request->StartBreak) && $request->StartBreak !== null) {
-            $userRow->StartBreak = $request->StartBreak;
-        }
-        if (isset($request->EndBreak) && $request->EndBreak !== null ) {
-            $userRow->EndBreak = $request->EndBreak;
-        }
         $addTimesheet = TimeloggingUtility::logTimeEntry($userRow, $id, null);
         $checkUserMonthTotal = UserUtility::CheckUserMonthTotal($date, $id);
         $calculateTotal = CalculateUtility::calculateUserTotal($id);

@@ -125,11 +125,49 @@ class UpdateTimesheetController extends Controller
             $validator = Validator::make(
                 $request->all(),
                 [
-                    'usedDayTotalDate' => 'required|date', // Replace startDate/endDate
-                    'startTime' => 'nullable|date_format:H:i|required_with:endTime',
-                    'endTime' => 'nullable|date_format:H:i|required_with:startTime|after:startTime',
-                    'startBreak' => 'nullable|date_format:H:i|required_with:endBreak',
-                    'endBreak' => 'nullable|date_format:H:i|required_with:startBreak|after_or_equal:startBreak',
+                    'usedDayTotalDate' => 'required|date',
+                    'startTime' => [
+                        'nullable',
+                        'date_format:H:i',
+                        Rule::requiredIf(function () use ($request) {
+                            return !empty($request->endTime);
+                        }),
+                    ],
+                    'endTime' => [
+                        'nullable',
+                        'date_format:H:i',
+                        Rule::requiredIf(function () use ($request) {
+                            return !empty($request->startTime);
+                        }),
+                        Rule::when(
+                            function () use ($request) {
+                                $dayTotal = UserUtility::userDayTotalFetch($request->usedDayTotalDate, auth()->user()->id);
+                                return !$dayTotal || !$dayTotal->NightShift;
+                            },
+                            'after:startTime'
+                        ),
+                    ],
+                    'startBreak' => [
+                        'nullable',
+                        'date_format:H:i',
+                        Rule::requiredIf(function () use ($request) {
+                            return !empty($request->endBreak);
+                        }),
+                    ],
+                    'endBreak' => [
+                        'nullable',
+                        'date_format:H:i',
+                        Rule::requiredIf(function () use ($request) {
+                            return !empty($request->startBreak);
+                        }),
+                        Rule::when(
+                            function () use ($request) {
+                                $dayTotal = UserUtility::userDayTotalFetch($request->usedDayTotalDate, auth()->user()->id);
+                                return !$dayTotal || !$dayTotal->NightShift;
+                            },
+                            'after_or_equal:startBreak'
+                        ),
+                    ],
                     'timeslot_pair' => Rule::requiredIf(function () use ($request) {
                         return (
                             (is_null($request->startTime) || is_null($request->endTime)) &&
@@ -141,10 +179,14 @@ class UpdateTimesheetController extends Controller
                     'usedDayTotalDate.required' => 'De datum is verplicht.',
                     'usedDayTotalDate.date' => 'De datum moet een geldige datum zijn.',
                     'startTime.required_with' => 'Starttijd is verplicht als eindtijd is ingevuld.',
+                    'startTime.date_format' => 'Starttijd moet in het formaat UU:MM zijn.',
                     'endTime.required_with' => 'Eindtijd is verplicht als starttijd is ingevuld.',
+                    'endTime.date_format' => 'Eindtijd moet in het formaat UU:MM zijn.',
                     'endTime.after' => 'Eindtijd moet na starttijd liggen.',
                     'startBreak.required_with' => 'Pauzestart is verplicht als pauzeeinde is ingevuld.',
+                    'startBreak.date_format' => 'Pauzestart moet in het formaat UU:MM zijn.',
                     'endBreak.required_with' => 'Pauzeeinde is verplicht als pauzestart is ingevuld.',
+                    'endBreak.date_format' => 'Pauzeeinde moet in het formaat UU:MM zijn.',
                     'endBreak.after_or_equal' => 'Pauzeeinde moet gelijk aan of na pauzestart liggen.',
                     'timeslot_pair.required' => 'Ten minste één tijdsblok (werkuren of pauze) moet worden ingevuld.',
                 ]

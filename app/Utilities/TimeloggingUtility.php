@@ -57,10 +57,10 @@ class TimeloggingUtility
             }  
             $date = $userRow->StartWork->format('Y-m-d');
             $dayTotal = UserUtility::findOrCreateUserDayTotal($date, $user);
-            $overlapCheck = DateUtility::checkIfSameDay($userRow->StartWork, $userRow->StopWork);
+            $sameDay = DateUtility::checkIfSameDay($userRow->StartWork, $userRow->StopWork);
             $dayTotal->update([
-                'DayOverlap' => !$overlapCheck,
-                'NightShift' => (!$overlapCheck || DateUtility::checkNightShift($userRow->StartWork) || DateUtility::checkNightShift($userRow->StopWork)),
+                'DayOverlap' => !$sameDay,
+                'NightShift' => (!$sameDay || DateUtility::checkNightShift($userRow->StartWork) || DateUtility::checkNightShift($userRow->StopWork)),
             ]);
 
             // Required attributes always included

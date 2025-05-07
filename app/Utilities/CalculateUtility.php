@@ -64,7 +64,6 @@ class CalculateUtility
             'Weekend' => false,
             'Completed' => true,
         ];
-
         $dailyHours = 0;
         $breaksTaken = 0;
         $isWeekendDay = $timesheets->isNotEmpty() && DateUtility::checkWeekend(
