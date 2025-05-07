@@ -11,11 +11,11 @@ class LogUserActivity
 {
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->check()) {
+        if (auth()->check() && !$request->isMethod('get')) {
             $data = $request->except(['password', 'password_confirmation', '_token']);
             $timestamp = now()->format('Y-m-d H:i:s');
 
-            $logMessage = "[{$timestamp}] Visited page";
+            $logMessage = "[{$timestamp}] {$request->method()} request to " . $request->path();
 
             UserActivityLogger::log($logMessage, $data);
         }
