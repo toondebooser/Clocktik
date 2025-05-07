@@ -8,12 +8,7 @@
 
    
 
-@if (session('status'))
-<div class="success">{{session('status')}}</div>
-@endif
-@if (session()->has('verified'))
-<div class="success">Thank you for verifying your email!</div>
-@endif
+
 @section('content')
    
         <form class="loginForm" action="{{route('authentication')}}" method="post">

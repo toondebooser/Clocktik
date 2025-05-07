@@ -13,7 +13,7 @@ class DashboardController extends Controller
     {
         $userRow = Timelog::where('UserId', auth()->user()->id)->first();
         $user = User::find(auth()->user()->id);
-        $dayTotal = $user->dayTotals()->whereDate('Month',  now('Europe/Brussels'))->first();
+        $dayTotal = $user->dayTotals()->whereDate('Month',  $userRow->StartWork)->first();
 
 
         $userNoteInput = $request->input('userNote');

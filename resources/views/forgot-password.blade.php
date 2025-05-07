@@ -25,8 +25,8 @@
 
         <form class="loginForm" action="{{route('password.request')}}" method="post">
             @csrf
-            <label class="userNameLabel" for="email">Email adress</label>
-            <input class="userName" type="email" id='email' name="email" >
+            <label class="userNameLabel" for="email">Email adres    </label>
+            <input class="userName uniform-input" type="email" id='email' name="email" >
             <input class="loginButton" type="submit" value="send">
         </form>
     

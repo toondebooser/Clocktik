@@ -96,29 +96,46 @@
         {{-- @yield('error') --}}
         @yield('title')
         @yield('content')
-        @if (session('success') || $errors->any())
-            <div class="message">
-                
-                @if (session('success'))
-                <div class="success">
-                    <img style="height: 50px" src="{{ asset('images/success.png') }}" alt="success">
-                        {{ session('success') }} <br>
-                        <a href="#" class="removeError" onclick="closeMessage(this)">Sluiten</a>
-                    </div>
-                    @endif
-                    @if ($errors->any())
-                    <div class="error">
-                        <img style="height: 50px" src="{{ asset('images/error.png') }}" alt="error">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                        <a href="#" class="removeError" onclick="closeMessage(this)">Sluiten</a>
-                    </div>
-                    @endif
+        @if (session('success') || $errors->any() || session('status') || session('verified'))
+    <div class="message">
+        @if (session('success'))
+            <div class="success">
+                <img style="height: 50px" src="{{ asset('images/success.png') }}" alt="succes">
+                {{ session('success') }}
+                <a href="#" class="removeError" onclick="closeMessage(this)">Sluiten</a>
             </div>
-            @endif
+        @endif
+        @if (session('status'))
+            <div class="success">
+                <img style="height: 50px" src="{{ asset('images/success.png') }}" alt="succes">
+                {{ session('status') }}
+                <a href="#" class="removeError" onclick="closeMessage(this)">Sluiten</a>
+            </div>
+        @endif
+        @if (session('verified'))
+            <div class="success">
+                <img style="height: 50px" src="{{ asset('images/success.png') }}" alt="succes">
+                Bedankt voor het verifiëren van uw e-mail!
+                <a href="#" class="removeError" onclick="closeMessage(this)">Sluiten</a>
+            </div>
+        @endif
+        @if ($errors->any())
+            <div class="error">
+                <img style="height: 50px" src="{{ asset('images/error.png') }}" alt="fout">
+                <ul>
+                    @if ($errors->has('error'))
+                        <li>{{ $errors->first('error') }}</li>
+                    @else
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    @endif
+                </ul>
+                <a href="#" class="removeError" onclick="closeMessage(this)">Sluiten</a>
+            </div>
+        @endif
+    </div>
+@endif
             @yield('header')
         <header>
             @auth
@@ -189,7 +206,7 @@
         </header>
 
 
-        <footer> &copy Toon De Booser</footer>
+        <footer> &copy Taxus software</footer>
     </div>
     <script>
         const toggle = () => {

@@ -34,13 +34,13 @@
         <input type="hidden" name="token" value="{{$token}}">
 
         <label class="emailLabel" for="email">Email</label>
-        <input id="email_adress" class="email" type="email" name="email">
+        <input id="email_adress" class="email uniform-input" type="email" name="email">
 
         <label class="passwordLabel" for="password">Password</label>
-        <input id="password"  class="password" type="password" name="password">
+        <input id="password"  class="password uniform-input" type="password" name="password">
        
         <label class="passwordConfirmationLabel" for="password_confirmation">Repeat password</label>
-        <input  class="passwordConfirmation" type="password" name="password_confirmation">
+        <input  class="passwordConfirmation uniform-input" type="password" name="password_confirmation">
 
       
 
