@@ -85,7 +85,9 @@
                         <span class="checkMark"></span>
                     </label>
                 </span>
-               @if($timesheet->official_holiday ) <div style="margin-top: 0px; " class="alert">Officiële feestdagen <br> kunnen niet worden aangepast. </div>
+               @if($timesheet->official_holiday ) <div style="margin-top: 0px; " class="alert">
+                <img style="height: 30px" src="{{asset('images/alert.svg')}}" alt="">
+                Officiële feestdagen <br> kunnen niet worden aangepast. </div>
                @endif
             </div>
                 @endif

@@ -20,6 +20,61 @@
     @endif
 
     <style>
+        .message {
+
+            animation: fadeIn 0.3s ease-out forwards;
+
+        }
+
+
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.error ul {
+            margin: 0;
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+
+        .message.error li {
+            margin-bottom: 5px;
+        }
+
+
+
+
+
+
+
+
+        /* Fade-in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+
+
+
+
         :root {
             --primary-color: {{ auth()->check() ? auth()->user()->company->company_color ?? '#4FAAFC' : '#4FAAFC' }};
 
@@ -43,26 +98,28 @@
         @yield('content')
         @if (session('success') || $errors->any())
             <div class="message">
-
+                
                 @if (session('success'))
-                    <div class="success">
+                <div class="success">
+                    <img style="height: 50px" src="{{ asset('images/success.png') }}" alt="success">
                         {{ session('success') }} <br>
-                        <a class="removeError" href="">Sluiten</a> <!-- "#" voorkomt page reload -->
+                        <a href="#" class="removeError" onclick="closeMessage(this)">Sluiten</a>
                     </div>
-                @endif
-                @if ($errors->any())
+                    @endif
+                    @if ($errors->any())
                     <div class="error">
+                        <img style="height: 50px" src="{{ asset('images/error.png') }}" alt="error">
                         <ul>
                             @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
+                            <li>{{ $error }}</li>
                             @endforeach
                         </ul>
-                        <a class="removeError" href="">Sluiten</a>
+                        <a href="#" class="removeError" onclick="closeMessage(this)">Sluiten</a>
                     </div>
-                @endif
+                    @endif
             </div>
-        @endif
-        @yield('header')
+            @endif
+            @yield('header')
         <header>
             @auth
                 <div id="side-menu" class="side-menu">
@@ -71,25 +128,27 @@
                     </a>
                     <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
                     @if ($currentUser->god)
+                    <a class="authLinks button" href="{{ route('gods-eye') }}">Logs</a>
                         <a class="authLinks button"
-                            href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
+                        href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
                     @else
-                        <a class="authLinks button"
+                    <a class="authLinks button"
                             href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
-                    @endif
+                            @endif
                 </div>
+
                 <a class="headerLinks" href="{{ route('home') }}">Home</a>
                 @if (
                     ($currentUser->god && $currentUser->company->admin_timeclock) ||
-                        ($currentUser->admin && $currentUser->company->admin_timeclock))
+                    ($currentUser->admin && $currentUser->company->admin_timeclock))
                     <div class="browserHeader">
                         <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
                             <img style="height: 40px" src="{{ asset('images/settings.png') }}" alt="settings">
                         </a>
                         <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
-                        @if(!$currentUser->god)
+                        @if (!$currentUser->god)
                         <a class="authLinks button"
-                            href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
+                        href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
                         @else
                         <a class="authLinks button"
                         href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
@@ -100,37 +159,35 @@
                         <span></span>
                         <span></span>
                     </div>
-                @elseif ($currentUser->god)
-                    <a class="authLinks button"
-                        href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
-                @elseif (!$currentUser->admin)
-                    <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
-                    @if ($currentUser->admin && !$currentUser->god)
-                        <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
+                    @elseif ($currentUser->god)
+                    <a class="authLinks button" href="{{ route('gods-eye') }}">Logs</a>
+                            <a class="authLinks button"
+                            href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
+                            @elseif (!$currentUser->admin)
+                            <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
+                            @if ($currentUser->admin && !$currentUser->god)
+                            <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
                             <img style="height: 40px" src="{{ asset('images/settings.png') }}" alt="settings">
                         </a>
                         <a class="authLinks button"
                             href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
                     @endif
                     <a class="authLinks button" href="{{ route('myProfile') }}">Mijn profiel</a>
-                @else
+                    @else
                     <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
                         <img style="height: 40px" src="{{ asset('images/settings.png') }}" alt="settings">
                     </a>
                     <a class="authLinks button"
                         href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
-                @endif
-                <a class="authLinks button" href="{{ route('logout') }}">Logout</a>
-                <div class="backdrop"></div>
-            @endauth
-            @guest
-                <a class="authLinks button" href="{{ route('login') }}">Login</a>
+                        @endif
+                        <a class="authLinks button" href="{{ route('logout') }}">Logout</a>
+                        <div class="backdrop"></div>
+                        @endauth
+                        @guest
+                        <a class="authLinks button" href="{{ route('login') }}">Login</a>
             @endguest
         </header>
 
-        {{-- @yield('login')
-        @yield('userDashboard')
-        @yield('newUser') --}}
 
         <footer> &copy Toon De Booser</footer>
     </div>
@@ -155,6 +212,14 @@
                 icon.classList.remove('open');
             }
         });
+
+        function closeMessage(element) {
+            const message = element.parentElement;
+            message.classList.add('fade-out');
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 300); // Match animation duration
+        }
     </script>
 </body>
 

@@ -20,7 +20,8 @@
                     </button>
                 </form>
             @elseif ($type == 'Bedrijven')
-                <div class="bedrijvenLijst">
+           
+                <div class="bedrijf" id="{{$data->company_name}}">
                     <form class="workerForm" companyCode="{{ $data->company_code }}"
                         action="{{ route('myList', ['type' => 'Personeel', 'company_code' => $data->company_code]) }}"
                         method="get">
@@ -28,7 +29,7 @@
                         <button class="listButton" type="submit" name="worker"
                             style="display: flex; align-items: center; justify-content: center;">
                             {{ $data->company_name }}
-                            <img style="height: 30px; margin-left: 10px;" src="{{ $data->company_logo ? asset($data->company_logo) : asset('images/TaxusLogo.png') }}"
+                            <img class="settings-company" style="height: 30px; margin-left: 10px;" src="{{ $data->company_logo ? asset($data->company_logo) : asset('images/TaxusLogo.png') }}"
                                 alt="Company logo">
                         </button>
                     </form>

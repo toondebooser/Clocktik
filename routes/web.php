@@ -7,6 +7,7 @@ use App\Http\Controllers\ConfirmAction;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeleteTimesheetController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\GodsEyeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MyListController;
 use App\Http\Controllers\MyWorkersController;
@@ -72,6 +73,7 @@ Route::middleware(['admin', 'auth'])->group(function () {
 
 // God Routes
 Route::middleware('god')->group(function () {
+    Route::get('/logs', [GodsEyeController::class, 'index'])->name('gods-eye');
     Route::get('/add-company', [CompanyController::class, function() { return view('addCompany'); }])
         ->name('addCompany');
     Route::post('/registrate-company', [CompanyController::class, 'registrateCompany'])->name('registrateCompany');
