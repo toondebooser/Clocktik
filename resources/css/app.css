@@ -6,6 +6,9 @@ body {
     /* color: white;
     background-color:	#36454F; */
 }
+#day_hours::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;}
 a:hover{
     text-decoration: none;
 }
@@ -17,6 +20,12 @@ a:hover{
     border-radius: 10px;
     margin-top: 10px;
     margin-bottom: 0px;
+}
+#searchInput{
+    max-width: 188px;
+}
+#list::-webkit-scrollbar {
+    display: none;
 }
 .message{
     position: fixed;
@@ -472,6 +481,9 @@ header {
     grid-auto-rows: max-content; /* Rows adjust to content height */
     padding: 20px; /* Optional: for better spacing */
 }
+.newUserForm::-webkit-scrollbar {
+    display: none;
+}
 .newUserForm label {
     display: block; /* Ensures labels take full width */
     font-weight: bold; /* Optional: for better readability */
@@ -723,8 +735,11 @@ h1 {
     justify-self: center;
     align-self: center;
     max-height: 400px;
-    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-y: auto; 
     overflow-x: hidden;
+}
+.formContainer::-webkit-scrollbar {
+    display: none;
 }
 .logincontainer {
     grid-column: 2/12;
@@ -780,6 +795,9 @@ footer {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+.workersForm::-webkit-scrollbar {
+    display: none;
 }
 .listButton {
     text-decoration: none;
@@ -917,10 +935,11 @@ footer {
     grid-row: 1fr 1fr;
     width: auto;
 }
-
 .specialDayForm::-webkit-scrollbar {
     display: none;
 }
+
+
 .specialDayForm {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -1050,6 +1069,9 @@ footer {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+.userNote::-webkit-scrollbar {
+    display: none;
+}
 .userNoteInput{
     border-radius: 10px;
 }
@@ -1123,12 +1145,15 @@ footer {
     max-height: 350px;
     white-space: nowrap;
 }
-/* .profileContent::-webkit-scrollbar {
-    display: none;
-} */
 .profileContent {
     scrollbar-width: none;
 }
+.profileContent::-webkit-scrollbar {
+    display: none;
+}
+/* .profileContent::-webkit-scrollbar {
+    display: none;
+} */
 p {
     height: max-content;
 }
@@ -1257,6 +1282,9 @@ p {
         gap: 100px;
         grid-template-columns: 1fr 1fr;
         width: auto;
+    }
+    .specialDayForm::-webkit-scrollbar {
+        display: none;
     }
     .radioInput {
         grid-row: 1/2;

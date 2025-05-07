@@ -64,7 +64,6 @@ class UpdateTimesheetController extends Controller
     public function updateTimesheet(Request $request)
     {
 
-
         $dayType = $request->dayType;
         $id = $request->id;
         $companyDayHours = User::find($id)->company->day_hours;
@@ -163,7 +162,7 @@ class UpdateTimesheetController extends Controller
                     'Weekend' => $weekend,
                     'userNote' => $request->userNote ?? null,
                 ];
-                $addTimesheet = TimeloggingUtility::logTimeEntry($userRow, $id, $timesheet->id);
+                TimeloggingUtility::logTimeEntry($userRow, $id, $timesheet->id);
             } else {
                 $extraBreakSlot = Extra_break_slot::find($request->timesheet);
                 $extraBreakSlot->update([

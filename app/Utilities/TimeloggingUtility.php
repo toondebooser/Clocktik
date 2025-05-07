@@ -74,12 +74,12 @@ class TimeloggingUtility
             ];
 
             
-            if (isset($userRow->StartBreak) && $userRow->StartBreak !== null) {
-                $timesheetAttributes['BreakStart'] = $userRow->StartBreak;
-            }
-            if (isset($userRow->EndBreak) && $userRow->EndBreak !== null ) {
-                $timesheetAttributes['BreakStop'] = $userRow->EndBreak;
-            }
+            $timesheetAttributes['BreakStart'] = $userRow->StartBreak ?? null;
+            // if (isset($userRow->StartBreak) && $userRow->StartBreak !== null) {
+            // }
+            $timesheetAttributes['BreakStop'] = $userRow->EndBreak ?? null;
+            // if (isset($userRow->EndBreak) && $userRow->EndBreak !== null ) {
+            // }
 
             return $timesheetAttributes;
         });

@@ -50,7 +50,6 @@
                     <input type="hidden" name="startTime" value="{{ null }}">
                     <input type="hidden" name="endTime" value="{{ null }}">
                 @endif
-                @if ($startBreak )
                     <fieldset class="gepauzeerd">
                         <legend>Gepauzeerd</legend>
 
@@ -64,7 +63,6 @@
                             <br>
                         </div>
                     </fieldset>
-                @endif
             @elseif(isset($timesheet->type) && $timesheet->type !== 'workday')
             <div class="specialUpdateContainer">
                 <input class="updateSpecialInput" type="text" name="updateSpecial" value="{{ $timesheet->type }}" {{ $timesheet->official_holiday ? 'readonly' : '' }}>

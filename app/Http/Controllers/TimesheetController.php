@@ -49,7 +49,6 @@ class TimesheetController extends Controller
     public function addNewTimesheet(Request $request)
     {
 
-        $timeloggingUtility = new TimeloggingUtility;
         $date = $request->newTimesheetDate;
         $id = $request->workerId;
         $validator = Validator::make(
@@ -67,21 +66,26 @@ class TimesheetController extends Controller
         if ($validator->fails()) {
             return redirect()->route('timesheetForm', ['worker' => $id])->withErrors($validator)->withInput();
         }
-        dd($request->all());
         $dayTotalCheck = UserUtility::findOrCreateUserDayTotal($date, $id);
         if (!$dayTotalCheck->wasRecentlyCreated) {
             return redirect()->route('timesheetForm', ['worker' => $id])->withErrors(['error', 'Datum al in gebruik: ' . $date]);
         }
         $userRow = (object) [
             'UserId' => $id,
-            'StartWork' => Carbon::parse($date . ' ' . $request->input('startTime'), 'Europe/Brussels'),
-            'StopWork' => Carbon::parse($date . ' ' . $request->input('endTime'), 'Europe/Brussels'),
-            'StartBreak' => Carbon::parse($date . ' ' . $request->input('endTime'), 'Europe/Brussels')->subMinutes(30),
-            'EndBreak' => Carbon::parse($date . ' ' . $request->input('endTime'), 'Europe/Brussels'),
+            'StartWork' => Carbon::parse($date . ' ' . $request->startTime, 'Europe/Brussels'),
+            'StopWork' => Carbon::parse($date . ' ' . $request->endTime, 'Europe/Brussels'),
+            'StartBreak' => Carbon::parse($date . ' ' . $request->StartBreak, 'Europe/Brussels'),
+            'EndBreak' => Carbon::parse($date . ' ' . $request->EndBreak, 'Europe/Brussels'),
             'Weekend' => DateUtility::checkWeekend($date, User::find($id)->company->company_code),
             'userNote' => $userNote ?? null,
         ];
-        $addTimesheet = $timeloggingUtility->logTimeEntry($userRow, $id, null);
+        if (isset($request->StartBreak) && $request->StartBreak !== null) {
+            $userRow->StartBreak = $request->StartBreak;
+        }
+        if (isset($request->EndBreak) && $request->EndBreak !== null ) {
+            $userRow->EndBreak = $request->EndBreak;
+        }
+        $addTimesheet = TimeloggingUtility::logTimeEntry($userRow, $id, null);
         $checkUserMonthTotal = UserUtility::CheckUserMonthTotal($date, $id);
         $calculateTotal = CalculateUtility::calculateUserTotal($id);
         if ($checkUserMonthTotal && $addTimesheet && $calculateTotal) return redirect()->route('timesheetForm', ['worker' => $id])->with('success', 'Uurrooster toegevoegd');

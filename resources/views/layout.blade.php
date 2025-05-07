@@ -51,7 +51,6 @@
                     </div>
                 @endif
                 @if ($errors->any())
-               
                     <div class="error">
                         <ul>
                             @foreach ($errors->all() as $error)
@@ -88,9 +87,13 @@
                             <img style="height: 40px" src="{{ asset('images/settings.png') }}" alt="settings">
                         </a>
                         <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
+                        @if(!$currentUser->god)
                         <a class="authLinks button"
                             href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
-
+                        @else
+                        <a class="authLinks button"
+                        href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
+                        @endif
                     </div>
                     <div class="headerLinks " id="nav-icon4" onclick="toggle()">
                         <span></span>
