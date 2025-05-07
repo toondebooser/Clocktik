@@ -50,24 +50,27 @@ class TimesheetController extends Controller
     {
 
         $timeloggingUtility = new TimeloggingUtility;
-        $date = $request->input('newTimesheetDate');
-        $id = $request->input('workerId');
-        $dayTotalCheck = UserUtility::findOrCreateUserDayTotal($date, $id);
+        $date = $request->newTimesheetDate;
+        $id = $request->workerId;
         $validator = Validator::make(
             $request->all(),
             [
                 'startTime'   => 'required|date_format:H:i',
                 'endTime'     => 'required|date_format:H:i|after:startTime',
+                'StartBreak' => 'nullable|date_format:H:i',
+                'EndBreak'  => 'nullable|date_format:H:i|after:StartBreak',
 
                 'newTimesheetDate' => 'required|date'
             ]
         );
-
+        
         if ($validator->fails()) {
             return redirect()->route('timesheetForm', ['worker' => $id])->withErrors($validator)->withInput();
         }
+        dd($request->all());
+        $dayTotalCheck = UserUtility::findOrCreateUserDayTotal($date, $id);
         if (!$dayTotalCheck->wasRecentlyCreated) {
-            return redirect()->route('timesheetForm', ['worker' => $id])->with('error', 'Datum al in gebruik: ' . $date);
+            return redirect()->route('timesheetForm', ['worker' => $id])->withErrors(['error', 'Datum al in gebruik: ' . $date]);
         }
         $userRow = (object) [
             'UserId' => $id,
@@ -97,7 +100,7 @@ class TimesheetController extends Controller
             'UserId' => $userId,
             'Month' => $singleDay,
         ])->first();
-        
+
         if (!$dayTotal) {
             $dayTotal = Daytotal::create([
                 'UserId' => $userId,
@@ -105,12 +108,12 @@ class TimesheetController extends Controller
                 'type' => $dayLabel,
                 'ClockedIn' => $singleDay,
                 'Completed' => true,
-                'official_holiday'=> DateUtility::isValidHolidayName($dayLabel),
+                'official_holiday' => DateUtility::isValidHolidayName($dayLabel),
                 'accountableHours' => $dayType == 'onbetaald' ? 0 : User::find($userId)->company->day_hours,
             ]);
             return true; // New record created
         } else {
-            return 'Datum al in gebruik: ' . $singleDay->toDateString() . ' ('. User::find($userId)->name . ')';
+            return 'Datum al in gebruik: ' . $singleDay->toDateString() . ' (' . User::find($userId)->name . ')';
         }
     }
 
@@ -256,8 +259,8 @@ class TimesheetController extends Controller
     //     foreach ($holidays as $date => $name) {
     //         TimesheetController::setDay($name,'betaald',$userId,$date);
     //     };
-         
+
     //     return true;
     // }   
-   
+
 }

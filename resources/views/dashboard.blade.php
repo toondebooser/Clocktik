@@ -78,7 +78,10 @@
 
         .modal-content {
             background-color: #fefefe;
-            margin: 15% auto;
+            /* margin: 15% auto; */
+            justify-self: center;
+            align-self: center;
+            height: fit-content;
             /* 15% from the top and centered */
             padding: 20px;
             border: 1px solid #888;
@@ -183,7 +186,7 @@
             const openConfirmationModal = (message, actionUrl) => {
                 document.getElementById('modalText').innerText = message;
                 document.getElementById('confirmButton').dataset.url = actionUrl;
-                document.getElementById('confirmationModal').style.display = "block";
+                document.getElementById('confirmationModal').style.display = "grid";
             }
 
             const closeModal = () => {

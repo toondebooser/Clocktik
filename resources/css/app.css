@@ -24,6 +24,7 @@ a:hover{
     left: 50%;
     display: flex;
     width: 100%;
+    max-width: 305px;
     flex-direction: column;
     z-index: 1;
 }

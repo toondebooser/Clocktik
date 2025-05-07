@@ -51,6 +51,7 @@
                     </div>
                 @endif
                 @if ($errors->any())
+               
                     <div class="error">
                         <ul>
                             @foreach ($errors->all() as $error)
