@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\UserActivityLogger;
 use App\Models\Daytotal;
 use App\Models\User;
 use Carbon\Carbon;
@@ -40,9 +39,9 @@ class TimesheetController extends Controller
                 'Month' => $userRow->StartWork->format('Y-m-d'),
             ];
         }
-        TimeloggingUtility::logTimeEntry($userRow, $id, $timesheet);
-        UserActivityLogger::log('Timesheet made:', $userRow);
-        return redirect()->back()->with('Succes', 'Uren succesvol toegevoegd');
+        $buildTimesheet = new TimeloggingUtility;
+        $buildTimesheet->logTimeEntry($userRow, $id, $timesheet);
+        if ($buildTimesheet) return redirect()->back()->with('Succes', 'Uren succesvol toegevoegd');
     }
 
     //ADDING CUSTOM TIMESHEET LOGIC

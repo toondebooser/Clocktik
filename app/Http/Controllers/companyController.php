@@ -19,11 +19,11 @@ class CompanyController extends Controller
         $adminName = request()->input('adminName');
         $email = request()->input('adminEmail');
         $companyCode = UserUtility::companyNumberGenerator();
-        $newAdmin =  $userController->createUser($adminName, $email, Hash::make('tiktrackadmin'), $companyCode, true);
         $company = Company::create([
             'company_name' => $companyName,
             'company_code' => $companyCode,
         ]);
+        $newAdmin =  $userController->createUser($adminName, $email, Hash::make('tiktrackadmin'), $companyCode, true);
          $newAdmin->sendEmailVerificationNotification($companyCode);
         if ($company) return redirect('/')->with('success', 'Registration successful! Please verify your email');
     }
