@@ -155,7 +155,7 @@
             <thead>
                 <tr class="pdfTableHeader">
                     <th>Datum</th>
-                    <th>Werkuren</th>
+                    <th>Dag type</th>
                     <th>Pauze</th>
                     <th>Overuren</th>
                 </tr>

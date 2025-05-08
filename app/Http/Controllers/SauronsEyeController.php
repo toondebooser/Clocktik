@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 
-class GodsEyeController extends Controller
+class SauronsEyeController extends Controller
 {
     public function index()
     {
@@ -50,7 +50,7 @@ class GodsEyeController extends Controller
                 'user_id' => auth()->user()->id ?? null,
             ]);
 
-            return view('gods-eye', ['logs' => array_reverse($logs)]);
+            return view('sauronsEye', ['logs' => array_reverse($logs)]);
         } catch (\Exception $e) {
             // Log error
             Log::error('Failed to read log file', [

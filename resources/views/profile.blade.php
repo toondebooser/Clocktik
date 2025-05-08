@@ -22,7 +22,7 @@
     <div class="profileContent">
         <form class="timesheetForm" method="POST" action="{{ route('getData') }}">
             @csrf
-            <select class="dropDownMonth" name="month" size="1">
+            <select class="dropDownMonth uniform-input" name="month" size="1">
                 @foreach ($clockedMonths as $allMonths)
                     @php
             
@@ -65,7 +65,7 @@
             @endif
         </div>
     
-        <table class="timesheetTable">
+        <table class="timesheetTable styled-table">
             <thead class="stikyHeader">
                 <tr>
                     <th>Datum</th>

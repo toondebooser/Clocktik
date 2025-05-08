@@ -3,12 +3,12 @@
     <h2>Logboek</h2>
 @endsection
 @section('content')
-<div class="log-container">
+    <div class="log-container">
         <div class="search-bar-group">
             <label for="log-timestamp">Zoek op datum of tijd:</label>
             <input type="text" id="log-timestamp" placeholder="Bijv. 2025-05-07 of 15:30" oninput="filterLogs()" />
-    
-    
+
+
             <label for="log-user">Zoek op gebruiker:</label>
             <input type="text" id="log-user" placeholder="Gebruikersnaam" oninput="filterLogs()" />
         </div>
@@ -23,8 +23,6 @@
         @if (empty($logs))
             <p>Geen logboeken beschikbaar.</p>
         @else
-
-
             <div class="log-list">
                 @foreach ($logs as $log)
                     <div class="log-entry">
@@ -57,6 +55,7 @@
             padding: 20px;
             box-sizing: border-box;
             overflow-y: auto;
+            overflow-x: hidden;
         }
 
         .log-list {
@@ -151,19 +150,21 @@
         .fade-out {
             animation: fadeOut 0.3s ease-in forwards;
         }
+
         .search-bar-group {
-    display: flex;
-    flex-wrap: wrap;
-    position: sticky;
-    top: 0;
-    z-index: 3;
-    background-color: white; /* Ensures it doesn't get transparent when scrolling */
-    padding: 15px 0;
-    gap: 15px;
-    align-items: center;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #ddd;
-}
+            display: flex;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 3;
+            background-color: white;
+            /* Ensures it doesn't get transparent when scrolling */
+            padding: 15px 0;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
 
 
         .search-bar-group label {
@@ -209,7 +210,6 @@
                 font-size: 12px;
             }
         }
-
     </style>
 
     <script>

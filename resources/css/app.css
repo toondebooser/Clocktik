@@ -2,33 +2,33 @@ html,
 body {
     height: 100vh;
     height: 100svh;
-    font-family: "Noto Sans", sans-serif;
-    /* color: white;
-    background-color:	#36454F; */
+    font-family: "inter", "Noto Sans", sans-serif;
 }
+
 #day_hours::-webkit-inner-spin-button {
     -webkit-appearance: none;
-    margin: 0;}
-a:hover{
+    margin: 0;
+}
+a:hover {
     text-decoration: none;
 }
-.red{
+.red {
     color: red;
 }
-.alert{
+.alert {
     border: 2px solid #007bff;
     background-color: white;
     border-radius: 10px;
     margin-top: 10px;
     margin-bottom: 0px;
 }
-#searchInput{
+#searchInput {
     max-width: 188px;
 }
 #list::-webkit-scrollbar {
     display: none;
 }
-.message{
+.message {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -39,26 +39,24 @@ a:hover{
     z-index: 1;
 }
 .hamburger {
-
-    display: none; 
+    display: none;
 }
-tr:hover{
+tr:hover {
     cursor: pointer;
 }
 :root {
-    --primary-color: #4FAAFC;
-    --night-mode: #36454F;
+    --primary-color: #4faafc;
+    --night-mode: #36454f;
     --night-shift: #8f969b;
     --status-working: rgb(33, 222, 33);
     --status-onBreak: rgb(18, 105, 244);
     --status-notWorking: rgb(252, 3, 3);
     --select: #ccc;
 }
-.nightShift{
+.nightShift {
     background-color: var(--night-shift);
     color: white;
 }
-
 
 a {
     text-decoration: none;
@@ -79,14 +77,13 @@ a {
     z-index: 5; /* Below menu but above content */
 }
 
-
 .side-menu {
     position: absolute; /* Required for positioning */
-    left: 0; 
+    left: 0;
     top: 0;
     padding: 20px;
     display: grid;
-    align-items:start;
+    align-items: start;
     justify-items: end;
     grid-auto-rows: max-content;
     gap: 5px;
@@ -105,14 +102,14 @@ a {
     opacity: 1;
     pointer-events: auto; /* Blocks clicks on blurred content */
 }
-  
+
 #nav-icon4 {
     z-index: 15;
     width: 60px;
     height: 45px; /* Fixed height to properly contain and center the spans */
     position: relative;
     cursor: pointer;
-    transition: .5s ease-in-out;
+    transition: 0.5s ease-in-out;
     display: flex; /* Added to help with centering */
     align-items: center; /* Vertical centering */
     justify-content: center; /* Horizontal centering */
@@ -127,8 +124,8 @@ a {
     background: grey; /* Changed from #d3531a to match your second definition */
     border-radius: 4px;
     opacity: 1;
-    transition: .25s ease-in-out;
-    left: 25%; 
+    transition: 0.25s ease-in-out;
+    left: 25%;
 }
 
 /* Adjusted spacing to be centered vertically */
@@ -166,16 +163,43 @@ a {
     left: 14px; /* Adjusted for centering */
     width: 50%; /* Keep consistent width */
 }
-
-
 .button {
+    display: grid;
+    align-content: center;
+    padding: 4px 8px;
+    font-size: 1rem;
+    font-weight: 400;
+    color: white;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.button:hover,
+.button:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    text-decoration: none;
+    outline: none;
+}
+
+.button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* .button {
     padding: 2px 5px;
     background-color: var(--primary-color);
     padding-bottom: 4px;
     color: white;
     border: none;
     border-radius: 5px;
-}
+} */
 
 :hover.timesheetRow {
     cursor: pointer;
@@ -187,18 +211,48 @@ a {
     display: none;
 }
 .belongTogether {
-    color: black;
+    color: #1f2937;
     background-color: lightcyan;
 }
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Inter', sans-serif;
+  color: #1f2937;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  font-size: smaller;
+  grid-column: 1/13;
+    justify-self: center;
+}
 
-table {
+.styled-table thead {
+  background-color: var(--primary-color);
+  color: #1f2937;
+  text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.styled-table tbody tr:hover {
+  cursor: default;
+}
+
+.styled-table tbody tr:last-child td {
+  border-bottom: none;
+}
+/* table {
     grid-column: 1/13;
     justify-self: center;
     border-collapse: collapse;
     font-size: smaller;
-    font-family: "Noto Sans", sans-serif;
+    font-family: "inter", "Noto Sans", sans-serif;
+
     width: 100%;
-}
+} */
 .content-row {
     transition: all 0.3s ease;
 }
@@ -261,7 +315,7 @@ th {
 
 .displayOvertTime {
     text-align: center;
-    color: black
+    color: #1f2937;
 }
 .displayBreak {
     text-align: center;
@@ -343,15 +397,15 @@ body.night-mode .uniform-input:focus {
     overflow-y: auto;
     padding: 10px 20px;
     display: flex;
-    border: 3px solid #40C057;
+    border: 3px solid #40c057;
     background-color: white;
-    color: #40C057;
+    color: #40c057;
     text-align: center;
     font-size: larger;
     z-index: 3;
 }
 .specifiedError {
-    color: black;
+    color: #1f2937;
 }
 
 .dagenInstellen {
@@ -368,8 +422,11 @@ body.night-mode .uniform-input:focus {
     justify-self: end;
     align-self: center;
 }
-#weekendDag1,#weekendDag2,#colorPreview,#preview:hover{
-cursor: pointer;
+#weekendDag1,
+#weekendDag2,
+#colorPreview,
+#preview:hover {
+    cursor: pointer;
 }
 .previewLink {
     grid-row: 2/3;
@@ -386,28 +443,31 @@ cursor: pointer;
 }
 
 .updateTimesheet {
-
     grid-row: 3/3;
     grid-column: 2/12;
     justify-self: center;
     align-self: center;
     justify-content: center;
-    gap: 20px;
-    width: 90dvw;
+    gap: 15px;
+    width: 80dvw;
     display: grid;
-    grid-auto-columns:max-content;
+    grid-auto-columns: auto;
     grid-auto-flow: row;
     grid-auto-flow: column;
 
     /* grid-template-rows:max-content; */
-    /* grid-template-columns: 50% 50%; */
+    grid-template-columns: 45% 45%;
 }
+
 .specialUpdateContainer {
     grid-column: 1/3;
 }
 
-.updateDateTime{
+.updateDateTime {
+    max-width: 250px;
     color: red;
+    justify-self: center;
+    text-align: center;
 }
 
 .submit {
@@ -417,16 +477,16 @@ cursor: pointer;
 }
 
 .submit:hover {
-    color: black;
+    color: #1f2937;
 }
 input:hover {
-    color: black;
+    color: #1f2937;
     cursor: pointer;
 }
 .removeError {
     text-decoration: none;
     background-color: var(--primary-color);
-    
+
     border-radius: 5px;
     margin-top: 10px;
     padding: 0px 5px;
@@ -440,14 +500,15 @@ input:hover {
 }
 .timesheetHeader {
     /* margin-top: 20px; */
-    font-family: "Noto Sans", sans-serif;
+    font-family: "inter", "Noto Sans", sans-serif;
+
     font-size: x-large;
     height: fit-content;
     justify-self: center;
     grid-row: 2/3;
     grid-column: 1/13;
 }
-.browserHeader{
+.browserHeader {
     display: none;
 }
 header {
@@ -467,7 +528,7 @@ header {
     margin-right: 50px;
     align-self: center;
     grid-row: 1/2;
-    z-index: 15; 
+    z-index: 15;
 }
 .newUserForm {
     justify-self: center;
@@ -534,7 +595,8 @@ header {
     grid-row: 4/5;
 }
 h2 {
-    font-family: "Noto Sans", sans-serif;
+    font-family: "inter", "Noto Sans", sans-serif;
+
     text-align: center;
     grid-column: 2/12;
     grid-row: 2/3;
@@ -558,7 +620,7 @@ h2 {
 }
 .registerLink:hover {
     text-decoration: none;
-    color: black;
+    color: #1f2937;
 }
 
 .loginButton {
@@ -574,7 +636,7 @@ h2 {
     padding-bottom: 2px;
 }
 .loginButton:hover {
-    color: black;
+    color: #1f2937;
 }
 
 .rememberLabel {
@@ -638,8 +700,8 @@ img {
 }
 .headerLinks {
     margin: 0px 10px;
-    color: black;
-    font-family: "Noto Sans", sans-serif;
+    color: #1f2937;
+    font-family: "inter", "Noto Sans", sans-serif;
 }
 .stikyHeader {
     position: sticky;
@@ -648,16 +710,16 @@ img {
 }
 .headerLinks:hover {
     text-decoration: none;
-    color: black;
+    color: #1f2937;
     border-top: solid 1px black;
 }
-#nav-icon4:hover{
-border-top:none;
+#nav-icon4:hover {
+    border-top: none;
 }
 
 .authLinks:hover {
     text-decoration: none;
-    color: black;
+    color: #1f2937;
 }
 /* .logoContainer:hover {
     transform: scale(1.05);
@@ -672,7 +734,7 @@ border-top:none;
 }
 
 .displayDay {
-    color: black;
+    color: #1f2937;
 }
 .trashIcon {
     height: 25px;
@@ -695,15 +757,16 @@ th {
 }
 
 .timesheetTable {
-    font-family: "Noto Sans", sans-serif;
+    font-family: "inter", "Noto Sans", sans-serif;
 
     border-radius: 10px;
     grid-row: 3/4;
 }
 
 .updateProfile {
-    color: black;
-    font-family: "Noto Sans", sans-serif;
+    color: #1f2937;
+    font-family: "inter", "Noto Sans", sans-serif;
+
     grid-row: 5/6;
     grid-column: 1/4;
     font-size: x-small;
@@ -712,7 +775,7 @@ th {
     margin-bottom: 10px;
 }
 .updateProfile:hover {
-    color: black;
+    color: #1f2937;
     border-top: 1px solid black;
     text-decoration: none;
 }
@@ -728,7 +791,8 @@ h1 {
     grid-row: 2/3;
     justify-self: center;
     align-self: center;
-    font-family: "Noto Sans", sans-serif;
+    font-family: "inter", "Noto Sans", sans-serif;
+
     font-weight: 400;
 }
 .formContainer {
@@ -738,7 +802,7 @@ h1 {
     justify-self: center;
     align-self: center;
     max-height: 400px;
-    overflow-y: auto; 
+    overflow-y: auto;
     overflow-x: hidden;
 }
 .formContainer::-webkit-scrollbar {
@@ -793,7 +857,7 @@ footer {
     grid-column: 2/12;
     grid-row: 3/4;
     min-height: 100px;
-    overflow-y:auto;
+    overflow-y: auto;
     justify-self: center;
     display: flex;
     flex-direction: column;
@@ -815,7 +879,7 @@ footer {
     text-align: start;
     padding-left: 20px;
     border: 1px solid grey;
-    color: black;
+    color: #1f2937;
 }
 .listButton:hover {
     background-color: #ccc;
@@ -944,13 +1008,13 @@ footer {
     display: none;
 }
 
-
 .specialDayForm {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
 .updateSpecialInput {
-    margin-bottom: 30px;
+    justify-self: center;
+    max-width: 250px;
 }
 .radioInput {
     display: grid;
@@ -1017,7 +1081,7 @@ footer {
 }
 .specialsButton:hover {
     text-decoration: none;
-    color: black;
+    color: #1f2937;
 }
 .startButton {
     align-self: center;
@@ -1038,7 +1102,8 @@ footer {
     box-shadow: 5px 5px 10px #929292;
 }
 .breakButton {
-    font-family: "Noto Sans", sans-serif;
+    font-family: "inter", "Noto Sans", sans-serif;
+
     align-self: center;
     display: grid;
     grid-template-columns: repeat(12, 1fr);
@@ -1077,7 +1142,7 @@ footer {
 .userNote::-webkit-scrollbar {
     display: none;
 }
-.userNoteInput{
+.userNoteInput {
     border-radius: 10px;
 }
 
@@ -1096,7 +1161,7 @@ footer {
 .gepauzeerd {
     grid-column: 2/3;
 }
-.periode{
+.periode {
     grid-column: 1/3;
     display: none;
 }
@@ -1133,7 +1198,7 @@ footer {
     width: 120px;
     border-radius: 50%;
     border-radius: 151px;
-    background:  #da0a0a;
+    background: #da0a0a;
     box-shadow: 5px 5px 10px #929292, -5px -5px 10px #ffffff;
 }
 .profileContent {
@@ -1163,7 +1228,8 @@ p {
     height: max-content;
 }
 .buttonText {
-    font-family: "Noto Sans", sans-serif;
+    font-family: "inter", "Noto Sans", sans-serif;
+
     font-size: large;
     margin-bottom: 0px;
     color: white;
@@ -1217,7 +1283,7 @@ p {
     justify-self: center;
     grid-column: 9/11;
     align-self: center;
-    color: black;
+    color: #1f2937;
     background-color: lightgrey;
     padding: 10px;
     border-radius: 10px;
@@ -1254,9 +1320,8 @@ p {
 }
 
 @media (min-width: 768px) {
-    tr:hover{
+    tr:hover {
         background-color: var(--select);
-    
     }
     .side-menu {
         display: none; /* Hide side menu on desktop */
@@ -1267,12 +1332,19 @@ p {
     .error {
         width: auto;
     }
- .browserHeader{
-    display: block;
- }
- #nav-icon4{
-    display: none;
- }
+    .browserHeader {
+        display: grid;
+        gap: 5px;
+        grid-template-columns: repeat(auto-fit, auto);
+        grid-template-rows: 1fr;
+        justify-content: end;
+        justify-items: end;
+        align-items: center;
+        grid-auto-flow: column;
+    }
+    #nav-icon4 {
+        display: none;
+    }
     .specialDays {
         grid-column: 2/12;
         grid-row: 3/5;
@@ -1304,10 +1376,10 @@ p {
 }
 @media (max-width: 768px) {
     .desktop-nav > *:not(.hamburger) {
-        display: none; /* Hide desktop links on mobile */
+        display: none; 
     }
     .hamburger {
-        display: block; /* Show hamburger on mobile */
+        display: block; 
     }
     h2 {
         font-size: x-large;

@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -93,50 +95,6 @@
     $currentUser = auth()->user(); ?>
     <div class="bodyContent">
 
-        {{-- @yield('error') --}}
-        @yield('title')
-        @yield('content')
-        @if (session('success') || $errors->any() || session('status') || session('verified'))
-    <div class="message">
-        @if (session('success'))
-            <div class="success">
-                <img style="height: 50px" src="{{ asset('images/success.png') }}" alt="succes">
-                {{ session('success') }}
-                <a href="#" class="removeError" onclick="closeMessage(this)">Sluiten</a>
-            </div>
-        @endif
-        @if (session('status'))
-            <div class="success">
-                <img style="height: 50px" src="{{ asset('images/success.png') }}" alt="succes">
-                {{ session('status') }}
-                <a href="#" class="removeError" onclick="closeMessage(this)">Sluiten</a>
-            </div>
-        @endif
-        @if (session('verified'))
-            <div class="success">
-                <img style="height: 50px" src="{{ asset('images/success.png') }}" alt="succes">
-                Bedankt voor het verifiëren van uw e-mail!
-                <a href="#" class="removeError" onclick="closeMessage(this)">Sluiten</a>
-            </div>
-        @endif
-        @if ($errors->any())
-            <div class="error">
-                <img style="height: 50px" src="{{ asset('images/error.png') }}" alt="fout">
-                <ul>
-                    @if ($errors->has('error'))
-                        <li>{{ $errors->first('error') }}</li>
-                    @else
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    @endif
-                </ul>
-                <a href="#" class="removeError" onclick="closeMessage(this)">Sluiten</a>
-            </div>
-        @endif
-    </div>
-@endif
-            @yield('header')
         <header>
             @auth
                 <div id="side-menu" class="side-menu">
@@ -145,30 +103,30 @@
                     </a>
                     <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
                     @if ($currentUser->god)
-                    <a class="authLinks button" href="{{ route('gods-eye') }}">Logs</a>
+                        <a class="authLinks button" href="{{ route('saurons-eye') }}">Logs</a>
                         <a class="authLinks button"
-                        href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
+                            href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
                     @else
-                    <a class="authLinks button"
+                        <a class="authLinks button"
                             href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
-                            @endif
+                    @endif
                 </div>
 
                 <a class="headerLinks" href="{{ route('home') }}">Home</a>
                 @if (
                     ($currentUser->god && $currentUser->company->admin_timeclock) ||
-                    ($currentUser->admin && $currentUser->company->admin_timeclock))
+                        ($currentUser->admin && $currentUser->company->admin_timeclock))
                     <div class="browserHeader">
                         <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
                             <img style="height: 40px" src="{{ asset('images/settings.png') }}" alt="settings">
                         </a>
                         <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
                         @if (!$currentUser->god)
-                        <a class="authLinks button"
-                        href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
+                            <a class="authLinks button"
+                                href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
                         @else
-                        <a class="authLinks button"
-                        href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
+                            <a class="authLinks button"
+                                href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
                         @endif
                     </div>
                     <div class="headerLinks " id="nav-icon4" onclick="toggle()">
@@ -176,34 +134,78 @@
                         <span></span>
                         <span></span>
                     </div>
-                    @elseif ($currentUser->god)
-                    <a class="authLinks button" href="{{ route('gods-eye') }}">Logs</a>
-                            <a class="authLinks button"
-                            href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
-                            @elseif (!$currentUser->admin)
-                            <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
-                            @if ($currentUser->admin && !$currentUser->god)
-                            <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
+                @elseif ($currentUser->god)
+                    <a class="authLinks button" href="{{ route('saurons-eye') }}">Logs</a>
+                    <a class="authLinks button"
+                        href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
+                @elseif (!$currentUser->admin)
+                    <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
+                    @if ($currentUser->admin && !$currentUser->god)
+                        <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
                             <img style="height: 40px" src="{{ asset('images/settings.png') }}" alt="settings">
                         </a>
                         <a class="authLinks button"
                             href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
                     @endif
                     <a class="authLinks button" href="{{ route('myProfile') }}">Mijn profiel</a>
-                    @else
+                @else
                     <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
                         <img style="height: 40px" src="{{ asset('images/settings.png') }}" alt="settings">
                     </a>
                     <a class="authLinks button"
                         href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
-                        @endif
-                        <a class="authLinks button" href="{{ route('logout') }}">Logout</a>
-                        <div class="backdrop"></div>
-                        @endauth
-                        @guest
-                        <a class="authLinks button" href="{{ route('login') }}">Login</a>
+                @endif
+                <a class="authLinks button" href="{{ route('logout') }}">Logout</a>
+                <div class="backdrop"></div>
+            @endauth
+            @guest
+                <a class="authLinks button" href="{{ route('login') }}">Login</a>
             @endguest
         </header>
+        {{-- @yield('error') --}}
+        @yield('title')
+        @yield('content')
+        @if (session('success') || $errors->any() || session('status') || session('verified'))
+            <div class="message">
+                @if (session('success'))
+                    <div class="success">
+                        <img style="height: 50px" src="{{ asset('images/success.png') }}" alt="succes">
+                        {{ session('success') }}
+                        <a href="#" class="removeError" onclick="closeMessage(this)">Sluiten</a>
+                    </div>
+                @endif
+                @if (session('status'))
+                    <div class="success">
+                        <img style="height: 50px" src="{{ asset('images/success.png') }}" alt="succes">
+                        {{ session('status') }}
+                        <a href="#" class="removeError" onclick="closeMessage(this)">Sluiten</a>
+                    </div>
+                @endif
+                @if (session('verified'))
+                    <div class="success">
+                        <img style="height: 50px" src="{{ asset('images/success.png') }}" alt="succes">
+                        Bedankt voor het verifiëren van uw e-mail!
+                        <a href="#" class="removeError" onclick="closeMessage(this)">Sluiten</a>
+                    </div>
+                @endif
+                @if ($errors->any())
+                    <div class="error">
+                        <img style="height: 50px" src="{{ asset('images/error.png') }}" alt="fout">
+                        <ul>
+                            @if ($errors->has('error'))
+                                <li>{{ $errors->first('error') }}</li>
+                            @else
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            @endif
+                        </ul>
+                        <a href="#" class="removeError" onclick="closeMessage(this)">Sluiten</a>
+                    </div>
+                @endif
+            </div>
+        @endif
+        {{-- @yield('header') --}}
 
 
         <footer> &copy Taxus software</footer>

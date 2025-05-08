@@ -7,11 +7,12 @@ use App\Http\Controllers\ConfirmAction;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeleteTimesheetController;
 use App\Http\Controllers\ForgotPasswordController;
-use App\Http\Controllers\GodsEyeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MyListController;
 use App\Http\Controllers\MyWorkersController;
 use App\Http\Controllers\PdfExportController;
+use App\Http\Controllers\pricingController;
+use App\Http\Controllers\SauronsEyeController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SpecialsController;
 use App\Http\Controllers\TimeclockController;
@@ -32,13 +33,12 @@ Route::group([], function () {
     Route::get('/login', [HomeController::class, 'login'])->name('login')->middleware('notSigned');
     Route::get('/logout', [HomeController::class, 'logout'])->name('logout');
     Route::post('/authentication', [HomeController::class, 'authentication'])->name('authentication');
-});
-
-// User Registration Routes
-Route::group([], function () {
     Route::get('/registration-form', [UserController::class, 'registrationForm'])->name('registration-form');
     Route::post('/user-registration', [UserController::class, 'registrate'])->name('registrate');
+    Route::get('/pricing', [pricingController::class, 'pricingPage'])->name('pricing');
 });
+
+
 
 // Users with timeclock functionallity
 Route::middleware(['auth', 'verified','check.admin.timeclock'])->group(function () {
@@ -73,7 +73,7 @@ Route::middleware(['admin', 'auth'])->group(function () {
 
 // God Routes
 Route::middleware('god')->group(function () {
-    Route::get('/logs', [GodsEyeController::class, 'index'])->name('gods-eye');
+    Route::get('/saurons-eye', [SauronsEyeController::class, 'index'])->name('saurons-eye');
     Route::get('/add-company', [CompanyController::class, function() { return view('addCompany'); }])
         ->name('addCompany');
     Route::post('/registrate-company', [CompanyController::class, 'registrateCompany'])->name('registrateCompany');
