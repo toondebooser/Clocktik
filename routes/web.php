@@ -15,6 +15,7 @@ use App\Http\Controllers\pricingController;
 use App\Http\Controllers\SauronsEyeController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SpecialsController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TimeclockController;
 use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\UpdateTimesheetController;
@@ -41,10 +42,10 @@ Route::group([], function () {
 
 
 // Users with timeclock functionallity
-Route::middleware(['auth', 'verified','check.admin.timeclock'])->group(function () {
+Route::middleware(['auth', 'verified', 'check.admin.timeclock'])->group(function () {
     Route::match(['get', 'post'], '/dashboard', [DashboardController::class, 'userDashboard'])->name('dashboard');
     Route::get('/my-profile', [UsersheetsController::class, 'myProfile'])->name('myProfile');
-    
+
     // Timeclock Routes with Confirmation and Admin Timeclock Check
     Route::middleware(['confirm.action'])->group(function () {
         Route::get('/dashboard-start', [TimeclockController::class, 'startWorking'])->name('start');
@@ -74,7 +75,9 @@ Route::middleware(['admin', 'auth'])->group(function () {
 // God Routes
 Route::middleware('god')->group(function () {
     Route::get('/saurons-eye', [SauronsEyeController::class, 'index'])->name('saurons-eye');
-    Route::get('/add-company', [CompanyController::class, function() { return view('addCompany'); }])
+    Route::get('/add-company', [CompanyController::class, function () {
+        return view('addCompany');
+    }])
         ->name('addCompany');
     Route::post('/registrate-company', [CompanyController::class, 'registrateCompany'])->name('registrateCompany');
 });
@@ -110,6 +113,8 @@ Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) 
 
 // Password Reset Routes
 Route::middleware('guest')->group(function () {
+    Route::get('/subscribe', [SubscriptionController::class, 'showForm'])->name('subscribe.form');
+    Route::post('/subscribe', [SubscriptionController::class, 'send'])->name('subscribe.send');
     Route::view('/forgot-password', 'forgot-password')->name('password.request');
     Route::post('/forgot-password', [ForgotPasswordController::class, 'forgotPassword'])->name('password.email');
     Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'resetPassword'])->name('password.reset');

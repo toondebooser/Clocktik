@@ -1,17 +1,13 @@
 @extends('layout') <!-- Adjust to your app's layout -->
 @section('title')
-    <h2>Logboek</h2>
+<img class="sauronsEye" src="{{asset('images/Eye-of-Sauron.jpeg')}}" alt="Logboek">
 @endsection
 @section('content')
+<div class="search-bar-group">
+    <input type="text" id="log-timestamp" placeholder="Bijv. 2025-05-07 of 15:30" oninput="filterLogs()" />
+    <input type="text" id="log-user" placeholder="Gebruikersnaam" oninput="filterLogs()" />
+</div>
     <div class="log-container">
-        <div class="search-bar-group">
-            <label for="log-timestamp">Zoek op datum of tijd:</label>
-            <input type="text" id="log-timestamp" placeholder="Bijv. 2025-05-07 of 15:30" oninput="filterLogs()" />
-
-
-            <label for="log-user">Zoek op gebruiker:</label>
-            <input type="text" id="log-user" placeholder="Gebruikersnaam" oninput="filterLogs()" />
-        </div>
 
         @if (session('error'))
             <div class="message error">
@@ -49,7 +45,7 @@
     </div>
     <style>
         .log-container {
-            grid-row: 3/5;
+            grid-row: 3/4;
             grid-column: 1/13;
             width: 100%;
             padding: 20px;
@@ -64,6 +60,9 @@
             gap: 15px;
             width: 100%;
         }
+        #log-timestamp,#log-user{
+            width: 100%;
+        }
 
         .log-entry {
             display: flex;
@@ -74,8 +73,9 @@
             padding: 15px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             width: 100%;
-            /* Full width of parent */
             box-sizing: border-box;
+            word-wrap: break-word;       /* Break long words */
+            overflow-wrap: break-word;  
         }
 
         .log-header {
@@ -153,24 +153,20 @@
 
         .search-bar-group {
             display: flex;
-            flex-wrap: wrap;
+            grid-column: 1/13;
+            justify-content: center;
             position: sticky;
             top: 0;
             z-index: 3;
-            background-color: white;
-            /* Ensures it doesn't get transparent when scrolling */
-            padding: 15px 0;
+            padding: 15px 15px;
             gap: 15px;
+            border-radius: 15px;
             align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #ddd;
+            justify-self:  center;
         }
 
 
-        .search-bar-group label {
-            font-weight: 600;
-            font-size: 14px;
-        }
+     
 
         .search-bar-group input {
             padding: 8px;
@@ -231,7 +227,6 @@
                 const timestampText = entry.querySelector('.log-timestamp').textContent.trim();
                 const messageText = entry.querySelector('.log-message').textContent;
 
-                // Extract username
                 const userMatch = messageText.match(/\[USER-ACTIVITY:\s*(.+?)\]/);
                 const extractedUsername = userMatch ? userMatch[1].toLowerCase() : '';
 

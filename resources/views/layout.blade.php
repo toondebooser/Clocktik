@@ -91,12 +91,14 @@
 </head>
 
 <body>
+    
     <?php
     $currentUser = auth()->user(); ?>
     <div class="bodyContent">
-
         <header>
+            <a class="headerLinks" href="{{ route('home') }}">Home</a>
             @auth
+            <div class="backdrop"></div>
                 <div id="side-menu" class="side-menu">
                     <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
                         <img style="height: 40px" src="{{ asset('images/settings.png') }}" alt="settings">
@@ -112,7 +114,6 @@
                     @endif
                 </div>
 
-                <a class="headerLinks" href="{{ route('home') }}">Home</a>
                 @if (
                     ($currentUser->god && $currentUser->company->admin_timeclock) ||
                         ($currentUser->admin && $currentUser->company->admin_timeclock))
@@ -156,7 +157,7 @@
                         href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
                 @endif
                 <a class="authLinks button" href="{{ route('logout') }}">Logout</a>
-                <div class="backdrop"></div>
+               
             @endauth
             @guest
                 <a class="authLinks button" href="{{ route('login') }}">Login</a>
@@ -206,11 +207,25 @@
             </div>
         @endif
         {{-- @yield('header') --}}
+        <div class="background"></div>
 
 
         <footer> &copy Taxus software</footer>
     </div>
     <script>
+        window.addEventListener('load', () => {
+            const logo = document.getElementById('companyLogo');
+
+            if (logo.complete) {
+                // Already loaded
+                logo.classList.add('fadeUpEffect');
+            } else {
+                // Wait until it's loaded
+                logo.onload = () => {
+                    logo.classList.add('fadeUpEffect');
+                };
+            }
+        });
         const toggle = () => {
             const element = document.getElementById('side-menu');
             const icon = document.getElementById('nav-icon4');

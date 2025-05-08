@@ -4,9 +4,36 @@ body {
     height: 100svh;
     font-family: "inter", "Noto Sans", sans-serif;
 }
+.background{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+    opacity: 100;
+    background: linear-gradient(to bottom, #bfdbfe, #d1fae5, #fed7aa);
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+.subscriptieForm{
+    grid-row: 3/4;
+    grid-column: 1/13;
+    justify-self: center;
+    align-self: center;
+    max-width: 300px;
+}
 .fadeUpEffect{
     opacity: 0;
     animation: fadeSlideUp 0.8s ease forwards;
+}
+.sauronsEye{
+    grid-column: 1/13;
+    border-radius: 10px;
+    justify-self: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+
 }
 .welcomCard{
     grid-column: 1 / 13;
@@ -235,9 +262,10 @@ a {
 }
 .belongTogether {
     color: #1f2937;
-    background-color: lightcyan;
+    background-color: lightgoldenrodyellow;
 }
 .styled-table {
+    background-color:white;
   width: 100%;
   border-collapse: collapse;
   font-family: 'Inter', sans-serif;
@@ -720,7 +748,7 @@ img {
 .logoContainer {
     grid-column: 1/13;
     grid-row: 3/4;
-    height: 50%;
+    height: 45%;
     justify-self: center;
     align-self: center;
 }

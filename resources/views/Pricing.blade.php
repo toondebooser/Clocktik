@@ -1,8 +1,6 @@
 @extends('layout')
 
 @section('content')
-    <!DOCTYPE html>
-    <html lang="nl">
 
     <head>
         <meta charset="UTF-8">
@@ -24,14 +22,11 @@
                 width: 100%;
                 height: 100%;
                 backdrop-filter: blur(5px);
-                /* Blur effect */
                 opacity: 100;
                 background: linear-gradient(to bottom, #bfdbfe, #d1fae5, #fed7aa);
                 pointer-events: none;
-                /* Allows clicks to pass through when hidden */
                 transition: opacity 0.3s ease;
                 z-index: -1;
-                /* Below menu but above content */
             }
 
             header {
@@ -44,34 +39,19 @@
             }
 
             .container {
-                max-width: 800px;
+                display: grid;
+                grid-column: 1fr;
+                width: fit-content;
                 margin: 0 auto;
                 padding: 40px 20px;
-                animation: fadeIn 2s ease-in;
+                animation: fadeIn 0.8s ease-in;
             }
 
             .fade-in {
-                animation: fadeIn 2s ease-in;
+                animation: fadeIn 0.8s ease-in;
             }
 
-            @media (min-width: 768px) {
-                .backdrop {
-                    display: block
-                }
-            }
-
-            @keyframes fadeIn {
-                0% {
-                    opacity: 0;
-                    transform: translateY(10px);
-                }
-
-                100% {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-
+            
             .logo {
                 display: block;
                 margin: 30px auto 0;
@@ -86,26 +66,17 @@
                 animation: bounce 2s infinite;
                 opacity: 1;
             }
-
-            @keyframes bounce {
-
-                0%,
-                100% {
-                    transform: translateY(0);
-                }
-
-                50% {
-                    transform: translateY(-5px);
-                }
-            }
-
+            
+            
             h1 {
                 text-align: center;
                 font-size: 2em;
                 margin-bottom: 30px;
                 font-weight: bold;
+                grid-column: 1/2;
+                grid-row: 1/2;
             }
-
+            
             p.subtitle {
                 text-align: center;
                 color: #4b5563;
@@ -113,6 +84,7 @@
             }
 
             .card {
+                max-width: 400px;
                 background: white;
                 border-radius: 16px;
                 padding: 30px;
@@ -128,20 +100,19 @@
                 margin-bottom: 20px;
                 color: #374151;
             }
-
+            
             .card ul {
                 list-style: disc inside;
                 padding-left: 20px;
                 margin-bottom: 30px;
             }
-
+            
             .btn {
                 background-color: #4FAAFC;
                 color: white;
                 border: none;
                 padding: 15px 30px;
                 font-size: 1em;
-                font-weight: bold;
                 border-radius: 10px;
                 cursor: pointer;
                 /* transition: background 0.3s ease; */
@@ -154,36 +125,61 @@
             .text-center {
                 text-align: center;
             }
+            @media (min-width: 768px) {
+                .backdrop {
+                    display: block
+                }
+            }
+            @keyframes bounce {
+                
+                0%,
+                100% {
+                    transform: translateY(0);
+                }
+        
+                50% {
+                    transform: translateY(-5px);
+                }
+            }
+        
+            @keyframes fadeIn {
+                0% {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+        
+                100% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
         </style>
     </head>
 
-    <body>
-        <img src="{{ asset('images/TaxusLogo.png') }}" alt="Taxus Logo" class="logo">
-
-        <div class="container">
-            <h1>Werkuren.be Prijzen</h1>
-
-            <div class="card">
-                <h2>Standaard Abonnement</h2>
-                <p>Voor slechts <strong style="color: #059669">€29,99/maand</strong> krijg je toegang tot één
-                    bedrijfsaccount met <strong style="color: #059669">5 werknemers.</strong> </p>
-                <p>Extra werknemers? Geen probleem. Voeg werknemers toe voor slechts <strong
-                        style="color: #059669">€1,99/maand</strong> per extra werknemer.</p>
-                <ul style="color: black; text-align: left;">
-                    <li>Live tijdregistratie</li>
-                    <li>Decimaal uur notatie</li>
-                    <li>Schone, intuïtieve interface</li>
-                    <li>PDF-export per maand</li>
-                    <li>Data-opslag voor 3 maanden</li>
-                </ul>
-                <div class="text-center">
-                    <button class="btn">Probeer TikTrack nu</button>
+        <div class="content">
+            <img src="{{ asset('images/TaxusLogo.png') }}" style="opacity: 0" id="companyLogo" alt="Taxus Logo" class="logo">
+            <div class="container">
+                <h1>Werkuren.be</h1>
+                <div class="card">
+                    <h2>Standaard Abonnement</h2>
+                    <p>Voor slechts <strong style="color: #059669">€29,99/maand</strong> krijg je toegang tot één
+                        bedrijfsaccount met <strong style="color: #059669">5 werknemers.</strong> </p>
+                    <p>Extra werknemers? Geen probleem. Voeg werknemers toe voor slechts <strong
+                            style="color: #059669">€1,99/maand</strong> per extra werknemer.</p>
+                    <ul style="color: black; text-align: left;">
+                        <li>Live tijdregistratie</li>
+                        <li>Decimaal uur notatie</li>
+                        <li>Schone, intuïtieve interface</li>
+                        <li>PDF-export per maand</li>
+                        <li>Data-opslag voor 3 maanden</li>
+                    </ul>
+                    <div class="text-center" style="display:flex; justify-content:center">
+                        <a href="{{route('subscribe.form')}}" class="btn button" style="color: white" >Probeer TikTrack nu</a>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <img src="{{ asset('images/TaxusLogo.png') }}" alt="Taxus Logo" class="logo-small">
-    </body>
+        {{-- <img src="{{ asset('images/TaxusLogo.png') }}" alt="Taxus Logo" class="logo-small"> --}}
 
-    </html>
 @endsection
