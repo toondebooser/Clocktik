@@ -161,7 +161,7 @@
         <img src="{{ asset('images/TaxusLogo.png') }}" alt="Taxus Logo" class="logo">
 
         <div class="container">
-            <h1>TikTrack Prijzen</h1>
+            <h1>Werkuren.be Prijzen</h1>
 
             <div class="card">
                 <h2>Standaard Abonnement</h2>
