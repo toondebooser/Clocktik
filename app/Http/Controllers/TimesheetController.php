@@ -38,13 +38,13 @@ class TimesheetController extends Controller
                 'userNote' => $userRow->userNote,
                 'Month' => $userRow->StartWork->format('Y-m-d'),
             ];
+            if (isset($userRow->StartBreak) && $userRow->BreaksTaken == 1) {
+                $userRow['BreakStart'] = $userRow->StartBreak;
+            }
+            if (isset($userRow->EndBreak) && $userRow->BreaksTaken == 1) {
+                $userRow['BreakStop'] = $userRow->EndBreak;
+            }
         }
-        if (isset($userRow->StartBreak) && $userRow->StartBreak !== null) {
-             $userRow['BreakStart'] = $userRow->StartBreak;
-         }
-         if (isset($userRow->EndBreak) && $userRow->EndBreak !== null ) {
-             $userRow['BreakStop'] = $userRow->EndBreak;
-         }
         $buildTimesheet = new TimeloggingUtility;
         $buildTimesheet->logTimeEntry($userRow, $id, $timesheet);
         if ($buildTimesheet) return redirect()->back()->with('Succes', 'Uren succesvol toegevoegd');
@@ -63,11 +63,11 @@ class TimesheetController extends Controller
                 'endTime'     => 'required|date_format:H:i|after:startTime',
                 'StartBreak' => 'nullable|date_format:H:i',
                 'EndBreak'  => 'nullable|date_format:H:i|after:StartBreak',
-                
+
                 'newTimesheetDate' => 'required|date'
-                ]
-            );
-        
+            ]
+        );
+
         if ($validator->fails()) {
             return redirect()->route('timesheetForm', ['worker' => $id])->withErrors($validator)->withInput();
         }

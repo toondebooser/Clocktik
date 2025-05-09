@@ -170,7 +170,7 @@
                                 @endif
                             </td>
                             <td class="timesheetStyle">
-                                @if ($timesheet->BreakStart && $timesheet->BreakStart->format('H:i') !== $timesheet->BreakStop->format('H:i'))
+                                @if ($timesheet->BreakStart )
                                     In: {{ $timesheet->BreakStart->format('H:i') }} <br>
                                     Uit: {{ $timesheet->BreakStop->format('H:i') }}
                                 @endif
