@@ -98,21 +98,21 @@
         <header>
             <a class="headerLinks" href="{{ route('home') }}">Home</a>
             @auth
+            <div id="side-menu" class="side-menu">
+                <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
+                    <img style="height: 40px" src="{{ asset('images/settings.png') }}" alt="settings">
+                </a>
+                <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
+                @if ($currentUser->god)
+                <a class="authLinks button" href="{{ route('saurons-eye') }}">Logs</a>
+                <a class="authLinks button"
+                href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
+                @else
+                <a class="authLinks button"
+                href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
+                @endif
+            </div>
             <div class="backdrop"></div>
-                <div id="side-menu" class="side-menu">
-                    <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
-                        <img style="height: 40px" src="{{ asset('images/settings.png') }}" alt="settings">
-                    </a>
-                    <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
-                    @if ($currentUser->god)
-                        <a class="authLinks button" href="{{ route('saurons-eye') }}">Logs</a>
-                        <a class="authLinks button"
-                            href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
-                    @else
-                        <a class="authLinks button"
-                            href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
-                    @endif
-                </div>
 
                 @if (
                     ($currentUser->god && $currentUser->company->admin_timeclock) ||
