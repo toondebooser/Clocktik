@@ -22,6 +22,57 @@
     @endif
 
     <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            place-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .modal-button:hover {
+            background-color: #0056b3;
+        }
+
+        .modal-button.cancel {
+            background-color: #6c757d;
+        }
+
+        .modal-button.cancel:hover {
+            background-color: #5a6268;
+        }
+
+        .close {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
         .message {
 
             animation: fadeIn 0.3s ease-out forwards;
@@ -91,28 +142,28 @@
 </head>
 
 <body>
-    
+
     <?php
     $currentUser = auth()->user(); ?>
     <div class="bodyContent">
         <header>
             <a class="headerLinks" href="{{ route('home') }}">Home</a>
             @auth
-            <div id="side-menu" class="side-menu">
-                <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
-                    <img style="height: 40px" src="{{ asset('images/settings.png') }}" alt="settings">
-                </a>
-                <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
-                @if ($currentUser->god)
-                <a class="authLinks button" href="{{ route('saurons-eye') }}">Logs</a>
-                <a class="authLinks button"
-                href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
-                @else
-                <a class="authLinks button"
-                href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
-                @endif
-            </div>
-            <div class="backdrop"></div>
+                <div id="side-menu" class="side-menu">
+                    <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
+                        <img style="height: 40px" src="{{ asset('images/settings.png') }}" alt="settings">
+                    </a>
+                    <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
+                    @if ($currentUser->god)
+                        <a class="authLinks button" href="{{ route('saurons-eye') }}">Logs</a>
+                        <a class="authLinks button"
+                            href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
+                    @else
+                        <a class="authLinks button"
+                            href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
+                    @endif
+                </div>
+                <div class="backdrop"></div>
 
                 @if (
                     ($currentUser->god && $currentUser->company->admin_timeclock) ||
@@ -157,7 +208,7 @@
                         href="{{ route('myList', ['type' => 'Personeel', 'company_code' => $currentUser->company_code]) }}">Personeel</a>
                 @endif
                 <a class="authLinks button" href="{{ route('logout') }}">Logout</a>
-               
+
             @endauth
             @guest
                 <a class="authLinks button" href="{{ route('login') }}">Login</a>
@@ -254,7 +305,118 @@
                 message.style.display = 'none';
             }, 300); // Match animation duration
         }
+        let formToSubmitId = null;
+
+        const openConfirmationModal = (message, actionUrl, form = null) => {
+        const modal = document.getElementById('confirmationModal');
+        const modalText = document.getElementById('modalText');
+        const confirmBtn = document.getElementById('confirmButton');
+
+        if (!modal || !modalText || !confirmBtn) {
+            console.error('Modal elements missing:', { modal, modalText, confirmBtn });
+            return;
+        }
+
+        modalText.innerText = message;
+        confirmBtn.dataset.url = actionUrl;
+
+        if (form) {
+            if (!form.id) {
+                form.id = 'tempForm-' + Date.now();
+            }
+            confirmBtn.dataset.form = form.id;
+        } else {
+            confirmBtn.dataset.form = '';
+        }
+
+        confirmBtn.disabled = false;
+        modal.style.display = 'grid';
+    };
+
+    const closeModal = () => {
+        const modal = document.getElementById('confirmationModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    };
+
+    const confirmAction = () => {
+        const confirmBtn = document.getElementById('confirmButton');
+        if (!confirmBtn) {
+            console.error('Confirm button not found');
+            return;
+        }
+
+        const formId = confirmBtn.dataset.form;
+        const actionUrl = confirmBtn.dataset.url;
+        console.log('Confirm clicked:', { formId, actionUrl });
+
+        confirmBtn.disabled = true;
+
+        // Step 1: Post to /confirm-action
+        fetch('/confirm-action', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ action: actionUrl })
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('Confirm action failed');
+                }
+                return res.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    console.log('Confirm-action successful');
+                    // Step 2: Submit the form if formId exists
+                    if (formId) {
+                        const formToSubmit = document.getElementById(formId);
+                        if (formToSubmit) {
+                            console.log('Submitting form:', formToSubmit);
+                            formToSubmit.submit();
+                        } else {
+                            console.error('Form not found:', formId);
+                        }
+                    } else {
+                        console.warn('No form to submit, redirecting to:', actionUrl);
+                        window.location.href = actionUrl;
+                    }
+                    closeModal();
+                } else {
+                    console.error('Confirm-action failed:', data);
+                    alert('Action failed.');
+                    confirmBtn.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Error in confirm-action:', error);
+                alert('An error occurred. Please try again.');
+                confirmBtn.disabled = false;
+            });
+    };
+
+    window.onclick = function (event) {
+        const modal = document.getElementById('confirmationModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    };
+
+    window.openConfirmationModal = openConfirmationModal;
+    window.closeModal = closeModal;
+    window.confirmAction = confirmAction;
     </script>
+    <div id="confirmationModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p id="modalText"></p>
+            <button id="confirmButton" class="modal-button"  onclick="confirmAction()">Confirm</button>
+            <button class="modal-button cancel" onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
 </body>
 
 </html>

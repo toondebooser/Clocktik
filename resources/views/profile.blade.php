@@ -25,7 +25,7 @@
             <select class="dropDownMonth uniform-input" name="month" size="1">
                 @foreach ($clockedMonths as $allMonths)
                     @php
-            
+
                         $currentMonth = Carbon\Carbon::now()->month;
                         $carbonDate = Carbon\Carbon::create(null, $allMonths->month, 1)->locale('nl');
                     @endphp
@@ -34,7 +34,7 @@
                     </option>
                 @endforeach
             </select>
-            
+
             </select>
             @if (isset($user))
                 <input type="hidden" name="worker" value='{{ $user->id }}'>
@@ -58,13 +58,13 @@
         <div class="timesheetHeader">
 
             @if (isset($days) && count($days) != 0)
-            @php
-            $monthName = Carbon\Carbon::parse($days[0]->Month)->locale('nl')->translatedFormat('F');
-        @endphp
-        {{ $monthName }}
+                @php
+                    $monthName = Carbon\Carbon::parse($days[0]->Month)->locale('nl')->translatedFormat('F');
+                @endphp
+                {{ $monthName }}
             @endif
         </div>
-    
+
         <table class="timesheetTable styled-table">
             <thead class="stikyHeader">
                 <tr>
@@ -176,11 +176,16 @@
                                 @endif
                             </td>
                             <td>
-                                @if(auth()->user()->admin)
-                                <a href="{{ route('delete', ['workerId' => $userId, 'deleteSheet' => $timesheet->id, 'date' => $timesheet->Month , 'sheetType' => $timesheet->getTable()]) }}"
-                                    onclick="return confirm('Zedde zeker?')">
-                                    <img class="trashIcon" src="{{ asset('/images/1843344.png') }}" alt="Delete">
-                                </a>
+                                @if (auth()->user()->admin)
+                                <form class="deleteForm" method="POST" action="{{ route('delete') }}" onsubmit="return confirmDelete(this);">
+                                    @csrf
+                                    <input type="hidden" name="workerId" value="{{ $userId }}">
+                                    <input type="hidden" name="deleteSheet" value="{{ $timesheet->id }}">
+                                    <input type="hidden" name="sheetType" value="{{ $timesheet->getTable() }}">
+                                    <input type="hidden" name="date" value="{{ $timesheet->Month }}">
+                                    <input onclick="return confirm('zedde zeker ?')" class="submit" type="image"
+                                    src="{{ asset('/images/1843344.png') }}" name="deleteThisSheet" alt="Delete">
+                            </form>
                                 @endif
                             </td>
                         </tr>
@@ -201,12 +206,18 @@
                                             Uit: {{ $breakSlot->BreakStop->format('H:i') }}
                                         @endif
                                     </td>
-                                    <td><a href="{{ route('delete', ['workerId' => $userId, 'deleteSheet' => $breakSlot->id, 'date' => $breakSlot->Month , 'sheetType' => $breakSlot->getTable()]) }}"
-                                            onclick="return confirm('Zedde zeker?')">
-                                            <img class="trashIcon" src="{{ asset('/images/1843344.png') }}" alt="Delete">
-                                        </a></td>
+                                    <td>
+                                        <form id="deleteForm" method="POST" style="display: none;">
+                                            @csrf
+                                            <input type="hidden" name="workerId" id="deleteWorkerId">
+                                            <input type="hidden" name="deleteSheet" id="deleteSheetId">
+                                            <input type="hidden" name="sheetType" id="deleteSheetType">
+                                            <input type="hidden" name="date" id="deleteDate">
+                                            <img class="trashIcon" src="{{ asset('/images/1843344.png') }}"
+                                                alt="Delete">
+                                        </form>
+                                    </td>
                                 </tr>
-                            
                             @endforeach
                         @endif
                     @endforeach

@@ -52,6 +52,8 @@ Route::middleware(['auth', 'verified', 'check.admin.timeclock'])->group(function
         Route::get('/dashboard-break', [TimeclockController::class, 'break'])->name('break');
         Route::get('/dashboard-stop-break', [TimeclockController::class, 'stopBreak'])->name('stopBreak');
         Route::get('/dashboard-stop', [TimeclockController::class, 'stop'])->name('stop');
+        Route::match(['get', 'post'], '/delete-timesheet/{workerId?}/{deleteSheet?}/{date?}/{sheetType?}', [DeleteTimesheetController::class, 'deleteTimesheet'])->name('delete');
+
     });
 });
 
@@ -66,7 +68,7 @@ Route::middleware(['admin', 'auth'])->group(function () {
     Route::match(['get', 'post'], '/specials', [SpecialsController::class, 'specials'])->name('specials');
     Route::post('/setSpecial', [TimesheetController::class, 'setSpecial'])->name('setSpecial');
     Route::get('/export-pdf', [PdfExportController::class, 'exportPdf'])->name('exportPdf');
-    Route::match(['get', 'post'], '/delete-timesheet/{workerId?}/{deleteSheet?}/{date?}/{sheetType?}', [DeleteTimesheetController::class, 'deleteTimesheet'])->name('delete');
+    // Route::match(['get', 'post'], '/delete-timesheet/{workerId?}/{deleteSheet?}/{date?}/{sheetType?}', [DeleteTimesheetController::class, 'deleteTimesheet'])->name('delete');
     Route::get('/admin-settings/{company_code}', [SettingsController::class, 'settingsView'])->name('adminSettings');
     Route::post('update-admin-rights/{id}/{company_code}', [SettingsController::class, 'changeRights'])->name('changeAdminRights');
     Route::post('update-company-settings', [SettingsController::class, 'updateSettings'])->name('change-company-settings');

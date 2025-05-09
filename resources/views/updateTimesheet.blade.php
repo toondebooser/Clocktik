@@ -47,11 +47,10 @@
                                 value="{{ $endShift }}">
                         </div>
                     </fieldset>
-
-                    @else
+                @else
                     <input type="hidden" name="startTime" value="{{ null }}">
                     <input type="hidden" name="endTime" value="{{ null }}">
-                    @endif
+                @endif
 
                 <fieldset class="gepauzeerd">
                     <legend>Gepauzeerd</legend>
@@ -104,17 +103,15 @@
         </form>
     </div>
     <br>
-    <form action="{{ route('delete') }}" class="delete" method="POST">
-        @csrf
-
-        <input type="hidden" name="workerId" value="{{ $worker->id }}">
-        {{-- <input type="hidden" name="type" value="{{$timesheet->type}}"> --}}
-        <input type="hidden" name="deleteSheet" value="{{ $timesheet->id }}">
-        <input type="hidden" name="sheetType" value="{{ $timesheet->getTable() }}">
-        <input type="hidden" name="date" value="{{ $timesheet->Month }}">
-        <input onclick="return confirm('zedde zeker ?')" class="submit" type="image"
-            src="{{ asset('/images/1843344.png') }}" name="deleteThisSheet" alt="Delete">
-    </form>
+    <form id="deleteForm-{{ $timesheet->id }}" action="{{ route('delete') }}" class="delete" method="POST">
+    @csrf
+    <input type="hidden" name="workerId" value="{{ $worker->id }}">
+    <input type="hidden" name="deleteSheet" value="{{ $timesheet->id }}">
+    <input type="hidden" name="sheetType" value="{{ $timesheet->getTable() }}">
+    <input type="hidden" name="date" value="{{ $timesheet->Month }}">
+    <input class="submit" type="image" src="{{ asset('/images/1843344.png') }}" name="deleteThisSheet" alt="Delete"
+        onclick="event.preventDefault(); openConfirmationModal('Ben je zeker dat je deze dag wilt verwijderen?', this.form.action, this.form);">
+</form>
     @if ($timesheet->userNote)
         <fieldset class="userNoteContainer">
             <div><b>Notitie:</b></div>
