@@ -60,7 +60,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         'email' => 'string',
         'admin' => 'boolean',
         'god' => 'boolean',
-        'company_code' => 'string',
+        'company_code' => 'integer',
         'email_verified_at' => 'datetime',
         'password' => 'string',
         'remember_token' => 'string',

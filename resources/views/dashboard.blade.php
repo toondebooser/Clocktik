@@ -37,11 +37,7 @@
             <p class="buttonText">Stop</p>
         </a>
     @endif
-    {{-- <div class="dayStatus" style="grid-column: 1/13; grid-row: 3/4; justify-self: center; align-self: end; height:100px">
-        <div style="text-align: center"><span style="color: red">{{date('d-m-y', strToTime($lastWorkedDate))}}</span></div>
-        <div class="workedHours">Gelogde werkuren: {{ $workedHours }}</div>
-        <div class="pausedHours">Gelogde pauze: {{ $breakHours }}</div>
-    </div> --}}
+ 
     <div id="confirmationModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
@@ -57,38 +53,26 @@
     <style>
         .modal {
             display: none;
-            /* Hidden by default */
             position: fixed;
-            /* Stay in place */
             z-index: 1;
-            /* Sit on top */
             left: 0;
             top: 0;
             width: 100%;
-            /* Full width */
             height: 100%;
-            /* Full height */
             overflow: auto;
-            /* Enable scroll if needed */
             background-color: rgb(0, 0, 0);
-            /* Fallback color */
             background-color: rgba(0, 0, 0, 0.4);
-            /* Black w/ opacity */
         }
 
         .modal-content {
             background-color: #fefefe;
-            /* margin: 15% auto; */
             justify-self: center;
             align-self: center;
             height: fit-content;
-            /* 15% from the top and centered */
             padding: 20px;
             border: 1px solid #888;
             width: 80%;
-            /* Could be more or less, depending on screen size */
             max-width: 400px;
-            /* Maximum width */
             text-align: center;
             border-radius: 8px;
         }
@@ -154,7 +138,6 @@
                 let elapsed = null
                 if(type == "work"){
                  elapsed = now - startShift   + workedMilliseconds    ;
-                //  console.log(elapsed);
                  
                  
                  
@@ -166,7 +149,6 @@
                 const minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((elapsed % (1000 * 60)) / 1000);
 
-                // Display the result
                 clockElement.innerText =
                     `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             }
