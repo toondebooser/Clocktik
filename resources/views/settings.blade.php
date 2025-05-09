@@ -2,23 +2,10 @@
 
 @section('content')
     <style>
-        .checkboxContainer .radioBox:checked~.checkMark {
-            background-color: {{ $data->company_color }};
-            
-        }
-
         .checkboxContainer {
             width: 100%;
             height: fit-content;
         }
-
-        .checkMark{
-            border: 1px solid {{ $data->company_color }};
-
-        }
-
-
-
         .container-drag-drop {
             display: flex;
             justify-content: center;
@@ -41,7 +28,7 @@
             margin-right: 5px;
             padding: 10px;
             background: #f9f9f9;
-            border: 2px solid {{ $data->company_color }};
+            border: 2px solid var(--primary-color);
         }
 
         .name {
@@ -96,21 +83,20 @@
                     style="  grid-row: 2/3; grid-column: 2/3;justify-self: center;max-height: 50px; max-width: auto;">
             </label>
             {{-- admin_timeclock --}}
-            {{-- <span style="grid-row: 2/3; grid-column: 1/3; justify-self: center" class="radioInput justify-row"> --}}
             <span class="justify-row">Admin klok </span>
             <label for="betaaldInput" class="checkboxContainer">
                 <input type="hidden" name="admin_timeclock" value="0">
-                <input @if ($data->admin_timeclock == 1) {{ 'checked' }}  @endif type="checkbox" class="radioBox"
+                <input @if ($data->admin_timeclock == 1) {{ 'checked' }} @endif type="checkbox" class="radioBox"
                     id="betaaldInput" name="admin_timeclock" value='1'>
                 <span class="checkMark"></span>
             </label>
 
-            <label style="text-align: end;  margin: 0" for="day_hours">Daguren decimaal</label>
+            <label style="text-align: end;  margin: 0" for="day_hours">uren Decimaal</label>
             <input step="0.1" min="0" max="24" value="{{ $data->day_hours }}" style="width:60px;"
-               class="uniform-input" type="number" name="day_hours" id="day_hours">
+                class="uniform-input" type="number" name="day_hours" id="day_hours">
 
             <div style="text-align: end">Weekend dagen</div>
-            <span style="display: flex">
+            <span style="display: flex; gap:5px;">
                 <select style="width: fit-content" class="uniform-input" name="weekend_day_1" id="weekendDag1">
                     <option value="1" {{ $data->weekend_day_1 == 1 ? 'selected' : '' }}>Ma</option>
                     <option value="2" {{ $data->weekend_day_1 == 2 ? 'selected' : '' }}>Di</option>
@@ -144,26 +130,28 @@
                 action="{{ route('add-holidays') }}" method="POST">
                 @csrf
                 <h5 style="text-align: center">Officiële vakantie dagen</h5>
-            
-           
+
+
                 @foreach ($holidays as $holiday)
                     <div style="margin-top:10px; display: flex; justify-content: space-between">
 
                         <div>{{ $holiday['name'] }}: </div>
 
                         @if ($holiday['weekend'] === $data->weekend_day_1 || $holiday['weekend'] === $data->weekend_day_2)
-                            <div  style=" color: red">!</div>
-                            <input style="width: 120px;" type="date" name="{{ $holiday['name'] }}" value="{{ $holiday['date'] }}">
-                            @else
+                            <div style=" color: red">!</div>
+                            <input style="width: 120px;" type="date" name="{{ $holiday['name'] }}"
+                                value="{{ $holiday['date'] }}">
+                        @else
                             <div>{{ $holiday['date'] }}</div>
-                            <input type="hidden" name="{{$holiday['name']}}" value="{{$holiday['date']}}">
-                            @endif
-                        </div>
-                        @endforeach
-                        @if ($holiday['weekend'] === $data->weekend_day_1 || $holiday['weekend'] === $data->weekend_day_2)
-                        <div class="alert"><span class="red">!</span> feestdag valt in een weekend, kies een andere datum.  </div>
+                            <input type="hidden" name="{{ $holiday['name'] }}" value="{{ $holiday['date'] }}">
                         @endif
-                        <input type="hidden" name="company_code" value="{{$data->company_code}}">
+                    </div>
+                @endforeach
+                @if ($holiday['weekend'] === $data->weekend_day_1 || $holiday['weekend'] === $data->weekend_day_2)
+                    <div class="alert"><span class="red">!</span> feestdag valt in een weekend, kies een andere datum.
+                    </div>
+                @endif
+                <input type="hidden" name="company_code" value="{{ $data->company_code }}">
                 <button style="margin-top:10px; width: fit-content; justify-self:center" class="button"
                     type="submit">Toevoegen</button>
             </form>
@@ -174,7 +162,8 @@
                 <div>Admins</div>
                 @foreach ($admins as $admin)
                     <div class="name" draggable="true" ondragstart="drag(event)" data-name="{{ $admin->name }}"
-                        data-id="{{ $admin->id }}" data-company_code="{{ $admin->company_code }}">{{ $admin->name }}
+                        data-id="{{ $admin->id }}" data-company_code="{{ $admin->company_code }}">
+                        {{ $admin->name }}
                     </div>
                 @endforeach
 
