@@ -3,8 +3,9 @@ body {
     height: 100vh;
     height: 100svh;
     font-family: "inter", "Noto Sans", sans-serif;
+    background: linear-gradient(to bottom, #bfdbfe, #d1fae5, #fed7aa);
 }
-.background {
+/* .background {
     position: fixed;
     top: 0;
     left: 0;
@@ -16,7 +17,7 @@ body {
     pointer-events: none;
     transition: opacity 0.3s ease;
     z-index: -1;
-}
+} */
 .subscriptieForm {
     grid-row: 3/4;
     grid-column: 1/13;
@@ -1282,6 +1283,7 @@ footer {
     max-height: 350px;
     white-space: nowrap;
 }
+
 .profileContent {
     scrollbar-width: none;
 }

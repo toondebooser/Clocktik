@@ -2,7 +2,7 @@
 @section('content')
     <style>
         body {
-            background-color: {{ $nightShift ? 'var(--night-mode)' : 'white' }};
+            background: {{ $nightShift ? 'var(--night-mode)' :  'linear-gradient(to bottom, #bfdbfe, #d1fae5, #fed7aa)' }};
             color: {{ $nightShift ? 'white' : 'black' }};
         }
     </style>

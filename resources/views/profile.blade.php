@@ -186,7 +186,7 @@
                                         <input type="hidden" name="date" value="{{ $timesheet->Month }}">
                                         <input
                                             onclick="event.preventDefault(); openConfirmationModal('Ben je zeker dat je deze dag wilt verwijderen?', this.form.action, this.form);"
-                                            class="submit" type="image" src="{{ asset('/images/1843344.png') }}"
+                                            class="submit trashIcon" type="image" src="{{ asset('/images/1843344.png') }}"
                                             name="deleteThisSheet" alt="Delete">
                                     </form>
                                 @endif
@@ -219,7 +219,7 @@
                                             <input type="hidden" name="date" value="{{ $breakSlot->Month }}">
                                             <input
                                                 onclick="event.preventDefault(); openConfirmationModal('Ben je zeker dat je deze dag wilt verwijderen?', this.form.action, this.form);"
-                                                class="submit" type="image" src="{{ asset('/images/1843344.png') }}"
+                                                class="submit trashIcon" type="image" src="{{ asset('/images/1843344.png') }}"
                                                 name="deleteThisSheet" alt="Delete">
                                         </form>
                                     </td>
