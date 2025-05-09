@@ -308,112 +308,125 @@
         let formToSubmitId = null;
 
         const openConfirmationModal = (message, actionUrl, form = null) => {
-        const modal = document.getElementById('confirmationModal');
-        const modalText = document.getElementById('modalText');
-        const confirmBtn = document.getElementById('confirmButton');
+            const modal = document.getElementById('confirmationModal');
+            const modalText = document.getElementById('modalText');
+            const confirmBtn = document.getElementById('confirmButton');
 
-        if (!modal || !modalText || !confirmBtn) {
-            console.error('Modal elements missing:', { modal, modalText, confirmBtn });
-            return;
-        }
-
-        modalText.innerText = message;
-        confirmBtn.dataset.url = actionUrl;
-
-        if (form) {
-            if (!form.id) {
-                form.id = 'tempForm-' + Date.now();
+            if (!modal || !modalText || !confirmBtn) {
+                console.error('Modal elements missing:', {
+                    modal,
+                    modalText,
+                    confirmBtn
+                });
+                return;
             }
-            confirmBtn.dataset.form = form.id;
-        } else {
-            confirmBtn.dataset.form = '';
-        }
 
-        confirmBtn.disabled = false;
-        modal.style.display = 'grid';
-    };
+            modalText.innerText = message;
+            confirmBtn.dataset.url = actionUrl;
 
-    const closeModal = () => {
-        const modal = document.getElementById('confirmationModal');
-        if (modal) {
-            modal.style.display = 'none';
-        }
-    };
-
-    const confirmAction = () => {
-        const confirmBtn = document.getElementById('confirmButton');
-        if (!confirmBtn) {
-            console.error('Confirm button not found');
-            return;
-        }
-
-        const formId = confirmBtn.dataset.form;
-        const actionUrl = confirmBtn.dataset.url;
-        console.log('Confirm clicked:', { formId, actionUrl });
-
-        confirmBtn.disabled = true;
-
-        // Step 1: Post to /confirm-action
-        fetch('/confirm-action', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({ action: actionUrl })
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error('Confirm action failed');
+            if (form) {
+                if (!form.id) {
+                    form.id = 'tempForm-' + Date.now();
                 }
-                return res.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    console.log('Confirm-action successful');
-                    // Step 2: Submit the form if formId exists
-                    if (formId) {
-                        const formToSubmit = document.getElementById(formId);
-                        if (formToSubmit) {
-                            console.log('Submitting form:', formToSubmit);
-                            formToSubmit.submit();
-                        } else {
-                            console.error('Form not found:', formId);
-                        }
-                    } else {
-                        console.warn('No form to submit, redirecting to:', actionUrl);
-                        window.location.href = actionUrl;
+                confirmBtn.dataset.form = form.id;
+            } else {
+                confirmBtn.dataset.form = '';
+            }
+
+            confirmBtn.disabled = false;
+            modal.style.display = 'grid';
+
+            // Focus the confirm button for accessibility
+            confirmBtn.focus();
+        };
+
+        const closeModal = () => {
+            const modal = document.getElementById('confirmationModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        };
+
+        const confirmAction = () => {
+            const confirmBtn = document.getElementById('confirmButton');
+            if (!confirmBtn) {
+                console.error('Confirm button not found');
+                return;
+            }
+
+            const formId = confirmBtn.dataset.form;
+            const actionUrl = confirmBtn.dataset.url;
+
+            confirmBtn.disabled = true;
+            confirmBtn.innerText = 'Processing...'; 
+
+            // Step 1: Post to /confirm-action
+            fetch('/confirm-action', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        action: actionUrl
+                    })
+                })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error(`Confirm action failed: ${res.status}`);
                     }
-                    closeModal();
-                } else {
-                    console.error('Confirm-action failed:', data);
-                    alert('Action failed.');
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        if (formId) {
+                            const formToSubmit = document.getElementById(formId);
+                            if (formToSubmit) {
+                                console.log('Submitting form:', formToSubmit);
+                                formToSubmit.submit();
+                            } else {
+                                console.error('Form not found:', formId);
+                                alert('Form submission failed.');
+                            }
+                        } else {
+                            window.location.href = actionUrl;
+                        }
+                        closeModal();
+                    } else {
+                        confirmBtn.disabled = false;
+                        confirmBtn.innerText = 'Confirm';
+                    }
+                })
+                .catch(error => {
                     confirmBtn.disabled = false;
-                }
-            })
-            .catch(error => {
-                console.error('Error in confirm-action:', error);
-                alert('An error occurred. Please try again.');
-                confirmBtn.disabled = false;
+                    confirmBtn.innerText = 'Confirm';
+                });
+        };
+
+        const confirmBtn = document.getElementById('confirmButton');
+        if (confirmBtn) {
+            confirmBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                confirmAction();
             });
-    };
-
-    window.onclick = function (event) {
-        const modal = document.getElementById('confirmationModal');
-        if (event.target === modal) {
-            closeModal();
         }
-    };
 
-    window.openConfirmationModal = openConfirmationModal;
-    window.closeModal = closeModal;
-    window.confirmAction = confirmAction;
+        window.onclick = function(event) {
+            const modal = document.getElementById('confirmationModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+
+        window.openConfirmationModal = openConfirmationModal;
+        window.closeModal = closeModal;
+        window.confirmAction = confirmAction;
     </script>
     <div id="confirmationModal" class="modal" style="display:none;">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <p id="modalText"></p>
-            <button id="confirmButton" class="modal-button"  onclick="confirmAction()">Confirm</button>
+            <button id="confirmButton" class="modal-button" onclick="confirmAction()">Confirm</button>
             <button class="modal-button cancel" onclick="closeModal()">Cancel</button>
         </div>
     </div>

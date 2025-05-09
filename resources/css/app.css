@@ -1171,7 +1171,7 @@ footer {
 }
 .breakButton {
     font-family: "inter", "Noto Sans", sans-serif;
-    animation: fromCenterLeft 1s ease;
+    /* animation: fromCenterLeft 1s ease; */
     align-self: center;
     display: grid;
     grid-template-columns: repeat(12, 1fr);
@@ -1265,7 +1265,7 @@ footer {
     width: 120px;
     border-radius: 50%;
     border-radius: 151px;
-    animation:fromCenterRight 1s ease;
+    /* animation:fromCenterRight 1s ease; */
     background: #da0a0a;
 }
 .profileContent {

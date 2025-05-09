@@ -177,15 +177,18 @@
                             </td>
                             <td>
                                 @if (auth()->user()->admin)
-                                <form class="deleteForm" method="POST" action="{{ route('delete') }}" onsubmit="return confirmDelete(this);">
-                                    @csrf
-                                    <input type="hidden" name="workerId" value="{{ $userId }}">
-                                    <input type="hidden" name="deleteSheet" value="{{ $timesheet->id }}">
-                                    <input type="hidden" name="sheetType" value="{{ $timesheet->getTable() }}">
-                                    <input type="hidden" name="date" value="{{ $timesheet->Month }}">
-                                    <input onclick="return confirm('zedde zeker ?')" class="submit" type="image"
-                                    src="{{ asset('/images/1843344.png') }}" name="deleteThisSheet" alt="Delete">
-                            </form>
+                                    <form  class="deleteForm" method="POST"
+                                        action="{{ route('delete') }}">
+                                        @csrf
+                                        <input type="hidden" name="workerId" value="{{ $userId }}">
+                                        <input type="hidden" name="deleteSheet" value="{{ $timesheet->id }}">
+                                        <input type="hidden" name="sheetType" value="{{ $timesheet->getTable() }}">
+                                        <input type="hidden" name="date" value="{{ $timesheet->Month }}">
+                                        <input
+                                            onclick="event.preventDefault(); openConfirmationModal('Ben je zeker dat je deze dag wilt verwijderen?', this.form.action, this.form);"
+                                            class="submit" type="image" src="{{ asset('/images/1843344.png') }}"
+                                            name="deleteThisSheet" alt="Delete">
+                                    </form>
                                 @endif
                             </td>
                         </tr>
@@ -207,14 +210,17 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <form id="deleteForm" method="POST" style="display: none;">
+                                        <form  class="deleteForm" method="POST"
+                                            action="{{ route('delete') }}">
                                             @csrf
-                                            <input type="hidden" name="workerId" id="deleteWorkerId">
-                                            <input type="hidden" name="deleteSheet" id="deleteSheetId">
-                                            <input type="hidden" name="sheetType" id="deleteSheetType">
-                                            <input type="hidden" name="date" id="deleteDate">
-                                            <img class="trashIcon" src="{{ asset('/images/1843344.png') }}"
-                                                alt="Delete">
+                                            <input type="hidden" name="workerId" value="{{ $userId }}">
+                                            <input type="hidden" name="deleteSheet" value="{{ $breakSlot->id }}">
+                                            <input type="hidden" name="sheetType" value="{{ $breakSlot->getTable() }}">
+                                            <input type="hidden" name="date" value="{{ $breakSlot->Month }}">
+                                            <input
+                                                onclick="event.preventDefault(); openConfirmationModal('Ben je zeker dat je deze dag wilt verwijderen?', this.form.action, this.form);"
+                                                class="submit" type="image" src="{{ asset('/images/1843344.png') }}"
+                                                name="deleteThisSheet" alt="Delete">
                                         </form>
                                     </td>
                                 </tr>

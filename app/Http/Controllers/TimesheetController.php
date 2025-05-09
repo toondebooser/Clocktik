@@ -40,10 +40,10 @@ class TimesheetController extends Controller
             ];
         }
         if (isset($userRow->StartBreak) && $userRow->StartBreak !== null) {
-             $timesheetAttributes['BreakStart'] = $userRow->StartBreak;
+             $userRow['BreakStart'] = $userRow->StartBreak;
          }
          if (isset($userRow->EndBreak) && $userRow->EndBreak !== null ) {
-             $timesheetAttributes['BreakStop'] = $userRow->EndBreak;
+             $userRow['BreakStop'] = $userRow->EndBreak;
          }
         $buildTimesheet = new TimeloggingUtility;
         $buildTimesheet->logTimeEntry($userRow, $id, $timesheet);

@@ -103,7 +103,7 @@
         </form>
     </div>
     <br>
-    <form id="deleteForm-{{ $timesheet->id }}" action="{{ route('delete') }}" class="delete" method="POST">
+    <form action="{{ route('delete') }}" class="delete" method="POST">
     @csrf
     <input type="hidden" name="workerId" value="{{ $worker->id }}">
     <input type="hidden" name="deleteSheet" value="{{ $timesheet->id }}">
