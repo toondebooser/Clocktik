@@ -4,7 +4,7 @@ body {
     height: 100svh;
     font-family: "inter", "Noto Sans", sans-serif;
 }
-.background{
+.background {
     position: fixed;
     top: 0;
     left: 0;
@@ -17,42 +17,41 @@ body {
     transition: opacity 0.3s ease;
     z-index: -1;
 }
-.subscriptieForm{
+.subscriptieForm {
     grid-row: 3/4;
     grid-column: 1/13;
     justify-self: center;
     align-self: center;
     max-width: 300px;
 }
-.fadeUpEffect{
+.fadeUpEffect {
     opacity: 0;
     animation: fadeSlideUp 0.8s ease forwards;
 }
-.sauronsEye{
+.sauronsEye {
     grid-column: 1/13;
     border-radius: 10px;
     justify-self: center;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
-
 }
-.welcomCard{
+.welcomCard {
     grid-column: 1 / 13;
-  grid-row: 4 / 5;
-  align-self: end;
-  justify-self: center;
-  background: linear-gradient(135deg, #f9fafb, #e5e7eb);
-  border-radius: 1rem;
-  padding: 1.5rem 2.5rem;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
-  font-family: 'Inter', sans-serif;
-  max-width: 230px;
-  text-align: center;
-  color: #111827;
-  font-size: 2rem;
-  font-weight: 500;
-  transition: all 0.3s ease-in-out;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+    grid-row: 4 / 5;
+    align-self: end;
+    justify-self: center;
+    background: linear-gradient(135deg, #f9fafb, #e5e7eb);
+    border-radius: 1rem;
+    padding: 1.5rem 2.5rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    font-family: "Inter", sans-serif;
+    max-width: 230px;
+    text-align: center;
+    color: #111827;
+    font-size: 2rem;
+    font-weight: 500;
+    transition: all 0.3s ease-in-out;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 #day_hours::-webkit-inner-spin-button {
@@ -68,6 +67,8 @@ a:hover {
 .alert {
     border: 2px solid #007bff;
     background-color: white;
+    justify-self: center;
+    max-width: 300px;
     border-radius: 10px;
     margin-top: 10px;
     margin-bottom: 0px;
@@ -265,35 +266,36 @@ a {
     background-color: lightgoldenrodyellow;
 }
 .styled-table {
-    background-color:white;
-  width: 100%;
-  border-collapse: collapse;
-  font-family: 'Inter', sans-serif;
-  color: #1f2937;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  border-radius: 8px;
-  font-size: smaller;
-  grid-column: 1/13;
+    background-color: white;
+    width: 100%;
+    max-width: 1000px;
+    border-collapse: collapse;
+    font-family: "Inter", sans-serif;
+    color: #1f2937;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    font-size: smaller;
+    grid-column: 1/13;
     justify-self: center;
 }
 
 .styled-table thead {
-  background-color: var(--primary-color);
-  color: #1f2937;
-  text-align: left;
+    background-color: var(--primary-color);
+    color: #1f2937;
+    text-align: left;
 }
 
 .styled-table th,
 .styled-table td {
-  border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .styled-table tbody tr:hover {
-  cursor: default;
+    cursor: default;
 }
 
 .styled-table tbody tr:last-child td {
-  border-bottom: none;
+    border-bottom: none;
 }
 /* table {
     grid-column: 1/13;
@@ -729,7 +731,6 @@ img {
 
 .logo {
     height: 100%;
-    
 }
 
 .verificationMessage {
@@ -1374,14 +1375,14 @@ p {
 }
 @keyframes fadeSlideUp {
     0% {
-      opacity: 0;
-      transform: translateY(20px);
+        opacity: 0;
+        transform: translateY(20px);
     }
     100% {
-      opacity: 1;
-      transform: translateY(0);
+        opacity: 1;
+        transform: translateY(0);
     }
-  }
+}
 @media (min-width: 768px) {
     tr:hover {
         background-color: var(--select);
@@ -1439,10 +1440,10 @@ p {
 }
 @media (max-width: 768px) {
     .desktop-nav > *:not(.hamburger) {
-        display: none; 
+        display: none;
     }
     .hamburger {
-        display: block; 
+        display: block;
     }
     h2 {
         font-size: x-large;

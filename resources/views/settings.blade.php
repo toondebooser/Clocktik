@@ -3,12 +3,18 @@
 @section('content')
     <style>
         .checkboxContainer .radioBox:checked~.checkMark {
-            background-color: {{ $data->color }};
+            background-color: {{ $data->company_color }};
+            
         }
 
         .checkboxContainer {
             width: 100%;
             height: fit-content;
+        }
+
+        .checkMark{
+            border: 1px solid {{ $data->company_color }};
+
         }
 
 
@@ -94,7 +100,7 @@
             <span class="justify-row">Admin klok </span>
             <label for="betaaldInput" class="checkboxContainer">
                 <input type="hidden" name="admin_timeclock" value="0">
-                <input @if ($data->admin_timeclock == 1) {{ 'checked' }} @endif type="checkbox" class="radioBox"
+                <input @if ($data->admin_timeclock == 1) {{ 'checked' }}  @endif type="checkbox" class="radioBox"
                     id="betaaldInput" name="admin_timeclock" value='1'>
                 <span class="checkMark"></span>
             </label>

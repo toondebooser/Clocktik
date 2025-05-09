@@ -174,12 +174,11 @@
                         <li>Data-opslag voor 3 maanden</li>
                     </ul>
                     <div class="text-center" style="display:flex; justify-content:center">
-                        <a href="{{route('subscribe.form')}}" class="btn button" style="color: white" >Probeer TikTrack nu</a>
+                        <a href="{{route('subscribe.form')}}" class="btn button" style="color: white" >Vraag je abonnement aan</a>
                     </div>
                 </div>
             </div>
         </div>
 
-        {{-- <img src="{{ asset('images/TaxusLogo.png') }}" alt="Taxus Logo" class="logo-small"> --}}
 
 @endsection
