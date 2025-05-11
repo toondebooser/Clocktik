@@ -35,7 +35,7 @@ class Daytotal extends Model
     }
     public function extraBreakSlots()
     {
-        return $this->hasMany(Extra_break_slot::class, 'daytotal_id');
+        return $this->hasMany(ExtraBreakSlot::class, 'daytotal_id');
     }
     public function user(): BelongsTo
     {

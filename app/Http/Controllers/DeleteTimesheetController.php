@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Daytotal;
-use App\Models\Extra_break_slot;
+use App\Models\ExtraBreakSlot;
 use App\Models\Timesheet;
 use App\Models\User;
 use App\Utilities\CalculateUtility;
@@ -27,7 +27,7 @@ class DeleteTimesheetController extends Controller
         $dayTotal = $user->dayTotals()->where('Month', $date)->first();
         $modelMap = [
             'timesheets' => Timesheet::class,
-            'extra_break_slots' => Extra_break_slot::class,
+            'ExtraBreakSlot' => ExtraBreakSlot::class,
             'daytotals' => Daytotal::class
         ];
 

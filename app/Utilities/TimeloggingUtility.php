@@ -4,6 +4,7 @@ namespace App\Utilities;
 
 use App\Http\Controllers\TimesheetController;
 use App\Models\Extra_break_slot;
+use App\Models\ExtraBreakSlot;
 use App\Models\Timelog;
 use App\Models\Timesheet;
 use App\Models\User;
@@ -33,7 +34,7 @@ class TimeloggingUtility
     {
         DB::transaction(function () use ( $userRow_id) {
            $userRow = Timelog::find($userRow_id);
-           $addExtraBreakSlot = Extra_break_slot::create([
+           $addExtraBreakSlot = ExtraBreakSlot::create([
             'timesheet_id' => $userRow->timesheet_id,
             'Month' => $userRow->StartWork->format('Y-m-d'),
             'UserId' => auth()->user()->id,
