@@ -53,31 +53,11 @@ class UserController extends Controller
         }
         
         $newUser = $this->createUser($name, $email, $password, $company_code);
-        // $newUser->name = $name;
-        // $newUser->email = $email;
-        // $newUser->password = $hashedPassword;
-        // // $newUser->email_verified_at = now('Europe/Brussels');
-        // $newUser->save();
-        // $userRow->UserId = $newUser->id;
-        // $userRow->ShiftStatus = false;
-        // $userRow->BreakStatus = false;
-        // $userRow->weekend = false;
-        // $userRow->save();
-
-        // $userTotal->UserId = $newUser->id;
-        // $userTotal->RegularHours = 0;
-        // $userTotal->BreakHours = 0;
-        // $userTotal->OverTime = 0;
-        // $userTotal->Month = now('Europe/Brussels');
-        // $userTotal->save();
-        
+   
 
         $newUser->sendEmailVerificationNotification();
 
-        // Optionally, log in the user after registration (comment if not needed)
-        // Auth::login($newUser);
-
-        // auth()->login($newUser);
+   
         return redirect('/')->with('success', 'Registration successful! Please verify your email:');
 
 

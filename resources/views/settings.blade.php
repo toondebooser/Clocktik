@@ -38,7 +38,7 @@
             background: #ddd;
             cursor: move;
         }
-
+        
         .side.dragover {
             background: #e0e0e0;
             border-color: #000;
@@ -48,11 +48,11 @@
         .content {
             overflow-x: hidden;
         }
-
+        
         .justify-row {
             justify-self: end !important;
         }
-    </style>
+        </style>
     <h2>Instellingen</h2>
     <div style=" max-width: 400px; height: 100%;justify-content:center; align-content:center; grid-row: 3/5; grid-column: 2/12; justify-self:center;"
         class="content">
@@ -78,7 +78,7 @@
                 <div>Kies je logo</div>
 
                 <img id="preview" for="file-input"
-                    src="{{ $data->company_logo ? asset($data->company_logo) : asset('images/TaxusLogo.png') }}"
+                src="{{ $data->company_logo ? asset($data->company_logo) : asset('images/TaxusLogo.png') }}"
                     alt="Logo preview"
                     style="  grid-row: 2/3; grid-column: 2/3;justify-self: center;max-height: 50px; max-width: auto;">
             </label>
@@ -119,10 +119,11 @@
 
 
 
-
-
+            
+            
             <button class="button" type="submit"
-                style="  grid-row: 5/6; grid-column: 1/3; justify-self: center; height: 30px">Update instellingen</button>
+            style="  grid-row: 5/6; grid-column: 1/3; justify-self: center; height: 30px">Update instellingen</button>
+            <div style="grid-column: 1/3; justify-self: center">Jou bedrijfs code:<strong> {{$data->company_code}}</strong></div>
         </form>
         @if (!empty($holidays))
             <form

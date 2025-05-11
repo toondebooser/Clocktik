@@ -20,6 +20,8 @@ class SubscriptionController extends Controller
             'name' => 'required|string|max:255',
             'company' => 'required|string|max:255',
             'email' => 'required|email',
+            'btw'=> 'required|text',
+            'adres' => 'required|text'
         ]);
         if ($validator->fails()) {
             return back()
@@ -28,12 +30,12 @@ class SubscriptionController extends Controller
         }
 
 
-        $data = $request->only('name', 'company', 'email');
+        $data = $request->only('name', 'company', 'email', 'btw', 'adres' );
 
-        Mail::raw("Nieuwe aanvraag voor subscribtie:\n\nName: {$data['name']}\nCompany: {$data['company']}\nEmail: {$data['email']}", function ($message) use ($data) {
-            $message->to('taxus.work@gmail.com')
-                    ->subject('Nieuwe subscriptie aanvraag werkuren.be');
-        });
+       Mail::send('emailSubscription', ['data' => $data], function ($message) use ($data) {
+    $message->to('taxus.work@gmail.com')
+            ->subject('Nieuwe subscriptie aanvraag ->'. $data['company']);
+});
 
         return back()->with('success', 'Bedankt voor je aanvraag, We mailen jou spoedig met je inlog gegevens');
     }

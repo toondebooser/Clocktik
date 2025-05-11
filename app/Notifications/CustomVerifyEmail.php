@@ -14,12 +14,14 @@ class CustomVerifyEmail extends Notification
 {
     use Queueable;
     protected $companyCode;
+    protected $adminEmail;
     /**
      * Create a new notification instance.
      */
-    public function __construct($companyCode)
+    public function __construct($companyCode, $email)
     {
         $this->companyCode = $companyCode;
+        $this->adminEmail = $email;
     }
 
     /**
@@ -41,7 +43,7 @@ class CustomVerifyEmail extends Notification
         $company= Company::where('company_code', $this->companyCode)->first();
         return (new MailMessage)
         ->subject('Verify Your Email Address')
-        ->view('email', ['url' => $verificationUrl,'company'=>$company, 'companyCode' => $this->companyCode, 'name' => $notifiable->name,]);
+        ->view('email', ['adminEmail'=> $this->adminEmail, 'url' => $verificationUrl,'company'=>$company, 'companyCode' => $this->companyCode, 'name' => $notifiable->name,]);
     }
     protected function verificationUrl($notifiable)
     {
