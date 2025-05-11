@@ -14,11 +14,11 @@
     <link rel="icon"
         href="{{ auth()->check() && auth()->user()->company && auth()->user()->company->company_logo ? asset(auth()->user()->company->company_logo) : asset('images/TaxusLogo.png') }}"
         sizes="192x192" type="image/png">
-    {{-- @if (env('APP_ENV') == 'local') --}}
+    @if (env('APP_ENV') == 'local') 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    {{-- @elseif (env('APP_ENV') == 'production') --}}
-        {{-- <link rel="stylesheet" href="{{ asset('public/build/assets//app-721905ac.css ') }}"> --}}
-    {{-- @endif --}}
+    @elseif (env('APP_ENV') == 'production') 
+        <link rel="stylesheet" href="{{ asset('public/build/assets//app-c624f261.css ') }}">
+    @endif
 
     <style>
         .modal {
