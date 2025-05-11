@@ -34,8 +34,10 @@ class SettingsController extends Controller
     }
 
 
-    public function changeRights(Request $request, $id, $company_code)
-    {
+
+public function changeRights(Request $request, $id, $company_code)
+{
+    return DB::transaction(function () use ($request, $id, $company_code) {
         try {
             $user = User::find($id);
             if (!$user) {
@@ -69,7 +71,8 @@ class SettingsController extends Controller
             return redirect()->route('adminSettings', ['company_code' => $company_code])
                 ->withErrors(['error' => 'Er ging iets mis bij het aanpassen van de rechten: ' . $e->getMessage()]);
         }
-    }
+    });
+}
 
     public function logohandler($company, $company_logo)
     {
@@ -108,8 +111,10 @@ class SettingsController extends Controller
         return $logoPath;
     }
 
-    public function updateSettings(Request $request)
-    {
+
+public function updateSettings(Request $request)
+{
+    return DB::transaction(function () use ($request) {
         try {
             $company = Company::where('company_code', $request->company_code)->first();
 
@@ -143,5 +148,6 @@ class SettingsController extends Controller
             Log::error("Error in updateSettings for company {$request->company_code}: " . $e->getMessage());
             return redirect()->back()->withErrors(['error',  $e->getMessage()]);
         }
-    }
+    });
+}
 }

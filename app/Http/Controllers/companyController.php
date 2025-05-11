@@ -46,7 +46,7 @@ public function registrateCompany(Request $request)
             throw new \Exception('Company creation failed');
         });
     } catch (\Exception $e) {
-        return redirect('/')->with('error', 'Registration failed: ' . $e->getMessage());
+        return redirect('/')->withErrors('error', 'Registration failed: ' . $e->getMessage());
     }
 }
 }
