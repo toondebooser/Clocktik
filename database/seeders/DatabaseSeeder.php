@@ -14,10 +14,7 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void
     {
-        Company::truncate();
-        User::truncate();
-        Timelog::truncate();
-        Usertotal::truncate();
+      
 
          Company::create([
             'company_name' => 'Heaven',
