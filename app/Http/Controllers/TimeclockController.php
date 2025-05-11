@@ -69,7 +69,7 @@ class TimeclockController extends Controller
         DB::transaction(function () {
             $now = now('Europe/Brussels');
             $userRow = auth()->user()->timelogs;
-            $dayTotal = $userRow->dayTotal;
+            $dayTotal = $userRow->daytotal;
             if ($userRow->StartBreak !== null && $userRow->BreaksTaken == 1 && $userRow->timesheet_id == null) {
 
                 $buildTimesheet = TimeloggingUtility::createTimesheetEntry([

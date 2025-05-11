@@ -24,7 +24,7 @@ class DeleteTimesheetController extends Controller
         $deleteSheet = $deleteSheet ?? $request->deleteSheet;
         $date = $date ?? $request->date;
         $user = User::find($workerId);
-        $dayTotal = $user->daytotals()->where('Month', $date)->first();
+        $dayTotal = $user->dayTotals()->where('Month', $date)->first();
         $modelMap = [
             'timesheets' => Timesheet::class,
             'extra_break_slots' => Extra_break_slot::class,
