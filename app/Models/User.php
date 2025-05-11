@@ -18,9 +18,9 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    public function sendEmailVerificationNotification($companyCode = null)
+    public function sendEmailVerificationNotification($companyCode = null, $email = null)
     {
-        $this->notify(new CustomVerifyEmail($companyCode));
+        $this->notify(new CustomVerifyEmail($companyCode, $email));
     }
     public function sendPasswordResetNotification($token)
     {
@@ -60,7 +60,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         'email' => 'string',
         'admin' => 'boolean',
         'god' => 'boolean',
-        'company_code' => 'integer',
+        'company_code' => 'string',
         'email_verified_at' => 'datetime',
         'password' => 'string',
         'remember_token' => 'string',

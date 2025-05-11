@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string("company_name")->nullable();
             $table->string('company_logo')->nullable();
             $table->string('company_color')->default("#4FAAFC");
-            $table->unsignedBigInteger('company_code', 10)->unique();
+            $table->string('company_code', 10)->unique();
             $table->index('company_code');
             $table->integer('weekend_day_1')->default(6); 
             $table->integer('weekend_day_2')->default(0); 
