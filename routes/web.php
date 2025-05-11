@@ -53,7 +53,6 @@ Route::middleware(['auth', 'verified', 'check.admin.timeclock'])->group(function
         Route::get('/dashboard-stop-break', [TimeclockController::class, 'stopBreak'])->name('stopBreak');
         Route::get('/dashboard-stop', [TimeclockController::class, 'stop'])->name('stop');
         Route::match(['get', 'post'], '/delete-timesheet/{workerId?}/{deleteSheet?}/{date?}/{sheetType?}', [DeleteTimesheetController::class, 'deleteTimesheet'])->name('delete');
-
     });
 });
 
