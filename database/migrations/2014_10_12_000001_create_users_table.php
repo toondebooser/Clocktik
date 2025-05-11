@@ -18,7 +18,7 @@ return new class extends Migration
             $table->boolean('admin')->default(false);
             $table->boolean('god')->default(false);
             $table->integer('worked_overtime')->default(0);
-            $table->unsignedBigInteger('company_code', 10);
+            $table->string('company_code', 10);
             $table->index('company_code');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
