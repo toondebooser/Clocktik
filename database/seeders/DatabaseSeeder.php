@@ -14,7 +14,10 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void
     {
-      
+         Timelog::query()->delete();
+        Usertotal::query()->delete();
+        User::query()->delete();
+        Company::query()->delete();
 
          Company::create([
             'company_name' => 'Heaven',
