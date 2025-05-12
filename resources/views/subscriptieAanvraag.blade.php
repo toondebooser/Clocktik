@@ -9,7 +9,7 @@
                 <input type="text" name="name" class="form-control uniform-input" placeholder="Your name" required>
                 <input type="text" name="company" class="form-control uniform-input" placeholder="Company name" required>
                 <input type="email" name="email" class="form-control uniform-input" placeholder="Your email" required>
-                <input type="text" name="btw" placeholder="Btw-nummer" required>
+                <input type="text" name="btw" class='form-control uniform-input' placeholder="Btw-nummer" required>
                 <input type="text" name="adres" class="form-control uniform-input" placeholder="facturatie adres" required>
         <button type="submit" class="button">Subscribe</button>
     </form>

@@ -23,7 +23,7 @@ class HomeController extends Controller
 
     public function authentication(Request $request)
     {
-        try {
+        
             $request->validate(
                 [
                     'email' => 'required|email|max:255',
@@ -35,41 +35,32 @@ class HomeController extends Controller
                     'password.required' => "your password is required",
                 ]
             );
-
             $credentials = $request->only(['email', 'password']);
             $remember = $request->filled('remember');
-
-            $authenticated = DB::transaction(function () use ($credentials, $remember) {
-                return auth()->attempt($credentials, $remember);
-            });
-
+            
+            $authenticated = auth()->attempt($credentials, $remember);
             if ($authenticated) {
                 // Log success
-                UserActivityLogger::log('User logged in successfully', [
-                    'user_id' => auth()->user()->id,
-                    'email' => $request->email,
-                    'remember' => $remember,
+                UserActivityLogger::log('User loggin successfully', [
+                  'user' => auth()->user()->name,
                 ]);
-
-                if (!auth()->user()->admin) {
+               
+                if (auth()->user()->admin == false) {
                     return redirect('/dashboard');
                 } else {
+                    
                     return redirect('/')->with('success', "Welkom " . auth()->user()->name);
                 }
+            }else{
+                UserActivityLogger::log('User login failed');
+                return redirect()->back()->withErrors(['error', 'Email of wachtwoord is onjuist.']);
             }
 
-            return redirect()->back()->withErrors('error', 'Email of wachtwoord is incorrect.');
-        } catch (QueryException $e) {
-            Log::error('Failed to authenticate user', [
-                'email' => $request->email,
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-            ]);
-
-            return redirect()->back()->withErrors('error', 'Er is een fout opgetreden bij het inloggen.');
         }
-    }
+
+
+        
+    
 
     public function logout()
     {

@@ -398,7 +398,7 @@ th {
     width: 80%;
     align-items: center;
     border-radius: 10px;
-    z-index: 3;
+    z-index: 10;
 }
 /* Uniform input field styling */
 .uniform-input {
@@ -460,7 +460,7 @@ body.night-mode .uniform-input:focus {
     color: #40c057;
     text-align: center;
     font-size: larger;
-    z-index: 3;
+    z-index: 10;
 }
 .specifiedError {
     color: #1f2937;

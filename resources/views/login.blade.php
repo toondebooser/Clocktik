@@ -9,7 +9,6 @@
 
 
 @section('content')
-   <div class="backdrop"></div>
         <form class="loginForm" action="{{route('authentication')}}" method="post">
             @csrf
             <label class="userNameLabel" for="email">Email adress</label>

@@ -218,7 +218,7 @@
                                             <input type="hidden" name="sheetType" value="{{ $breakSlot->getTable() }}">
                                             <input type="hidden" name="date" value="{{ $breakSlot->Month }}">
                                             <input
-                                                onclick="event.preventDefault(); openConfirmationModal('Ben je zeker dat je deze dag wilt verwijderen?', this.form.action, this.form);"
+                                                onclick="event.preventDefault(); openConfirmationModal('Ben je zeker dat je deze Pauze wilt verwijderen?', this.form.action, this.form);"
                                                 class="submit trashIcon" type="image" src="{{ asset('/images/1843344.png') }}"
                                                 name="deleteThisSheet" alt="Delete">
                                         </form>

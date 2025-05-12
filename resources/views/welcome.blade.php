@@ -8,6 +8,7 @@
             src="{{ auth()->check() && auth()->user()->company && auth()->user()->company->company_logo ? asset(auth()->user()->company->company_logo) : asset('images/TaxusLogo.png') }}"
             alt="Company Logo">
     </a>
+
     @guest
     <div class="welcomCard fadeUpEffect">
         <p style="margin-bottom: 15px; font-size:small;">
