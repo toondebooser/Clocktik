@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Extra_break_slot;
+use App\Models\ExtraBreakSlot;
 use App\Utilities\CalculateUtility;
 use App\Utilities\DateUtility;
 use App\Utilities\TimeloggingUtility;
