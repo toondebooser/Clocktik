@@ -20,8 +20,8 @@ class SubscriptionController extends Controller
             'name' => 'required|string|max:255',
             'company' => 'required|string|max:255',
             'email' => 'required|email',
-            'btw'=> 'required|text',
-            'adres' => 'required|text'
+            'btw' => 'required|string',
+            'adres' => 'required|string'
         ]);
         if ($validator->fails()) {
             return back()
