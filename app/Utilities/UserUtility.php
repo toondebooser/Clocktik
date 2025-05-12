@@ -125,6 +125,10 @@ class UserUtility
             foreach ($users as $user) {
                 foreach ($user->dayTotals as $dayTotal) {
 
+                    if (!$dayTotal->Completed) {
+                        continue;
+                    }
+
                     UserUtility::CheckUserMonthTotal($dayTotal->Month, $user->id);
 
                     if ($dayTotal->type !== 'workday') {
