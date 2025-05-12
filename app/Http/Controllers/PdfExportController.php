@@ -31,8 +31,9 @@ class PdfExportController extends Controller
         $type = request('type');
         $pdf = Pdf::loadView('pdf', ['user' => $user, 'dayTotal' => $dayTotal, "monthlyTotal" => $monthlyTotal]);
         $filename = 'Uurrooster' . '-' . $user->name . '-' . date('F', strtotime($dayTotal[0]->Month)) . '-' . date('Y', strtotime($dayTotal[0]->Month)) . '.pdf';
+        
         if ($type == 'preview') {
-            return $pdf->stream($filename);
+            return $pdf->stream($filename . now('Europe/Brussels')->format('H:i:s'));
         } elseif ($type == 'download') {
             return $pdf->download($filename);
         }
