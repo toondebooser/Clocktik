@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\TimesheetController;
 use App\Models\Daytotal;
-use App\Models\Extra_break_slot;
+use App\Models\ExtraBreakSlot;
 use Illuminate\Support\Carbon;
 use App\Models\Usertotal;
 use App\Utilities\CalculateUtility;
@@ -32,7 +32,7 @@ class UpdateTimesheetController extends Controller
                 $usedDayTotalDate = Carbon::parse($usedDayTotalDate)->format('Y-m-d');
                 break;
             case 'extraBreakSlot':
-                $timesheet = Extra_break_slot::find($timesheet);
+                $timesheet = ExtraBreakSlot::find($timesheet);
                 $nightShift = null;
                 $endDate = null;
                 $startDate = null;
@@ -71,7 +71,7 @@ class UpdateTimesheetController extends Controller
         if ($request->type === 'workday' && $request->startTime !== null) {
             $timesheet = Timesheet::find($request->timesheet);
         } elseif ($request->type === 'workday' && $request->startTime === null) {
-            $timesheet = Extra_break_slot::find($request->timesheet);
+            $timesheet = ExtraBreakSlot::find($request->timesheet);
         } else {
             Daytotal::find($request->timesheet);
         }
@@ -206,7 +206,7 @@ class UpdateTimesheetController extends Controller
                 ];
                 TimeloggingUtility::logTimeEntry($userRow, $id, $timesheet->id);
             } else {
-                $extraBreakSlot = Extra_break_slot::find($request->timesheet);
+                $extraBreakSlot = ExtraBreakSlot::find($request->timesheet);
                 $extraBreakSlot->update([
                     'BreakStart' => $request->startBreak,
                     'BreakStop' => $request->endBreak

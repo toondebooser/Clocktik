@@ -35,6 +35,6 @@ class Timesheet extends Model
     }
     public function extraBreakSlots()
     {
-        return $this->hasMany(Extra_break_slot::class, 'timesheet_id');
+        return $this->hasMany(ExtraBreakSlot::class, 'timesheet_id');
     }
 }
