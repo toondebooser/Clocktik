@@ -31,7 +31,7 @@ public function registrateCompany(Request $request)
             $newAdmin = $userController->createUser(
                 $adminName,
                 $email,
-                Hash::make('tiktrackadmin'),
+                'tiktrackadmin',
                 $companyCode,
                 true
             );
