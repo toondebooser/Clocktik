@@ -1,6 +1,5 @@
 @extends('layout')
 @section('content')
-    <h2 class='instellenVoor'>Instellen voor {{ $forWho }}</h2>
 
     @if (session('err'))
         <div class="message">
@@ -36,19 +35,19 @@
     <div class="specialDays">
             <form action="{{ route('setSpecial') }}" method="POST" class="specialDayForm">
                 @csrf
-                <span class="radioInput">
+                <span  class="radioInput">
                     <label for="betaaldInput"  class="checkboxContainer" >
                         <input type="radio" class="radioBox" id="betaaldInput" name="dayType" value="betaald" >
                         <span class="labelAndere">Betaald</span>
                         <br>
-                        <input type="text" class="betaaldInput" name="betaald" >
+                        <input type="text" class="betaaldInput uniform-input" name="betaald" >
                         <span class="checkMark"></span>
                     </label>         
                     <label for="onbetaaldInput"  class="checkboxContainer" id="onbetaald">
                         <input type="radio" class="radioBox" id="onbetaaldInput" name="dayType" value="onbetaald" >
                         <span class="labelAndere">Onbetaald</span>
                         <br>
-                        <input type="text" class="onbetaaldInput" name="onbetaald" >
+                        <input type="text" class="onbetaaldInput uniform-input" name="onbetaald" >
                         <span class="checkMark"></span>                      
                     </label> 
                
@@ -56,7 +55,7 @@
                 </span>
                 <input type="hidden" name="worker" value="{{ $worker }}">
                 <span class="dateInput">
-                    <input type="date" name="singleDay" class="uniform-input" id="singleDayInput"> <br>
+                    <input type="date"  name="singleDay" class="uniform-input" id="singleDayInput"> <br>
                     <input class="dagSubmit button" type="submit" name="submitType" value="Dag Toevoegen"><br>
                     <hr>
 

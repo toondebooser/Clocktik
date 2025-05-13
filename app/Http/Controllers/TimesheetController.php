@@ -153,47 +153,66 @@ class TimesheetController extends Controller
         $worker = $request->input('worker');
         $submitType = $request->input('submitType');
         $workerObjectArray = json_decode($worker, true);
-        $results = [];
+        $results = [];    
+    // Define validation rules
+   $rules = [
+        'dayType' => 'required|in:betaald,onbetaald',
+        'betaald' => 'required_if:dayType,betaald|string|nullable',
+        'onbetaald' => 'required_if:dayType,onbetaald|string|nullable',
+    ];
 
-        if ($submitType ==  'Periode Toevoegen') {
-            $validator = Validator::make(
-                $request->all(),
-                [
-                    'startDate' => 'required|date',
-                    'endDate' => 'required|date|after:startDate',
-                ]
-            );
+    // Add date rules based on submitType
+    if ($request->input('submitType') === 'Periode Toevoegen') {
+        $rules['startDate'] = 'required|date';
+        $rules['endDate'] = 'required|date|after:startDate';
+    } else {
+        $rules['singleDay'] = 'required|date';
+    }
 
-            //TODO REFACTOR THIS MESS!!!
-            if ($validator->fails()) {
-                if (is_array($workerObjectArray) && count($workerObjectArray) > 1) {
-                    return redirect()
-                        ->route('specials', ['worker' => $worker])
-                        ->with('errList', ['result' => ['id' => 0, 'errorList' => ['Geen geldige datum doorgegeven.']]]);
-                }
-                return redirect()
-                    ->route('specials', ['worker' => $worker])
-                    ->with('errList', ['result' => ['id' => $worker, 'errorList' => ['Geen geldige datum doorgegeven.']]]);
-            }
-        } else {
-            $validator = Validator::make(
-                $request->all(),
-                [
-                    'singleDay' => 'required|date',
-                ]
-            );
+    // Define custom Dutch error messages for all rules
+    $messages = [
+        'dayType.required' => 'Kies een type dag (Betaald of Onbetaald).',
+        'dayType.in' => 'Ongeldig dagtype geselecteerd.',
+        'betaald.required_if' => 'Vul een beschrijving in voor een betaalde dag.',
+        'betaald.string' => 'De beschrijving voor een betaalde dag moet tekst zijn.',
+        'onbetaald.required_if' => 'Vul een beschrijving in voor een onbetaalde dag.',
+        'onbetaald.string' => 'De beschrijving voor een onbetaalde dag moet tekst zijn.',
+        'singleDay.required' => 'Selecteer een datum voor de dag.',
+        'singleDay.date' => 'De ingevoerde datum is ongeldig.',
+        'startDate.required' => 'Selecteer een startdatum voor de periode.',
+        'startDate.date' => 'De startdatum is ongeldig.',
+        'endDate.required' => 'Selecteer een einddatum voor de periode.',
+        'endDate.date' => 'De einddatum is ongeldig.',
+        'endDate.after' => 'De einddatum moet na de startdatum liggen.',
+    ];
 
-            if ($validator->fails()) {
-                if (is_array($workerObjectArray) && count($workerObjectArray) > 1) {
-                    return redirect()
-                        ->route('specials', ['worker' => $worker])
-                        ->with('err', ['result' => ['id' => 0, 'errorList' => 'Geen geldige datum doorgegeven.']]);
-                }
-                return redirect()
-                    ->route('specials', ['worker' => $worker])
-                    ->with('err', ['result' => ['id' => $worker, 'errorList' => 'Geen geldige datum doorgegeven.']]);
+    // Create validator instance
+    $validator = Validator::make($request->all(), $rules, $messages);
+
+    // Handle validation failure
+    if ($validator->fails()) {
+        // Collect only custom error messages
+        $errorList = [];
+        foreach ($rules as $field => $fieldRules) {
+            if ($validator->errors()->has($field)) {
+                $errorList = array_merge($errorList, $validator->errors()->get($field));
             }
         }
+
+        $errorData = [
+            'result' => [
+                'id' => is_array($workerObjectArray) && count($workerObjectArray) > 1 ? 0 : $worker,
+                'errorList' => $errorList
+            ]
+        ];
+
+        return redirect()
+            ->route('specials', ['worker' => $worker])
+            ->with('errList', $errorData);
+    }
+
+
+    
         if ($submitType == "Dag Toevoegen") {
             $singleDay = Carbon::parse($request->input('singleDay'));
             if (is_array($workerObjectArray) && count($workerObjectArray) > 1) {

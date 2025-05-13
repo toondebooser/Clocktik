@@ -10,7 +10,7 @@
 
     <div class="container">
         <div class="card">
-            <h2>Standaard Abonnement</h2>
+            <h2>Abonnement</h2>
             <p>
                 Voor slechts <strong style="color: #059669">€29,99/maand</strong> krijg je toegang tot één
                 bedrijfsaccount met <strong style="color: #059669">5 werknemers.</strong>
@@ -52,7 +52,7 @@
             justify-self: center;
             padding-bottom: 10px;
         }
-
+       
         .card {
             grid-column: 1/13;
             max-width: 400px;

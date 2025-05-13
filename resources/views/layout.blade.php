@@ -9,8 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400&display=swap" rel="stylesheet">
-    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="icon"
         href="{{ auth()->check() && auth()->user()->company && auth()->user()->company->company_logo ? asset(auth()->user()->company->company_logo) : asset('images/TaxusLogo.png') }}"
         sizes="192x192" type="image/png">
@@ -24,7 +24,7 @@
         .modal {
             display: none;
             position: fixed;
-            z-index: 9999;
+            z-index: 11;
             left: 0;
             top: 0;
             width: 100%;
@@ -34,10 +34,12 @@
         }
 
         .modal-content {
+            /* display:flex;
+            flex-direction:column; */
             background-color: white;
             padding: 20px;
             border-radius: 8px;
-            width: 90%;
+            width: 70%;
             max-width: 400px;
             text-align: center;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
@@ -143,14 +145,15 @@
 <body>
 
     <?php
-    $currentUser = auth()->user(); ?>
+    $currentUser = auth()->user(); 
+    ?>
     <div class="bodyContent">
         <header>
             <a class="headerLinks" href="{{ route('home') }}">Home</a>
             @auth
                 <div id="side-menu" class="side-menu">
-                    <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
-                        <img style="height: 40px" src="{{ asset('images/settings.png') }}" alt="settings">
+                    <a style=" height: 40px;" href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
+                        <img style="height: inherent" src="{{ asset('images/settings.png') }}" alt="settings">
                     </a>
                     <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
                     @if ($currentUser->god)

@@ -73,7 +73,7 @@ class UpdateTimesheetController extends Controller
         } elseif ($request->type === 'workday' && $request->startTime === null) {
             $timesheet = ExtraBreakSlot::find($request->timesheet);
         } else {
-            Daytotal::find($request->timesheet);
+           $timesheet = Daytotal::find($request->timesheet);
         }
 
         $type = $request->updateSpecial;
@@ -92,7 +92,7 @@ class UpdateTimesheetController extends Controller
                     'worker' => $id,
                 ];
 
-                return redirect()->route('getData', $postData);
+                return redirect()->route('getData', $postData)->with('success', 'Dag is aangepast');
             } else {
                 $postData = [
                     'worker' => $id,
@@ -112,7 +112,7 @@ class UpdateTimesheetController extends Controller
                         'worker' => $id,
                     ];
 
-                    return redirect()->route('getData', $postData);
+                    return redirect()->route('getData', $postData)->with('success', 'Dag is aangepast');
                 }
             } else {
                 $postData = [
