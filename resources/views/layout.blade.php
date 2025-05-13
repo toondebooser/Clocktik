@@ -11,21 +11,42 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-           @php
-        $logoPath = auth()->check() && auth()->user()->company && auth()->user()->company->company_logo 
-            ? asset(auth()->user()->company->company_logo) 
-            : asset('images/TaxusLogo.png');
-    @endphp
-  <!-- Favicon and homescreen icon for browsers and Android -->
-    <link rel="icon" type="image/png" sizes="192x192" href="{{ $logoPath }}">
-    <link rel="icon" type="image/png" sizes="512x512" href="{{ $logoPath }}">
+@php
+    $logoPath = auth()->check() && auth()->user()->company && auth()->user()->company->company_logo 
+        ? asset(auth()->user()->company->company_logo) 
+        : asset('images/TaxusLogo.png');
+@endphp
 
-    <!-- Homescreen icon for iOS -->
-    <link rel="apple-touch-icon" sizes="192x192" href="{{ $logoPath }}">
-    <link rel="apple-touch-icon" sizes="512x512" href="{{ $logoPath }}">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="Your App Name">
-    <link rel="stylesheet" href="{{ asset('public/build/assets//app-0f445238.css ') }}">
+<!-- Favicon for all browsers -->
+<link rel="icon" type="image/png" sizes="16x16" href="{{ $logoPath }}">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ $logoPath }}">
+<link rel="icon" type="image/png" sizes="48x48" href="{{ $logoPath }}">
+<link rel="icon" type="image/png" sizes="96x96" href="{{ $logoPath }}">
+<link rel="icon" type="image/png" sizes="192x192" href="{{ $logoPath }}">
+<link rel="icon" type="image/png" sizes="512x512" href="{{ $logoPath }}">
+
+<!-- Apple Touch Icons (for iOS homescreen) -->
+<link rel="apple-touch-icon" sizes="57x57" href="{{ $logoPath }}">
+<link rel="apple-touch-icon" sizes="60x60" href="{{ $logoPath }}">
+<link rel="apple-touch-icon" sizes="72x72" href="{{ $logoPath }}">
+<link rel="apple-touch-icon" sizes="76x76" href="{{ $logoPath }}">
+<link rel="apple-touch-icon" sizes="114x114" href="{{ $logoPath }}">
+<link rel="apple-touch-icon" sizes="120x120" href="{{ $logoPath }}">
+<link rel="apple-touch-icon" sizes="144x144" href="{{ $logoPath }}">
+<link rel="apple-touch-icon" sizes="152x152" href="{{ $logoPath }}">
+<link rel="apple-touch-icon" sizes="180x180" href="{{ $logoPath }}">
+<link rel="apple-touch-icon" sizes="192x192" href="{{ $logoPath }}">
+<link rel="apple-touch-icon" sizes="512x512" href="{{ $logoPath }}">
+
+<!-- Apple-specific meta -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Your App Name">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<!-- Android Chrome metadata -->
+<meta name="theme-color" content="#ffffff">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="Your App Name">
     <!-- @vite('resources/css/app.css') -->
     <style>
         .modal {
