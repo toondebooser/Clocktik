@@ -28,7 +28,7 @@
             </ul>
             <div class="text-center" style="display:flex; justify-content:center">
                 <a href="{{ route('subscribe.form') }}" class="btn button" style="color: white">
-                    Vraag je abonnement aan
+                    Start vandaag
                 </a>
             </div>
         </div>
