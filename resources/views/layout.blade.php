@@ -11,10 +11,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="icon"
-        href="{{ auth()->check() && auth()->user()->company && auth()->user()->company->company_logo ? asset(auth()->user()->company->company_logo) : asset('images/TaxusLogo.png') }}"
-        sizes="192x192" type="image/png">
+           @php
+        $logoPath = auth()->check() && auth()->user()->company && auth()->user()->company->company_logo 
+            ? asset(auth()->user()->company->company_logo) 
+            : asset('images/TaxusLogo.png');
+    @endphp
+  <!-- Favicon and homescreen icon for browsers and Android -->
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ $logoPath }}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{{ $logoPath }}">
+
+    <!-- Homescreen icon for iOS -->
+    <link rel="apple-touch-icon" sizes="192x192" href="{{ $logoPath }}">
+    <link rel="apple-touch-icon" sizes="512x512" href="{{ $logoPath }}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Your App Name">
     <link rel="stylesheet" href="{{ asset('public/build/assets//app-0f445238.css ') }}">
+    <!-- @vite('resources/css/app.css') -->
     <style>
         .modal {
             display: none;
