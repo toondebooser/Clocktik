@@ -14,12 +14,7 @@
     <link rel="icon"
         href="{{ auth()->check() && auth()->user()->company && auth()->user()->company->company_logo ? asset(auth()->user()->company->company_logo) : asset('images/TaxusLogo.png') }}"
         sizes="192x192" type="image/png">
-    {{-- <link rel="stylesheet" href="{{ asset('public/build/assets//app-c624f261.css ') }}"> --}}
- {{-- @if (env('APP_ENV') == 'local') --}}
-        @vite('resources/css/app.css')
-    {{-- @elseif (env('APP_ENV') == 'production')
-        <link rel="stylesheet" href="{{ asset('public/build/assets//app-721905ac.css ') }}">
-    @endif --}}
+    <link rel="stylesheet" href="{{ asset('public/build/assets//app-0f445238.css ') }}">
     <style>
         .modal {
             display: none;
