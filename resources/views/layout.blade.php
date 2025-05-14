@@ -11,11 +11,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="manifest" href="{{ url('/manifest.json') }}">
+
      @php
-    $logoPath = auth()->check() && auth()->user()->company && auth()->user()->company->company_logo 
+
+    $logoPath = auth()->user()?->company?->company_logo 
         ? asset(auth()->user()->company->company_logo) 
         : asset('images/TaxusLogo.png');
-@endphp
+
+    $themeColor = auth()->user()?->company?->company_color ?? '#4FAAFC';
+
+    @endphp
 
 <!-- Favicon for all browsers -->
 <link rel="icon" type="image/png" sizes="16x16" href="{{ $logoPath }}">
@@ -40,15 +46,17 @@
 
 <!-- Apple-specific meta -->
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Your App Name">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Werkuren.be">
+<meta name="apple-mobile-web-app-status-bar-style" content="{{$themeColor}}">
 
 <!-- Android Chrome metadata -->
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="{{$themeColor}}">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="application-name" content="Your App Name">
-    <link rel="stylesheet" href="{{ asset('public/build/assets//app-0f445238.css ') }}">
-    <!-- @vite('resources/css/app.css') -->
+<meta name="application-name" content="Werkuren.be">
+
+
+    <!-- <link rel="stylesheet" href="{{ asset('public/build/assets//app-0f445238.css ') }}"> -->
+    @vite('resources/css/app.css')
     <style>
         .modal {
             display: none;
@@ -159,7 +167,9 @@
 
 
         :root {
-            --primary-color: {{ auth()->check() ? auth()->user()->company->company_color ?? '#4FAAFC' : '#4FAAFC' }};
+            --primary-color: {{ auth()->user()?->company?->company_color ?? '#4FAAFC' }};
+
+
 
         }
     </style>

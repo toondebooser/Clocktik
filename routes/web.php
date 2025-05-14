@@ -27,6 +27,36 @@ use Illuminate\Http\Request;
 use App\Models\User;
 
 Auth::routes(['verify' => true]);
+Route::get('/manifest.json', function () {
+    $user = auth()->user();
+    $iconPath = $user && $user->company && $user->company->company_logo
+        ? asset($user->company->company_logo)
+        : asset('images/TaxusLogo.png');
+
+    $data = [
+        "name" => "Werkuren.be",
+        "short_name" => "App",
+        "start_url" => "/",
+        "display" => "standalone",
+        "background_color" => "#ffffff",
+        "theme_color" => "#ffffff",
+        "icons" => [
+            [
+                "src" => $iconPath,
+                "sizes" => "192x192",
+                "type" => "image/png"
+            ],
+            [
+                "src" => $iconPath,
+                "sizes" => "512x512",
+                "type" => "image/png"
+            ]
+        ]
+    ];
+
+    return response()->json($data)
+        ->header('Content-Type', 'application/manifest+json');
+});
 
 // Public Routes
 Route::group([], function () {
