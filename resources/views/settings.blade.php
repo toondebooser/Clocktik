@@ -45,31 +45,38 @@
 
         }
 
-        .content {
+        .settings {
             overflow-x: hidden;
         }
-        
+           #colorInput {
+        position: absolute;
+        opacity: 0;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;}
         .justify-row {
             justify-self: end !important;
         }
         </style>
     <h2>Instellingen</h2>
-    <div style=" max-width: 400px; height: 100%;justify-content:center; align-content:center; grid-row: 3/5; grid-column: 2/12; justify-self:center;"
-        class="content">
+    <div style=" max-width: 400px; height: 100%;justify-content:center; grid-row: 3/5; grid-column: 2/12; justify-self:center;"
+        class="settings" id="settingFormContainer">
         <form
             style=" margin: 0px 0px 10px 0px; grid-gap:15px; border-radius: 20px; padding: 10px;border: solid {{ $data->company_color }} 2px;display:grid; grid-template-rows:repeat(5, auto); grid-template-columns:repeat(2,1fr); align-items:start; "
             action="{{ route('change-company-settings') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="company_code" value="{{ $data->company_code }}">
             {{-- set color --}}
-            <input style="display: none" id="colorInput" type="color" name="company_color"
-                value="{{ $data->company_color }}">
-            <label class="flex" for="colorInput">
-                <div>Kies een kleur</div>
-                <div id="colorPreview"
-                    style=" border-radius: 10px; width: 50px; height: 50px;background-color: {{ $data->company_color }}">
-                </div>
-            </label>
+          
+         <div style="position: relative; display: inline-block;">
+        <input id="colorInput" type="color" name="company_color" value="{{ $data->company_color }}">
+        <label for="colorInput" class="flex" style="cursor: pointer;">
+            <div>Kies een kleur</div>
+            <div id="colorPreview"
+                style="border-radius: 10px; width: 50px; height: 50px; background-color: {{ $data->company_color }}">
+            </div>
+        </label>
+    </div>
 
             {{-- upload logo --}}
             <input style="display: none" type="file" name="company_logo" id="pictureInput" accept="image/*">
@@ -183,7 +190,11 @@
     </div>
 
     <script>
-        // Desktop Drag and Drop
+        document.getElementById('settingFormContainer').scrollTo({
+        top: 0,
+        behavior: 'smooth'
+            });
+        
         function allowDrop(event) {
             event.preventDefault();
             event.currentTarget.classList.add('dragover');
