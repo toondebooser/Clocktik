@@ -215,7 +215,7 @@ class TimesheetController extends Controller
     
         if ($submitType == "Dag Toevoegen") {
             $singleDay = Carbon::parse($request->input('singleDay'));
-            if (is_array($workerObjectArray) && count($workerObjectArray) > 1) {
+            if (is_array($workerObjectArray)) {
                 foreach ($workerObjectArray as $userObject) {
                     $user = User::find($userObject['id']);
                     if ($user->admin && !$user->company->admin_timeclock) {
@@ -223,14 +223,18 @@ class TimesheetController extends Controller
                     }
 
                     $result = $this->setday($dayLabel, $dayType, $userObject['id'], $singleDay);
-                    UserUtility::CheckUserMonthTotal($singleDay->copy(), $worker);
+                    UserUtility::CheckUserMonthTotal($singleDay->copy(), $user->id);
                     CalculateUtility::calculateUserTotal($user->id);
                     if ($result !== true) {
                         array_push($results, ['id' => $userObject['id'], 'errorList' => $result]);
                     }
                 }
                 if (!empty($results)) {
-                    return redirect()->route('specials', ['worker' => $worker])->with('err', $results);
+                    return redirect()->route('specials', ['worker' => $user->id])->with('err', $results);
+                }
+                else{             
+                     return redirect()->route('specials', ['worker' => $user->id])->with('success', "Periode succesvol toegevoegd");
+            
                 }
             } else {
 
@@ -245,7 +249,8 @@ class TimesheetController extends Controller
         } elseif ($submitType == 'Periode Toevoegen') {
             $startDate = Carbon::parse($request->input('startDate'));
             $endDate = Carbon::parse($request->input('endDate'));
-            if (is_array($workerObjectArray) && count($workerObjectArray) > 1) {
+            dd($workerObjectArray);
+            if (is_array($workerObjectArray)) {
                 foreach ($workerObjectArray as $userObject) {
 
                     $user = User::find($userObject['id']);
@@ -260,7 +265,10 @@ class TimesheetController extends Controller
                     CalculateUtility::calculateUserTotal($user->id);
                 }
                 if (!empty($results)) {
-                    return redirect()->route('specials', ['worker' => $worker])->with('errList', $results);
+                    return redirect()->route('specials', ['worker' => $user->id])->with('errList', $results);
+                }else
+                {
+                     return redirect()->route('specials', ['worker' => $user->id])->with('success', "Periode succesvol toegevoegd");
                 }
             } else {
                 $result = $this->setPeriod($dayLabel, $dayType, $worker, $startDate, $endDate);

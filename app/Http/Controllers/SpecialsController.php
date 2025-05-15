@@ -14,7 +14,7 @@ class SpecialsController extends Controller
         $workerInput = $request->input('worker');
         $workersArray = json_decode($workerInput, true);
              
-        if (is_array($workersArray) && count($workersArray) > 1) {
+        if (is_array($workersArray)) {
             $forWho = 'iedereen';
         } else {
             $worker = User::find($workerInput);

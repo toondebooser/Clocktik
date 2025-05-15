@@ -20,7 +20,6 @@ class UserUtility
             if (is_string($date)) {
                 $date = Carbon::parse($date);
             }
-
             $user = User::find($id);
             $monthStart = $date->copy()->startOfMonth();
 
