@@ -55,8 +55,8 @@
 <meta name="application-name" content="Werkuren.be">
 
 
-    <!-- <link rel="stylesheet" href="{{ asset('public/build/assets//app-0f445238.css ') }}"> -->
-    @vite('resources/css/app.css')
+    <link rel="stylesheet" href="{{ asset('public/build/assets//app-9f4e3b9b.css ') }}">
+    <!-- @vite('resources/css/app.css') -->
     <style>
         .modal {
             display: none;
