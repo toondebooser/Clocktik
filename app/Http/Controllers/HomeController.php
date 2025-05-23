@@ -21,46 +21,46 @@ class HomeController extends Controller
         return view('welcome');
     }
 
-    public function authentication(Request $request)
-    {
-        
-            $request->validate(
-                [
-                    'email' => 'required|email|max:255',
-                    'password' => 'required',
-                ],
-                [
-                    'email.required' => "Email adress is required",
-                    'email.email' => "your email adress seems to be none existing.",
-                    'password.required' => "your password is required",
-                ]
-            );
-            $credentials = $request->only(['email', 'password']);
-            $remember = $request->filled('remember');
-            
-            $authenticated = auth()->attempt($credentials, $remember);
-            if ($authenticated) {
-                // Log success
-                UserActivityLogger::log('User loggin successfully', [
-                  'user' => auth()->user()->name,
-                ]);
-               
-                if (auth()->user()->admin == false) {
-                    return redirect('/dashboard');
-                } else {
-                    
-                    return redirect('/')->with('success', "Welkom " . auth()->user()->name);
-                }
-            }else{
-                UserActivityLogger::log('User login failed');
-                return redirect()->back()->withErrors(['error', 'Email of wachtwoord is onjuist.']);
-            }
+   public function authentication(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email|max:255',
+        'password' => 'required',
+    ], [
+        'email.required' => "Email adress is required",
+        'email.email' => "your email adress seems to be none existing.",
+        'password.required' => "your password is required",
+    ]);
 
-        }
-
-
-        
+    $credentials = $request->only(['email', 'password']);
+    $remember = $request->filled('remember');
     
+    if (auth()->attempt($credentials, $remember)) {
+        $user = auth()->user();
+        Log::debug('User Authenticated', [
+            'user_id' => $user->id,
+            'user_email' => $user->email,
+            'session_id' => session()->getId(),
+            'session_data' => session()->all(),
+        ]);
+        UserActivityLogger::log('User logged in successfully', [
+            'user' => $user->name,
+        ]);
+        
+        if ($user->admin == false) {
+            return redirect('/dashboard');
+        } else {
+            return redirect('/');
+        }
+    }
+
+    UserActivityLogger::log('User login failed');
+    return redirect()->back()->withErrors(['error' => 'Email of wachtwoord is onjuist.']);
+}
+
+
+
+
 
     public function logout()
     {

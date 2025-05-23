@@ -5,58 +5,59 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="manifest" href="{{ url('/manifest.json') }}">
+    <link rel="manifest"
+        href="{{ url('/manifest.json') }}?v={{ auth()->check() ? auth()->user()->company->updated_at->timestamp : time() }}">
 
-     @php
+    @php
 
-    $logoPath = auth()->user()?->company?->company_logo 
-        ? asset(auth()->user()->company->company_logo) 
-        : asset('images/TaxusLogo.png');
-
-    $themeColor = auth()->user()?->company?->company_color ?? '#4FAAFC';
+        $logoPath = auth()->user()?->company?->company_logo
+            ? asset(auth()->user()->company?->company_logo)
+            : asset('images/TaxusLogo.png');
+        $themeColor = auth()->user()?->company?->company_color ?? '#4FAAFC';
 
     @endphp
 
-<!-- Favicon for all browsers -->
-<link rel="icon" type="image/png" sizes="16x16" href="{{ $logoPath }}">
-<link rel="icon" type="image/png" sizes="32x32" href="{{ $logoPath }}">
-<link rel="icon" type="image/png" sizes="48x48" href="{{ $logoPath }}">
-<link rel="icon" type="image/png" sizes="96x96" href="{{ $logoPath }}">
-<link rel="icon" type="image/png" sizes="192x192" href="{{ $logoPath }}">
-<link rel="icon" type="image/png" sizes="512x512" href="{{ $logoPath }}">
+    <!-- Favicon for all browsers -->
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ $logoPath }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ $logoPath }}">
+    <link rel="icon" type="image/png" sizes="48x48" href="{{ $logoPath }}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ $logoPath }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ $logoPath }}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{{ $logoPath }}">
 
-<!-- Apple Touch Icons (for iOS homescreen) -->
-<link rel="apple-touch-icon" sizes="57x57" href="{{ $logoPath }}">
-<link rel="apple-touch-icon" sizes="60x60" href="{{ $logoPath }}">
-<link rel="apple-touch-icon" sizes="72x72" href="{{ $logoPath }}">
-<link rel="apple-touch-icon" sizes="76x76" href="{{ $logoPath }}">
-<link rel="apple-touch-icon" sizes="114x114" href="{{ $logoPath }}">
-<link rel="apple-touch-icon" sizes="120x120" href="{{ $logoPath }}">
-<link rel="apple-touch-icon" sizes="144x144" href="{{ $logoPath }}">
-<link rel="apple-touch-icon" sizes="152x152" href="{{ $logoPath }}">
-<link rel="apple-touch-icon" sizes="180x180" href="{{ $logoPath }}">
-<link rel="apple-touch-icon" sizes="192x192" href="{{ $logoPath }}">
-<link rel="apple-touch-icon" sizes="512x512" href="{{ $logoPath }}">
+    <!-- Apple Touch Icons (for iOS homescreen) -->
+    <link rel="apple-touch-icon" sizes="57x57" href="{{ $logoPath }}">
+    <link rel="apple-touch-icon" sizes="60x60" href="{{ $logoPath }}">
+    <link rel="apple-touch-icon" sizes="72x72" href="{{ $logoPath }}">
+    <link rel="apple-touch-icon" sizes="76x76" href="{{ $logoPath }}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{{ $logoPath }}">
+    <link rel="apple-touch-icon" sizes="120x120" href="{{ $logoPath }}">
+    <link rel="apple-touch-icon" sizes="144x144" href="{{ $logoPath }}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{{ $logoPath }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ $logoPath }}">
+    <link rel="apple-touch-icon" sizes="192x192" href="{{ $logoPath }}">
+    <link rel="apple-touch-icon" sizes="512x512" href="{{ $logoPath }}">
 
-<!-- Apple-specific meta -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Werkuren.be">
-<meta name="apple-mobile-web-app-status-bar-style" content="{{$themeColor}}">
+    <!-- Apple-specific meta -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Werkuren.be">
+    <meta name="apple-mobile-web-app-status-bar-style" content="{{ $themeColor }}">
 
-<!-- Android Chrome metadata -->
-<meta name="theme-color" content="{{$themeColor}}">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="application-name" content="Werkuren.be">
+    <!-- Android Chrome metadata -->
+    <meta name="theme-color" content="{{ $themeColor }}">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Werkuren.be">
 
 
-    <link rel="stylesheet" href="{{ asset('public/build/assets//app-9f4e3b9b.css ') }}">
-    <!-- @vite('resources/css/app.css') -->
+    {{-- <link rel="stylesheet" href="{{ asset('public/build/assets//app-9f4e3b9b.css ') }}"> --}}
+    @vite('resources/css/app.css')
     <style>
         .modal {
             display: none;
@@ -175,7 +176,7 @@
     </style>
 
 
-    <title>Tiktrack</title>
+    <title>Werkuren</title>
 
 
 
@@ -184,14 +185,15 @@
 <body>
 
     <?php
-    $currentUser = auth()->user(); 
+    $currentUser = auth()->user();
     ?>
     <div class="bodyContent">
         <header>
             <a class="headerLinks" href="{{ route('home') }}">Home</a>
             @auth
                 <div id="side-menu" class="side-menu">
-                    <a style=" height: 40px;" href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
+                    <a style=" height: 40px;"
+                        href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
                         <img style="height: inherent" src="{{ asset('images/settings.png') }}" alt="settings">
                     </a>
                     <a class="headerLinks" href="{{ route('dashboard') }}">Timeclock</a>
@@ -206,9 +208,7 @@
                 </div>
                 <div class="backdrop"></div>
 
-                @if (
-                    ($currentUser->god && $currentUser->company->admin_timeclock) ||
-                        ($currentUser->admin && $currentUser->company->admin_timeclock))
+                @if ($currentUser->admin && $currentUser->company->admin_timeclock)
                     <div class="browserHeader">
                         <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
                             <img style="height: 40px" src="{{ asset('images/settings.png') }}" alt="settings">
@@ -228,6 +228,9 @@
                         <span></span>
                     </div>
                 @elseif ($currentUser->god)
+                    <a href="{{ route('adminSettings', ['company_code' => $currentUser->company_code]) }}">
+                        <img style="height: 40px" src="{{ asset('images/settings.png') }}" alt="settings">
+                    </a>
                     <a class="authLinks button" href="{{ route('saurons-eye') }}">Logs</a>
                     <a class="authLinks button"
                         href="{{ route('myList', ['type' => 'Bedrijven', 'company_code' => $currentUser->company_code]) }}">Bedrijven</a>
@@ -298,8 +301,7 @@
                 @endif
             </div>
         @endif
-        {{-- @yield('header') --}}
-        {{-- <div class="background"></div> --}}
+
 
 
         <footer> &copy Taxus software</footer>
@@ -308,161 +310,169 @@
         window.addEventListener('load', () => {
             const logo = document.getElementById('companyLogo');
 
-            if (logo.complete) {
+            if (logo?.complete) {
                 // Already loaded
                 logo.classList.add('fadeUpEffect');
-            } else {
+            } else if (logo) {
                 // Wait until it's loaded
                 logo.onload = () => {
                     logo.classList.add('fadeUpEffect');
                 };
             }
         });
-        const toggle = () => {
-            const element = document.getElementById('side-menu');
-            const icon = document.getElementById('nav-icon4');
-            element.classList.toggle('slide-in');
-            icon.classList.toggle('open');
-        };
-        window.toggle = toggle;
+    </script>
+    @auth
+        <script>
+            const toggle = () => {
+                const element = document.getElementById('side-menu');
+                const icon = document.getElementById('nav-icon4');
+                element.classList.toggle('slide-in');
+                icon.classList.toggle('open');
+            };
+            window.toggle = toggle;
 
-        document.addEventListener('click', (event) => {
-            const menu = document.getElementById('side-menu');
-            const icon = document.getElementById('nav-icon4');
-            const isMenuOpen = menu.classList.contains('slide-in');
-            const clickedInsideMenu = menu.contains(event.target);
-            const clickedToggle = event.target.closest('#nav-icon4');
+            document.addEventListener('click', (event) => {
+                const menu = document.getElementById('side-menu');
+                const icon = document.getElementById('nav-icon4');
+                const isMenuOpen = menu.classList.contains('slide-in');
+                const clickedInsideMenu = menu.contains(event.target);
+                const clickedToggle = event.target.closest('#nav-icon4');
 
-            if (isMenuOpen && !clickedInsideMenu && !clickedToggle) {
-                menu.classList.remove('slide-in');
-                icon.classList.remove('open');
-            }
-        });
-
-        function closeMessage(element) {
-            const message = element.parentElement;
-            message.classList.add('fade-out');
-            setTimeout(() => {
-                message.style.display = 'none';
-            }, 300); // Match animation duration
-        }
-        let formToSubmitId = null;
-
-        const openConfirmationModal = (message, actionUrl, form = null) => {
-            const modal = document.getElementById('confirmationModal');
-            const modalText = document.getElementById('modalText');
-            const confirmBtn = document.getElementById('confirmButton');
-
-            if (!modal || !modalText || !confirmBtn) {
-                console.error('Modal elements missing:', {
-                    modal,
-                    modalText,
-                    confirmBtn
-                });
-                return;
-            }
-
-            modalText.innerText = message;
-            confirmBtn.dataset.url = actionUrl;
-
-            if (form) {
-                if (!form.id) {
-                    form.id = 'tempForm-' + Date.now();
+                if (isMenuOpen && !clickedInsideMenu && !clickedToggle) {
+                    menu.classList.remove('slide-in');
+                    icon.classList.remove('open');
                 }
-                confirmBtn.dataset.form = form.id;
-            } else {
-                confirmBtn.dataset.form = '';
+            });
+
+            function closeMessage(element) {
+                const message = element.parentElement;
+                message.classList.add('fade-out');
+                setTimeout(() => {
+                    message.style.display = 'none';
+                }, 300); // Match animation duration
             }
+            let formToSubmitId = null;
 
-            confirmBtn.disabled = false;
-            modal.style.display = 'grid';
+            const openConfirmationModal = (message, actionUrl, form = null) => {
+                const modal = document.getElementById('confirmationModal');
+                const modalText = document.getElementById('modalText');
+                const confirmBtn = document.getElementById('confirmButton');
 
-            // Focus the confirm button for accessibility
-            confirmBtn.focus();
-        };
+                if (!modal || !modalText || !confirmBtn) {
+                    console.error('Modal elements missing:', {
+                        modal,
+                        modalText,
+                        confirmBtn
+                    });
+                    return;
+                }
 
-        const closeModal = () => {
-            const modal = document.getElementById('confirmationModal');
-            if (modal) {
-                modal.style.display = 'none';
-            }
-        };
+                modalText.innerText = message;
+                confirmBtn.dataset.url = actionUrl;
 
-        const confirmAction = () => {
-            const confirmBtn = document.getElementById('confirmButton');
-            if (!confirmBtn) {
-                console.error('Confirm button not found');
-                return;
-            }
-
-            const formId = confirmBtn.dataset.form;
-            const actionUrl = confirmBtn.dataset.url;
-
-            confirmBtn.disabled = true;
-            confirmBtn.innerText = 'Processing...';
-
-            // Step 1: Post to /confirm-action
-            fetch('/confirm-action', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        action: actionUrl
-                    })
-                })
-                .then(res => {
-                    if (!res.ok) {
-                        throw new Error(`Confirm action failed: ${res.status}`);
+                if (form) {
+                    if (!form.id) {
+                        form.id = 'tempForm-' + Date.now();
                     }
-                    return res.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        if (formId) {
-                            const formToSubmit = document.getElementById(formId);
-                            if (formToSubmit) {
-                                console.log('Submitting form:', formToSubmit);
-                                formToSubmit.submit();
-                            } else {
-                                console.error('Form not found:', formId);
-                                alert('Form submission failed.');
-                            }
-                        } else {
-                            window.location.href = actionUrl;
+                    confirmBtn.dataset.form = form.id;
+                } else {
+                    confirmBtn.dataset.form = '';
+                }
+
+                confirmBtn.disabled = false;
+                modal.style.display = 'grid';
+
+                // Focus the confirm button for accessibility
+                confirmBtn.focus();
+            };
+
+            const closeModal = () => {
+                const modal = document.getElementById('confirmationModal');
+                if (modal) {
+                    modal.style.display = 'none';
+                }
+            };
+
+            const confirmAction = () => {
+                const confirmBtn = document.getElementById('confirmButton');
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                if (!confirmBtn) {
+                    console.error('Confirm button not found');
+                    return;
+                }
+
+                const formId = confirmBtn.dataset.form;
+                const actionUrl = confirmBtn.dataset.url;
+
+
+                confirmBtn.disabled = true;
+                confirmBtn.innerText = 'Processing...';
+
+                // Step 1: Post to /confirm-action
+                fetch('/confirm-action', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        body: JSON.stringify({
+                            action: actionUrl
+                        })
+                    })
+                    .then(res => {
+                        if (!res.ok) {
+                            throw new Error(`Confirm action failed: ${res.status}`);
                         }
-                        closeModal();
-                    } else {
+                        return res.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            if (formId) {
+                                const formToSubmit = document.getElementById(formId);
+                                if (formToSubmit) {
+                                    console.log('Submitting form:', formToSubmit);
+                                    formToSubmit.submit();
+                                } else {
+                                    console.error('Form not found:', formId);
+                                    alert('Form submission failed.');
+                                }
+                            } else {
+                                window.location.href = actionUrl;
+                            }
+                            closeModal();
+                        } else {
+                            confirmBtn.disabled = false;
+                            confirmBtn.innerText = 'Confirm';
+                        }
+                    })
+                    .catch(error => {
                         confirmBtn.disabled = false;
                         confirmBtn.innerText = 'Confirm';
-                    }
-                })
-                .catch(error => {
-                    confirmBtn.disabled = false;
-                    confirmBtn.innerText = 'Confirm';
+                    });
+            };
+
+            const confirmBtn = document.getElementById('confirmButton');
+            if (confirmBtn) {
+                confirmBtn.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    confirmAction();
                 });
-        };
-
-        const confirmBtn = document.getElementById('confirmButton');
-        if (confirmBtn) {
-            confirmBtn.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                confirmAction();
-            });
-        }
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('confirmationModal');
-            if (event.target === modal) {
-                closeModal();
             }
-        };
 
-        window.openConfirmationModal = openConfirmationModal;
-        window.closeModal = closeModal;
-        window.confirmAction = confirmAction;
-    </script>
+            window.onclick = function(event) {
+                const modal = document.getElementById('confirmationModal');
+                if (event.target === modal) {
+                    closeModal();
+                }
+            };
+
+            window.openConfirmationModal = openConfirmationModal;
+            window.closeModal = closeModal;
+            window.confirmAction = confirmAction;
+        </script>
+    @endauth
+
+
     <div id="confirmationModal" class="modal" style="display:none;">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>

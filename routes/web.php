@@ -9,7 +9,6 @@ use App\Http\Controllers\DeleteTimesheetController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MyListController;
-use App\Http\Controllers\MyWorkersController;
 use App\Http\Controllers\PdfExportController;
 use App\Http\Controllers\pricingController;
 use App\Http\Controllers\SauronsEyeController;
@@ -26,16 +25,18 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
 
-Auth::routes(['verify' => true]);
-Route::get('/manifest.json', function () {
+Auth::routes(['verify' => true, 'login' => false, 'register' => false, 'reset' => false]);
+
+Route::middleware('web')->get('/manifest.json', function () {
     $user = auth()->user();
-    $iconPath = $user && $user->company && $user->company->company_logo
-        ? asset($user->company->company_logo)
+      
+    $iconPath = $user?->company?->company_logo
+        ? asset('storage/' . $user->company->company_logo)
         : asset('images/TaxusLogo.png');
 
     $data = [
         "name" => "Werkuren.be",
-        "short_name" => "App",
+        "short_name" => "Werkuren",
         "start_url" => "/",
         "display" => "standalone",
         "background_color" => "#ffffff",
