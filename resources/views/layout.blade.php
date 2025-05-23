@@ -323,6 +323,7 @@
     </script>
     @auth
         <script>
+
             const toggle = () => {
                 const element = document.getElementById('side-menu');
                 const icon = document.getElementById('nav-icon4');
@@ -349,9 +350,8 @@
                 message.classList.add('fade-out');
                 setTimeout(() => {
                     message.style.display = 'none';
-                }, 300); // Match animation duration
+                }, 300);
             }
-            let formToSubmitId = null;
 
             const openConfirmationModal = (message, actionUrl, form = null) => {
                 const modal = document.getElementById('confirmationModal');
@@ -381,8 +381,6 @@
 
                 confirmBtn.disabled = false;
                 modal.style.display = 'grid';
-
-                // Focus the confirm button for accessibility
                 confirmBtn.focus();
             };
 
@@ -393,63 +391,112 @@
                 }
             };
 
-            const confirmAction = () => {
+            const confirmAction = async () => {
                 const confirmBtn = document.getElementById('confirmButton');
-                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 if (!confirmBtn) {
                     console.error('Confirm button not found');
+                    alert('Confirmation button not found. Please try again.');
                     return;
                 }
 
                 const formId = confirmBtn.dataset.form;
                 const actionUrl = confirmBtn.dataset.url;
 
-
                 confirmBtn.disabled = true;
                 confirmBtn.innerText = 'Processing...';
 
-                // Step 1: Post to /confirm-action
-                fetch('/confirm-action', {
+                async function tryConfirm(csrfToken) {
+                    return await fetch('/confirm-action', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': csrfToken
+                            'X-CSRF-TOKEN': csrfToken,
                         },
                         body: JSON.stringify({
-                            action: actionUrl
-                        })
-                    })
-                    .then(res => {
-                        if (!res.ok) {
-                            throw new Error(`Confirm action failed: ${res.status}`);
-                        }
-                        return res.json();
-                    })
-                    .then(data => {
-                        if (data.success) {
-                            if (formId) {
-                                const formToSubmit = document.getElementById(formId);
-                                if (formToSubmit) {
-                                    console.log('Submitting form:', formToSubmit);
-                                    formToSubmit.submit();
-                                } else {
-                                    console.error('Form not found:', formId);
-                                    alert('Form submission failed.');
-                                }
-                            } else {
-                                window.location.href = actionUrl;
-                            }
-                            closeModal();
-                        } else {
-                            confirmBtn.disabled = false;
-                            confirmBtn.innerText = 'Confirm';
-                        }
-                    })
-                    .catch(error => {
-                        confirmBtn.disabled = false;
-                        confirmBtn.innerText = 'Confirm';
+                            action: actionUrl,
+                        }),
                     });
+                }
+
+                try {
+                    const tokenResponse = await fetch('/refresh-csrf', {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                        },
+                    });
+                    if (!tokenResponse.ok) throw new Error(`Failed to fetch CSRF token: ${tokenResponse.status}`);
+                    const tokenData = await tokenResponse.json();
+                    csrfToken = tokenData.csrfToken;
+                    console.log('CSRF token fetched:', csrfToken);
+
+                    let confirmResponse = await tryConfirm(csrfToken);
+
+                    if (confirmResponse.status === 419) {
+                        console.warn('CSRF token expired, retrying...');
+                        const retryTokenResponse = await fetch('/refresh-csrf', {
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json',
+                            },
+                        });
+                        if (!retryTokenResponse.ok) throw new Error(
+                            `Failed to fetch CSRF token on retry: ${retryTokenResponse.status}`);
+                        const retryTokenData = await retryTokenResponse.json();
+                        csrfToken = retryTokenData.csrfToken;
+                        console.log('CSRF token retried:', csrfToken);
+                        confirmResponse = await tryConfirm(csrfToken);
+                    }
+
+                    if (!confirmResponse.ok) {
+                        throw new Error(`Confirm action failed: ${confirmResponse.status}`);
+                    }
+
+                    const data = await confirmResponse.json();
+                    if (data.success) {
+                        if (formId) {
+                            const formToSubmit = document.getElementById(formId);
+                            if (formToSubmit) {
+                                console.log('Submitting form:', formId);
+                                formToSubmit.submit();
+                            } else {
+                                console.error('Form not found:', formId);
+                                throw new Error('Form submission failed');
+                            }
+                        } else {
+                            console.log('Redirecting to:', actionUrl);
+                            window.location.href = actionUrl;
+                        }
+                        closeModal();
+                    } else {
+                        throw new Error('Confirmation not successful');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert(`Action failed: ${error.message}`);
+                    confirmBtn.disabled = false;
+                    confirmBtn.innerText = 'Confirm';
+                }
             };
+
+            document.addEventListener('visibilitychange', async () => {
+                if (document.visibilityState === 'visible') {
+                    try {
+                        const response = await fetch('/refresh-csrf', {
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json',
+                            },
+                        });
+                        if (!response.ok) throw new Error('Failed to fetch CSRF token');
+                        const data = await response.json();
+                        csrfToken = data.csrfToken;
+                        console.log('CSRF token refreshed on visibility:', csrfToken);
+                    } catch (error) {
+                        console.error('Failed to refresh CSRF token on visibility:', error);
+                    }
+                }
+            });
 
             const confirmBtn = document.getElementById('confirmButton');
             if (confirmBtn) {
@@ -469,6 +516,11 @@
             window.openConfirmationModal = openConfirmationModal;
             window.closeModal = closeModal;
             window.confirmAction = confirmAction;
+
+            function displayCurrentToken() {
+                console.log(@json(csrf_token()));
+            }
+            setInterval(displayCurrentToken, 0.1 * 60 * 1000);
         </script>
     @endauth
 

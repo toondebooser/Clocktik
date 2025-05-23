@@ -29,7 +29,7 @@ Auth::routes(['verify' => true, 'login' => false, 'register' => false, 'reset' =
 
 Route::middleware('web')->get('/manifest.json', function () {
     $user = auth()->user();
-      
+
     $iconPath = $user?->company?->company_logo
         ? asset('storage/' . $user->company->company_logo)
         : asset('images/TaxusLogo.png');
@@ -116,6 +116,9 @@ Route::middleware('god')->group(function () {
 
 // Authenticated Routes
 Route::middleware('auth')->group(function () {
+    Route::get('/refresh-csrf', function () {
+        return response()->json(['csrfToken' => csrf_token()]);
+    });
     Route::match(['get', 'post'], '/my-profile-post', [UsersheetsController::class, 'myProfile'])->name('getData');
     Route::get('/make-timesheet/{id}', [TimesheetController::class, 'makeTimesheet'])->name('makeTimesheet');
 });
