@@ -82,7 +82,7 @@ a:hover {
 .hamburger {
     display: none;
 }
-tr:hover {
+tr:hover td {
     cursor: pointer;
 }
 :root {
@@ -241,9 +241,8 @@ a {
     border-radius: 5px;
 } */
 
-:hover.timesheetRow {
-    cursor: pointer;
-}
+
+
 .timesheetStyle {
     text-align: center;
 }
@@ -1456,7 +1455,7 @@ p {
     }
     .radioInput {
         grid-row: 1/2;
-        justify-self: end;
+        /* justify-self: end; */
     }
     .dateInput {
         width: min-content;
@@ -1502,5 +1501,40 @@ p {
     }
     p {
         font-size: small;
+    }
+}
+
+@media (min-width: 1170px){
+    .timesheetForm{
+        grid-column: 2/5;
+    }
+    .previewLink{
+        grid-column: 10/11;
+    }
+    .downloadLink{
+        grid-column: 11/12;
+    }
+    .dagenInstellen{
+        grid-column: 3/4;
+    }
+    .timesheetToevoegen{
+        grid-column:2/3;
+    }
+}
+@media(min-width:1300px){
+    .timesheetForm{
+        grid-column: 3/8;
+    }
+     .previewLink{
+        grid-column: 9/10;
+    }
+    .downloadLink{
+        grid-column: 10/11;
+    }
+    .dagenInstellen{
+        grid-column: 4/5;
+    }
+    .timesheetToevoegen{
+        grid-column:3/4;
     }
 }

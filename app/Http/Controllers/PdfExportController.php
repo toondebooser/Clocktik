@@ -14,27 +14,38 @@ class PdfExportController extends Controller
 {
     public function exportPdf(Request $request)
     {
-
         $user = User::find($request->userId);
         $date = Carbon::parse($request->month);
         $dayTotal = $user->dayTotals()
-        ->whereMonth('Month', $date)
-        ->whereYear('Month', $date)
-        ->orderBy('Month', 'asc')
-        ->get();
+            ->whereMonth('Month', $date)
+            ->whereYear('Month', $date)
+            ->orderBy('Month', 'asc')
+            ->get();
 
         $monthlyTotal = $user->userTotals()
             ->whereMonth('Month', $date)
             ->whereYear('Month', $date)
             ->orderBy('Month', 'asc')
             ->get();
-        $type = request('type');
-        $pdf = Pdf::loadView('pdf', ['user' => $user, 'dayTotal' => $dayTotal, "monthlyTotal" => $monthlyTotal]);
-        $filename = 'Uurrooster' . '-' . $user->name . '-' . date('F', strtotime($dayTotal[0]->Month)) . '-' . date('Y', strtotime($dayTotal[0]->Month)) . '.pdf';
-        
-        if ($type == 'preview') {
-            return $pdf->stream($filename . now('Europe/Brussels')->format('H:i:s'));
-        } elseif ($type == 'download') {
+
+        $type = $request->input('type');
+        $pdf = Pdf::loadView('pdf', [
+            'user' => $user,
+            'dayTotal' => $dayTotal,
+            'monthlyTotal' => $monthlyTotal
+        ]);
+        $filename = 'Uurrooster-' . $user->name . '-' . $date->format('F-Y') . '.pdf';
+
+        // Add cache-busting headers
+        $response = $pdf->stream($filename);
+
+        if ($type === 'preview') {
+            return $response->withHeaders([
+                'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+                'Pragma' => 'no-cache',
+                'Expires' => 'Fri, 01 Jan 1990 00:00:00 GMT',
+            ]);
+        } elseif ($type === 'download') {
             return $pdf->download($filename);
         }
     }

@@ -1,5 +1,4 @@
 @extends('layout')
-<?php $currentUser = auth()->user();?>
 @section('title')
     <h1>Werkuren</h1>
  

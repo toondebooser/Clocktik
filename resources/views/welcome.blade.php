@@ -5,7 +5,7 @@
 
     <a href="{{ route('pricing') }}" class="logoContainer">
         <img id="companyLogo" class="logo " style="opacity: 0"
-            src="{{ auth()->check() && auth()->user()->company && auth()->user()->company->company_logo ? asset(auth()->user()->company->company_logo) : asset('images/TaxusLogo.png') }}"
+            src="{{ auth()?->user()?->company?->company_logo ? asset(auth()->user()->company->company_logo) : asset('images/TaxusLogo.png') }}"
             alt="Company Logo">
     </a>
 

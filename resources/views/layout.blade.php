@@ -306,6 +306,7 @@
 
         <footer> &copy Taxus software</footer>
     </div>
+    
     <script>
         window.addEventListener('load', () => {
             const logo = document.getElementById('companyLogo');
@@ -320,6 +321,14 @@
                 };
             }
         });
+           function closeMessage(element) {
+                const message = element.parentElement;
+                message.classList.add('fade-out');
+                setTimeout(() => {
+                    message.style.display = 'none';
+                }, 300);
+            }
+
     </script>
     @auth
         <script>
@@ -345,13 +354,7 @@
                 }
             });
 
-            function closeMessage(element) {
-                const message = element.parentElement;
-                message.classList.add('fade-out');
-                setTimeout(() => {
-                    message.style.display = 'none';
-                }, 300);
-            }
+     
 
             const openConfirmationModal = (message, actionUrl, form = null) => {
                 const modal = document.getElementById('confirmationModal');
@@ -517,10 +520,6 @@
             window.closeModal = closeModal;
             window.confirmAction = confirmAction;
 
-            function displayCurrentToken() {
-                console.log(@json(csrf_token()));
-            }
-            setInterval(displayCurrentToken, 0.1 * 60 * 1000);
         </script>
     @endauth
 

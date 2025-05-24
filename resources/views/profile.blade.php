@@ -76,7 +76,10 @@
             </thead>
             @if ($days->count() > 0)
                 @if (auth()->user()->admin == true)
-            
+                <a class="previewLink"
+                        href="{{ route('exportPdf', ['userId' => $userId, 'month' => $days[0]->Month, 'type' => 'preview']) }}">
+                        <img class="previewIcon" src="{{ asset('/images/preview.png') }}" alt="Download">
+                    </a>
                     <a class="downloadLink"
                         href="{{ route('exportPdf', ['userId' => $userId, 'month' => $days[0]->Month, 'type' => 'download']) }}">
                         <img class="downloadIcon" src="{{ asset('/images/download.png') }}" alt="Download">

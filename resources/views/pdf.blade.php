@@ -163,7 +163,7 @@
             <tbody>
                 @foreach ($dayTotal as $item)
                  
-                    <tr  class="timesheetRow">
+                    <tr  class="timesheetRow " style="background-color: @if($item->NightShift) ">
                         {{-- date --}}
                         <td class="date" id="{{ $item->id }}">
                             <?php
@@ -178,9 +178,9 @@
                         {{-- regular --}}
                         <td>
                             <div class="displayRegular">
-                                @if ($item->RegularHours < 7.6 && $item->Weekend == false && $item->type == 'workday')
+                                @if ($item->RegularHours !== $user->company->day_hours && $item->Weekend == false && $item->type == 'workday')
                                     <s>{{ $item->RegularHours }}</s>
-                                    => 7.60
+                                    => {{$user->company->day_hours}}
                                 @elseif($item->Weekend == true && $item->type == 'workday')
                                     Weekend
                                 @elseif ($item->Weekend == false && $item->type !== 'workday')
