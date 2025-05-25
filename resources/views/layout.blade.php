@@ -431,7 +431,7 @@
                     if (!tokenResponse.ok) throw new Error(`Failed to fetch CSRF token: ${tokenResponse.status}`);
                     const tokenData = await tokenResponse.json();
                     csrfToken = tokenData.csrfToken;
-                    console.log('CSRF token fetched:', csrfToken);
+                    // console.log('CSRF token fetched:', csrfToken);
 
                     let confirmResponse = await tryConfirm(csrfToken);
 
@@ -447,7 +447,7 @@
                             `Failed to fetch CSRF token on retry: ${retryTokenResponse.status}`);
                         const retryTokenData = await retryTokenResponse.json();
                         csrfToken = retryTokenData.csrfToken;
-                        console.log('CSRF token retried:', csrfToken);
+                        // console.log('CSRF token retried:', csrfToken);
                         confirmResponse = await tryConfirm(csrfToken);
                     }
 
@@ -460,14 +460,14 @@
                         if (formId) {
                             const formToSubmit = document.getElementById(formId);
                             if (formToSubmit) {
-                                console.log('Submitting form:', formId);
+                                // console.log('Submitting form:', formId);
                                 formToSubmit.submit();
                             } else {
                                 console.error('Form not found:', formId);
                                 throw new Error('Form submission failed');
                             }
                         } else {
-                            console.log('Redirecting to:', actionUrl);
+                            // console.log('Redirecting to:', actionUrl);
                             window.location.href = actionUrl;
                         }
                         closeModal();
@@ -494,7 +494,7 @@
                         if (!response.ok) throw new Error('Failed to fetch CSRF token');
                         const data = await response.json();
                         csrfToken = data.csrfToken;
-                        console.log('CSRF token refreshed on visibility:', csrfToken);
+                        // console.log('CSRF token refreshed on visibility:', csrfToken);
                     } catch (error) {
                         console.error('Failed to refresh CSRF token on visibility:', error);
                     }
