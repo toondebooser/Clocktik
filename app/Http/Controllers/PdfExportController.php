@@ -34,7 +34,8 @@ class PdfExportController extends Controller
             'dayTotal' => $dayTotal,
             'monthlyTotal' => $monthlyTotal
         ]);
-        $filename = 'Uurrooster-' . $user->name . '-' . $date->format('F-Y') . '.pdf';
+        $timestamp = now()->format('YmdHis'); 
+        $filename = 'Uurrooster-' . $user->name . '-' . $date->format('F-Y') . '-' . $timestamp . '.pdf';
 
         // Add cache-busting headers
         $response = $pdf->stream($filename);
