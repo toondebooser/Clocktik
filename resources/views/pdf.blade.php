@@ -9,67 +9,71 @@
         body {
             font-family: "Noto Sans", sans-serif;
         }
-    
+
         h1 {
             color: #333;
             text-align: center;
         }
-    
+
         table {
             width: 100%;
-            border-collapse: separate; /* Prevents collapsing row heights */
-            border-spacing: 0; /* Maintains border appearance */
+            border-collapse: separate;
+            /* Prevents collapsing row heights */
+            border-spacing: 0;
+            /* Maintains border appearance */
         }
-    
+
         .timesheetRow {
-            min-height: 50px; /* Set row height to 50px */
-            height: 50px; /* Enforce exact height */
+            min-height: 50px;
+            /* Set row height to 50px */
+            height: 50px;
+            /* Enforce exact height */
         }
-    
+
         table,
         th,
         td {
             border: 0.4px solid #333;
         }
-    
+
         th {
             height: 70px;
             font-size: x-large;
-            background-color:lightblue;
+            background-color: lightblue;
         }
-    
+
         td {
             width: 130px;
-            min-height: 50px; 
-            height: 50px; 
-            vertical-align:middle; 
-            box-sizing: border-box; 
+            min-height: 50px;
+            height: 50px;
+            vertical-align: middle;
+            box-sizing: border-box;
 
         }
-    
+
         .date {
             text-align: center;
         }
-    
+
         .displayRegular {
             text-align: center;
             color: #2626da;
-            padding: 5px; /* Reduced padding for smaller height */
+            padding: 5px;
+            /* Reduced padding for smaller height */
         }
-    
-    
+
+
         .displayBreak {
             text-align: center;
             color: #da0a0a;
             padding: 5px;
         }
-    
+
         .displayOvertTime {
             text-align: center;
-            color: black
-            padding: 5px;
+            color: black padding: 5px;
         }
-    
+
         .displayTotalRegular {
             text-align: center;
             justify-self: center;
@@ -80,7 +84,7 @@
             border-radius: 10px;
             border: 1px solid #2626da;
         }
-    
+
         .displayTotalBreak {
             text-align: center;
             justify-self: center;
@@ -91,21 +95,21 @@
             border-radius: 10px;
             border: 1px solid #da0a0a;
         }
-    
+
         .totalContainer {
             text-align: center;
         }
-    
+
         .total {
             display: inline-block;
             width: 150px;
             margin: 10px;
         }
-    
+
         h3 {
             text-align: start;
         }
-    
+
         .displayTotalOverTime {
             text-align: center;
             justify-self: center;
@@ -116,7 +120,7 @@
             border-radius: 10px;
             border: 1px solid black;
         }
-    
+
         .text-danger {
             color: red;
         }
@@ -132,7 +136,7 @@
         <div class="totalContainer">
             <h3>Maand Totaal</h3>
             @if (isset($monthlyTotal))
-            
+
                 @foreach ($monthlyTotal as $item)
                     <div class="displayTotalRegular total">
                         Gewerkt {{ $item->RegularHours }}
@@ -145,10 +149,10 @@
                     </div>
                 @endforeach
             @else
+                <div class="text-danger">Something went wrong pls call Toon.</div>
         </div>
-        <div class="text-danger">Something went wrong pls call Toon.</div>
+        @endif
     </div>
-    @endif
     <h3>Uurrooster</h3>
     <main>
         <table>
@@ -162,8 +166,8 @@
             </thead>
             <tbody>
                 @foreach ($dayTotal as $item)
-                 
-                    <tr  class="timesheetRow " style="background-color: @if($item->NightShift) ">
+                    <tr class="timesheetRow "
+                        style="background-color: @if ($item->NightShift) ">
                         {{-- date --}}
                         <td class="date" id="{{ $item->id }}">
                             <?php
@@ -180,14 +184,13 @@
                             <div class="displayRegular">
                                 @if ($item->RegularHours !== $user->company->day_hours && $item->Weekend == false && $item->type == 'workday')
                                     <s>{{ $item->RegularHours }}</s>
-                                    => {{$user->company->day_hours}}
+                                    => {{ $user->company->day_hours }}
                                 @elseif($item->Weekend == true && $item->type == 'workday')
                                     Weekend
                                 @elseif ($item->Weekend == false && $item->type !== 'workday')
                                     {{ $item->type }}
                                 @else
-                                    {{ $item->RegularHours }}
-                                @endif
+                                    {{ $item->RegularHours }} @endif
                                 {{-- @if ($item->type == 'workday')
                                         <span class="inOut">
                                             <br> Clocked in: {{ date('H:i', $toTime) }}
@@ -199,14 +202,14 @@
                         {{-- break --}}
                         <td>
                             <div class="displayBreak">
-                                {{ $item->BreakHours }}
-                                {{-- @if ($item->type == 'workday' && $item->BreakStart !== $item->BreakStop)
+                        {{ $item->BreakHours }}
+                        {{-- @if ($item->type == 'workday' && $item->BreakStart !== $item->BreakStop)
                                     <span class="inOut">
                                         <br> Clocked in: {{ date('H:i', strtotime($item->BreakStart)) }}
                                         <br> Clocked out: {{ date('H:i', strtotime($item->BreakStop)) }}
                                     </span>
                                 @endif --}}
-                            </div>
+                        </div>
                         </td>
                         {{-- overTime --}}
                         <td>
