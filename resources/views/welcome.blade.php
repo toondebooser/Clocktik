@@ -2,7 +2,7 @@
 @section('title')
     <h1 class="welcomeTitle fadeUpEffect" style="margin-top: 100px">
         @php
-            $companyName = optional(auth()->user()->company)->company_name;
+            $companyName = auth()->user()?->company?->company_name;
         @endphp
         {{ $companyName ?? 'Werkuren.be' }}
     </h1>
