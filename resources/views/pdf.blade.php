@@ -150,8 +150,8 @@
                 @endforeach
             @else
                 <div class="text-danger">Something went wrong pls call Toon.</div>
+            @endif
         </div>
-        @endif
     </div>
     <h3>Uurrooster</h3>
     <main>
@@ -166,8 +166,8 @@
             </thead>
             <tbody>
                 @foreach ($dayTotal as $item)
-                    <tr class="timesheetRow "
-                        style="background-color: @if ($item->NightShift) ">
+                    <tr class="timesheetRow {{ $item->NightShift ? 'nightShift' : '' }}"
+                        >
                         {{-- date --}}
                         <td class="date" id="{{ $item->id }}">
                             <?php
@@ -190,25 +190,16 @@
                                 @elseif ($item->Weekend == false && $item->type !== 'workday')
                                     {{ $item->type }}
                                 @else
-                                    {{ $item->RegularHours }} @endif
-                                {{-- @if ($item->type == 'workday')
-                                        <span class="inOut">
-                                            <br> Clocked in: {{ date('H:i', $toTime) }}
-                                            <br> Clocked out: {{ date('H:i', strtotime($item->ClockedOut)) }}
-                                        </span>
-                                @endif --}}
+                                    {{$item->RegularHours}}
+                                @endif
+                               
                             </div>
                         </td>
                         {{-- break --}}
                         <td>
                             <div class="displayBreak">
                         {{ $item->BreakHours }}
-                        {{-- @if ($item->type == 'workday' && $item->BreakStart !== $item->BreakStop)
-                                    <span class="inOut">
-                                        <br> Clocked in: {{ date('H:i', strtotime($item->BreakStart)) }}
-                                        <br> Clocked out: {{ date('H:i', strtotime($item->BreakStop)) }}
-                                    </span>
-                                @endif --}}
+
                         </div>
                         </td>
                         {{-- overTime --}}
