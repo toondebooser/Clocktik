@@ -97,7 +97,7 @@ Route::middleware(['admin', 'auth'])->group(function () {
     Route::post('/update-worker-timesheet', [UpdateTimesheetController::class, 'updateTimesheet'])->name('updateTimesheet');
     Route::match(['get', 'post'], '/specials', [SpecialsController::class, 'specials'])->name('specials');
     Route::post('/setSpecial', [TimesheetController::class, 'setSpecial'])->name('setSpecial');
-    Route::get('/export-pdf', [PdfExportController::class, 'exportPdf'])->name('exportPdf');
+    Route::get('/export-pdf/{userId}/{month}/{type}', [PdfExportController::class, 'exportPdf'])->name('exportPdf');
     // Route::match(['get', 'post'], '/delete-timesheet/{workerId?}/{deleteSheet?}/{date?}/{sheetType?}', [DeleteTimesheetController::class, 'deleteTimesheet'])->name('delete');
     Route::get('/admin-settings/{company_code}', [SettingsController::class, 'settingsView'])->name('adminSettings');
     Route::post('update-admin-rights/{id}/{company_code}', [SettingsController::class, 'changeRights'])->name('changeAdminRights');
