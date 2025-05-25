@@ -249,7 +249,6 @@ class TimesheetController extends Controller
         } elseif ($submitType == 'Periode Toevoegen') {
             $startDate = Carbon::parse($request->input('startDate'));
             $endDate = Carbon::parse($request->input('endDate'));
-            dd($workerObjectArray);
             if (is_array($workerObjectArray)) {
                 foreach ($workerObjectArray as $userObject) {
 

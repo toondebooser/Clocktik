@@ -20,7 +20,6 @@ class PdfExportController extends Controller
             ->orderBy('Month', 'asc')
             ->get();
 
-            dd($date);
             $monthlyTotal = $user->userTotals()
             ->whereMonth('Month', $date)
             ->whereYear('Month', $date)
