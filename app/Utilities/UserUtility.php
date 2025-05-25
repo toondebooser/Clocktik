@@ -109,7 +109,6 @@ class UserUtility
         if (is_string($date)) {
             $date = Carbon::parse($date);
         }
-
         return Daytotal::where('UserId', $id)
             ->whereDate('Month', $date)
             ->first();

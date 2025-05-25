@@ -5,11 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Timesheet;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\TimesheetController;
 use App\Models\Daytotal;
 use App\Models\ExtraBreakSlot;
 use Illuminate\Support\Carbon;
-use App\Models\Usertotal;
 use App\Utilities\CalculateUtility;
 use App\Utilities\DateUtility;
 use App\Utilities\TimeloggingUtility;
@@ -141,7 +139,7 @@ class UpdateTimesheetController extends Controller
                         }),
                         Rule::when(
                             function () use ($request) {
-                                $dayTotal = UserUtility::userDayTotalFetch($request->usedDayTotalDate, auth()->user()->id);
+                                $dayTotal = UserUtility::userDayTotalFetch($request->usedDayTotalDate, $request->id);
                                 return !$dayTotal || !$dayTotal->NightShift;
                             },
                             'after:startTime'
