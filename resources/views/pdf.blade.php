@@ -110,6 +110,11 @@
             text-align: start;
         }
 
+        .nightShift {
+            background-color: #8f969b;
+            color: white;
+        }
+
         .displayTotalOverTime {
             text-align: center;
             justify-self: center;
@@ -166,17 +171,22 @@
             </thead>
             <tbody>
                 @foreach ($dayTotal as $item)
-                    <tr class="timesheetRow {{ $item->NightShift ? 'nightShift' : '' }}"
-                        >
+                    <tr class="timesheetRow {{ $item->NightShift ? 'nightShift' : '' }}" >
                         {{-- date --}}
                         <td class="date" id="{{ $item->id }}">
                             <?php
                             $toTime = strtotime($item->Month);
                             $days = ['Mon' => 'Ma', 'Tue' => 'Di', 'Wed' => 'Wo', 'Thu' => 'Do', 'Fri' => 'Vr', 'Sat' => 'Za', 'Sun' => 'Zo'];
-                            $englishDay = date('D', $toTime);
-                            $dutchDay = $days[$englishDay];
-                            $dayOfMonth = date('d', $toTime);
-                            echo $dutchDay . ' ' . $dayOfMonth;
+                             if ($item->DayOverlap) {
+                                    $currentDate = date('d-m', $toTime);
+                                    $nextDate = date('d-m', strtotime('+1 day', $toTime));
+                                    echo $currentDate . '<br>' . '>>' . '<br>' . $nextDate;
+                                } else {
+                                    $englishDay = date('D', $toTime);
+                                    $dutchDay = $days[$englishDay];
+                                    $dayOfMonth = date('d', $toTime);
+                                    echo $dutchDay . ' ' . $dayOfMonth;
+                                }
                             ?>
                         </td>
                         {{-- regular --}}
@@ -190,17 +200,17 @@
                                 @elseif ($item->Weekend == false && $item->type !== 'workday')
                                     {{ $item->type }}
                                 @else
-                                    {{$item->RegularHours}}
+                                    {{ $item->RegularHours }}
                                 @endif
-                               
+
                             </div>
                         </td>
                         {{-- break --}}
                         <td>
                             <div class="displayBreak">
-                        {{ $item->BreakHours }}
+                                {{ $item->BreakHours }}
 
-                        </div>
+                            </div>
                         </td>
                         {{-- overTime --}}
                         <td>

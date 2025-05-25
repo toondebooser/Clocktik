@@ -95,7 +95,7 @@ tr:hover td {
     --select: #ccc;
 }
 .nightShift {
-    background-color: var(--night-shift);
+    background-color: #8f969b;
     color: white;
 }
 
