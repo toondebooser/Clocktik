@@ -396,11 +396,7 @@
 
             const confirmAction = async () => {
                 const confirmBtn = document.getElementById('confirmButton');
-                if (!confirmBtn) {
-                    console.error('Confirm button not found');
-                    alert('Confirmation button not found. Please try again.');
-                    return;
-                }
+            
 
                 const formId = confirmBtn.dataset.form;
                 const actionUrl = confirmBtn.dataset.url;
