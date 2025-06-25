@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-use Dompdf\Helpers;
 use Illuminate\Http\Request;
 
 class PdfExportController extends Controller
@@ -15,12 +14,12 @@ class PdfExportController extends Controller
         $user = User::find($request->userId);
         $date = Carbon::parse($request->month);
         $dayTotal = $user->dayTotals()
-        ->whereMonth('Month', $date)
+            ->whereMonth('Month', $date)
             ->whereYear('Month', $date)
             ->orderBy('Month', 'asc')
             ->get();
 
-            $monthlyTotal = $user->userTotals()
+        $monthlyTotal = $user->userTotals()
             ->whereMonth('Month', $date)
             ->whereYear('Month', $date)
             ->orderBy('Month', 'asc')
@@ -32,20 +31,21 @@ class PdfExportController extends Controller
             'dayTotal' => $dayTotal,
             'monthlyTotal' => $monthlyTotal
         ]);
-        $timestamp = now()->format('YmdHis'); 
+        $timestamp = now()->format('YmdHis');
         $filename = 'Uurrooster-' . $user->name . '-' . $date->format('F-Y') . '-' . $timestamp . '.pdf';
         // Add cache-busting headers
-        $response = $pdf->stream($filename);
+        // $response = $pdf->stream($filename);
 
         if ($type === 'preview') {
-            return $response->withHeaders([
+           return response($pdf->output(), 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . $filename . '"',
                 'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
                 'Pragma' => 'no-cache',
-                'Expires' => 'Fri, 01 Jan 1990 00:00:00 GMT',
+                'Expires' => '0',
             ]);
         } elseif ($type === 'download') {
-            $pdf->download($filename);
-            return back()->with('success', 'Pdf succesvol gedownload');
+            return $pdf->download($filename);
         }
     }
 }
