@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
-use function PHPUnit\Framework\isEmpty;
 
 class DeleteTimesheetController extends Controller
 {

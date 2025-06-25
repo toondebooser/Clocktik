@@ -353,6 +353,7 @@ th {
 }
 .displayRegular {
     min-width: 87px;
+    max-width: 90px;
     white-space: normal;
     text-align: center;
     word-wrap: break-word;
@@ -816,7 +817,6 @@ th {
 
 .timesheetTable {
     font-family: "inter", "Noto Sans", sans-serif;
-
     border-radius: 10px;
     grid-row: 3/4;
 }
