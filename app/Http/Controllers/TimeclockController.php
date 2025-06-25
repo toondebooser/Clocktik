@@ -31,6 +31,7 @@ class TimeclockController extends Controller
                 }
                 $now = now('Europe/Brussels');
                 $dayTotal = UserUtility::findOrCreateUserDayTotal($now, $currentUser->id);
+                if(!$dayTotal->wasRecentlyCreated && $dayTotal->type !== 'workday') return redirect()->back()->withErrors(['error'=> "Vandaag is geregistreerd onder: ". $dayTotal->type]);
                 UserUtility::CheckUserMonthTotal($now->copy(), $currentUser->id);
                 $dayTotal->Weekend = DateUtility::checkWeekend($now, $currentUser->company->company_code);
                 $userRow = $currentUser->timelogs;
@@ -79,9 +80,7 @@ class TimeclockController extends Controller
                 $addTimesheet = TimeloggingUtility::updateOrInsertTimesheet($buildTimesheet, null);
                 $userRow->update(['timesheet_id' => $addTimesheet->id]);
             } 
-            // elseif ($userRow->BreaksTaken > 1 && $userRow->timesheet_id !== null) {
-            //   TimeloggingUtility::ExtraBreakSlot($userRow->id);
-            // }
+        
 
             $userRow->update([
                 'StartBreak' => $now,
