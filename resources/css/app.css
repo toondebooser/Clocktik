@@ -289,15 +289,7 @@ a {
 .styled-table tbody tr:last-child td {
     border-bottom: none;
 }
-/* table {
-    grid-column: 1/13;
-    justify-self: center;
-    border-collapse: collapse;
-    font-size: smaller;
-    font-family: "inter", "Noto Sans", sans-serif;
 
-    width: 100%;
-} */
 .content-row {
     transition: all 0.3s ease;
 }
@@ -775,7 +767,7 @@ img {
 } */
 
 .dropDownMonth {
-    height: 35px;
+    height: fit-content;
     width: 120px;
     margin-right: 10px;
     border-radius: 10px;
@@ -1520,6 +1512,9 @@ p {
     .timesheetToevoegen{
         grid-column:2/3;
     }
+}
+@media(max-width: 350px){
+
 }
 @media(min-width:1300px){
     .timesheetForm{
