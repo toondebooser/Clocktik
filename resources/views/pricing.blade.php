@@ -11,7 +11,7 @@
     <div class="container">
         <div class="card">
             <h2>Abonnement</h2>
-            <p>
+            {{-- <p>
                 Voor slechts <strong style="color: #059669">€29,99/maand</strong> krijg je toegang tot één
                 bedrijfsaccount met <strong style="color: #059669">5 werknemers.</strong>
             </p>
@@ -29,7 +29,7 @@
             <div class="text-center" style="display:flex; justify-content:center">
                 <a href="{{ route('subscribe.form') }}" class="btn button" style="color: white">
                     Start vandaag
-                </a>
+                </a> --}}
             </div>
         </div>
     </div>

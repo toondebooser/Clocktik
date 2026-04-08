@@ -1,6 +1,6 @@
 @extends('layout')
 @section('title')
-    <h1>Werkuren</h1>
+    <h1 >Tijdregistratie</h1>
  
 @endsection
 

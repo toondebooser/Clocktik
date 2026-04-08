@@ -56,8 +56,8 @@
     <meta name="application-name" content="Werkuren.be">
 
 
-    {{-- <link rel="stylesheet" href="{{ asset('public/build/assets/app-7b43df26.css') }}"> --}}
-    @vite('resources/css/app.css')
+    <link rel="stylesheet" href="{{ asset('public/build/assets/app-7b43df26.css') }}">
+    {{-- @vite('resources/css/app.css') --}}
     <style>
         .modal {
             display: none;
@@ -176,7 +176,7 @@
     </style>
 
 
-    <title>Werkuren</title>
+    <title>Tijdregistratie</title>
 
 
 
@@ -304,7 +304,7 @@
 
 
 
-        <footer> &copy werkuren.be</footer>
+        <footer> &copy Toon De Booser</footer>
     </div>
     
     <script>
