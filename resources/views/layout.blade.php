@@ -306,7 +306,7 @@
 
         <footer> &copy Toon De Booser</footer>
     </div>
-    
+
     <script>
         window.addEventListener('load', () => {
             const logo = document.getElementById('companyLogo');
@@ -321,18 +321,17 @@
                 };
             }
         });
-           function closeMessage(element) {
-                const message = element.parentElement;
-                message.classList.add('fade-out');
-                setTimeout(() => {
-                    message.style.display = 'none';
-                }, 300);
-            }
 
+        function closeMessage(element) {
+            const message = element.parentElement;
+            message.classList.add('fade-out');
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 300);
+        }
     </script>
     @auth
         <script>
-
             const toggle = () => {
                 const element = document.getElementById('side-menu');
                 const icon = document.getElementById('nav-icon4');
@@ -354,7 +353,7 @@
                 }
             });
 
-     
+
 
             const openConfirmationModal = (message, actionUrl, form = null) => {
                 const modal = document.getElementById('confirmationModal');
@@ -396,7 +395,7 @@
 
             const confirmAction = async () => {
                 const confirmBtn = document.getElementById('confirmButton');
-            
+
 
                 const formId = confirmBtn.dataset.form;
                 const actionUrl = confirmBtn.dataset.url;
@@ -515,7 +514,6 @@
             window.openConfirmationModal = openConfirmationModal;
             window.closeModal = closeModal;
             window.confirmAction = confirmAction;
-
         </script>
     @endauth
 
