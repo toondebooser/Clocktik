@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Models\Usertotal;
 use Illuminate\Http\Request;
 use App\Http\Controllers\TimesheetController;
+use App\Models\Daytotal;
 
 class UsersheetsController extends Controller
 {
@@ -31,7 +32,10 @@ class UsersheetsController extends Controller
 
         $threeMonthsAgo = Carbon::now()->startOfMonth()->subMonths(3);
 
-         Timesheet::where('UserId', '=', $currentUser->id)
+        Timesheet::where('UserId', '=', $currentUser->id)
+            ->where('Month', '<=', $threeMonthsAgo)
+            ->delete();
+        Daytotal::where('UserId', '=', $currentUser->id)
             ->where('Month', '<=', $threeMonthsAgo)
             ->delete();
 
@@ -39,14 +43,15 @@ class UsersheetsController extends Controller
             ->where('Month', '<', $threeMonthsAgo)
             ->delete();
 
+
         // $timesheet = $currentUser->timesheets()
         //     ->whereMonth('Month', '=', $month)
         //     ->orderBy('Month', 'asc')
         //     ->get();
 
-        $days = $currentUser->dayTotals()->whereMonth('Month', $month)->where('Completed', true)->orderBy('Month','asc')->get();
-        
-        
+        $days = $currentUser->dayTotals()->whereMonth('Month', $month)->where('Completed', true)->orderBy('Month', 'asc')->get();
+
+
         $monthlyTotal = $currentUser->userTotals()->where('UserId', '=', $currentUser->id)
             ->whereMonth('Month', $month)
             ->get();
@@ -55,6 +60,6 @@ class UsersheetsController extends Controller
             ->orderBy('Month', 'desc')
             ->get();
 
-        return view('profile', ['user' => $currentUser, 'companyDayHours' => $currentUser->company->day_hours , 'days' => $days,'clockedMonths' => $clockedMonths,  'monthlyTotal' => $monthlyTotal]);
+        return view('profile', ['user' => $currentUser, 'companyDayHours' => $currentUser->company->day_hours, 'days' => $days, 'clockedMonths' => $clockedMonths,  'monthlyTotal' => $monthlyTotal]);
     }
 }
