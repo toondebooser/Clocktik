@@ -5,7 +5,7 @@
     @endphp
     <h1 class="welcomeTitle" style="
         {{ $companyName ? 'margin-top: 100px;' : 'grid-row: 3/4;' }}    ">
-        {{ $companyName ?? 'werkuren.be' }}
+        {{ $companyName ?? 'Tijdregistratie' }}
     </h1>
     @auth
         <div class="logoContainer">
